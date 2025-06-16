@@ -1,0 +1,286 @@
+fileFormatVersion: 2
+guid: 4365eb6076c24a9498cf37afe8066a20
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Asphalt1_Ground
+    second: {fileID: 2100000, guid: d31273a5be39a27418a33c446b505052, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Asphalt1_Road
+    second: {fileID: 2100000, guid: fb4da4660cb00384ab584e5befb62d5e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Concrete1_Curb
+    second: {fileID: 2100000, guid: b44696afde097e94e9bc2244dc98700b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Concrete1_Gutter
+    second: {fileID: 2100000, guid: e9f505c26bd0a234fabf0ff11882197f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Concrete1_Prop
+    second: {fileID: 2100000, guid: 50feb09f3e0af924b82bf785dedc8d3e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Concrete1_Sidewalk
+    second: {fileID: 2100000, guid: c34eb9839e837ab47b841e6adf4b365b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Concrete2_rrx_Ground
+    second: {fileID: 2100000, guid: 4908eb97bc5a57c47bb41139717d9c0e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Default_Prop
+    second: {fileID: 2100000, guid: 0a92c4808ec9b64458ac252bfa3484ec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grass1_Ground
+    second: {fileID: 2100000, guid: 4920bd7d7a0aafe4b9632b9b5e9163db, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LaneMarking1_Marking
+    second: {fileID: 2100000, guid: 751292d8a0f4cce4c8fba3236e641b4a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LaneMarkingYellow1_Marking
+    second: {fileID: 2100000, guid: fd1d3b3ce2d4d454fa2c8bfe71fe5fb3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal1_Prop
+    second: {fileID: 2100000, guid: 3d9288df3fe586a47afac5cd72b71efc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal_Signals
+    second: {fileID: 2100000, guid: 098641e516f127f439da47767b8e0863, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal_Signals_Prop
+    second: {fileID: 2100000, guid: daf722f1c43080b4e9f953c77c35f8e4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_DeadEndAhead-Back.png_Sign
+    second: {fileID: 2100000, guid: 74b5c9ef2c6080c41913d3a331bc87b4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_DeadEndAhead.svg_rrx_Sign
+    second: {fileID: 2100000, guid: f26c7205c4eb9074fb5a0e336f9d54df, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_R1-1-Back.png_StopSign
+    second: {fileID: 2100000, guid: 16968fd43118adc4e9346638d341bfb0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_R1-1.svg_StopSign
+    second: {fileID: 2100000, guid: fde90baecdb34f54ea159427c5ca1f1f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_R5-1-Back.png_Sign
+    second: {fileID: 2100000, guid: 8fd922b0ef0ed4247b0a3f681f3b02eb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_R5-1.svg_rrx_Sign
+    second: {fileID: 2100000, guid: 9689c824df0d5ee4d9c411648aef5366, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_R6-1_01-Back.png_LeftOneWaySign
+    second: {fileID: 2100000, guid: bd3c6999ab600d7418dbc68965ac662a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_R6-1_01.svg_rrx_LeftOneWaySign
+    second: {fileID: 2100000, guid: 79eb256a9cdbdaf4cbc8ed1ba85f9660, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_R6-1_02-Back.png_RightOneWaySign
+    second: {fileID: 2100000, guid: bb2fb7b5bc231594c9b376fe535bddac, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_R6-1_02.svg_rrx_RightOneWaySign
+    second: {fileID: 2100000, guid: 131f076e637882b498bb7e50ef4bc53f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_W16-5P_01-Back.png_LeftArrowWarningSign
+    second: {fileID: 2100000, guid: 4849096570e5a6c47a49aa6163e2ff53, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_W16-5P_01.svg_rrx_LeftArrowWarningSign
+    second: {fileID: 2100000, guid: a2706228d2a418f4a8ca3125db7a91b4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bark_elmTree
+    second: {fileID: 2100000, guid: b5773189562de3844b35910d0c917c6d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bark_eucalyptusTree
+    second: {fileID: 2100000, guid: 599e1f15bdadb344ea7f9a8cd0624f3e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leaf_EucalyptusTree_lowLOD
+    second: {fileID: 2100000, guid: 52737ac245a526e498cec4f51db3ec51, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leaf_Tree_lowLOD
+    second: {fileID: 2100000, guid: 85a312f2c60771d47999130903b068b2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leaf_elmTree
+    second: {fileID: 2100000, guid: f0380f593f374ac46a8d0ba6854e291f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leaf_eucalyptusTree
+    second: {fileID: 2100000, guid: 265e5fdbf1f8c4f4484d43a8c4ceda95, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_bottomPost_black
+    second: {fileID: 2100000, guid: d36f700da180b924ab6325ffd1d536d6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_upperPost_brown
+    second: {fileID: 2100000, guid: 6e563766d0fdbc648bcadc7ed6a1696d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: steel_bracket_Prop
+    second: {fileID: 2100000, guid: 1a453b7d0c71133449e6605d46efbd2a, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages:
+    - 0.25
+    - 0.125
+    - 0.0625
+    - 0.01
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
