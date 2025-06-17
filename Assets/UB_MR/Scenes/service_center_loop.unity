@@ -228,7 +228,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   origin_topic: map_origin
-  origin: GNSS origin data
+  origin_latitude: 5
+  origin_longitude: 10
+  origin_altitude: 15
 --- !u!1 &285627478
 GameObject:
   m_ObjectHideFlags: 0

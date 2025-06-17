@@ -4,12 +4,14 @@ using ROS2;
 public class MapData : MonoBehaviour
 {
     [SerializeField] string origin_topic = "map_origin";
-    [SerializeField] string origin = "GNSS origin data"; // Placeholder for GNSS origin data
+    [SerializeField] double origin_latitude = 0; 
+    [SerializeField] double origin_longitude = 0; 
+    [SerializeField] double origin_altitude = 0;
 
 
     ROS2Node mNode;
     
-    IPublisher<std_msgs.msg.String> mMapOriginPublisher;
+    IPublisher<sensor_msgs.msg.NavSatFix> mMapOriginPublisher;
 
     // To Do: Turn this node into a Service
 
@@ -18,7 +20,7 @@ public class MapData : MonoBehaviour
         if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
         {
             this.mNode = ROS2_Bridge.ROS_CORE.CreateNode("Map_Info");
-            this.mMapOriginPublisher = this.mNode.CreatePublisher<std_msgs.msg.String>(origin_topic);
+            this.mMapOriginPublisher = this.mNode.CreatePublisher<sensor_msgs.msg.NavSatFix>(origin_topic);
         }
     }
 
@@ -35,8 +37,10 @@ public class MapData : MonoBehaviour
 
     void PublishMapOrigin()
     {
-        std_msgs.msg.String msg = new std_msgs.msg.String();
-        msg.Data = origin;
+        sensor_msgs.msg.NavSatFix msg = new sensor_msgs.msg.NavSatFix();
+        msg.Latitude = origin_latitude;
+        msg.Longitude = origin_longitude;
+        msg.Altitude = origin_altitude;
         this.mMapOriginPublisher.Publish(msg);
     }
 

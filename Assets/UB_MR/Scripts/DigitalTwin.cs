@@ -7,6 +7,9 @@ public class DigitalTwin : MonoBehaviour
 
     ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
 
+    Vector3 mWorldPosition = Vector3.zero;
+    Quaternion mWorldRotation = Quaternion.identity;
+
     // TODO: Refactor subscriber to ROS2_Bridge?
     void Start()
     {
@@ -17,32 +20,35 @@ public class DigitalTwin : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        UpdateWorldTransformation();
+    }
+
     void WorldTransformationUpdate(nav_msgs.msg.Odometry msg)
     {
-        Vector3 position = new Vector3(
+        this.mWorldPosition = new Vector3(
             (float)msg.Pose.Pose.Position.X,
             (float)msg.Pose.Pose.Position.Y,
             (float)msg.Pose.Pose.Position.Z
         );
-        Quaternion rotation = new Quaternion(
+        this.mWorldRotation = new Quaternion(
             (float)msg.Pose.Pose.Orientation.X,
             (float)msg.Pose.Pose.Orientation.Y,
             (float)msg.Pose.Pose.Orientation.Z,
             (float)msg.Pose.Pose.Orientation.W
         );
-        Debug.Log("World Coordinates: [" + position.ToString() + "]");
-        UpdateWorldTransformation(position, rotation);
+        Debug.Log("World Coordinates: [" + this.mWorldPosition.ToString() + "]");
     }
 
 
 
     // Read World Position from WorldTransformation ROS2 Node
-    void UpdateWorldTransformation(Vector3 inPosition, Quaternion inRotation)
+    void UpdateWorldTransformation()
     {
-        this.gameObject.transform.position = inPosition;
-        this.gameObject.transform.rotation = inRotation;
+        this.gameObject.transform.position = this.mWorldPosition;
+        this.gameObject.transform.rotation = this.mWorldRotation;
         // TODO: integrate linear velocity and angular velocity
-        
     }
 
     
