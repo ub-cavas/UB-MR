@@ -1,15 +1,20 @@
 using UnityEngine;
 using ROS2;
 
-public class ROS2_Bridge
+public static class ROS2_Bridge
 {
-    public static ROS2UnityCore ROS_CORE;
+    // backing field
+    private static ROS2UnityCore _rosCore;
 
-    ROS2_Bridge()
+    public static ROS2UnityCore ROS_CORE
     {
-        if (ROS_CORE == null)
+        get
         {
-            ROS_CORE = new ROS2UnityCore();
+            if (_rosCore == null)
+            {
+                _rosCore = new ROS2UnityCore();
+            }
+            return _rosCore;
         }
     }
 }
