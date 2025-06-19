@@ -12,7 +12,7 @@ public class DigitalTwin : MonoBehaviour
     ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
 
     VirtualObjectDetector mVirtualObjectDetector;
-    //IPublisher<vision_msgs.msg.BoundingBox3D> mObstacleBoundingBoxPublisher; // TODO: integrate BoundingBox3D message type
+    IPublisher<vision_msgs.msg.BoundingBox3DArray> mObstacleBoundingBoxPublisher; // TODO: integrate BoundingBox3D message type
 
     Vector3 mWorldPosition = Vector3.zero;
     Quaternion mWorldRotation = Quaternion.identity;
@@ -29,7 +29,7 @@ public class DigitalTwin : MonoBehaviour
                 this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>("world_transform", On_WorldTransformationUpdate);
                 // Obstacle Bounding Box Publisher
                 this.mVirtualObjectDetector = new VirtualObjectDetector(this.transform);
-                //this.mObstacleBoundingBoxPublisher = this.mNode.CreatePublisher<sensor_msgs.msg.NavSatFix>(vision_msgs.msg.BoundingBox3D);
+                this.mObstacleBoundingBoxPublisher = this.mNode.CreatePublisher<vision_msgs.msg.BoundingBox3DArray>("virtual_obstacles");
             }
             
         }
@@ -66,13 +66,34 @@ public class DigitalTwin : MonoBehaviour
 
     void PublishNearbyVirtualObjects()
     {
+        vision_msgs.msg.BoundingBox3DArray msg = new vision_msgs.msg.BoundingBox3DArray();
+        // TODO: Populate Header
         List<VirtualObject> virtualObjects = this.mVirtualObjectDetector.GetNearbyObstacles(virtualObjectDetectionRadius);
         foreach (VirtualObject virtualObject in virtualObjects)
         {
             Bounds bounds = virtualObject.GetBoundingBox();
-            // TODO: Create a 3D bounding box for the nearby virtual objects
+            vision_msgs.msg.BoundingBox3D bbox = new vision_msgs.msg.BoundingBox3D();
+            bbox.Center = new geometry_msgs.msg.Pose();
+            // Position
+            bbox.Center.Position = new geometry_msgs.msg.Point();
+            bbox.Center.Position.X = bounds.center.x;
+            bbox.Center.Position.Y = bounds.center.y;
+            bbox.Center.Position.Z = bounds.center.z;
+            // Orientation
+            bbox.Center.Orientation = new geometry_msgs.msg.Quaternion();
+            bbox.Center.Orientation.X = virtualObject.transform.rotation.x;
+            bbox.Center.Orientation.Y = virtualObject.transform.rotation.y;
+            bbox.Center.Orientation.Z = virtualObject.transform.rotation.z;
+            bbox.Center.Orientation.W = virtualObject.transform.rotation.w;
+            // Size
+            bbox.Size = new geometry_msgs.msg.Vector3();
+            bbox.Size.X = bounds.size.x;
+            bbox.Size.Y = bounds.size.y;
+            bbox.Size.Z = bounds.size.z;
+            // TODO: Add to array
+            //msg.Boxes.Initialize(virtualObjects.Count);
         }
-        //this.mObstacleBoundingBoxPublisher.Publish(new vision_msgs.msg.BoundingBox3D); // TODO
+        this.mObstacleBoundingBoxPublisher.Publish(msg); // TODO
 
     }
 }
