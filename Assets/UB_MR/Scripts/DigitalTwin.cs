@@ -1,11 +1,18 @@
 using ROS2;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DigitalTwin : MonoBehaviour
 {
+    [SerializeField] float virtualObjectDetectionRadius = 30f; // Radius in which virtual objects are detected
+
+
     ROS2Node mNode;
 
     ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
+
+    VirtualObjectDetector mVirtualObjectDetector;
+    //IPublisher<vision_msgs.msg.BoundingBox3D> mObstacleBoundingBoxPublisher; // TODO: integrate BoundingBox3D message type
 
     Vector3 mWorldPosition = Vector3.zero;
     Quaternion mWorldRotation = Quaternion.identity;
@@ -15,8 +22,16 @@ public class DigitalTwin : MonoBehaviour
     {
         if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
         {
-            this.mNode = ROS2_Bridge.ROS_CORE.CreateNode("Digital_Twin");
-            this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>("world_transform", WorldTransformationUpdate);
+            if (this.mNode == null)
+            {
+                this.mNode = ROS2_Bridge.ROS_CORE.CreateNode("Digital_Twin");
+                // World Transformation Subscriber
+                this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>("world_transform", On_WorldTransformationUpdate);
+                // Obstacle Bounding Box Publisher
+                this.mVirtualObjectDetector = new VirtualObjectDetector(this.transform);
+                //this.mObstacleBoundingBoxPublisher = this.mNode.CreatePublisher<sensor_msgs.msg.NavSatFix>(vision_msgs.msg.BoundingBox3D);
+            }
+            
         }
     }
 
@@ -25,7 +40,7 @@ public class DigitalTwin : MonoBehaviour
         UpdateWorldTransformation();
     }
 
-    void WorldTransformationUpdate(nav_msgs.msg.Odometry msg)
+    void On_WorldTransformationUpdate(nav_msgs.msg.Odometry msg)
     {
         this.mWorldPosition = new Vector3(
             (float)msg.Pose.Pose.Position.X,
@@ -41,8 +56,6 @@ public class DigitalTwin : MonoBehaviour
         Debug.Log("World Coordinates: [" + this.mWorldPosition.ToString() + "]");
     }
 
-
-
     // Read World Position from WorldTransformation ROS2 Node
     void UpdateWorldTransformation()
     {
@@ -51,5 +64,15 @@ public class DigitalTwin : MonoBehaviour
         // TODO: integrate linear velocity and angular velocity
     }
 
-    
+    void PublishNearbyVirtualObjects()
+    {
+        List<VirtualObject> virtualObjects = this.mVirtualObjectDetector.GetNearbyObstacles(virtualObjectDetectionRadius);
+        foreach (VirtualObject virtualObject in virtualObjects)
+        {
+            Bounds bounds = virtualObject.GetBoundingBox();
+            // TODO: Create a 3D bounding box for the nearby virtual objects
+        }
+        //this.mObstacleBoundingBoxPublisher.Publish(new vision_msgs.msg.BoundingBox3D); // TODO
+
+    }
 }
