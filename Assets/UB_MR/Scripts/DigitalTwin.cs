@@ -1,5 +1,7 @@
+using builtin_interfaces.msg;
 using ROS2;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using vision_msgs.msg;
 
@@ -75,7 +77,10 @@ public class DigitalTwin : MonoBehaviour
         // Header
         msg.Header = new std_msgs.msg.Header(); 
         msg.Header.Frame_id = "world";
-        
+        builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();     
+        time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad; // Use Time.timeSinceLevelLoad for simulation time
+        msg.Header.Stamp = time;
+
         List<VirtualObject> virtualObjects = this.mVirtualObjectDetector.GetNearbyObstacles(virtualObjectDetectionRadius);
         var boxes = new BoundingBox3D[virtualObjects.Count];
         for (int i = 0; i < boxes.Length; i++) 
