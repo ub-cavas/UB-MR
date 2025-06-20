@@ -1,11 +1,15 @@
 using ROS2;
 using System.Collections.Generic;
 using UnityEngine;
+using vision_msgs.msg;
 
 public class DigitalTwin : MonoBehaviour
 {
+    [Header("World Transformation Settings")]
+    [SerializeField] string worldTransformationTopicName = "world_transform"; // Topic name for world transformation updates
+    [Header("Virtual Object Detection Settings")]
     [SerializeField] float virtualObjectDetectionRadius = 30f; // Radius in which virtual objects are detected
-
+    [SerializeField] string virtualObjectsTopicName = "virtual_obstacles"; // Topic name for publishing virtual objects
 
     ROS2Node mNode;
 
@@ -26,10 +30,10 @@ public class DigitalTwin : MonoBehaviour
             {
                 this.mNode = ROS2_Bridge.ROS_CORE.CreateNode("Digital_Twin");
                 // World Transformation Subscriber
-                this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>("world_transform", On_WorldTransformationUpdate);
+                this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>(worldTransformationTopicName, On_WorldTransformationUpdate);
                 // Obstacle Bounding Box Publisher
                 this.mVirtualObjectDetector = new VirtualObjectDetector(this.transform);
-                this.mObstacleBoundingBoxPublisher = this.mNode.CreatePublisher<vision_msgs.msg.BoundingBox3DArray>("virtual_obstacles");
+                this.mObstacleBoundingBoxPublisher = this.mNode.CreatePublisher<vision_msgs.msg.BoundingBox3DArray>(virtualObjectsTopicName);
             }
             
         }
@@ -38,6 +42,7 @@ public class DigitalTwin : MonoBehaviour
     void Update()
     {
         UpdateWorldTransformation();
+        PublishNearbyVirtualObjects();
     }
 
     void On_WorldTransformationUpdate(nav_msgs.msg.Odometry msg)
@@ -67,12 +72,17 @@ public class DigitalTwin : MonoBehaviour
     void PublishNearbyVirtualObjects()
     {
         vision_msgs.msg.BoundingBox3DArray msg = new vision_msgs.msg.BoundingBox3DArray();
-        // TODO: Populate Header
+        // Header
+        msg.Header = new std_msgs.msg.Header(); 
+        msg.Header.Frame_id = "world";
+        
         List<VirtualObject> virtualObjects = this.mVirtualObjectDetector.GetNearbyObstacles(virtualObjectDetectionRadius);
-        foreach (VirtualObject virtualObject in virtualObjects)
+        var boxes = new BoundingBox3D[virtualObjects.Count];
+        for (int i = 0; i < boxes.Length; i++) 
         {
+            VirtualObject virtualObject = virtualObjects[i];
             Bounds bounds = virtualObject.GetBoundingBox();
-            vision_msgs.msg.BoundingBox3D bbox = new vision_msgs.msg.BoundingBox3D();
+            BoundingBox3D bbox = new BoundingBox3D();
             bbox.Center = new geometry_msgs.msg.Pose();
             // Position
             bbox.Center.Position = new geometry_msgs.msg.Point();
@@ -90,10 +100,14 @@ public class DigitalTwin : MonoBehaviour
             bbox.Size.X = bounds.size.x;
             bbox.Size.Y = bounds.size.y;
             bbox.Size.Z = bounds.size.z;
-            // TODO: Add to array
-            //msg.Boxes.Initialize(virtualObjects.Count);
-        }
-        this.mObstacleBoundingBoxPublisher.Publish(msg); // TODO
 
+            // TODO: Add to array
+            boxes[i] = bbox;
+        }
+        msg.Boxes = boxes;
+        msg.WriteNativeMessage();
+        this.mObstacleBoundingBoxPublisher.Publish(msg);
+
+        Debug.Log("Published " + virtualObjects.Count + " virtual objects to topic: " + virtualObjectsTopicName);
     }
 }
