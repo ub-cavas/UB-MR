@@ -560,6 +560,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4143673940181590695, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4143673940181590695, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5313072702893990253, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
       propertyPath: m_LocalPosition.x
       value: -49.2
@@ -600,14 +608,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7646279603512248635, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: -2975577217368688508, guid: 181170b735e40694799299d506019a65, type: 3}
-    - target: {fileID: 7705897699676775977, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: -2975577217368688508, guid: 181170b735e40694799299d506019a65, type: 3}
     - target: {fileID: 8485769508998957606, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
       propertyPath: m_Name
       value: Ego-Vehicle
