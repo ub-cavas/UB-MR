@@ -73,6 +73,7 @@ public class DigitalTwin : MonoBehaviour
 
     void PublishNearbyVirtualObjects()
     {
+        // TODO: Bounding Boxes position and orientation should be relative to the Ego-Vehicle, not the world
         vision_msgs.msg.BoundingBox3DArray msg = new vision_msgs.msg.BoundingBox3DArray();
         // Header
         msg.Header = new std_msgs.msg.Header(); 
