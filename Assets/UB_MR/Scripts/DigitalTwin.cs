@@ -60,7 +60,7 @@ public class DigitalTwin : MonoBehaviour
     {
         this.mPrevWorldPosition = this.mWorldPosition;
         this.mWorldPosition = new Vector3(
-            -(float)msg.Pose.Pose.Position.Z,
+            (float)msg.Pose.Pose.Position.Z,
             (float)msg.Pose.Pose.Position.Y,
             (float)msg.Pose.Pose.Position.X
         );
@@ -74,9 +74,9 @@ public class DigitalTwin : MonoBehaviour
         );
         // Remap axes: FLU → URF
         this.mWorldRotation = new Quaternion(
-            q_ros.y,    // Unity X = ROS Y
+             -q_ros.y,    // Unity X = ROS Y
              q_ros.z,    // Unity Y =  ROS Z
-             q_ros.x,    // Unity Z =  ROS X
+            -q_ros.x,    // Unity Z =  ROS X
              q_ros.w     // w stays the same
         );
 
