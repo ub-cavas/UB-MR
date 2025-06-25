@@ -2,6 +2,7 @@
 using Unity.VisualScripting;
 using UnityEditor.UI;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 using static UnityEngine.UI.Image;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -14,7 +15,7 @@ public class DigitalTwin : MonoBehaviour
     ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
 
     [SerializeField] float velocityGain = 1; // Proportional gain for position error correction
-    [SerializeField] float angularGain = 0.03f;
+    [SerializeField] float angularGain = 1;
     bool updated = false;
     Rigidbody rb;
     Vector3 mPrevWorldPosition = Vector3.zero;
@@ -118,8 +119,31 @@ public class DigitalTwin : MonoBehaviour
             Vector3 localVel = transform.TransformDirection(this.mLinearVelocity);
             Vector3 avg = (localVel + errorVel) / 2f;
             rb.linearVelocity = avg;
-            Debug.Log(rb.linearVelocity);
-            rb.MoveRotation(this.mWorldRotation);
         }
+
+        // 2) Compute angular error
+        
+        Vector3 angVel = this.mAngularVelocity;
+        if (angVel.y >= -0.05f && angVel.y <= 0.05f) // If the angular velocity is too small, set it to zero
+            angVel.y = 0;
+        angVel.y = -angVel.y;
+
+        float angleError = Quaternion.Angle(rb.rotation, this.mWorldRotation);
+        Quaternion errorQuat = this.mWorldRotation * Quaternion.Inverse(rb.rotation);
+        // 3) Extract axis and (unused) angle from that quaternion
+        errorQuat.ToAngleAxis(out float axisAngle, out Vector3 axis);
+
+        // 4) Build an angular velocity vector:
+        //    - direction = axis (already normalized by ToAngleAxis)
+        //    - magnitude = kP * error (converted to radians/sec)
+        float errorRad = angleError * Mathf.Deg2Rad;
+        Vector3 desiredAngularVel = axis * (angularGain * errorRad);
+
+        // 5) Apply it
+        rb.angularVelocity = desiredAngularVel;
+
+
+        //rb.angularVelocity = transform.TransformDirection(angVel);
+        Debug.Log(rb.angularVelocity);
     }
 }
