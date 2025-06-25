@@ -115,9 +115,9 @@ public class DigitalTwin : MonoBehaviour
         else
         {
             Vector3 errorVel = error;
-            Vector3 localVel = transform.InverseTransformDirection(this.mLinearVelocity);
+            Vector3 localVel = transform.TransformDirection(this.mLinearVelocity);
             Vector3 avg = (localVel + errorVel) / 2f;
-            rb.linearVelocity = velocityGain * avg;
+            rb.linearVelocity = avg;
             Debug.Log(rb.linearVelocity);
             rb.MoveRotation(this.mWorldRotation);
         }
