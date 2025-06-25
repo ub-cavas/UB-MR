@@ -13,7 +13,7 @@ public class DigitalTwin : MonoBehaviour
 
     ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
 
-    [SerializeField] float velocityGain = 0.03f; // Proportional gain for position error correction
+    [SerializeField] float velocityGain = 1; // Proportional gain for position error correction
     [SerializeField] float angularGain = 0.03f;
     bool updated = false;
     Rigidbody rb;
@@ -61,9 +61,9 @@ public class DigitalTwin : MonoBehaviour
     {
         this.mPrevWorldPosition = this.mWorldPosition;
         this.mWorldPosition = new Vector3(
-            -(float)msg.Pose.Pose.Position.Z,
+            (float)msg.Pose.Pose.Position.Z,
             (float)msg.Pose.Pose.Position.Y,
-            (float)msg.Pose.Pose.Position.X
+            -(float)msg.Pose.Pose.Position.X
         );
 
         // Build a C# quaternion from the raw ROS values
@@ -78,11 +78,10 @@ public class DigitalTwin : MonoBehaviour
              -q_ros.y,    // Unity X = ROS Y
              q_ros.z,    // Unity Y =  ROS Z
              q_ros.x,    // Unity Z =  ROS X
-             q_ros.w     // w stays the same
+             -q_ros.w     
         );
-        Vector3 rot = new Vector3(q_unity.eulerAngles.x, -q_unity.eulerAngles.y, q_unity.eulerAngles.z); // Flip Y axis to match Unity's coordinate system
-        Quaternion unityRotation = Quaternion.Euler(rot);
-        this.mWorldRotation = unityRotation;
+        q_unity.Normalize(); // Normalize the quaternion to ensure it's a valid rotation
+        this.mWorldRotation = q_unity;
 
         this.mAngularVelocity = new Vector3(
             -(float)msg.Twist.Twist.Angular.Y,
@@ -117,21 +116,10 @@ public class DigitalTwin : MonoBehaviour
         {
             Vector3 errorVel = error;
             Vector3 localVel = transform.InverseTransformDirection(this.mLinearVelocity);
-            localVel.z = -localVel.z; // Flip Z axis to match incorrect orientation
             Vector3 avg = (localVel + errorVel) / 2f;
-            rb.linearVelocity = avg;
+            rb.linearVelocity = velocityGain * avg;
             Debug.Log(rb.linearVelocity);
             rb.MoveRotation(this.mWorldRotation);
         }
-            // 2) turn that into a velocity to close the gap in one physics frame
-            
-        // 3) get the velocity of the real vehicle
-        // TODO: Smooth rotation
-        /*
-        // Rotation
-        Vector3 msgRot = this.mAngularVelocity;
-        error = this.mWorldRotation.eulerAngles - rb.rotation.eulerAngles;
-        errorVel = angularGain * error / Time.fixedDeltaTime;*/
-
     }
 }
