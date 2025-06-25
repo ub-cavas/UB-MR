@@ -945,6 +945,10 @@ PrefabInstance:
       propertyPath: smoothUpdate
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6064827272676705894, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: velocityGain
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7646279603512248635, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

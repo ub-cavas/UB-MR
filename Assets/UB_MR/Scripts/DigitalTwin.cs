@@ -42,25 +42,26 @@ public class DigitalTwin : MonoBehaviour
 
     void Update()
     {
-        if (smoothUpdate)
-            SmoothUpdate();
+        
     }
 
     void FixedUpdate()
     {
         if (!smoothUpdate)
             SnapUpdate();
-  
-            
-            
-        
+        if (smoothUpdate)
+            SmoothUpdate();
+
+
+
+
     }
 
     void WorldTransformationUpdate(nav_msgs.msg.Odometry msg)
     {
         this.mPrevWorldPosition = this.mWorldPosition;
         this.mWorldPosition = new Vector3(
-            (float)msg.Pose.Pose.Position.Z,
+            -(float)msg.Pose.Pose.Position.Z,
             (float)msg.Pose.Pose.Position.Y,
             (float)msg.Pose.Pose.Position.X
         );
@@ -73,13 +74,15 @@ public class DigitalTwin : MonoBehaviour
             (float)msg.Pose.Pose.Orientation.W
         );
         // Remap axes: FLU → URF
-        this.mWorldRotation = new Quaternion(
+        Quaternion q_unity = new Quaternion(
              -q_ros.y,    // Unity X = ROS Y
              q_ros.z,    // Unity Y =  ROS Z
-            -q_ros.x,    // Unity Z =  ROS X
+             q_ros.x,    // Unity Z =  ROS X
              q_ros.w     // w stays the same
         );
-
+        Vector3 rot = new Vector3(q_unity.eulerAngles.x, -q_unity.eulerAngles.y, q_unity.eulerAngles.z); // Flip Y axis to match Unity's coordinate system
+        Quaternion unityRotation = Quaternion.Euler(rot);
+        this.mWorldRotation = unityRotation;
 
         this.mAngularVelocity = new Vector3(
             -(float)msg.Twist.Twist.Angular.Y,
@@ -103,19 +106,27 @@ public class DigitalTwin : MonoBehaviour
 
     void SmoothUpdate()
     {
-        // 1) get the raw ROS twist
-        Vector3 msgVel = this.mLinearVelocity;
-        // 2) compute position error
+        // 1) compute position error
         Vector3 error = this.mWorldPosition - rb.position;
-        // 3) turn that into a velocity to close the gap in one physics frame
-        Vector3 errorVel = velocityGain * error / Time.fixedDeltaTime;
-        // 4) blend real and corrective velocities
-        Vector3 correctedVel = msgVel + errorVel;
-
-        // 5) apply to the Rigidbody
-        rb.linearVelocity = correctedVel;
-        //rb.angularVelocity = this.mAngularVelocity;
-        rb.rotation = this.mWorldRotation; // TODO: Smooth rotation
+        if (error.magnitude > 5f) // If the error is too large, teleport
+        {
+            rb.Move(this.mWorldPosition, this.mWorldRotation);
+            return;
+        }
+        else
+        {
+            Vector3 errorVel = error;
+            Vector3 localVel = transform.InverseTransformDirection(this.mLinearVelocity);
+            localVel.z = -localVel.z; // Flip Z axis to match incorrect orientation
+            Vector3 avg = (localVel + errorVel) / 2f;
+            rb.linearVelocity = avg;
+            Debug.Log(rb.linearVelocity);
+            rb.MoveRotation(this.mWorldRotation);
+        }
+            // 2) turn that into a velocity to close the gap in one physics frame
+            
+        // 3) get the velocity of the real vehicle
+        // TODO: Smooth rotation
         /*
         // Rotation
         Vector3 msgRot = this.mAngularVelocity;
