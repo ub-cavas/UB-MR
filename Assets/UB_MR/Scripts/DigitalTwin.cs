@@ -121,8 +121,8 @@ public class DigitalTwin : MonoBehaviour
             rb.linearVelocity = avg;
         }
 
-        // 2) Compute angular error
         
+        // 2) angle error
         Vector3 angVel = this.mAngularVelocity;
         if (angVel.y >= -0.05f && angVel.y <= 0.05f) // If the angular velocity is too small, set it to zero
             angVel.y = 0;
@@ -130,17 +130,12 @@ public class DigitalTwin : MonoBehaviour
 
         float angleError = Quaternion.Angle(rb.rotation, this.mWorldRotation);
         Quaternion errorQuat = this.mWorldRotation * Quaternion.Inverse(rb.rotation);
-        // 3) Extract axis and (unused) angle from that quaternion
         errorQuat.ToAngleAxis(out float axisAngle, out Vector3 axis);
-
-        // 4) Build an angular velocity vector:
-        //    - direction = axis (already normalized by ToAngleAxis)
-        //    - magnitude = kP * error (converted to radians/sec)
         float errorRad = angleError * Mathf.Deg2Rad;
         Vector3 desiredAngularVel = axis * (angularGain * errorRad);
 
-        // 5) Apply it
-        rb.angularVelocity = desiredAngularVel;
+        Vector3 avgRot = (angVel + desiredAngularVel) / 2f;
+        rb.angularVelocity = avgRot;
 
 
         //rb.angularVelocity = transform.TransformDirection(angVel);
