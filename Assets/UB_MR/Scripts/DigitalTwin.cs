@@ -9,16 +9,14 @@ using static UnityEngine.UI.Image;
 public class DigitalTwin : MonoBehaviour
 {
     [SerializeField] bool smoothUpdate;
+    [SerializeField] float mLinearVelocity_P_Gain = 1; // Proportional gain for position error correction
+    [SerializeField] float mAngularVelocity_P_Gain = 1; // Proportional gain for rotation error correction
 
     ROS2Node mNode;
 
     ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
 
-    [SerializeField] float velocityGain = 1; // Proportional gain for position error correction
-    [SerializeField] float angularGain = 1;
-    bool updated = false;
     Rigidbody rb;
-    Vector3 mPrevWorldPosition = Vector3.zero;
     Vector3 mWorldPosition = Vector3.zero;
     Vector3 mAngularVelocity = Vector3.zero;
     Vector3 mLinearVelocity = Vector3.zero;
@@ -31,7 +29,6 @@ public class DigitalTwin : MonoBehaviour
         rb = this.GetComponent<Rigidbody>();
     }
 
-    // TODO: Refactor subscriber to ROS2_Bridge?
     void Start()
     {
         if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
@@ -41,26 +38,16 @@ public class DigitalTwin : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        
-    }
-
     void FixedUpdate()
     {
         if (!smoothUpdate)
             SnapUpdate();
         if (smoothUpdate)
             SmoothUpdate();
-
-
-
-
     }
 
     void WorldTransformationUpdate(nav_msgs.msg.Odometry msg)
     {
-        this.mPrevWorldPosition = this.mWorldPosition;
         this.mWorldPosition = new Vector3(
             (float)msg.Pose.Pose.Position.Z,
             (float)msg.Pose.Pose.Position.Y,
@@ -101,7 +88,6 @@ public class DigitalTwin : MonoBehaviour
     {
         rb.position = this.mWorldPosition;
         rb.rotation = this.mWorldRotation;
-
     }
 
     void SmoothUpdate()
@@ -121,7 +107,6 @@ public class DigitalTwin : MonoBehaviour
             rb.linearVelocity = avg;
         }
 
-        
         // 2) angle error
         Vector3 angVel = this.mAngularVelocity;
         if (angVel.y >= -0.05f && angVel.y <= 0.05f) // If the angular velocity is too small, set it to zero
@@ -132,13 +117,9 @@ public class DigitalTwin : MonoBehaviour
         Quaternion errorQuat = this.mWorldRotation * Quaternion.Inverse(rb.rotation);
         errorQuat.ToAngleAxis(out float axisAngle, out Vector3 axis);
         float errorRad = angleError * Mathf.Deg2Rad;
-        Vector3 desiredAngularVel = axis * (angularGain * errorRad);
+        Vector3 desiredAngularVel = axis * (mAngularVelocity_P_Gain * errorRad);
 
         Vector3 avgRot = (angVel + desiredAngularVel) / 2f;
         rb.angularVelocity = avgRot;
-
-
-        //rb.angularVelocity = transform.TransformDirection(angVel);
-        Debug.Log(rb.angularVelocity);
     }
 }
