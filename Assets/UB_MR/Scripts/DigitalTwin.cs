@@ -12,17 +12,13 @@ public class DigitalTwin : MonoBehaviour
     [SerializeField] float mLinearVelocity_P_Gain = 1; // Proportional gain for position error correction
     [SerializeField] float mAngularVelocity_P_Gain = 1; // Proportional gain for rotation error correction
 
-    ROS2Node mNode;
-
     ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
-
+    ROS2Node mNode;
     Rigidbody rb;
     Vector3 mWorldPosition = Vector3.zero;
     Vector3 mAngularVelocity = Vector3.zero;
     Vector3 mLinearVelocity = Vector3.zero;
     Quaternion mWorldRotation = Quaternion.identity;
-
-    Vector3 error = Vector3.zero;
 
     void Awake()
     {
