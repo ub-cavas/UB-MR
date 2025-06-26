@@ -241,39 +241,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4365eb6076c24a9498cf37afe8066a20, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.87
+      value: 3.508121
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4365eb6076c24a9498cf37afe8066a20, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -37.2
+      value: -37.057106
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4365eb6076c24a9498cf37afe8066a20, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.5
+      value: 0.48296753
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4365eb6076c24a9498cf37afe8066a20, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.5
+      value: -0.5164711
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4365eb6076c24a9498cf37afe8066a20, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.5
+      value: 0.5164711
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4365eb6076c24a9498cf37afe8066a20, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.5
+      value: 0.48296753
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4365eb6076c24a9498cf37afe8066a20, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
+      value: -86.16
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4365eb6076c24a9498cf37afe8066a20, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 90
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4365eb6076c24a9498cf37afe8066a20, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4365eb6076c24a9498cf37afe8066a20, type: 3}
       propertyPath: m_Name
