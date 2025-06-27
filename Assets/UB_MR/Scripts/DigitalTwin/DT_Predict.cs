@@ -3,6 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class DT_Predict : DigitalTwin
 {
+    [SerializeField] float mPositionErrorThreshold = 5f; // Position in the world to predict
     [SerializeField] float mLinearVelocity_P_Gain = 1; // Proportional gain for position error correction
     [SerializeField] float mAngularVelocity_P_Gain = 1; // Proportional gain for rotation error correction
     Rigidbody mRigidbody;
@@ -20,7 +21,7 @@ public class DT_Predict : DigitalTwin
     {
         // 1) compute position error
         Vector3 error = this.mWorldPosition - this.mRigidbody.position;
-        if (error.magnitude > 5f) // If the error is too large, teleport
+        if (error.magnitude > mPositionErrorThreshold) // If the error is too large, teleport
         {
             mRigidbody.Move(this.mWorldPosition, this.mWorldRotation);
             return;
