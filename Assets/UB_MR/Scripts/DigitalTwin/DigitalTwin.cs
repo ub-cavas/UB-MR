@@ -1,9 +1,5 @@
 ﻿using ROS2;
-using Unity.VisualScripting;
-using UnityEditor.UI;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
-using static UnityEngine.UI.Image;
 
 public class DigitalTwin : MonoBehaviour
 {
