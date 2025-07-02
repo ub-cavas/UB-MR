@@ -28,10 +28,8 @@ public class DT_Predict : DigitalTwin
         }
         else
         {
-            Vector3 errorVel = error;
-            Vector3 localVel = transform.TransformDirection(this.mLinearVelocity);
-            Vector3 avg = (localVel + errorVel) / 2f;
-            mRigidbody.linearVelocity = avg * this.mLinearVelocity_P_Gain;
+            Vector3 vehicleVelocity = transform.TransformDirection(this.mLinearVelocity);
+            this.mRigidbody.linearVelocity = vehicleVelocity;
         }
 
         // 2) angle error
@@ -45,7 +43,6 @@ public class DT_Predict : DigitalTwin
         errorQuat.ToAngleAxis(out float axisAngle, out Vector3 axis);
         float errorRad = angleError * Mathf.Deg2Rad;
         Vector3 desiredAngularVel = axis * (mAngularVelocity_P_Gain * errorRad);
-
         Vector3 avgRot = (angVel + desiredAngularVel) / 2f;
         this.mRigidbody.angularVelocity = avgRot;
     }

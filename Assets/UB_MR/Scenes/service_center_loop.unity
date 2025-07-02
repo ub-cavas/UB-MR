@@ -335,7 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46a75bb3e1a0276408014f7b8fd5cff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  origin_topic: map_origin
+  origin_topic: /map_origin
   origin_latitude: 42.992605
   origin_longitude: -78.795326
   origin_altitude: 152.5
@@ -1123,7 +1123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9924ec5c46833743a7d7d3824b4c98c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mPositionErrorThreshold: 5
+  mPositionErrorThreshold: 10
   mLinearVelocity_P_Gain: 1
   mAngularVelocity_P_Gain: 1
 --- !u!54 &1660019998
