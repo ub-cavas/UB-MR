@@ -32,12 +32,11 @@ public class DT_Predict : DigitalTwin
             this.mRigidbody.linearVelocity = vehicleVelocity;
         }
 
-        // 2) angle error
+        // 2) Smooth Rotation
         Vector3 angVel = this.mAngularVelocity;
         if (angVel.y >= -0.05f && angVel.y <= 0.05f) // If the angular velocity is too small, set it to zero
             angVel.y = 0;
         angVel.y = -angVel.y;
-
         float angleError = Quaternion.Angle(mRigidbody.rotation, this.mWorldRotation);
         Quaternion errorQuat = this.mWorldRotation * Quaternion.Inverse(mRigidbody.rotation);
         errorQuat.ToAngleAxis(out float axisAngle, out Vector3 axis);
@@ -49,11 +48,11 @@ public class DT_Predict : DigitalTwin
 
     public override Vector3 GetLinearVelocity()
     {
-        return this.mRigidbody.linearVelocity;
+        return transform.InverseTransformDirection(this.mRigidbody.linearVelocity);
     }
 
     public override Vector3 GetAngularVelocity()
     {
-        return this.mRigidbody.angularVelocity;
+        return transform.InverseTransformDirection(this.mRigidbody.angularVelocity);
     }
 }
