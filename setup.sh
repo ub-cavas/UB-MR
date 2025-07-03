@@ -39,6 +39,8 @@ bash build.sh --overlay --clean-install
 if [ -d "Assets/Ros2ForUnity" ]; then
     rm -rf Assets/Ros2ForUnity
 fi
+cd ..
+cd ..
 cp -r Externals/ros2_for_unity_ws/install/asset/Ros2ForUnity Assets
 
 echo "Setup complete! To use overlay mode, remember to:"
