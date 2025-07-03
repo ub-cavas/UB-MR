@@ -61,9 +61,7 @@ Before you begin, ensure you have:
      ```
    - Build + install the ros2-for-unity binaries
      # Windows
-     ```bash
-     ./windows_setup.sh
-     ```
+     Install the prebuilt binaries: https://github.com/RobotecAI/ros2-for-unity/releases/tag/1.3.0 to Assets/
      # Ubuntu 2022.04.5
       ```bash
       ./setup.sh
