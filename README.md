@@ -18,32 +18,31 @@
 ---
 
 ## Configuration
-
-- **Unity Editor:** 6000.0.36f1 on Windows 11
-- **Operating System (ROS 2):** Ubuntu 22.04.5 LTS on WSL2
+- **Unity Editor:** 6000.0.36f1
 - **ROS 2 Distribution:** Humble
+
+## ROS2 Installation
+Follow the official guide to install ROS 2 Humble:
+```bash
+https://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html
+```
 
 ---
 
-## Prerequisites
-
+## Setup
+# Windows + WSL
 Before you begin, ensure you have:
 
 1. **WSL2** enabled on Windows 11.
 2. **Unity Hub** installed for managing Unity versions.
 3. An existing ROS 2 workspace (e.g., `ros2_ws`).
+4. **Firewall** is disabled (Windows 11)
+
+# Ubuntu 
+1. **Unity Hub** installed for managing Unity versions.
+2. An existing ROS 2 workspace (e.g., `ros2_ws`).
 
 ---
-
-## Installation
-
-### ROS 2 Humble on WSL2 Ubuntu 22.04.5 LTS
-
-Follow the official guide to install ROS 2 Humble:
-
-```bash
-https://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html
-```
 
 ### Clone Repositories
 
@@ -55,13 +54,20 @@ https://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setu
    ```
 
 2. **Mixed Reality Unity Engine** (on Windows):
-
-   - Install Unity Hub: [https://unity.com/download](https://unity.com/download)
    - Open Unity Hub and install **Unity Editor 6000.0.36f1**
    - Clone the engine source:
      ```powershell
      git clone https://github.com/ub-cavas/UB-MR.git
      ```
+   - Build + install the ros2-for-unity binaries
+     # Windows
+     ```bash
+     ./windows_setup.sh
+     ```
+     # Ubuntu 2022.04.5
+      ```bash
+      ./setup.sh
+      ```
 
 3. **Unity Engine Binaries** (optional):
 
