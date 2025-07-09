@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/UB_MR/Scenes/service_center_loop.unity
     guid: ea3c5b6f3f13cf146a46bb81ef9e934b
+  - enabled: 1
+    path: Assets/NGO_Minimal_Setup/NGO_Setup.unity
+    guid: ed8f6f86f7e201c28aa2b3a7c7b3112e
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
