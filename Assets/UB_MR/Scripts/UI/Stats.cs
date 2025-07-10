@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using CAVAS.UB_MR.DT;
 
-namespace CAVAS.UB_MR
+namespace CAVAS.UB_MR.UI
 {
     public class Stats : MonoBehaviour
     {

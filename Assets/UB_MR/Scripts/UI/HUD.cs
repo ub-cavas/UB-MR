@@ -1,38 +1,42 @@
 using UnityEngine;
 using UnityEngine.UI;
+using CAVAS.UB_MR.DT;
 
-public class HUD : MonoBehaviour
+namespace CAVAS.UB_MR.UI
 {
-    [SerializeField] Button mHUD_Button;
-    Stats[] mStatPanels;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class HUD : MonoBehaviour
     {
-        this.mStatPanels = this.GetComponentsInChildren<Stats>(true);
+        [SerializeField] Button mHUD_Button;
+        Stats[] mStatPanels;
 
-        this.mHUD_Button.onClick.AddListener(this.ToggleHUD);
-        this.mHUD_Button.onClick.AddListener(this.ToggleGhost);
-    }
-
-    void ToggleHUD()
-    {
-        // Stat Panels
-        foreach (Stats statPanel in this.mStatPanels)
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
-            if (statPanel != null)
+            this.mStatPanels = this.GetComponentsInChildren<Stats>(true);
+
+            this.mHUD_Button.onClick.AddListener(this.ToggleHUD);
+            this.mHUD_Button.onClick.AddListener(this.ToggleGhost);
+        }
+
+        void ToggleHUD()
+        {
+            // Stat Panels
+            foreach (Stats statPanel in this.mStatPanels)
             {
-                statPanel.gameObject.SetActive(!statPanel.gameObject.activeSelf);
+                if (statPanel != null)
+                {
+                    statPanel.gameObject.SetActive(!statPanel.gameObject.activeSelf);
+                }
             }
         }
-    }
 
-    void ToggleGhost()
-    {
-        DT_Reflect ghost = Object.FindFirstObjectByType<DT_Reflect>(FindObjectsInactive.Include);
-        if (ghost != null)
+        void ToggleGhost()
         {
-            ghost.gameObject.SetActive(!ghost.gameObject.activeSelf);
+            DT_Reflect ghost = Object.FindFirstObjectByType<DT_Reflect>(FindObjectsInactive.Include);
+            if (ghost != null)
+            {
+                ghost.gameObject.SetActive(!ghost.gameObject.activeSelf);
+            }
         }
     }
 }
