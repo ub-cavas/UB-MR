@@ -36,7 +36,7 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
    git clone https://github.com/ub-cavas/mr_pkg.git
    ```
    Whenever you update the ROS 2 package, rebuild it:
-   ```bash
+  ```bash
   cd ~/ros2_ws
   colcon build --symlink-install
   ```
