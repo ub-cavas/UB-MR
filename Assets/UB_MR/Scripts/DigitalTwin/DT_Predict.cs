@@ -10,11 +10,14 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] float mLinearVelocity_P_Gain = 1; // Proportional gain for position error correction
         [SerializeField] float mAngularVelocity_P_Gain = 1; // Proportional gain for rotation error correction
         Rigidbody mRigidbody;
-        
-        override public void OnNetworkSpawn()
+
+        void Awake()
         {
             this.mRigidbody = GetComponent<Rigidbody>();
+        }
 
+        override public void OnNetworkSpawn()
+        {
             base.OnNetworkSpawn();
         }
 
