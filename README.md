@@ -18,69 +18,43 @@
 ---
 
 ## Configuration
+- **Ubuntu 2022.04.5** (WSL not officially supported, but may work)
 - **Unity Editor:** 6000.0.36f1
 - **ROS 2 Distribution:** Humble
 
 ## ROS2 Installation
-Follow the official guide to install ROS 2 Humble:
+Follow the official guide to install ROS 2 Humble (packaged version):
 ```bash
-https://docs.ros.org/en/humble/Installation/Alternatives/Ubuntu-Development-Setup.html
+https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
 ```
 
 ---
+## Install Mixed Reality Packages
 
-## Setup
-# Windows + WSL
-Before you begin, ensure you have:
-
-1. **WSL2** enabled on Windows 11.
-2. **Unity Hub** installed for managing Unity versions.
-3. An existing ROS 2 workspace (e.g., `ros2_ws`).
-4. **Firewall** is disabled (Windows 11)
-
-# Ubuntu 
-1. **Unity Hub** installed for managing Unity versions.
-2. An existing ROS 2 workspace (e.g., `ros2_ws`).
-
----
-
-### Clone Repositories
-
-1. **Mixed Reality ROS 2 Package** (in your ROS 2 workspace):
-
+1. **ROS 2 Package** (~/ros2_ws/src):
    ```bash
-   cd ~/ros2_ws/src
    git clone https://github.com/ub-cavas/mr_pkg.git
    ```
+   Whenever you update the ROS 2 package, rebuild it:
+   ```bash
+  cd ~/ros2_ws
+  colcon build --symlink-install
+  ```
 
-2. **Mixed Reality Unity Engine** (on Windows):
-   - Open Unity Hub and install **Unity Editor 6000.0.36f1**
-   - Clone the engine source:
-     ```powershell
+2. **OPTION A: Packaged Simulator** (recommended):
+   > *TODO: Provide binary download link and installation steps.*
+
+3. **OPTION B: Simulator Source Code**:
+     ```bash
+     cd <directory-outside-of-your-ros2_ws>
      git clone https://github.com/ub-cavas/UB-MR.git
      ```
-   - Build + install the ros2-for-unity binaries
-     # Windows
-     Install the prebuilt binaries: https://github.com/RobotecAI/ros2-for-unity/releases/tag/1.3.0 to Assets/
-     # Ubuntu 2022.04.5
+     This script will build Ros2ForUnity binaries and import them into the Unity project
       ```bash
+      cd UB-MR
       ./setup.sh
       ```
 
-3. **Unity Engine Binaries** (optional):
-
-   > *TODO: Provide binary download link and installation steps.*
-
----
-
-## Building the ROS 2 Package
-
-Whenever you update the ROS 2 package, rebuild it:
-
-```bash
-cd ~/ros2_ws
-colcon build --symlink-install
-```
 
 ---
 
