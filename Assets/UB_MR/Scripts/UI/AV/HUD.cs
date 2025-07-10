@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CAVAS.UB_MR.DT;
 
-namespace CAVAS.UB_MR.UI
+namespace CAVAS.UB_MR.UI.AV
 {
     public class HUD : MonoBehaviour
     {
