@@ -289,7 +289,7 @@ GameObject:
   - component: {fileID: 6417628658900768305}
   - component: {fileID: 682469846908821571}
   m_Layer: 0
-  m_Name: Ego-Vehicle
+  m_Name: Ego_Vehicle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
