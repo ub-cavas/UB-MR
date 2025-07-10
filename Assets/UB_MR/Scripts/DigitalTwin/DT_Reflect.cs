@@ -1,16 +1,20 @@
 using UnityEngine;
 
-public class DT_Reflect : DigitalTwin
+namespace CAVAS.UB_MR.DT
 {
-
-    void Update()
+    [RequireComponent(typeof(Rigidbody))]
+    public class DT_Reflect : DigitalTwin
     {
-        SnapUpdate();
-    }
 
-    void SnapUpdate()
-    {
-        this.transform.position = this.mWorldPosition;
-        this.transform.rotation = this.mWorldRotation;
+        void Update()
+        {
+            SnapUpdate();
+        }
+
+        void SnapUpdate()
+        {
+            this.transform.position = this.mWorldPosition;
+            this.transform.rotation = this.mWorldRotation;
+        }
     }
 }
