@@ -41,7 +41,6 @@ namespace CAVAS.UB_MR.DT
             return this.mAngularVelocity;
         }
 
-
         void WorldTransformationUpdate(nav_msgs.msg.Odometry msg)
         {
             this.mWorldPosition = new Vector3(
