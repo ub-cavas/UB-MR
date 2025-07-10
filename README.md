@@ -18,7 +18,7 @@
 ---
 
 ## Configuration
-- **Ubuntu 2022.04.5** (WSL not officially supported, but may work)
+- **Ubuntu 2022.04.5** 
 - **Unity Editor:** 6000.0.36f1
 - **ROS 2 Distribution:** Humble
 
@@ -41,6 +41,12 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
   colcon build --symlink-install
   ```
 
+2. **Vulkan Graphics API's** (skip if already installed)
+   ```bash
+     sudo apt update
+     sudo apt install libvulkan1
+     ```
+
 2. **OPTION A: Packaged Simulator** (recommended):
    > *TODO: Provide binary download link and installation steps.*
 
@@ -60,18 +66,9 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
 
 ## Sourcing Your Environment
 
-In each new terminal session (WSL2 Ubuntu):
-
-```bash
-source /opt/ros/humble/setup.bash
-source ~/ros2_ws/install/setup.bash
-```
-
----
-
 ## Running the Mixed Reality Package
 
-Launch all MR nodes in one terminal:
+Launch all world_transform nodes in one terminal:
 
 ```bash
 ros2 run mr_pkg world_transform
@@ -83,7 +80,7 @@ ros2 run mr_pkg world_transform
 
 ### Option 2: Replay a ROS Bag
 
-1. Open a new WSL2 Ubuntu terminal and source ROS 2:
+1. Open a new terminal and source ROS 2:
    ```bash
    source /opt/ros/humble/setup.bash
    ```
@@ -91,15 +88,6 @@ ros2 run mr_pkg world_transform
    ```bash
    ros2 bag play <path-to-rosbag> --start-offset 200
    ```
-
----
-
-## Running the Unity Engine
-
-On Windows 11, either:
-
-- Double-click `UB-MR.exe` in the build folder, or
-- Open the `service_center_loop` scene in Unity Editor and press ▶️ Play.
 
 ---
 
