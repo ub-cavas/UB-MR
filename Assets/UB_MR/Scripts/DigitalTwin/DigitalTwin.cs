@@ -1,6 +1,7 @@
 ﻿using ROS2;
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Cinemachine;
 
 namespace CAVAS.UB_MR.DT
 {
@@ -13,12 +14,22 @@ namespace CAVAS.UB_MR.DT
         protected Vector3 mLinearVelocity = Vector3.zero;
         protected Quaternion mWorldRotation = Quaternion.identity;
 
-      
+        protected CinemachineCamera[] mCameras;
+
+        void Awake()
+        {
+            this.mCameras = GetComponentsInChildren<CinemachineCamera>(true);
+        }
+
         public override void OnNetworkSpawn()
         {
             if (IsOwner)
             {
                 ConnectToROS();
+            }
+            else
+            {
+                EnableCameras(false);
             }
         }
 
@@ -80,7 +91,19 @@ namespace CAVAS.UB_MR.DT
             );
         }
 
+        void EnableCameras(bool enable)
+        {
+            if (this.mCameras == null || this.mCameras.Length == 0)
+            {
+                this.mCameras = GetComponentsInChildren<CinemachineCamera>(true);
+            }
 
+
+            foreach (var cam in this.mCameras)
+            {
+                cam.gameObject.SetActive(enable);
+            }
+        }
 
 
 
