@@ -15,10 +15,12 @@ namespace CAVAS.UB_MR.DT
         protected Quaternion mWorldRotation = Quaternion.identity;
 
         protected CinemachineCamera[] mCameras;
+        protected Canvas mCanvas;
 
         void Awake()
         {
             this.mCameras = GetComponentsInChildren<CinemachineCamera>(true);
+            this.mCanvas = GetComponentInChildren<Canvas>(true);
         }
 
         public override void OnNetworkSpawn()
@@ -30,6 +32,7 @@ namespace CAVAS.UB_MR.DT
             else
             {
                 EnableCameras(false);
+                EnableUI(false);
             }
         }
 
@@ -102,6 +105,18 @@ namespace CAVAS.UB_MR.DT
             foreach (var cam in this.mCameras)
             {
                 cam.gameObject.SetActive(enable);
+            }
+        }
+
+        void EnableUI(bool enable)
+        {
+            if (this.mCanvas == null)
+            {
+                this.mCanvas = GetComponentInChildren<Canvas>(true);
+            }
+            if (this.mCanvas != null)
+            {
+                this.mCanvas.enabled = enable;
             }
         }
 
