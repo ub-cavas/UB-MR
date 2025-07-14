@@ -20,6 +20,11 @@ namespace CAVAS.UB_MR.UI.Network
             NetworkManager.Singleton.StartClient();
         }
 
+        public void Disconnect()
+        {
+            NetworkManager.Singleton.Shutdown();
+        }
+
         public void SpawnSpectator()
         {
             SpawnSpectatorServerRpc();

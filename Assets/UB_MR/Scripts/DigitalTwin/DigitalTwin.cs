@@ -27,6 +27,7 @@ namespace CAVAS.UB_MR.DT
             if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
             {
                 string name = gameObject.name.Replace("(Clone)", "");
+                name = name.Replace(" Variant", "");
                 this.mNode = ROS2_Bridge.ROS_CORE.CreateNode(name + "_Digital_Twin");
                 this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>("/world_transform", WorldTransformationUpdate);
             }
