@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using CAVAS.UB_MR.UI;
 
 
 namespace CAVAS.UB_MR.UI.Network
@@ -10,6 +11,18 @@ namespace CAVAS.UB_MR.UI.Network
         [SerializeField] GameObject mPredictiveDigitalTwinPrefab;
         [SerializeField] GameObject mGPSDigitalTwinPrefab;
 
+        [SerializeField] bool mAutoDisable = true;
+        Canvas mCanvas;
+
+        void Awake()
+        {
+            this.mCanvas = GetComponent<Canvas>();
+            MainMenu.OnOpenNetworkMenu += EnableMenu;
+            MainMenu.OnOpenMainMenu += DisableMenu;
+            if (mAutoDisable)
+                this.mCanvas.enabled = false;
+        }
+
         public void StartHost()
         {
             NetworkManager.Singleton.StartHost();
@@ -18,6 +31,16 @@ namespace CAVAS.UB_MR.UI.Network
         public void StartClient()
         {
             NetworkManager.Singleton.StartClient();
+        }
+
+        void DisableMenu()
+        {
+            this.mCanvas.enabled = false;
+        }
+
+        void EnableMenu()
+        {
+            this.mCanvas.enabled = true;
         }
 
         public void Disconnect()

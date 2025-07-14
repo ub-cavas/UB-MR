@@ -1,32 +1,41 @@
 using UnityEngine;
-using CAVAS.UB_MR.UI.Network;
+using UnityEngine.UI;
+using System;
 
 namespace CAVAS.UB_MR.UI
 {
     public class MainMenu : MonoBehaviour
     {
-        NetworkUI mNetworkUI;
+        public static event Action OnOpenMainMenu;
+        public static event Action OnOpenNetworkMenu;
+        public static event Action OnOpenStatsMenu;
 
-        void Awake()
-        {
-            this.mNetworkUI = GetComponentInChildren<NetworkUI>(true);
-        }
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        [SerializeField] GameObject mPanel;
 
         public void ExitApplication()
         {
             Application.Quit();
+        }
+
+        public void OpenNetworkMenu()
+        {
+            OnOpenNetworkMenu?.Invoke();
+            TogglePanel();
+        }
+
+        public void OpenStatsMenu()
+        {
+            OnOpenStatsMenu?.Invoke();
+        }
+
+        public void TogglePanel()
+        {
+            this.mPanel.SetActive(!this.mPanel.activeInHierarchy);
+            if (this.mPanel.activeInHierarchy)
+            {
+                OnOpenMainMenu?.Invoke();
+            }
+
         }
     }
 
