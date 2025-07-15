@@ -401,7 +401,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 80
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -427,8 +427,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 285627478}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.28566685, y: 0, z: 0, w: 0.958329}
-  m_LocalPosition: {x: 0, y: 5, z: -5}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -668,6 +668,10 @@ PrefabInstance:
       propertyPath: mAutoDisable
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1769185154820949846, guid: 54047bdb85a3eef819611002d844fbba, type: 3}
+      propertyPath: mSpectatorPrefab
+      value: 
+      objectReference: {fileID: 3895189477123148705, guid: adf234d794a63b8d4a452dfbcd0494e1, type: 3}
     - target: {fileID: 3770550431530086742, guid: 54047bdb85a3eef819611002d844fbba, type: 3}
       propertyPath: m_Name
       value: --NetworkMenu--
@@ -1029,6 +1033,7 @@ GameObject:
   - component: {fileID: 1905470394}
   - component: {fileID: 1905470393}
   - component: {fileID: 1905470392}
+  - component: {fileID: 1905470395}
   m_Layer: 0
   m_Name: --NetworkManager--
   m_TagString: Untagged
@@ -1123,6 +1128,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1905470395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905470391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 870d755fdb3ccd62abd0e872a64d90fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2144222636
 GameObject:
   m_ObjectHideFlags: 0
