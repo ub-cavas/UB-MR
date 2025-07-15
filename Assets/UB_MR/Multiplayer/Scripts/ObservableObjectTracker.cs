@@ -2,7 +2,6 @@ using Unity.Netcode;
 using System.Collections.Generic;
 using UnityEngine;
 using CAVAS.UB_MR.DT;
-using System.Collections;
 
 namespace CAVAS.UB_MR
 {
@@ -11,7 +10,6 @@ namespace CAVAS.UB_MR
         private List<NetworkObject> observableNetworkObjects = new List<NetworkObject>();
         private HashSet<ulong> trackedObjectIds = new HashSet<ulong>();
         private NetworkManager networkManager;
-
         public List<NetworkObject> ObservableNetworkObjects => observableNetworkObjects;
 
         void Start()
@@ -30,6 +28,16 @@ namespace CAVAS.UB_MR
                 }
 
             }
+        }
+
+        void OnEnable()
+        {
+            DigitalTwin.OnSpawn += ForceUpdate;
+        }
+
+        void OnDisable()
+        {
+            DigitalTwin.OnSpawn -= ForceUpdate;
         }
 
         void OnDestroy()
@@ -123,15 +131,9 @@ namespace CAVAS.UB_MR
             return clientObjects;
         }
 
-        public void ForceUpdate()
+        void ForceUpdate()
         {
             CheckForNewOrRemovedObjects();
-            Debug.Log("Updating Observable List");
-            foreach (var h in ObservableNetworkObjects)
-            {
-                Debug.Log(h.gameObject.name);
-            }
-
         }
     }
 }

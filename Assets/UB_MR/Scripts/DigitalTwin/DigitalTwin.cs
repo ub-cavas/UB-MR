@@ -2,6 +2,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Cinemachine;
+using System;
 
 namespace CAVAS.UB_MR.DT
 {
@@ -11,6 +12,7 @@ namespace CAVAS.UB_MR.DT
 
     public class DigitalTwin : NetworkBehaviour, Observable
     {
+        public static event Action OnSpawn;
         ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
         ROS2Node mNode;
         protected Vector3 mWorldPosition = Vector3.zero;
@@ -29,6 +31,7 @@ namespace CAVAS.UB_MR.DT
 
         public override void OnNetworkSpawn()
         {
+            OnSpawn?.Invoke();
             if (IsOwner)
             {
                 ConnectToROS();
