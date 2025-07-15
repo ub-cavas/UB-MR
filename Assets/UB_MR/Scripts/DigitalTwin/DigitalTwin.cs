@@ -5,7 +5,11 @@ using Unity.Cinemachine;
 
 namespace CAVAS.UB_MR.DT
 {
-    public class DigitalTwin : NetworkBehaviour
+    public interface Observable
+    {
+    }
+
+    public class DigitalTwin : NetworkBehaviour, Observable
     {
         ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
         ROS2Node mNode;
@@ -15,12 +19,12 @@ namespace CAVAS.UB_MR.DT
         protected Quaternion mWorldRotation = Quaternion.identity;
 
         protected CinemachineCamera[] mCameras;
-        protected Canvas mCanvas;
+        protected Canvas mHUD;
 
         void Awake()
         {
             this.mCameras = GetComponentsInChildren<CinemachineCamera>(true);
-            this.mCanvas = GetComponentInChildren<Canvas>(true);
+            this.mHUD = GetComponentInChildren<Canvas>(true);
         }
 
         public override void OnNetworkSpawn()
@@ -110,13 +114,13 @@ namespace CAVAS.UB_MR.DT
 
         void EnableUI(bool enable)
         {
-            if (this.mCanvas == null)
+            if (this.mHUD == null)
             {
-                this.mCanvas = GetComponentInChildren<Canvas>(true);
+                this.mHUD = GetComponentInChildren<Canvas>(true);
             }
-            if (this.mCanvas != null)
+            if (this.mHUD != null)
             {
-                this.mCanvas.enabled = enable;
+                this.mHUD.enabled = enable;
             }
         }
 
