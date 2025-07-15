@@ -43,13 +43,29 @@ namespace CAVAS.UB_MR.DT
             }
         }
 
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+            
+            if (this.mNode != null && this.mWorldTransformationSubscriber != null)
+            {
+                Debug.Log("Destroying Node: " + this.mNode.name);
+                this.mNode.RemoveSubscription<nav_msgs.msg.Odometry>(this.mWorldTransformationSubscriber);
+                this.mWorldTransformationSubscriber = null;
+                ROS2_Bridge.ROS_CORE.RemoveNode(this.mNode);
+                this.mNode = null;
+            }
+        }
+
         void ConnectToROS()
         {
             if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
             {
                 string name = gameObject.name.Replace("(Clone)", "");
                 name = name.Replace(" Variant", "");
-                this.mNode = ROS2_Bridge.ROS_CORE.CreateNode(name + "_Digital_Twin");
+                // This is sort of cheating but ROS2_Bridge is not immediately deleting nodes so this avoids a collision
+                int randomSuffix = UnityEngine.Random.Range(0, 1000);
+                this.mNode = ROS2_Bridge.ROS_CORE.CreateNode(name + "_Digital_Twin_" + randomSuffix.ToString());
                 this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>("/world_transform", WorldTransformationUpdate);
             }
         }

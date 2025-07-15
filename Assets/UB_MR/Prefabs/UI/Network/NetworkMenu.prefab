@@ -1090,7 +1090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3288976400
+  GlobalObjectIdHash: 768626426
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1120,6 +1120,8 @@ MonoBehaviour:
   mPredictiveDigitalTwinPrefab: {fileID: 8485769508998957606, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
   mGPSDigitalTwinPrefab: {fileID: 602795477179330169, guid: cc6b8bf094ce6184b9b66c95db0fcbf1, type: 3}
   mAutoDisable: 1
+  mAgentSelectionPanel: {fileID: 4233521776417598638}
+  mConnectionPanel: {fileID: 8742837772093263440}
 --- !u!1 &4012370380095971102
 GameObject:
   m_ObjectHideFlags: 0
