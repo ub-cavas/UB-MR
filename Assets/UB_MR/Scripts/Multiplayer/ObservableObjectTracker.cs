@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CAVAS.UB_MR.DT;
 
-namespace CAVAS.UB_MR
+namespace CAVAS.UB_MR.Multiplayer
 {
     public class ObservableObjectTracker : MonoBehaviour
     {
@@ -133,7 +133,6 @@ namespace CAVAS.UB_MR
 
         void ForceUpdate()
         {
-            Debug.Log("Force updating observable objects.");
             CheckForNewOrRemovedObjects();
         }
     }
