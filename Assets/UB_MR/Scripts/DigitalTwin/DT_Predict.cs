@@ -4,8 +4,9 @@ using UnityEngine;
 namespace CAVAS.UB_MR.DT
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class DT_Predict : DigitalTwin
+    public class DT_Predict : AutonomousVehicle
     {
+        [Header("Prediction Settings")]
         [SerializeField] float mPositionErrorThreshold = 5f; // Position in the world to predict
         [SerializeField] float mLinearVelocity_P_Gain = 1; // Proportional gain for position error correction
         [SerializeField] float mAngularVelocity_P_Gain = 1; // Proportional gain for rotation error correction

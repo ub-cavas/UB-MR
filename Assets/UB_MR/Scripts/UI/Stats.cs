@@ -6,7 +6,7 @@ namespace CAVAS.UB_MR.UI
 {
     public class Stats : MonoBehaviour
     {
-        [SerializeField] DigitalTwin mDigitalTwin;
+        [SerializeField] AutonomousVehicle mDigitalTwin;
         [Space]
         [SerializeField] TextMeshProUGUI mLinearVelocityText;
         [SerializeField] TextMeshProUGUI mAngularVelocityText;
