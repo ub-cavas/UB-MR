@@ -3,7 +3,7 @@ using UnityEngine;
 namespace CAVAS.UB_MR.DT
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class DT_Reflect : AutonomousVehicle
+    public class AV_Reflect : AutonomousVehicle
     {
 
         void Update()

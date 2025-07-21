@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 using Unity.Cinemachine;
 
 namespace CAVAS.UB_MR.DT
@@ -13,6 +14,11 @@ namespace CAVAS.UB_MR.DT
         {
             tracker = FindFirstObjectByType<ObservableObjectTracker>();
             Spectate(this);
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
         }
 
 

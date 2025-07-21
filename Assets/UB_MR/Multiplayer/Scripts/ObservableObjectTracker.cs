@@ -133,6 +133,7 @@ namespace CAVAS.UB_MR
 
         void ForceUpdate()
         {
+            Debug.Log("Force updating observable objects.");
             CheckForNewOrRemovedObjects();
         }
     }

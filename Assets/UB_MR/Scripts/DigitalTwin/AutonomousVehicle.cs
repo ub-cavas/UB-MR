@@ -43,7 +43,7 @@ namespace CAVAS.UB_MR.DT
 
         public override void OnNetworkSpawn()
         {
-
+            base.OnNetworkSpawn();
             if (IsOwner)
             {
                 ConnectToROS();

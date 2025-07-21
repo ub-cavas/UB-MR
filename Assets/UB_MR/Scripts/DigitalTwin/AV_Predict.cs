@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CAVAS.UB_MR.DT
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class DT_Predict : AutonomousVehicle
+    public class AV_Predict : AutonomousVehicle
     {
         [Header("Prediction Settings")]
         [SerializeField] float mPositionErrorThreshold = 5f; // Position in the world to predict
@@ -17,17 +17,11 @@ namespace CAVAS.UB_MR.DT
             this.mRigidbody = GetComponent<Rigidbody>();
         }
 
-        override public void OnNetworkSpawn()
-        {
-            base.OnNetworkSpawn();
-        }
-
         void FixedUpdate()
         {
             if (IsOwner)
             {
                 SmoothUpdate();
-
             }
         }
 

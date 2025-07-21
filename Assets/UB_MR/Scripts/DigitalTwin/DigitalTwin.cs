@@ -16,14 +16,9 @@ namespace CAVAS.UB_MR.DT
         protected CinemachineCamera[] mCameras;
         protected Canvas mHUD;
 
-        void Awake()
-        {
-            this.mCameras = GetComponentsInChildren<CinemachineCamera>(true);
-            this.mHUD = GetComponentInChildren<Canvas>(true);
-        }
-
         public override void OnNetworkSpawn()
         {
+            base.OnNetworkSpawn();
             OnSpawn?.Invoke();
             if (!IsOwner)
             {
@@ -57,8 +52,6 @@ namespace CAVAS.UB_MR.DT
                 this.mHUD.enabled = enable;
             }
         }
-
-
 
     }
 }
