@@ -7,7 +7,19 @@ namespace Assets.UB_MR.Scripts.SimpleTraffic
     public class TrafficAgent : DigitalTwin
     {
 
-        public IEnumerator WaypointFollow(Transform[] transforms, float velocity)
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            if (IsOwner)
+            {
+                TrafficManager trafficManager = FindFirstObjectByType<TrafficManager>();
+                Transform[] waypoints = trafficManager.GetWaypoints();
+                float velocity = trafficManager.GetVelocity();
+                StartCoroutine(WaypointFollow(waypoints, velocity));
+            }
+        }
+
+        IEnumerator WaypointFollow(Transform[] transforms, float velocity)
         {
             Transform startTransform = transform;
             float currentProgress = 0f;
@@ -22,7 +34,6 @@ namespace Assets.UB_MR.Scripts.SimpleTraffic
           
             while (true)
             {
-
                 // Move through each subsequent waypoint
                 for (int i = 1; i < transforms.Length; i++)
                 {

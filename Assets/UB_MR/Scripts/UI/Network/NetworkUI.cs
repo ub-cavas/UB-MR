@@ -1,15 +1,18 @@
 using UnityEngine;
 using Unity.Netcode;
 using CAVAS.UB_MR.UI;
+using Assets.UB_MR.Scripts.SimpleTraffic;
 
 
 namespace CAVAS.UB_MR.UI.Network
 {
     public class NetworkUI : NetworkBehaviour
     {
+        [Header("Prefabs")]
         [SerializeField] GameObject mSpectatorPrefab;
         [SerializeField] GameObject mPredictiveDigitalTwinPrefab;
         [SerializeField] GameObject mGPSDigitalTwinPrefab;
+        [SerializeField] GameObject mSimpleTrafficManagerPrefab;
         [Space]
         [SerializeField] bool mAutoDisable = true;
         [SerializeField] RectTransform mRoleSelectionPanel;
@@ -20,7 +23,7 @@ namespace CAVAS.UB_MR.UI.Network
         void Awake()
         {
             this.mCanvas = GetComponent<Canvas>();
-            
+
             if (mAutoDisable)
                 this.mCanvas.enabled = false;
         }
@@ -29,14 +32,14 @@ namespace CAVAS.UB_MR.UI.Network
         {
             MainMenu.OnOpenNetworkMenu += EnableMenu;
             MainMenu.OnOpenMainMenu += DisableMenu;
-            
+
         }
 
         void OnDisable()
         {
             MainMenu.OnOpenNetworkMenu -= EnableMenu;
             MainMenu.OnOpenMainMenu -= DisableMenu;
-            
+
         }
 
         public void StartHost()
@@ -104,36 +107,57 @@ namespace CAVAS.UB_MR.UI.Network
                 SpawnGPSDigitalTwinServerRpc();
             }
         }
-        
+
+        public void SpawnSimpleTrafficManager()
+        {
+            SpawnSimpleTrafficManagerServerRpc();
+        }
 
         [ServerRpc(RequireOwnership = false)]
         void SpawnSpectatorServerRpc(ServerRpcParams rpcParams = default)
         {
             ulong callerClientId = rpcParams.Receive.SenderClientId;
-            NetworkSpawn(mSpectatorPrefab, callerClientId);
+            NetworkSpawnWithClientOwnership(mSpectatorPrefab, callerClientId);
         }
 
         [ServerRpc(RequireOwnership = false)]
         public void SpawnPredictiveDigitalTwinServerRpc(ServerRpcParams rpcParams = default)
         {
             ulong callerClientId = rpcParams.Receive.SenderClientId;
-            NetworkSpawn(mPredictiveDigitalTwinPrefab, callerClientId);
+            NetworkSpawnWithClientOwnership(mPredictiveDigitalTwinPrefab, callerClientId);
         }
 
         [ServerRpc(RequireOwnership = false)]
         public void SpawnGPSDigitalTwinServerRpc(ServerRpcParams rpcParams = default)
         {
             ulong callerClientId = rpcParams.Receive.SenderClientId;
-            NetworkSpawn(mGPSDigitalTwinPrefab, callerClientId);
+            NetworkSpawnWithClientOwnership(mGPSDigitalTwinPrefab, callerClientId);
         }
 
-        
-        void NetworkSpawn(GameObject prefab, ulong client_id)
+        // TODO: Make the traffic simulator owned by the client that spawned it
+        [ServerRpc(RequireOwnership = false)]
+        public void SpawnSimpleTrafficManagerServerRpc(ServerRpcParams rpcParams = default)
+        {
+            NetworkSpawnWithServerOwnership(this.mSimpleTrafficManagerPrefab);
+        }
+
+
+        NetworkObject NetworkSpawnWithClientOwnership(GameObject prefab, ulong client_id)
         {
             //Debug.Log("Spawning " + prefab.name + " for client " + client_id);
             var instance = Instantiate(prefab);
             var instanceNetworkObject = instance.GetComponent<NetworkObject>();
             instanceNetworkObject.SpawnWithOwnership(client_id);
+            return instanceNetworkObject;
+        }
+        
+        NetworkObject NetworkSpawnWithServerOwnership(GameObject prefab)
+        {
+            //Debug.Log("Spawning " + prefab.name + " for server");
+            var instance = Instantiate(prefab);
+            var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+            instanceNetworkObject.Spawn();
+            return instanceNetworkObject;
         }
     }
 }
