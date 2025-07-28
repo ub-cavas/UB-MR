@@ -111,6 +111,7 @@ namespace CAVAS.UB_MR.UI.Network
         public void SpawnSimpleTrafficManager()
         {
             SpawnSimpleTrafficManagerServerRpc();
+            SpawnSpectator();
         }
 
         [ServerRpc(RequireOwnership = false)]
