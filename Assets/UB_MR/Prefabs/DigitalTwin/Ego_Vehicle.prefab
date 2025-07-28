@@ -1,5 +1,77 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2414147012261344672
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2759975764063797757}
+  - component: {fileID: 4196765738956378022}
+  - component: {fileID: 701716828005956959}
+  m_Layer: 5
+  m_Name: RawImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2759975764063797757
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2414147012261344672}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2169212408663401872}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 640, y: 480}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &4196765738956378022
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2414147012261344672}
+  m_CullTransparentMesh: 1
+--- !u!114 &701716828005956959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2414147012261344672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 2800000, guid: 7c8c5efafd80c0b4fa8e99f1dcaa7df0, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1 &4055490579143946091
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,6 +486,15 @@ MonoBehaviour:
   enableVirtualObjectDetection: 1
   virtualObjectDetectionRadius: 30
   virtualObjectsTopicName: /virtual_obstacles
+  enableImageCapture: 1
+  targetCamera: {fileID: 0}
+  imageWidth: 640
+  imageHeight: 480
+  publishRate: 1
+  frameId: camera_link
+  topicName: /virtual_camera/image_raw/compressed
+  debugImageDisplay: {fileID: 701716828005956959}
+  showDebugImage: 1
   mPositionErrorThreshold: 10
   mLinearVelocity_P_Gain: 1
   mAngularVelocity_P_Gain: 1
@@ -598,7 +679,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2158124374701177491, guid: 552485070c61a4158bfe2fd98a4b0c24, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 1677611216727178270, guid: 552485070c61a4158bfe2fd98a4b0c24, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2759975764063797757}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 552485070c61a4158bfe2fd98a4b0c24, type: 3}
 --- !u!224 &2169212408663401872 stripped

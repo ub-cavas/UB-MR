@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using vision_msgs.msg;
 using sensor_msgs.msg;
+using UnityEngine.UI;
 
 namespace CAVAS.UB_MR.DT
 {
@@ -23,6 +24,10 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] float publishRate = 1.0f; // 1 FPS
         [SerializeField] string frameId = "camera_link";
         [SerializeField] string topicName = "/virtual_camera/image_raw/compressed";
+
+        [Header("Debug Visualization")]
+        public RawImage debugImageDisplay; // Assign a UI RawImage in inspector
+        public bool showDebugImage = true;
 
         ROS2Node mNode;
         VirtualObjectDetector mVirtualObjectDetector;
@@ -210,24 +215,29 @@ namespace CAVAS.UB_MR.DT
         {
             if (imagePublisher == null || targetCamera == null)
                 return;
-
-            // Capture camera image
+                
+            // Capture camera image (your existing code)
             RenderTexture currentRT = RenderTexture.active;
             targetCamera.targetTexture = renderTexture;
             targetCamera.Render();
-
+            
             RenderTexture.active = renderTexture;
             texture2D.ReadPixels(new Rect(0, 0, imageWidth, imageHeight), 0, 0);
             texture2D.Apply();
-
+            
             // Restore render texture
             targetCamera.targetTexture = null;
             RenderTexture.active = currentRT;
-
-            // Convert to JPEG bytes for compression
-            byte[] imageBytes = texture2D.EncodeToJPG(75); // 75% quality
-
-            // Create and populate ROS2 message
+            
+            // Show debug image in Unity UI
+            if (showDebugImage && debugImageDisplay != null)
+            {
+                debugImageDisplay.texture = texture2D;
+            }
+            
+            // Convert to JPEG and publish (your existing code)
+            byte[] imageBytes = texture2D.EncodeToJPG(75);
+            
             var compressedImage = new CompressedImage();
             builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
             time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad; // Use Time.timeSinceLevelLoad for simulation time
@@ -235,9 +245,11 @@ namespace CAVAS.UB_MR.DT
             compressedImage.Header.Frame_id = frameId;
             compressedImage.Format = "jpeg";
             compressedImage.Data = imageBytes;
-
-            // Publish the message
+            
             imagePublisher.Publish(compressedImage);
+            
+            // Debug: Log image data info
+            Debug.Log($"Published image: {imageBytes.Length} bytes, {imageWidth}x{imageHeight}");
         }
     
     
