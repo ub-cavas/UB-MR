@@ -1,7 +1,9 @@
 using UnityEngine;
 using ROS2;
+using System.Collections;
 using System.Collections.Generic;
 using vision_msgs.msg;
+using sensor_msgs.msg;
 
 namespace CAVAS.UB_MR.DT
 {
@@ -13,11 +15,22 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] float virtualObjectDetectionRadius = 30f; // Radius in which virtual objects are detected
         [SerializeField] string virtualObjectsTopicName = "/virtual_obstacles"; // Topic name for publishing virtual objects
         [Space]
+        [Header("Image Capture Settings")]
+        [SerializeField] bool enableImageCapture = true; // Enable image capture
+        [SerializeField] Camera targetCamera; // Camera to capture images from
+        [SerializeField] int imageWidth = 640;
+        [SerializeField] int imageHeight = 480;
+        [SerializeField] float publishRate = 1.0f; // 1 FPS
+        [SerializeField] string frameId = "camera_link";
+        [SerializeField] string topicName = "/virtual_camera/image_raw/compressed";
 
         ROS2Node mNode;
         VirtualObjectDetector mVirtualObjectDetector;
         ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
         IPublisher<BoundingBox3DArray> mObstacleBoundingBoxPublisher;
+        IPublisher<CompressedImage> imagePublisher;
+        RenderTexture renderTexture;
+        Texture2D texture2D;
 
         protected Vector3 mWorldPosition = Vector3.zero;
         protected Vector3 mAngularVelocity = Vector3.zero;
@@ -36,8 +49,23 @@ namespace CAVAS.UB_MR.DT
                 // World Transformation Subscriber
                 this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>("/world_transform", WorldTransformationUpdate);
                 // Obstacle Bounding Box Publisher
-                this.mVirtualObjectDetector = new VirtualObjectDetector(this.transform);
-                this.mObstacleBoundingBoxPublisher = this.mNode.CreatePublisher<BoundingBox3DArray>(virtualObjectsTopicName);
+                if (enableVirtualObjectDetection)
+                {
+                    this.mVirtualObjectDetector = new VirtualObjectDetector(this.transform);
+                    this.mObstacleBoundingBoxPublisher = this.mNode.CreatePublisher<BoundingBox3DArray>(virtualObjectsTopicName);
+                }
+
+                // Image Publisher
+                if (enableImageCapture)
+                {
+                    targetCamera = FindFirstObjectByType<Camera>();
+                    imagePublisher = this.mNode.CreatePublisher<CompressedImage>(topicName);
+                    // Create render texture and texture2D for image capture
+                    renderTexture = new RenderTexture(imageWidth, imageHeight, 24);
+                    texture2D = new Texture2D(imageWidth, imageHeight, TextureFormat.RGB24, false);
+                    StartCoroutine(PublishImagesCoroutine());
+                }
+
             }
         }
 
@@ -65,6 +93,15 @@ namespace CAVAS.UB_MR.DT
                 }
                 ROS2_Bridge.ROS_CORE.RemoveNode(this.mNode);
                 this.mNode = null;
+            }
+
+            if (this.mNode != null)
+            {
+                // Clean up resources
+                if (renderTexture != null)
+                    renderTexture.Release();
+                if (texture2D != null)
+                    Destroy(texture2D);
             }
         }
 
@@ -118,7 +155,7 @@ namespace CAVAS.UB_MR.DT
             msg.WriteNativeMessage();
             this.mObstacleBoundingBoxPublisher.Publish(msg);
 
-            Debug.Log("Published " + virtualObjects.Count + " virtual objects to topic: " + virtualObjectsTopicName);
+            //Debug.Log("Published " + virtualObjects.Count + " virtual objects to topic: " + virtualObjectsTopicName);
         }
 
 
@@ -167,6 +204,50 @@ namespace CAVAS.UB_MR.DT
                 (float)msg.Twist.Twist.Linear.Z,
                 (float)msg.Twist.Twist.Linear.X
             );
+        }
+
+        void CaptureAndPublishImage()
+        {
+            if (imagePublisher == null || targetCamera == null)
+                return;
+
+            // Capture camera image
+            RenderTexture currentRT = RenderTexture.active;
+            targetCamera.targetTexture = renderTexture;
+            targetCamera.Render();
+
+            RenderTexture.active = renderTexture;
+            texture2D.ReadPixels(new Rect(0, 0, imageWidth, imageHeight), 0, 0);
+            texture2D.Apply();
+
+            // Restore render texture
+            targetCamera.targetTexture = null;
+            RenderTexture.active = currentRT;
+
+            // Convert to JPEG bytes for compression
+            byte[] imageBytes = texture2D.EncodeToJPG(75); // 75% quality
+
+            // Create and populate ROS2 message
+            var compressedImage = new CompressedImage();
+            builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
+            time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad; // Use Time.timeSinceLevelLoad for simulation time
+            compressedImage.Header.Stamp = time;
+            compressedImage.Header.Frame_id = frameId;
+            compressedImage.Format = "jpeg";
+            compressedImage.Data = imageBytes;
+
+            // Publish the message
+            imagePublisher.Publish(compressedImage);
+        }
+    
+    
+        IEnumerator PublishImagesCoroutine()
+        {
+            while (true)
+            {
+                CaptureAndPublishImage();
+                yield return new WaitForSeconds(1.0f / publishRate);
+            }
         }
     }
 
