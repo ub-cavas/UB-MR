@@ -558,9 +558,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6296057214859087874, guid: ed65a2cbe0d499245ae77f298a25af81, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ed65a2cbe0d499245ae77f298a25af81, type: 3}
       propertyPath: m_Name
       value: centerroad
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ed65a2cbe0d499245ae77f298a25af81, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1320922580489055607, guid: ed65a2cbe0d499245ae77f298a25af81, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5717171705178728097, guid: ed65a2cbe0d499245ae77f298a25af81, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -753,7 +769,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -1149,7 +1165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2144222637}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: OSM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
