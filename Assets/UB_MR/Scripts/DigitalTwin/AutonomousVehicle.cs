@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using vision_msgs.msg;
 using sensor_msgs.msg;
-using UnityEngine.UI;
 
 namespace CAVAS.UB_MR.DT
 {
@@ -25,9 +24,6 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] string frameId = "camera_link";
         [SerializeField] string topicName = "/virtual_camera/image_raw/compressed";
 
-        [Header("Debug Visualization")]
-        public RawImage debugImageDisplay; // Assign a UI RawImage in inspector
-        public bool showDebugImage = true;
 
         ROS2Node mNode;
         VirtualObjectDetector mVirtualObjectDetector;
@@ -68,9 +64,8 @@ namespace CAVAS.UB_MR.DT
                     // Create render texture and texture2D for image capture
                     renderTexture = new RenderTexture(imageWidth, imageHeight, 24);
                     texture2D = new Texture2D(imageWidth, imageHeight, TextureFormat.RGB24, false);
-                    StartCoroutine(PublishImagesCoroutine());
+                    StartCoroutine(PublishActiveCameraImage());
                 }
-
             }
         }
 
@@ -126,7 +121,7 @@ namespace CAVAS.UB_MR.DT
             msg.Header = new std_msgs.msg.Header();
             msg.Header.Frame_id = "world";
             builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
-            time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad; // Use Time.timeSinceLevelLoad for simulation time
+            time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
             msg.Header.Stamp = time;
 
             List<VirtualObject> virtualObjects = this.mVirtualObjectDetector.GetNearbyObstacles(virtualObjectDetectionRadius);
@@ -162,7 +157,6 @@ namespace CAVAS.UB_MR.DT
 
             //Debug.Log("Published " + virtualObjects.Count + " virtual objects to topic: " + virtualObjectsTopicName);
         }
-
 
         public virtual Vector3 GetLinearVelocity()
         {
@@ -220,7 +214,6 @@ namespace CAVAS.UB_MR.DT
             RenderTexture currentRT = RenderTexture.active;
             targetCamera.targetTexture = renderTexture;
             targetCamera.Render();
-            
             RenderTexture.active = renderTexture;
             texture2D.ReadPixels(new Rect(0, 0, imageWidth, imageHeight), 0, 0);
             texture2D.Apply();
@@ -229,15 +222,8 @@ namespace CAVAS.UB_MR.DT
             targetCamera.targetTexture = null;
             RenderTexture.active = currentRT;
             
-            // Show debug image in Unity UI
-            if (showDebugImage && debugImageDisplay != null)
-            {
-                debugImageDisplay.texture = texture2D;
-            }
-            
-            // Convert to JPEG and publish (your existing code)
+            // Convert to JPEG and publish 
             byte[] imageBytes = texture2D.EncodeToJPG(75);
-            
             var compressedImage = new CompressedImage();
             builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
             time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad; // Use Time.timeSinceLevelLoad for simulation time
@@ -245,15 +231,10 @@ namespace CAVAS.UB_MR.DT
             compressedImage.Header.Frame_id = frameId;
             compressedImage.Format = "jpeg";
             compressedImage.Data = imageBytes;
-            
             imagePublisher.Publish(compressedImage);
-            
-            // Debug: Log image data info
-            Debug.Log($"Published image: {imageBytes.Length} bytes, {imageWidth}x{imageHeight}");
         }
     
-    
-        IEnumerator PublishImagesCoroutine()
+        IEnumerator PublishActiveCameraImage()
         {
             while (true)
             {
