@@ -44,12 +44,6 @@ public class MapData : MonoBehaviour
         this.mMapOriginPublisher.Publish(msg);
     }
 
-    // TODO: Bounding Box publisher of object within 30m of the ego-vehicle
-    void PublishBoundingBoxes()
-    {
-        
-    }
-
     // TODO: Publish disparity between expected location (GNSS) and predicted location (Rigidbody Physics)
     // this could be used later in the pipeline to correct the error via a Kalman Filter or similar
     void PublishError()
