@@ -259,6 +259,29 @@ namespace CAVAS.UB_MR.DT
             }
         }
 
+        public void SetLayerCulling(Camera camera, string layerName, bool shouldRender)
+        {
+            int layerIndex = LayerMask.NameToLayer(layerName);
+            if (layerIndex == -1)
+            {
+                Debug.LogWarning($"Layer '{layerName}' does not exist.");
+                return;
+            }
+            
+            int layerMask = 1 << layerIndex;
+            if (shouldRender)
+            {
+                camera.cullingMask |= layerMask;
+                camera.clearFlags = CameraClearFlags.Skybox;
+            }
+            else
+            {
+                camera.cullingMask &= ~layerMask;
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                camera.backgroundColor = Color.black;
+            }
+        }
+
         IEnumerator PublishActiveCameraImage()
         {
             while (true)

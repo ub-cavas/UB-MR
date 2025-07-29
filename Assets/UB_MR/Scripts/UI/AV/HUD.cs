@@ -44,6 +44,11 @@ namespace CAVAS.UB_MR.UI.AV
             }
         }
 
+        public void ToggleEnvironmentVisibility(bool inVisible)
+        {
+            this.mAutonomousVehicle.SetLayerCulling(Camera.main, "Environment", inVisible);
+        }
+
        
     }
 }
