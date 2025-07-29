@@ -27,7 +27,7 @@ namespace CAVAS.UB_MR.DT
             }
         }
 
-        void EnableCameras(bool enable)
+        protected void EnableCameras(bool enable)
         {
             if (this.mCameras == null || this.mCameras.Length == 0)
             {

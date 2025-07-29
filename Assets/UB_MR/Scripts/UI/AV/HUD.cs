@@ -6,13 +6,14 @@ namespace CAVAS.UB_MR.UI.AV
 {
     public class HUD : MonoBehaviour
     {
+        AutonomousVehicle mAutonomousVehicle;
         Stats[] mStatPanels;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+            this.mAutonomousVehicle = GetComponentInParent<AutonomousVehicle>();
             this.mStatPanels = this.GetComponentsInChildren<Stats>(true);
-          
         }
 
         void ToggleHUD()
@@ -24,6 +25,22 @@ namespace CAVAS.UB_MR.UI.AV
                 {
                     statPanel.gameObject.SetActive(!statPanel.gameObject.activeSelf);
                 }
+            }
+        }
+
+        public void DashCam()
+        {
+            if (this.mAutonomousVehicle != null)
+            {
+                this.mAutonomousVehicle.EnableDashCam(true);
+            }
+        }
+
+        public void FollowCam()
+        {
+            if (this.mAutonomousVehicle != null)
+            {
+                this.mAutonomousVehicle.EnableFollowCam(true);
             }
         }
 

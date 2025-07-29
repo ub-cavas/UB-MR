@@ -486,6 +486,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  dashCam: {fileID: 5594920057050925548}
+  followCam: {fileID: 9039658749950542671}
   enableVirtualObjectDetection: 1
   virtualObjectDetectionRadius: 30
   virtualObjectsTopicName: /virtual_obstacles

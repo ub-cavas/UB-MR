@@ -4,12 +4,17 @@ using System.Collections;
 using System.Collections.Generic;
 using vision_msgs.msg;
 using sensor_msgs.msg;
+using Unity.Cinemachine;
 
 namespace CAVAS.UB_MR.DT
 {
 
     public class AutonomousVehicle : DigitalTwin
     {
+        [Header("Cameras")]
+        [SerializeField] CinemachineCamera dashCam;
+        [SerializeField] CinemachineCamera followCam;
+        [Space]
         [Header("Object Detection Settings")]
         [SerializeField] bool enableVirtualObjectDetection = true; // Enable detection of virtual objects
         [SerializeField] float virtualObjectDetectionRadius = 30f; // Radius in which virtual objects are detected
@@ -233,7 +238,27 @@ namespace CAVAS.UB_MR.DT
             compressedImage.Data = imageBytes;
             imagePublisher.Publish(compressedImage);
         }
-    
+
+        public void EnableDashCam(bool inEnable)
+        {
+            if (IsOwner)
+            {
+                base.EnableCameras(false);
+                if (dashCam != null)
+                    dashCam.gameObject.SetActive(inEnable);
+            }
+        }
+
+        public void EnableFollowCam(bool inEnable)
+        {
+            if (IsOwner)
+            {
+                base.EnableCameras(false);
+                if (followCam != null)
+                    followCam.gameObject.SetActive(inEnable);
+            }
+        }
+
         IEnumerator PublishActiveCameraImage()
         {
             while (true)
