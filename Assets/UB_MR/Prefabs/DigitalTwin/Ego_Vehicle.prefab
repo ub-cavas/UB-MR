@@ -495,7 +495,7 @@ MonoBehaviour:
   targetCamera: {fileID: 0}
   imageWidth: 640
   imageHeight: 480
-  publishRate: 1
+  publishRate: 30
   frameId: camera_link
   topicName: /virtual_camera/image_raw/compressed
   mPositionErrorThreshold: 10

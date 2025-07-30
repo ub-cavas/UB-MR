@@ -172,7 +172,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   mTrafficAgentPrefab: {fileID: 6837698577090086273, guid: add07f9f68cce57ca9124f27e6dc9fe8, type: 3}
-  mNumberOfAgents: 3
+  mNumberOfAgents: 8
   mVelocity: 10
   mWaypoints:
   - {fileID: 2166014672277350893}
