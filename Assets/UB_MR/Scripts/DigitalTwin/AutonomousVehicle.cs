@@ -18,6 +18,7 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] bool enableBoundingBoxCapture = true; // Enable detection of virtual objects
         [SerializeField] bool enableImageCapture = true; // Enable image capture
         [SerializeField] bool enableLidarModifier = true; // Enable Lidar modifier for virtual objects
+        [SerializeField] string worldTransformationTopicName = "/odometry/local"; // Topic name for world transformation updates
         [SerializeField] string boundingBoxTopicName = "/virtual_obstacles"; // Topic name for publishing virtual object bounding boxes
         [SerializeField] string virtualCameraTopicName = "/virtual_camera/image_raw/compressed"; // Topic name for publishing virtual camera images
         [SerializeField] string lidarTopicName = "/lidar/scan"; // Topic name for Lidar scans
@@ -100,7 +101,7 @@ namespace CAVAS.UB_MR.DT
                 int randomSuffix = UnityEngine.Random.Range(0, 1000);
                 this.mNode = ROS2_Bridge.ROS_CORE.CreateNode(name + "_Digital_Twin_" + randomSuffix.ToString());
                 // World Transformation Subscriber
-                this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>("/world_transform", WorldTransformationUpdate);
+                this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>(worldTransformationTopicName, WorldTransformationUpdate);
                 // Obstacle Bounding Box Publisher
                 this.mVirtualBoundingBoxDetector = new VirtualBoundingBoxDetector(boundingBoxTopicName, this.mNode, this.transform);
                 this.mVirtualCameraOverlay = new VirtualCameraOverlay(virtualCameraTopicName, this.mNode, FindFirstObjectByType<Camera>());
