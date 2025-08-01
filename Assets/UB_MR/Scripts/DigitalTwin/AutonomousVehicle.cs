@@ -18,7 +18,7 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] bool enableBoundingBoxCapture = true; // Enable detection of virtual objects
         [SerializeField] bool enableImageCapture = true; // Enable image capture
         [SerializeField] bool enableLidarModifier = true; // Enable Lidar modifier for virtual objects
-        [SerializeField] string worldTransformationTopicName = "/odometry/local"; // Topic name for world transformation updates
+        [SerializeField] string worldTransformationTopicName = "/world_transform"; // Topic name for world transformation updates
         [SerializeField] string boundingBoxTopicName = "/virtual_obstacles"; // Topic name for publishing virtual object bounding boxes
         [SerializeField] string virtualCameraTopicName = "/virtual_camera/image_raw/compressed"; // Topic name for publishing virtual camera images
         [SerializeField] string lidarTopicName = "/lidar/scan"; // Topic name for Lidar scans
