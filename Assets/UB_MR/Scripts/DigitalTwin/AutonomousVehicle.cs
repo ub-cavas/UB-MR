@@ -1,9 +1,6 @@
 using UnityEngine;
 using ROS2;
 using System.Collections;
-using System.Collections.Generic;
-using vision_msgs.msg;
-using sensor_msgs.msg;
 using Unity.Cinemachine;
 using CAVAS.UB_MR.DT.VirtualObjectDetection;
 
@@ -20,8 +17,10 @@ namespace CAVAS.UB_MR.DT
         [Header("Object Detection Settings")]
         [SerializeField] bool enableBoundingBoxCapture = true; // Enable detection of virtual objects
         [SerializeField] bool enableImageCapture = true; // Enable image capture
+        [SerializeField] bool enableLidarModifier = true; // Enable Lidar modifier for virtual objects
         [SerializeField] string boundingBoxTopicName = "/virtual_obstacles"; // Topic name for publishing virtual object bounding boxes
         [SerializeField] string virtualCameraTopicName = "/virtual_camera/image_raw/compressed"; // Topic name for publishing virtual camera images
+        [SerializeField] string lidarTopicName = "/lidar/scan"; // Topic name for Lidar scans
 
         [Space]
 
@@ -42,6 +41,7 @@ namespace CAVAS.UB_MR.DT
         ROS2Node mNode;
         VirtualBoundingBoxDetector mVirtualBoundingBoxDetector;
         VirtualCameraOverlay mVirtualCameraOverlay;
+        LidarModifier mLidarModifier;
         ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
 
         
@@ -59,8 +59,14 @@ namespace CAVAS.UB_MR.DT
             base.OnDestroy();
             if (IsOwner)
             {
-                this.mVirtualCameraOverlay.CleanUp();
-                this.mVirtualBoundingBoxDetector.CleanUp();
+                if (this.mVirtualCameraOverlay != null)
+                    this.mVirtualCameraOverlay.CleanUp();
+
+                if (this.mVirtualBoundingBoxDetector != null)
+                    this.mVirtualBoundingBoxDetector.CleanUp();
+
+                if (this.mLidarModifier != null)
+                    this.mLidarModifier.CleanUp();
             }
             
 
@@ -78,6 +84,12 @@ namespace CAVAS.UB_MR.DT
             }
         }
 
+        void Update()
+        {
+            if (enableLidarModifier && this.mLidarModifier != null)
+                this.mLidarModifier.UpdateMovingObjects();
+        }
+
         void ConnectToROS()
         {
             if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
@@ -90,11 +102,9 @@ namespace CAVAS.UB_MR.DT
                 // World Transformation Subscriber
                 this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>("/world_transform", WorldTransformationUpdate);
                 // Obstacle Bounding Box Publisher
-                if (enableBoundingBoxCapture)
-                {
-                    this.mVirtualBoundingBoxDetector = new VirtualBoundingBoxDetector(boundingBoxTopicName, this.mNode, this.transform);
-                    this.mVirtualCameraOverlay = new VirtualCameraOverlay(virtualCameraTopicName, this.mNode, FindFirstObjectByType<Camera>());
-                }
+                this.mVirtualBoundingBoxDetector = new VirtualBoundingBoxDetector(boundingBoxTopicName, this.mNode, this.transform);
+                this.mVirtualCameraOverlay = new VirtualCameraOverlay(virtualCameraTopicName, this.mNode, FindFirstObjectByType<Camera>());
+                this.mLidarModifier = new LidarModifier(this.transform, this.mNode, lidarTopicName);
             }
         }
 
