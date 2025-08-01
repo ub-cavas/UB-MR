@@ -177,9 +177,9 @@ namespace CAVAS.UB_MR.DT
         void WorldTransformationUpdate(nav_msgs.msg.Odometry msg)
         {
             this.mWorldPosition = new Vector3(
+                -(float)msg.Pose.Pose.Position.Y,
                 (float)msg.Pose.Pose.Position.Z,
-                (float)msg.Pose.Pose.Position.Y,
-                -(float)msg.Pose.Pose.Position.X
+                (float)msg.Pose.Pose.Position.X
             );
 
             // Build a C# quaternion from the raw ROS values
