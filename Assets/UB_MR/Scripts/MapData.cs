@@ -1,54 +1,59 @@
 using UnityEngine;
 using ROS2;
+using robot_localization.srv;
+using System.Threading.Tasks;
 
 public class MapData : MonoBehaviour
 {
-    [SerializeField] string origin_topic = "/map_origin";
     [SerializeField] double origin_latitude = 42.9899575863; 
     [SerializeField] double origin_longitude = -78.7980738989; 
     [SerializeField] double origin_altitude = 0;
 
 
     ROS2Node mNode;
-    
-    IPublisher<sensor_msgs.msg.NavSatFix> mMapOriginPublisher;
 
-    // To Do: Turn this node into a Service
+  
 
     void Start()
     {
         if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
         {
-            this.mNode = ROS2_Bridge.ROS_CORE.CreateNode("Map_Info");
-            this.mMapOriginPublisher = this.mNode.CreatePublisher<sensor_msgs.msg.NavSatFix>(origin_topic);
+            this.mNode = ROS2_Bridge.ROS_CORE.CreateNode("Unity_Map");
+            SetDatum();
         }
     }
 
-    void Update()
+    void SetDatum()
     {
-       
-        if (ROS2_Bridge.ROS_CORE.Ok())
+        IClient<SetDatum_Request, SetDatum_Response> setDatumClient = this.mNode.CreateClient<SetDatum_Request, SetDatum_Response>("/datum");
+        SetDatum_Request request = new SetDatum_Request();
+        request.Geo_pose.Position.Latitude = origin_latitude;
+        request.Geo_pose.Position.Longitude = origin_longitude;
+        request.Geo_pose.Position.Altitude = origin_altitude;
+        request.Geo_pose.Orientation.X = 0;
+        request.Geo_pose.Orientation.Y = 0;
+        request.Geo_pose.Orientation.Z = 0;
+        request.Geo_pose.Orientation.W = 1;
+
+
+        Task<SetDatum_Response> asyncTask = setDatumClient.CallAsync(request);
+        asyncTask.ContinueWith(task =>
         {
-            PublishMapOrigin();
-        }
-       
-    }
-
-
-    void PublishMapOrigin()
-    {
-        sensor_msgs.msg.NavSatFix msg = new sensor_msgs.msg.NavSatFix();
-        msg.Latitude = origin_latitude;
-        msg.Longitude = origin_longitude;
-        msg.Altitude = origin_altitude;
-        this.mMapOriginPublisher.Publish(msg);
-    }
-
-    // TODO: Publish disparity between expected location (GNSS) and predicted location (Rigidbody Physics)
-    // this could be used later in the pipeline to correct the error via a Kalman Filter or similar
-    void PublishError()
-    {
-
+            if (task.IsCompletedSuccessfully)
+            {
+                SetDatum_Response response = task.Result;
+                Debug.Log("Datum set successfully: ");
+            }
+            else
+            {
+                Debug.LogError("Failed to set datum: ");
+            }
+        });
+        /*var response = setDatumClient.Call(request);
+        if (response != null)
+        {
+            Debug.Log("Datum set successfully");
+        }*/
     }
 }
 

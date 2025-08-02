@@ -105,7 +105,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             msg.WriteNativeMessage();
             this.mObstacleBoundingBoxPublisher.Publish(msg);
 
-            //Debug.Log("Published " + virtualObjects.Count + " virtual objects to topic: " + virtualObjectsTopicName);
+            //Debug.Log("Published " + virtualObjects.Count + " virtual objects");
         }
 
         public void CleanUp()
