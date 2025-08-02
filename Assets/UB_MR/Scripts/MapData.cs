@@ -1,6 +1,7 @@
 using UnityEngine;
 using ROS2;
 using robot_localization.srv;
+using System.Threading.Tasks;
 
 public class MapData : MonoBehaviour
 {
@@ -33,11 +34,26 @@ public class MapData : MonoBehaviour
         request.Geo_pose.Orientation.Y = 0;
         request.Geo_pose.Orientation.Z = 0;
         request.Geo_pose.Orientation.W = 1;
-        var response = setDatumClient.Call(request);
+
+
+        Task<SetDatum_Response> asyncTask = setDatumClient.CallAsync(request);
+        asyncTask.ContinueWith(task =>
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                SetDatum_Response response = task.Result;
+                Debug.Log("Datum set successfully: ");
+            }
+            else
+            {
+                Debug.LogError("Failed to set datum: ");
+            }
+        });
+        /*var response = setDatumClient.Call(request);
         if (response != null)
         {
             Debug.Log("Datum set successfully");
-        }
+        }*/
     }
 }
 
