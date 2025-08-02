@@ -4,8 +4,8 @@ using ROS2;
 public class MapData : MonoBehaviour
 {
     [SerializeField] string origin_topic = "/map_origin";
-    [SerializeField] double origin_latitude = 0; 
-    [SerializeField] double origin_longitude = 0; 
+    [SerializeField] double origin_latitude = 42.9899575863; 
+    [SerializeField] double origin_longitude = -78.7980738989; 
     [SerializeField] double origin_altitude = 0;
 
 

@@ -1,0 +1,22 @@
+{
+    "name": "RoadRunnerImporter",
+    "references": [
+        "RoadRunnerRuntime",
+        "Unity.RenderPipelines.HighDefinition.Editor"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.high-definition",
+            "expression": "7.1",
+            "define": "HAS_HDRP"
+        }
+    ]
+}
