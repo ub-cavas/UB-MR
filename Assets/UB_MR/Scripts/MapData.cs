@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 public class MapData : MonoBehaviour
 {
-    [SerializeField] double origin_latitude = 0; 
-    [SerializeField] double origin_longitude = 0; 
+    [SerializeField] double origin_latitude = 42.9899575863; 
+    [SerializeField] double origin_longitude = -78.7980738989; 
     [SerializeField] double origin_altitude = 0;
 
 
     ROS2Node mNode;
 
-    // To Do: Turn this node into a Service
+  
 
     void Start()
     {

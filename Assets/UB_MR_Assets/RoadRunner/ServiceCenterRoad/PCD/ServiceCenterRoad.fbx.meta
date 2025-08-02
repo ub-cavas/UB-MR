@@ -180,7 +180,7 @@ ModelImporter:
       name: steel_bracket_Prop
     second: {fileID: 2100000, guid: 1a453b7d0c71133449e6605d46efbd2a, type: 2}
   materials:
-    materialImportMode: 2
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
