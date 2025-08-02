@@ -371,7 +371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46a75bb3e1a0276408014f7b8fd5cff2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  origin_topic: /map_origin
+  origin_topic: /datum
   origin_latitude: 42.992605
   origin_longitude: -78.795326
   origin_altitude: 152.5

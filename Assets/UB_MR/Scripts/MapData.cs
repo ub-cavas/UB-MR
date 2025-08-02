@@ -1,17 +1,15 @@
 using UnityEngine;
 using ROS2;
+using robot_localization.srv;
 
 public class MapData : MonoBehaviour
 {
-    [SerializeField] string origin_topic = "/map_origin";
     [SerializeField] double origin_latitude = 0; 
     [SerializeField] double origin_longitude = 0; 
     [SerializeField] double origin_altitude = 0;
 
 
     ROS2Node mNode;
-    
-    IPublisher<sensor_msgs.msg.NavSatFix> mMapOriginPublisher;
 
     // To Do: Turn this node into a Service
 
@@ -19,36 +17,27 @@ public class MapData : MonoBehaviour
     {
         if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
         {
-            this.mNode = ROS2_Bridge.ROS_CORE.CreateNode("Map_Info");
-            this.mMapOriginPublisher = this.mNode.CreatePublisher<sensor_msgs.msg.NavSatFix>(origin_topic);
+            this.mNode = ROS2_Bridge.ROS_CORE.CreateNode("Unity_Map");
+            SetDatum();
         }
     }
 
-    void Update()
+    void SetDatum()
     {
-       
-        if (ROS2_Bridge.ROS_CORE.Ok())
+        IClient<SetDatum_Request, SetDatum_Response> setDatumClient = this.mNode.CreateClient<SetDatum_Request, SetDatum_Response>("/datum");
+        SetDatum_Request request = new SetDatum_Request();
+        request.Geo_pose.Position.Latitude = origin_latitude;
+        request.Geo_pose.Position.Longitude = origin_longitude;
+        request.Geo_pose.Position.Altitude = origin_altitude;
+        request.Geo_pose.Orientation.X = 0;
+        request.Geo_pose.Orientation.Y = 0;
+        request.Geo_pose.Orientation.Z = 0;
+        request.Geo_pose.Orientation.W = 1;
+        var response = setDatumClient.Call(request);
+        if (response != null)
         {
-            PublishMapOrigin();
+            Debug.Log("Datum set successfully");
         }
-       
-    }
-
-
-    void PublishMapOrigin()
-    {
-        sensor_msgs.msg.NavSatFix msg = new sensor_msgs.msg.NavSatFix();
-        msg.Latitude = origin_latitude;
-        msg.Longitude = origin_longitude;
-        msg.Altitude = origin_altitude;
-        this.mMapOriginPublisher.Publish(msg);
-    }
-
-    // TODO: Publish disparity between expected location (GNSS) and predicted location (Rigidbody Physics)
-    // this could be used later in the pipeline to correct the error via a Kalman Filter or similar
-    void PublishError()
-    {
-
     }
 }
 
