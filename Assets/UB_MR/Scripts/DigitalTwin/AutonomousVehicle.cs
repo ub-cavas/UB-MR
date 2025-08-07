@@ -170,7 +170,7 @@ namespace CAVAS.UB_MR.DT
             {
                 camera.cullingMask &= ~layerMask;
                 camera.clearFlags = CameraClearFlags.SolidColor;
-                camera.backgroundColor = Color.black;
+                camera.backgroundColor = new Color(255, 0, 163, 1f); // Set background color to pink
             }
         }
 
