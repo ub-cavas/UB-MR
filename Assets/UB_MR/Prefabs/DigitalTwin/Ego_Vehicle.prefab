@@ -496,8 +496,8 @@ MonoBehaviour:
   virtualCameraTopicName: /virtual_camera/image_raw/compressed
   lidarTopicName: /lidar/scan
   detectionRadius: 30
-  imageWidth: 640
-  imageHeight: 480
+  imageWidth: 1920
+  imageHeight: 1080
   publishRate: 30
   mPositionErrorThreshold: 10
   mLinearVelocity_P_Gain: 1

@@ -104,7 +104,7 @@ namespace CAVAS.UB_MR.DT
                 this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>(worldTransformationTopicName, WorldTransformationUpdate);
                 // Obstacle Bounding Box Publisher
                 this.mVirtualBoundingBoxDetector = new VirtualBoundingBoxDetector(boundingBoxTopicName, this.mNode, this.transform);
-                this.mVirtualCameraOverlay = new VirtualCameraOverlay(virtualCameraTopicName, this.mNode, FindFirstObjectByType<Camera>());
+                this.mVirtualCameraOverlay = new VirtualCameraOverlay(virtualCameraTopicName, this.mNode, FindFirstObjectByType<Camera>(), this.imageWidth, this.imageHeight);
                 this.mLidarModifier = new LidarModifier(this.transform, this.mNode, lidarTopicName);
             }
         }
