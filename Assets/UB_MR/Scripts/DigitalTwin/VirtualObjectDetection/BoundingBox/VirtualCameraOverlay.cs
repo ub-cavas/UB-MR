@@ -83,16 +83,21 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             if (depthPublisher != null && targetCamera != null)
             {
                 // Capture Depth Image
-                depthImage = CaptureDepthImage();
-                depthImage.Header.Stamp = time;
-                depthImage.Header.Frame_id = frameId;
+                //depthImage = CaptureDepthImage();
+                //depthImage.Header.Stamp = time;
+                //depthImage.Header.Frame_id = frameId;
             }
 
             // Publish both images
             if (imagePublisher != null && image != null)
+            {
                 imagePublisher.Publish(image);
+            }
             if (depthPublisher != null && depthImage != null)
+            {
                 depthPublisher.Publish(depthImage);
+            }
+               
         }
 
         builtin_interfaces.msg.Time GetTimestamp()
@@ -133,7 +138,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
         {
             if (imagePublisher == null || targetCamera == null)
                 return null;
-        
+
             RenderTexture currentRT = RenderTexture.active;
             targetCamera.targetTexture = imageRenderTexture;
             targetCamera.Render();
@@ -147,31 +152,34 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             RenderTexture.active = currentRT;
             
             // Performance optimization: reuse byte array to avoid GC allocations
+            // RGB24 uses 3 bytes per pixel
             int dataSize = IMAGE_WIDTH * IMAGE_HEIGHT * 3;
             if (imageByteData == null || imageByteData.Length != dataSize)
             {
                 imageByteData = new byte[dataSize];
             }
             
-            // Get raw pixel data - GetRawTextureData is faster than GetPixels32
+            // Get raw pixel data
             var rawData = imageTexture2D.GetRawTextureData();
             
-            // Convert from Unity's RGBA32 to RGB8 format
-            // Unity typically stores as RGBA, so we extract RGB
-            for (int i = 0, j = 0; i < rawData.Length; i += 4, j += 3)
+            // Flip the image vertically while copying
+            int bytesPerRow = IMAGE_WIDTH * 3;
+            for (int row = 0; row < IMAGE_HEIGHT; row++)
             {
-                imageByteData[j] = rawData[i];     // Red
-                imageByteData[j + 1] = rawData[i + 1]; // Green  
-                imageByteData[j + 2] = rawData[i + 2]; // Blue
-                // Skip alpha (i + 3)
+                int sourceRow = IMAGE_HEIGHT - 1 - row;  // Read from bottom to top
+                int sourceIndex = sourceRow * bytesPerRow;
+                int destIndex = row * bytesPerRow;
+                
+                // Copy entire row at once
+                System.Buffer.BlockCopy(rawData, sourceIndex, imageByteData, destIndex, bytesPerRow);
             }
             
             var image = new Image();
             image.Height = (uint)IMAGE_HEIGHT;
             image.Width = (uint)IMAGE_WIDTH;
-            image.Encoding = "rgb8";
+            image.Encoding = "rgb8";  // RGB24 in Unity maps to "rgb8" in ROS2
             image.Is_bigendian = 0; // false
-            image.Step = (uint)(IMAGE_WIDTH * 3);
+            image.Step = (uint)(IMAGE_WIDTH * 3);  // 3 bytes per pixel for RGB
             image.Data = imageByteData;
             
             return image;
