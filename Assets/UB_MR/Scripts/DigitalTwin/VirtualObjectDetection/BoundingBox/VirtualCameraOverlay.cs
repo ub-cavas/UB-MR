@@ -151,15 +151,12 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             targetCamera.targetTexture = null;
             RenderTexture.active = currentRT;
             
-            // Performance optimization: reuse byte array to avoid GC allocations
-            // RGB24 uses 3 bytes per pixel
+            
             int dataSize = IMAGE_WIDTH * IMAGE_HEIGHT * 3;
             if (imageByteData == null || imageByteData.Length != dataSize)
             {
                 imageByteData = new byte[dataSize];
             }
-            
-            // Get raw pixel data
             var rawData = imageTexture2D.GetRawTextureData();
             
             // Flip the image vertically while copying
@@ -169,8 +166,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
                 int sourceRow = IMAGE_HEIGHT - 1 - row;  // Read from bottom to top
                 int sourceIndex = sourceRow * bytesPerRow;
                 int destIndex = row * bytesPerRow;
-                
-                // Copy entire row at once
                 System.Buffer.BlockCopy(rawData, sourceIndex, imageByteData, destIndex, bytesPerRow);
             }
             
@@ -181,7 +176,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             image.Is_bigendian = 0; // false
             image.Step = (uint)(IMAGE_WIDTH * 3);  // 3 bytes per pixel for RGB
             image.Data = imageByteData;
-            
             return image;
         }
 

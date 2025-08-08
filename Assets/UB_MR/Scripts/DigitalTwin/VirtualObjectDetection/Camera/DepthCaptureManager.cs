@@ -95,8 +95,7 @@ public class DepthCaptureManager : MonoBehaviour
             if (readbackTexture != null)
                 Destroy(readbackTexture);
             
-            readbackTexture = new Texture2D(depthTexture.width, depthTexture.height, 
-                                           TextureFormat.RFloat, false);
+            readbackTexture = new Texture2D(depthTexture.width, depthTexture.height, TextureFormat.RFloat, false);
         }
         
         // Read the depth texture
