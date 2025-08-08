@@ -37,7 +37,7 @@ namespace CAVAS.UB_MR.DT
 
         protected Vector3 mWorldPosition = Vector3.zero;
         protected Vector3 mAngularVelocity = Vector3.zero;
-        protected Vector3 mLinearVelocity = Vector3.zero;
+        protected Vector3 mLinearVelocity = Vector3.zero; 
         protected Quaternion mWorldRotation = Quaternion.identity;
 
         ROS2Node mNode;

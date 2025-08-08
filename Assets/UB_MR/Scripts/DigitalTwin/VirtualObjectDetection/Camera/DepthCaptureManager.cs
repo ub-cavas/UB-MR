@@ -47,9 +47,8 @@ public class DepthCaptureManager : MonoBehaviour
             depthTexture = new RenderTexture(width, height, 0, RenderTextureFormat.RFloat);
             depthTexture.name = "DepthCaptureTexture";
             depthTexture.filterMode = FilterMode.Point; // No filtering for accurate depth values
-            depthTexture.Create();
+            depthTexture.Create();  
         }
-        
         return depthTexture;
     }
     
