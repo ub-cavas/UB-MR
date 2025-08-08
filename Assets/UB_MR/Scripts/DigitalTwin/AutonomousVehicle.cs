@@ -114,7 +114,7 @@ namespace CAVAS.UB_MR.DT
         {
             while (IsOwner)
             {
-                
+                yield return new WaitForEndOfFrame();
                 if (enableBoundingBoxCapture)
                     this.mVirtualBoundingBoxDetector.PublishNearbyVirtualObjects(detectionRadius);
                 if (enableImageCapture)
