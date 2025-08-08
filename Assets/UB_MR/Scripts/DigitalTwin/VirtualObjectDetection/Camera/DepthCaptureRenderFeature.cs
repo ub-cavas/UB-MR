@@ -18,7 +18,7 @@ public class DepthCaptureRenderFeature : ScriptableRendererFeature
         public void Setup(Material material, RenderTargetIdentifier source)
         {
             this.depthCaptureMaterial = material;
-            this.source = source;
+            this.source = source; 
         }
         
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -33,10 +33,7 @@ public class DepthCaptureRenderFeature : ScriptableRendererFeature
             descriptor.depthBufferBits = 0;
             
             // Get or create the depth render texture from the manager
-            RenderTexture depthRT = DepthCaptureManager.Instance.GetOrCreateDepthTexture(
-                descriptor.width, 
-                descriptor.height
-            );
+            RenderTexture depthRT = DepthCaptureManager.Instance.GetOrCreateDepthTexture(descriptor.width, descriptor.height);
             
             // Render the depth to our texture
             cmd.Blit(source, depthRT, depthCaptureMaterial);
