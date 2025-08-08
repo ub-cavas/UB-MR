@@ -12,7 +12,6 @@ public class DepthCaptureRenderFeature : ScriptableRendererFeature
 
         public DepthCapturePass()
         {
-            //tempTexture.Init("_TempDepthTexture");
             tempTexture = RTHandles.Alloc("_TempDepthTexture", name: "_TempDepthTexture");
         }
         

@@ -6,58 +6,189 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
 {
     public class VirtualCameraOverlay
     {
+        public static int IMAGE_WIDTH = 640;
+        public static int IMAGE_HEIGHT = 480;
         ROS2Node mNode;
         Camera targetCamera;
-        IPublisher<CompressedImage> imagePublisher;
-        RenderTexture renderTexture;
-        Texture2D texture2D;
+        // IMAGE
+        IPublisher<CompressedImage> compressedImagePublisher;
+        IPublisher<Image> imagePublisher;
+        RenderTexture imageRenderTexture;
+        Texture2D imageTexture2D;
+        byte[] imageByteData;
+
+        // DEPTH
+        IPublisher<CompressedImage> compressedDepthImagePublisher;
+        IPublisher<Image> depthPublisher;
+        Texture2D depthTexture2D;
         string frameId = "camera_link"; // Default frame ID for the camera
 
-        public VirtualCameraOverlay(string inTopicName, ROS2Node inNode, Camera inCamera, int inImageWidth = 640, int inImageHeight = 480)
+        public VirtualCameraOverlay(DigitalTwin inDT, string inImageTopic, string inDepthTopic, ROS2Node inNode, Camera inCamera, int inImageWidth = 640, int inImageHeight = 480)
         {
+            UpdateCameraResolution(inDT, inImageWidth, inImageHeight);
             this.targetCamera = inCamera;
-            this.imagePublisher = inNode.CreatePublisher<CompressedImage>(inTopicName);
-            // Create render texture and texture2D for image capture
-            this.renderTexture = new RenderTexture(inImageWidth, inImageHeight, 24);
-            this.texture2D = new Texture2D(inImageWidth, inImageHeight, TextureFormat.RGB24, false);
+            // IMAGE
+            this.compressedImagePublisher = inNode.CreatePublisher<CompressedImage>(inImageTopic + "/compressed");
+            this.imagePublisher = inNode.CreatePublisher<Image>(inImageTopic);
+            this.imageRenderTexture = new RenderTexture(IMAGE_WIDTH, IMAGE_HEIGHT, 24);
+            this.imageTexture2D = new Texture2D(IMAGE_WIDTH, IMAGE_HEIGHT, TextureFormat.RGB24, false);
+            // DEPTH
+            this.compressedDepthImagePublisher = inNode.CreatePublisher<CompressedImage>(inDepthTopic + "/compressed");
+            this.depthPublisher = inNode.CreatePublisher<Image>(inDepthTopic);
+            this.depthTexture2D = new Texture2D(IMAGE_WIDTH, IMAGE_HEIGHT, TextureFormat.RFloat, false);
         }
 
-        public void CaptureAndPublishImage(int inImageWidth = 640, int inImageHeight = 480)
+        public void UpdateCameraResolution(DigitalTwin inDT, int inImageWidth, int inImageHeight)
+        {
+            if (inDT.IsOwner)
+            {
+                IMAGE_WIDTH = inImageWidth;
+                IMAGE_HEIGHT = inImageHeight;
+            }
+        }
+
+
+        // TODO: Implement compressed depth image capture
+        public void CaptureAndPublishCompressedImage(int inCompressionQuality = 75)
+        {
+            if (compressedImagePublisher == null || depthPublisher == null || targetCamera == null)
+                return;
+
+            builtin_interfaces.msg.Time time = GetTimestamp();
+            // Capture Camera Image
+            CompressedImage compressedImage = CaptureCompressedImage(inCompressionQuality);
+            compressedImage.Header.Stamp = time;
+            compressedImage.Header.Frame_id = frameId;
+            // Capture Depth Image
+            CompressedImage compressedDepthImage = CaptureCompressedDepthImage();
+            compressedDepthImage.Header.Stamp = time;
+            compressedDepthImage.Header.Frame_id = frameId;
+            // Publish both images
+            compressedImagePublisher.Publish(compressedImage);
+            //depthImagePublisher.Publish(compressedDepthImage);
+        }
+
+        public void CaptureAndPublishImage()
+        {
+            builtin_interfaces.msg.Time time = GetTimestamp();
+            Image image = null;
+            Image depthImage = null;
+            if (imagePublisher != null && targetCamera != null)
+            {
+                // Capture Camera Image
+                image = CaptureImage();
+                image.Header.Stamp = time;
+                image.Header.Frame_id = frameId;
+            }
+            if (depthPublisher != null && targetCamera != null)
+            {
+                // Capture Depth Image
+                depthImage = CaptureDepthImage();
+                depthImage.Header.Stamp = time;
+                depthImage.Header.Frame_id = frameId;
+            }
+
+            // Publish both images
+            if (imagePublisher != null && image != null)
+                imagePublisher.Publish(image);
+            if (depthPublisher != null && depthImage != null)
+                depthPublisher.Publish(depthImage);
+        }
+
+        builtin_interfaces.msg.Time GetTimestamp()
+        {
+            builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
+            time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
+            return time;
+        }
+
+        CompressedImage CaptureCompressedImage(int inCompressionQuality = 75)
+        {
+            if (compressedImagePublisher == null || targetCamera == null)
+                return null;
+            RenderTexture currentRT = RenderTexture.active;
+            targetCamera.targetTexture = imageRenderTexture;
+            targetCamera.Render();
+            RenderTexture.active = imageRenderTexture;
+            imageTexture2D.ReadPixels(new Rect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT), 0, 0);
+            imageTexture2D.Apply();
+            // Restore render texture
+            targetCamera.targetTexture = null;
+            RenderTexture.active = currentRT;
+            // Convert to JPEG and publish 
+            byte[] imageBytes = imageTexture2D.EncodeToJPG(inCompressionQuality);
+            var compressedImage = new CompressedImage();
+            compressedImage.Format = "jpeg";
+            compressedImage.Data = imageBytes;
+            return compressedImage;
+        }
+
+        CompressedImage CaptureCompressedDepthImage()
+        {
+            Debug.LogError("Compressed depth image capture not implemented yet. Currently only supports raw depth images.");
+            return null;
+        }
+
+        Image CaptureImage()
         {
             if (imagePublisher == null || targetCamera == null)
-                return;
-                
-            // Capture camera image (your existing code)
+                return null;
+        
             RenderTexture currentRT = RenderTexture.active;
-            targetCamera.targetTexture = renderTexture;
+            targetCamera.targetTexture = imageRenderTexture;
             targetCamera.Render();
-            RenderTexture.active = renderTexture;
-            texture2D.ReadPixels(new Rect(0, 0, inImageWidth, inImageHeight), 0, 0);
-            texture2D.Apply();
+            RenderTexture.active = imageRenderTexture;
+            
+            imageTexture2D.ReadPixels(new Rect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT), 0, 0);
+            imageTexture2D.Apply();
             
             // Restore render texture
             targetCamera.targetTexture = null;
             RenderTexture.active = currentRT;
             
-            // Convert to JPEG and publish 
-            byte[] imageBytes = texture2D.EncodeToJPG(75);
-            var compressedImage = new CompressedImage();
-            builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
-            time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad; // Use Time.timeSinceLevelLoad for simulation time
-            compressedImage.Header.Stamp = time;
-            compressedImage.Header.Frame_id = frameId;
-            compressedImage.Format = "jpeg";
-            compressedImage.Data = imageBytes;
-            imagePublisher.Publish(compressedImage);
+            // Performance optimization: reuse byte array to avoid GC allocations
+            int dataSize = IMAGE_WIDTH * IMAGE_HEIGHT * 3;
+            if (imageByteData == null || imageByteData.Length != dataSize)
+            {
+                imageByteData = new byte[dataSize];
+            }
+            
+            // Get raw pixel data - GetRawTextureData is faster than GetPixels32
+            var rawData = imageTexture2D.GetRawTextureData();
+            
+            // Convert from Unity's RGBA32 to RGB8 format
+            // Unity typically stores as RGBA, so we extract RGB
+            for (int i = 0, j = 0; i < rawData.Length; i += 4, j += 3)
+            {
+                imageByteData[j] = rawData[i];     // Red
+                imageByteData[j + 1] = rawData[i + 1]; // Green  
+                imageByteData[j + 2] = rawData[i + 2]; // Blue
+                // Skip alpha (i + 3)
+            }
+            
+            var image = new Image();
+            image.Height = (uint)IMAGE_HEIGHT;
+            image.Width = (uint)IMAGE_WIDTH;
+            image.Encoding = "rgb8";
+            image.Is_bigendian = 0; // false
+            image.Step = (uint)(IMAGE_WIDTH * 3);
+            image.Data = imageByteData;
+            
+            return image;
+        }
+
+        Image CaptureDepthImage()
+        {
+            return null;
         }
 
         public void CleanUp()
         {
             // Clean up resources
-            if (renderTexture != null)
-                renderTexture.Release();
-            if (texture2D != null)
-                GameObject.Destroy(texture2D);
+            if (imageRenderTexture != null)
+                imageRenderTexture.Release();
+            if (imageTexture2D != null)
+                GameObject.Destroy(imageTexture2D);
         }
     }
 
