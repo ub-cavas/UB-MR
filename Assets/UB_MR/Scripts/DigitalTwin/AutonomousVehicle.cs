@@ -20,13 +20,14 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] bool enableLidarModifier = true; // Enable Lidar modifier for virtual objects
         [SerializeField] string worldTransformationTopicName = "/world_transform"; // Topic name for world transformation updates
         [SerializeField] string boundingBoxTopicName = "/virtual_obstacles"; // Topic name for publishing virtual object bounding boxes
-        [SerializeField] string virtualCameraTopicName = "/virtual_camera/image_raw/compressed"; // Topic name for publishing virtual camera images
+        [SerializeField] string virtualCameraImageTopicName = "/virtual_camera/image_raw"; // Topic name for publishing virtual camera images
+        [SerializeField] string virtualCameraDepthTopicName = "/virtual_camera/depth"; // Topic name for publishing virtual camera depth images
         [SerializeField] string lidarTopicName = "/lidar/scan"; // Topic name for Lidar scans
 
         [Space]
 
         [Header("Bounding Box Parameters")]
-        [SerializeField] float detectionRadius = 30.0f; // Height of
+        [SerializeField] float detectionRadius = 30.0f;
 
         [Header("Image Capture Parameters")]
         [SerializeField] int imageWidth = 640;
@@ -104,7 +105,7 @@ namespace CAVAS.UB_MR.DT
                 this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>(worldTransformationTopicName, WorldTransformationUpdate);
                 // Obstacle Bounding Box Publisher
                 this.mVirtualBoundingBoxDetector = new VirtualBoundingBoxDetector(boundingBoxTopicName, this.mNode, this.transform);
-                this.mVirtualCameraOverlay = new VirtualCameraOverlay(virtualCameraTopicName, this.mNode, FindFirstObjectByType<Camera>());
+                this.mVirtualCameraOverlay = new VirtualCameraOverlay(this, virtualCameraImageTopicName, virtualCameraDepthTopicName, this.mNode, FindFirstObjectByType<Camera>(), imageWidth, imageHeight);
                 this.mLidarModifier = new LidarModifier(this.transform, this.mNode, lidarTopicName);
             }
         }
@@ -113,10 +114,14 @@ namespace CAVAS.UB_MR.DT
         {
             while (IsOwner)
             {
+                
                 if (enableBoundingBoxCapture)
                     this.mVirtualBoundingBoxDetector.PublishNearbyVirtualObjects(detectionRadius);
                 if (enableImageCapture)
-                    this.mVirtualCameraOverlay.CaptureAndPublishImage(imageWidth, imageHeight);
+                {
+                    this.mVirtualCameraOverlay.UpdateCameraResolution(this, imageWidth, imageHeight);
+                    this.mVirtualCameraOverlay.CaptureAndPublishImage();
+                }
                 yield return new WaitForSeconds(1.0f / publishRate);
             }
         }
