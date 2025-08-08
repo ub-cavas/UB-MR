@@ -1,6 +1,7 @@
 using ROS2;
 using sensor_msgs.msg;
 using UnityEngine;
+using System;
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection
 {
@@ -16,11 +17,13 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
         RenderTexture imageRenderTexture;
         Texture2D imageTexture2D;
         byte[] imageByteData;
+        byte[] depthByteData;
 
         // DEPTH
         IPublisher<CompressedImage> compressedDepthImagePublisher;
         IPublisher<Image> depthPublisher;
         Texture2D depthTexture2D;
+        
         string frameId = "camera_link"; // Default frame ID for the camera
 
         public VirtualCameraOverlay(DigitalTwin inDT, string inImageTopic, string inDepthTopic, ROS2Node inNode, Camera inCamera, int inImageWidth = 640, int inImageHeight = 480)
@@ -83,9 +86,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             if (depthPublisher != null && targetCamera != null)
             {
                 // Capture Depth Image
-                //depthImage = CaptureDepthImage();
-                //depthImage.Header.Stamp = time;
-                //depthImage.Header.Frame_id = frameId;
+                depthImage = CaptureDepthImage();
+                depthImage.Header.Stamp = time;
+                depthImage.Header.Frame_id = frameId;
             }
 
             // Publish both images
@@ -181,7 +184,38 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
 
         Image CaptureDepthImage()
         {
-            return null;
+            if (depthPublisher == null || targetCamera == null)
+                return null;
+
+            RenderTexture currentRT = RenderTexture.active;
+            RenderTexture.active = DepthCaptureRenderFeature.DepthCapturePass.GetDepthRenderTexture(); // This probably needs to get fixed
+            depthTexture2D.ReadPixels(new Rect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT), 0, 0);
+            depthTexture2D.Apply();
+            RenderTexture.active = currentRT;
+
+           int dataSize = IMAGE_WIDTH * IMAGE_HEIGHT * 4;
+            if (depthByteData == null || depthByteData.Length != dataSize)
+            {
+                depthByteData = new byte[dataSize];
+            }
+            byte[] rawData = depthTexture2D.GetRawTextureData();
+            int bytesPerRow = IMAGE_WIDTH * 4; // 4 bytes per float pixel
+            for (int row = 0; row < IMAGE_HEIGHT; row++)
+            {
+                int sourceRow = IMAGE_HEIGHT - 1 - row;  // Read from bottom to top
+                int sourceIndex = sourceRow * bytesPerRow;
+                int destIndex = row * bytesPerRow;
+                System.Buffer.BlockCopy(rawData, sourceIndex, depthByteData, destIndex, bytesPerRow);
+            }
+            
+            var image = new Image();
+            image.Height = (uint)IMAGE_HEIGHT;
+            image.Width = (uint)IMAGE_WIDTH;
+            image.Encoding = "32FC1";  // Single channel float for depth
+            image.Is_bigendian = BitConverter.IsLittleEndian ? (byte)0 : (byte)1;
+            image.Step = (uint)(IMAGE_WIDTH * 4);  // 4 bytes per pixel for float
+            image.Data = depthByteData;
+            return image;
         }
 
         public void CleanUp()
