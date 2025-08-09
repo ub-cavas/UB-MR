@@ -168,10 +168,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return !float.IsNaN(range) && !float.IsInfinity(range) && range >= rangeMin && range <= rangeMax && range > 0;
         }
         
-        
-        
-        
-        
         void OnDestroy()
         {
             if (linesParent != null)
