@@ -55,6 +55,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.demoteam.mesh-to-sdf": {
+      "version": "https://github.com/Unity-Technologies/com.unity.demoteam.mesh-to-sdf.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "1f8ee658aabe2b588aae7d0b635a9941266a52ef"
+    },
     "com.unity.ext.nunit": {
       "version": "2.0.5",
       "depth": 1,
