@@ -17,7 +17,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         
         // LineRenderer components for visualization
         List<LineRenderer> mLineRenderers = new List<LineRenderer>();
-        private GameObject linesParent;
+        List<(Vector3, float)> mCartesianData = new List<(Vector3, float)>();
+        GameObject linesParent;
+        bool mIsReading = false;
 
         void Awake()
         {
@@ -33,14 +35,18 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 qosProfile.SetReliability(ReliabilityPolicy.QOS_POLICY_RELIABILITY_BEST_EFFORT);
                 qosProfile.SetHistory(HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST, 2);
                 qosProfile.SetDurability(DurabilityPolicy.QOS_POLICY_DURABILITY_VOLATILE);
-                
-                this.mLidarSubscriber = this.mNode.CreateSubscription<LaserScan>(lidarTopicName, VisualizeLidarScan, qosProfile);
+                this.mLidarSubscriber = this.mNode.CreateSubscription<LaserScan>(lidarTopicName, UpdateCartesianData, qosProfile);
             }
             
             // Initialize visualization components
             InitializeVisualization();
         }
-        
+
+        void Update()
+        {
+            VisualizeMostRecentScan();
+        }
+
         void InitializeVisualization()
         {
             // Create parent object for organization
@@ -64,15 +70,15 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
         }
 
-        void UpdateLines(List<(Vector3, float)> inScan)
+        void VisualizeMostRecentScan()
         {
+            List<(Vector3, float)> inScan = mCartesianData;
             if (inScan == null || inScan.Count == 0)
             {
                 Debug.LogWarning("No valid points to visualize in Lidar scan.");
                 return;
             }
-
-
+            this.mIsReading = true;
             if (inScan.Count > mLineRenderers.Count)
             {
                 // Add more lines
@@ -82,33 +88,43 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                     LineRenderer lr = CreateScanVisual(i);
                     mLineRenderers.Add(lr);
                 }
+                // Render them
                 for (int i = 0; i < inScan.Count; i++)
-                {
-                    SetRendererPosition(this.mLineRenderers[i], inScan[i]);
-                }
-                
+                    SetVisual(true, this.mLineRenderers[i], inScan[i]);
             }
             // "Remove" some lines
             else if (inScan.Count < mLineRenderers.Count)
             {
                 for (int i = 0; i < inScan.Count; i++)
-                {
-                    SetRendererPosition(this.mLineRenderers[i], inScan[i]);
-                }
+                    SetVisual(true, this.mLineRenderers[i], inScan[i]);
                 // Don't render excess lines
                 for (int i = mLineRenderers.Count - 1; i >= inScan.Count; i--)
-                {
-
-                }
+                    SetVisual(false, this.mLineRenderers[i], (Vector3.zero, 0f));
             }
+            else
+            {
+                // Update existing lines
+                for (int i = 0; i < inScan.Count; i++)
+                    SetVisual(true, this.mLineRenderers[i], inScan[i]);
+            }
+            this.mIsReading = false;
         }
 
-        void SetRendererPosition(LineRenderer inLineRenderer, (Vector3, float) inScan)
+        void SetVisual(bool inRender, LineRenderer inLineRenderer, (Vector3, float) inScan)
         {
-            inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin
-            inLineRenderer.SetPosition(1, inScan.Item1); // Set the end point at
-            inLineRenderer.startColor = distanceGradient.Evaluate(Mathf.InverseLerp(inScan.Item2, 0, inScan.Item2));
-            inLineRenderer.endColor = distanceGradient.Evaluate(Mathf.InverseLerp(inScan.Item2, 0, inScan.Item2));
+            if (inRender)
+            {
+                inLineRenderer.gameObject.SetActive(true);
+                inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin
+                inLineRenderer.SetPosition(1, inScan.Item1); // Set the end point at
+                inLineRenderer.startColor = distanceGradient.Evaluate(Mathf.InverseLerp(inScan.Item2, 0, inScan.Item2));
+                inLineRenderer.endColor = distanceGradient.Evaluate(Mathf.InverseLerp(inScan.Item2, 0, inScan.Item2));
+            }
+            else
+            {
+                inLineRenderer.gameObject.SetActive(false);
+            }
+            
         }
 
         LineRenderer CreateScanVisual(int idx)
@@ -125,62 +141,26 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return lr;
         }
             
-      
-
-        List<(Vector3, float)> GetCartesianData(LaserScan scan)
+        void UpdateCartesianData(LaserScan scan)
         {
-            List<(Vector3, float)> cartesianScan = new List<(Vector3, float)>();
-            float currentAngle = scan.Angle_min;
-            for (int i = 0; i < scan.Ranges.Length; i++)
+            if (!this.mIsReading)
             {
-                float range = scan.Ranges[i];
-                if (IsValidMeasurement(range, scan.Range_min, scan.Range_max))
+                List<(Vector3, float)> cartesianScan = new List<(Vector3, float)>();
+                float currentAngle = scan.Angle_min;
+                for (int i = 0; i < scan.Ranges.Length; i++)
                 {
-                    float x = range * Mathf.Cos(currentAngle);
-                    float z = range * Mathf.Sin(currentAngle); // ROS Y becomes Unity Z
-                    Vector3 point = new Vector3(x, 0, z);
-                    cartesianScan.Add((point, range));
+                    float range = scan.Ranges[i];
+                    if (IsValidMeasurement(range, scan.Range_min, scan.Range_max))
+                    {
+                        float x = range * Mathf.Cos(currentAngle);
+                        float z = range * Mathf.Sin(currentAngle); // ROS Y becomes Unity Z
+                        Vector3 point = new Vector3(x, 0, z);
+                        cartesianScan.Add((point, range));
+                    }
+                    currentAngle += scan.Angle_increment;
                 }
-                currentAngle += scan.Angle_increment;
+                this.mCartesianData = cartesianScan;
             }
-            return cartesianScan;
-        }
-
-        
-        
-        void VisualizeLidarScan(LaserScan scan)
-        {
-            Debug.Log($"Received Lidar Scan with {scan.Ranges.Length} points from topic {lidarTopicName}");
-            if (scan.Ranges == null || scan.Ranges.Length == 0)
-                return;
-                
-
-            // Convert scan data to Unity coordinates and create lines
-            List<Vector3> validPoints = new List<Vector3>();
-            List<float> validDistances = new List<float>();
-            
-            float currentAngle = scan.Angle_min;
-            
-            for (int i = 0; i < scan.Ranges.Length; i++)
-            {
-                float range = scan.Ranges[i];
-                
-                // Check if the measurement is valid
-                if (IsValidMeasurement(range, scan.Range_min, scan.Range_max))
-                {
-                    float x = range * Mathf.Cos(currentAngle);
-                    float z = range * Mathf.Sin(currentAngle); // ROS Y becomes Unity Z
-                    Vector3 point = new Vector3(x, 0, z);
-                    
-                    validPoints.Add(point);
-                    validDistances.Add(range);
-                }
-                
-                currentAngle += scan.Angle_increment;
-            }
-            
-            // Create line renderers for valid points
-            CreateLinesFromPoints(validPoints, validDistances, scan.Range_min, scan.Range_max);
         }
         
         bool IsValidMeasurement(float range, float rangeMin, float rangeMax)
@@ -188,40 +168,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return !float.IsNaN(range) && !float.IsInfinity(range) && range >= rangeMin && range <= rangeMax && range > 0;
         }
         
-        void CreateLinesFromPoints(List<Vector3> points, List<float> distances, float minRange, float maxRange)
-        {
-            Vector3 origin = Vector3.zero; // Relative to this GameObject
-            
-            for (int i = 0; i < points.Count; i++)
-            {
-                // Create a new line renderer for each point
-                GameObject lineObj = new GameObject($"LidarLine_{i}");
-                lineObj.transform.SetParent(linesParent.transform);
-                lineObj.transform.localPosition = Vector3.zero;
-                
-                LineRenderer lr = lineObj.AddComponent<LineRenderer>();
-                
-                // Configure line renderer
-                lr.material = lineMaterial;
-                lr.startWidth = lineWidth;
-                lr.endWidth = lineWidth;
-                lr.positionCount = 2;
-                lr.useWorldSpace = false; // Use local space relative to parent
-                
-                // Set positions
-                lr.SetPosition(0, origin);
-                lr.SetPosition(1, points[i]);
-                
-                // Set color based on distance
-                float normalizedDistance = Mathf.InverseLerp(minRange, maxRange, distances[i]);
-                Color lineColor = distanceGradient.Evaluate(normalizedDistance);
-                lr.startColor = lineColor;
-                lr.endColor = lineColor;
-                
-                // Store reference for cleanup
-                this.mLineRenderers.Add(lr);
-            }
-        }
+        
         
         
         
