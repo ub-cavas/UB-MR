@@ -3,14 +3,14 @@ using sensor_msgs.msg;
 using UnityEngine;
 using System;
 
-namespace CAVAS.UB_MR.DT.VirtualObjectDetection
+namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Camera
 {
     public class VirtualCameraOverlay
     {
         public static int IMAGE_WIDTH = 640;
         public static int IMAGE_HEIGHT = 480;
         ROS2Node mNode;
-        Camera targetCamera;
+        UnityEngine.Camera targetCamera;
         // IMAGE
         IPublisher<CompressedImage> compressedImagePublisher;
         IPublisher<Image> imagePublisher;
@@ -23,10 +23,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
         IPublisher<CompressedImage> compressedDepthImagePublisher;
         IPublisher<Image> depthPublisher;
         Texture2D depthTexture2D;
-        
+
         string frameId = "camera_link"; // Default frame ID for the camera
 
-        public VirtualCameraOverlay(DigitalTwin inDT, string inImageTopic, string inDepthTopic, ROS2Node inNode, Camera inCamera, int inImageWidth = 640, int inImageHeight = 480)
+        public VirtualCameraOverlay(DigitalTwin inDT, string inImageTopic, string inDepthTopic, ROS2Node inNode, UnityEngine.Camera inCamera, int inImageWidth = 640, int inImageHeight = 480)
         {
             UpdateCameraResolution(inDT, inImageWidth, inImageHeight);
             this.targetCamera = inCamera;
@@ -100,7 +100,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             {
                 depthPublisher.Publish(depthImage);
             }
-               
+
         }
 
         builtin_interfaces.msg.Time GetTimestamp()
@@ -146,22 +146,22 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             targetCamera.targetTexture = imageRenderTexture;
             targetCamera.Render();
             RenderTexture.active = imageRenderTexture;
-            
+
             imageTexture2D.ReadPixels(new Rect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT), 0, 0);
             imageTexture2D.Apply();
-            
+
             // Restore render texture
             targetCamera.targetTexture = null;
             RenderTexture.active = currentRT;
-            
-            
+
+
             int dataSize = IMAGE_WIDTH * IMAGE_HEIGHT * 3;
             if (imageByteData == null || imageByteData.Length != dataSize)
             {
                 imageByteData = new byte[dataSize];
             }
             var rawData = imageTexture2D.GetRawTextureData();
-            
+
             // Flip the image vertically while copying
             int bytesPerRow = IMAGE_WIDTH * 3;
             for (int row = 0; row < IMAGE_HEIGHT; row++)
@@ -171,7 +171,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
                 int destIndex = row * bytesPerRow;
                 System.Buffer.BlockCopy(rawData, sourceIndex, imageByteData, destIndex, bytesPerRow);
             }
-            
+
             var image = new Image();
             image.Height = (uint)IMAGE_HEIGHT;
             image.Width = (uint)IMAGE_WIDTH;
@@ -193,7 +193,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             depthTexture2D.Apply();
             RenderTexture.active = currentRT;
 
-           int dataSize = IMAGE_WIDTH * IMAGE_HEIGHT * 4;
+            int dataSize = IMAGE_WIDTH * IMAGE_HEIGHT * 4;
             if (depthByteData == null || depthByteData.Length != dataSize)
             {
                 depthByteData = new byte[dataSize];
@@ -207,7 +207,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
                 int destIndex = row * bytesPerRow;
                 System.Buffer.BlockCopy(rawData, sourceIndex, depthByteData, destIndex, bytesPerRow);
             }
-            
+
             var image = new Image();
             image.Height = (uint)IMAGE_HEIGHT;
             image.Width = (uint)IMAGE_WIDTH;
@@ -229,3 +229,4 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
     }
 
 }
+

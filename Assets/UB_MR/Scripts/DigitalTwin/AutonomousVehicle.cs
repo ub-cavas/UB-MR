@@ -3,6 +3,8 @@ using ROS2;
 using System.Collections;
 using Unity.Cinemachine;
 using CAVAS.UB_MR.DT.VirtualObjectDetection;
+using CAVAS.UB_MR.DT.VirtualObjectDetection.Camera;
+using CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar;
 
 namespace CAVAS.UB_MR.DT
 {
@@ -47,7 +49,6 @@ namespace CAVAS.UB_MR.DT
         ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
 
         
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
