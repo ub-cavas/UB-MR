@@ -31,15 +31,16 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
 ---
 ## Install Mixed Reality Packages
 
-1. **ROS 2 Package** (~/ros2_ws/src):
+1. **ROS 2 MR Package** (~/ros2_ws/src):
    ```bash
    git clone https://github.com/ub-cavas/mr_pkg.git
    ```
-   Whenever you update the ROS 2 package, rebuild it:
-  ```bash
-  cd ~/ros2_ws
-  colcon build --symlink-install
-  ```
+   Whenever you update the ROS 2 package, rebuild it and source the workspace:
+   ```bash
+   cd ~/ros2_ws
+   colcon build
+   source install/setup.bash
+   ```
 
 2. **Vulkan Graphics API's** (skip if already installed)
    ```bash
@@ -55,38 +56,42 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
      cd <directory-outside-of-your-ros2_ws>
      git clone https://github.com/ub-cavas/UB-MR.git
      ```
-     This script will build Ros2ForUnity binaries and import them into the Unity project
-      ```bash
-      cd UB-MR
-      ./setup.sh
-      ```
+     *Add the project to UnityHub*
 
+     1.) Open UnityHub
 
+     2.) Click the "Add" Button from the "Project" tab
+
+     3.) Locate the UB-MR directory that you cloned and add it to the UnityHub
+
+     4.) Open the project with Unity Editor 6000.0.36f1
 ---
 
-## Sourcing Your Environment
+## Running the Project
 
-## Running the Mixed Reality Package
+1. **Run the Mixed Reality ROS2 Package**
 
-Launch all world_transform nodes in one terminal:
+   Launch localization nodes in one terminal:
 
-```bash
-ros2 run mr_pkg world_transform
-```
+   ```bash
+   ros2 launch mr_pkg dual_ekf.launch.py
+   ```
 
-### Option 1: Live Stream Mixed Reality
+2. **Run the Mixed Reality Simulator**
 
-> *TODO: Describe how to configure and launch live streaming of sensor data.*
+   OPTION A: Run the executable
 
-### Option 2: Replay a ROS Bag
+   OPTION B: Press Play in the Unity Editor
 
-1. Open a new terminal and source ROS 2:
+## Playback a Ros Bag
+
+1. Open a new terminal, source ROS2 Humble and your Workspace:
    ```bash
    source /opt/ros/humble/setup.bash
    ```
 2. Play your bag with an offset (e.g., start at 200s):
    ```bash
-   ros2 bag play <path-to-rosbag> --start-offset 200
+   ros2 bag play <path-to-rosbag> --clock --start-offset 200
    ```
 
 ---

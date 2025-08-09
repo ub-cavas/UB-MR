@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CAVAS.UB_MR.DT.VirtualObjectDetection
+namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
     public class LidarModifier
     {
