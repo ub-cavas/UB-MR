@@ -3,6 +3,7 @@ using UnityEngine;
 using ROS2;
 using System.Collections;
 using Unity.Cinemachine;
+using System.Collections.Generic;
 using CAVAS.UB_MR.DT.VirtualObjectDetection;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Camera;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar;
@@ -43,6 +44,7 @@ namespace CAVAS.UB_MR.DT
 
 
         [Header("LiDAR Capture Parameters")] 
+        [SerializeField] List<SDFTexture> mSDFs;
         [SerializeField] ComputeShader mLiDARComputeShader;
         [SerializeField] ReliabilityPolicy reliabilityPolicy = ReliabilityPolicy.QOS_POLICY_RELIABILITY_BEST_EFFORT;
         [SerializeField] HistoryPolicy historyPolicy = HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST;
@@ -111,7 +113,7 @@ namespace CAVAS.UB_MR.DT
             {
                 string name = gameObject.name.Replace("(Clone)", "");
                 name = name.Replace(" Variant", "");
-                // This is sort of cheating but ROS2_Bridge is not immediately deleting nodes so this avoids a collision
+                // This is sort of cheating but ROS2_Bridge is not immediately deleting nodes so this avoids a collision (~99% of the time)
                 int randomSuffix = UnityEngine.Random.Range(0, 1000);
                 this.mNode = ROS2_Bridge.ROS_CORE.CreateNode(name + "_Digital_Twin_" + randomSuffix.ToString());
                 // World Transformation Subscriber
@@ -125,7 +127,9 @@ namespace CAVAS.UB_MR.DT
                 qosProfile.SetReliability(reliabilityPolicy);
                 qosProfile.SetHistory(historyPolicy, historyDepth);
                 qosProfile.SetDurability(durabilityPolicy);
-                this.mLidarModifier = new LidarModifier(this.transform, lidarTopicName, this.mLiDARComputeShader, this.mNode, qosProfile);
+                
+                //TODO: dynamic lists of SDFS... currently just supports 1 sdf
+                this.mLidarModifier = new LidarModifier(this.transform, lidarTopicName, this.mLiDARComputeShader, this.mNode, qosProfile, this.mSDFs[0]);
             }
         }
 

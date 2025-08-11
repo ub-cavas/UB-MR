@@ -1,16 +1,82 @@
 // Each #kernel tells which function to compile; you can have many kernels
-#pragma kernel CartesianConvert
+#pragma kernel LiDAR_Modifier
+
+
+Texture3D<float> _SDFTexture; // mesh-to-sdf texture
+SamplerState sampler_SDFTexture;
+float4x4 _WorldToSDF;        // Transforms from world space to SDF texture space (0-1)
+float4x4 _SDFToWorld;        // Transform SDF texture space (0-1) to world space
+
+float3 origin;
+// Raymarching parameters
+float _MaxDistance;          // Maximum distance to march
+float _HitThreshold;         // Distance threshold to consider a hit (e.g., 0.001)
+int _MaxIterations;          // Maximum iterations (e.g., 128)
+float _StepScale;           // Scale factor for stepping (0.5 to 1.0, lower = more accurate but slower)
 
 struct LidarData
 {
-    float angle;
+    float3 direction;
     float distance;
+};
+
+struct LidarHit
+{
+    float3 point;
 };
 
 RWStructuredBuffer<LidarData> lidarBuffer;
 
 [numthreads(8,8,1)]
-void CartesianConvert (uint3 id : SV_DispatchThreadID)
+void LiDAR_Modifier (uint3 id : SV_DispatchThreadID)
 {
-    lidarBuffer[id.x].angle = lidarBuffer[id.x].angle + 1;
+    //lidarBuffer[id.x].angle = lidarBuffer[id.x].angle + 1;
+}
+
+float SampleSDF(float3 worldPosition, Texture3D<float> sdf)
+{
+    // Transform world position to SDF texture coordinates (0-1)
+    float4 sdfPos = mul(_WorldToSDF, float4(worldPosition, 1.0));
+    // Return a very large distance if outside SDF bounds
+    if (any(sdfPos.xyz < 0.0) || any(sdfPos.xyz > 1.0))
+    {
+        return 1000000.0;
+    }
+    // Sample the SDF texture
+    return sdf.SampleLevel(sampler_SDFTexture, sdfPos.xyz, 0).r;
+}
+
+LidarHit Raymarch(LidarData lidarData)
+{
+    LidarHit lidarHit;
+    lidarHit.point = float3(0,0,0);
+    
+    float3 currentPos = origin;
+    float totalDistance = 0.0;
+    // TODO: Iterate all SDFs
+    for (int i = 0; i < _MaxIterations; i++)
+    {
+        float sdfDistance = SampleSDF(currentPos, _SDFTexture);
+        if (sdfDistance < _HitThreshold)
+        {
+            if (sdfDistance < lidarData.distance)
+                lidarHit.point = currentPos;
+            else 
+                lidarHit.point = lidarData.direction * lidarData.distance;
+            
+            break;
+        }
+        if (totalDistance > _MaxDistance)
+        {
+            break;
+        }
+        // Step forward along the ray
+        // The SDF gives us the minimum safe distance we can step
+        float stepDistance = sdfDistance * _StepScale;
+        currentPos += lidarData.direction * stepDistance;
+        totalDistance += stepDistance;
+    }
+    return lidarHit;
+    
+    
 }
