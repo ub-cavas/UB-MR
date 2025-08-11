@@ -7,10 +7,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
     public class LidarVisualizer : MonoBehaviour
     {
-        [SerializeField] string lidarTopicName = "/scan"; // Topic name for Lidar scans
-        [SerializeField] Material lineMaterial; // Material for the line renderer
-        [SerializeField] float lineWidth = 0.02f; // Width of the lines
-        [SerializeField] Gradient distanceGradient; // Gradient for color coding distances
+        [SerializeField] string mLidarTopicName = "/scan"; // Topic name for Lidar scans
+        [SerializeField] Material mLidarVisualMaterial; // Material for the line renderer
+        [SerializeField] float mLineWidth = 0.02f; // Width of the lines
+        [SerializeField] Gradient mDistanceGradient; // Gradient for color coding distances
         
         ROS2Node mNode;
         ISubscription<LaserScan> mLidarSubscriber;
@@ -18,7 +18,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         // LineRenderer components for visualization
         List<LineRenderer> mLineRenderers = new List<LineRenderer>();
         List<(Vector3, float)> mCartesianData = new List<(Vector3, float)>();
-        GameObject linesParent;
+        GameObject mLineParent;
         bool mIsReading = false;
 
         void Awake()
@@ -35,7 +35,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 qosProfile.SetReliability(ReliabilityPolicy.QOS_POLICY_RELIABILITY_BEST_EFFORT);
                 qosProfile.SetHistory(HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST, 2);
                 qosProfile.SetDurability(DurabilityPolicy.QOS_POLICY_DURABILITY_VOLATILE);
-                this.mLidarSubscriber = this.mNode.CreateSubscription<LaserScan>(lidarTopicName, UpdateCartesianData, qosProfile);
+                this.mLidarSubscriber = this.mNode.CreateSubscription<LaserScan>(mLidarTopicName, UpdateCartesianData, qosProfile);
             }
             
             // Initialize visualization components
@@ -50,15 +50,15 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         void InitializeVisualization()
         {
             // Create parent object for organization
-            linesParent = new GameObject("LidarLines");
-            linesParent.transform.SetParent(transform);
-            linesParent.transform.localPosition = Vector3.zero;
-            linesParent.transform.localRotation = Quaternion.identity;
+            mLineParent = new GameObject("LidarLines");
+            mLineParent.transform.SetParent(transform);
+            mLineParent.transform.localPosition = Vector3.zero;
+            mLineParent.transform.localRotation = Quaternion.identity;
             
             // Initialize default gradient if not set
-            if (distanceGradient == null)
+            if (mDistanceGradient == null)
             {
-                distanceGradient = new Gradient();
+                mDistanceGradient = new Gradient();
                 GradientColorKey[] colorKeys = new GradientColorKey[3];
                 colorKeys[0] = new GradientColorKey(Color.red, 0.0f);    // Close range - red
                 colorKeys[1] = new GradientColorKey(Color.yellow, 0.5f); // Medium range - yellow  
@@ -66,7 +66,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
                 alphaKeys[0] = new GradientAlphaKey(1.0f, 0.0f);
                 alphaKeys[1] = new GradientAlphaKey(1.0f, 1.0f);
-                distanceGradient.SetKeys(colorKeys, alphaKeys);
+                mDistanceGradient.SetKeys(colorKeys, alphaKeys);
             }
         }
 
@@ -117,8 +117,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 inLineRenderer.gameObject.SetActive(true);
                 inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin
                 inLineRenderer.SetPosition(1, inScan.Item1); // Set the end point at
-                inLineRenderer.startColor = distanceGradient.Evaluate(Mathf.InverseLerp(inScan.Item2, 0, inScan.Item2));
-                inLineRenderer.endColor = distanceGradient.Evaluate(Mathf.InverseLerp(inScan.Item2, 0, inScan.Item2));
+                inLineRenderer.startColor = mDistanceGradient.Evaluate(Mathf.InverseLerp(inScan.Item2, 0, inScan.Item2));
+                inLineRenderer.endColor = mDistanceGradient.Evaluate(Mathf.InverseLerp(inScan.Item2, 0, inScan.Item2));
             }
             else
             {
@@ -130,12 +130,12 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         LineRenderer CreateScanVisual(int idx)
         {
             GameObject lineObj = new GameObject($"LidarLine_{mLineRenderers.Count + idx}");
-            lineObj.transform.SetParent(linesParent.transform);
+            lineObj.transform.SetParent(mLineParent.transform);
             lineObj.transform.localPosition = Vector3.zero;
             LineRenderer lr = lineObj.AddComponent<LineRenderer>();
-            lr.material = lineMaterial;
-            lr.startWidth = lineWidth;
-            lr.endWidth = lineWidth;
+            lr.material = mLidarVisualMaterial;
+            lr.startWidth = mLineWidth;
+            lr.endWidth = mLineWidth;
             lr.positionCount = 2;
             lr.useWorldSpace = false; // Use local space relative to parent
             return lr;
@@ -170,9 +170,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         
         void OnDestroy()
         {
-            if (linesParent != null)
+            if (mLineParent != null)
             {
-                DestroyImmediate(linesParent);
+                DestroyImmediate(mLineParent);
             }
             
             // Clean up ROS2 subscription
