@@ -442,10 +442,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19ff5c35be23f23d09613522b2e03e82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lidarTopicName: /scan
-  lineMaterial: {fileID: 2100000, guid: e3d372b3121ab3e8ab4ad00da940a801, type: 2}
-  lineWidth: 0.02
-  distanceGradient:
+  mLidarTopicName: /scan
+  mLidarVisualMaterial: {fileID: 0}
+  mLineWidth: 0.02
+  mDistanceGradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
     key1: {r: 1, g: 1, b: 1, a: 1}
@@ -689,6 +689,11 @@ MonoBehaviour:
   imageWidth: 640
   imageHeight: 480
   publishRate: 30
+  mLiDARComputeShader: {fileID: 7200000, guid: 9179a9ab794eb7c1fb1ad145d0a993e5, type: 3}
+  reliabilityPolicy: 2
+  historyPolicy: 1
+  historyDepth: 2
+  durabilityPolicy: 2
   mPositionErrorThreshold: 10
   mLinearVelocity_P_Gain: 1
   mAngularVelocity_P_Gain: 1

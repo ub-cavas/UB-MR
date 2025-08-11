@@ -40,8 +40,9 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] int imageHeight = 480;
         [SerializeField] float publishRate = 1.0f; // 1 FPS
 
-        
-        [Header("LiDAR Capture Parameters")]
+
+        [Header("LiDAR Capture Parameters")] 
+        [SerializeField] ComputeShader mLiDARComputeShader;
         [SerializeField] ReliabilityPolicy reliabilityPolicy = ReliabilityPolicy.QOS_POLICY_RELIABILITY_BEST_EFFORT;
         [SerializeField] HistoryPolicy historyPolicy = HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST;
         [SerializeField] int historyDepth = 2;
@@ -122,7 +123,7 @@ namespace CAVAS.UB_MR.DT
                 qosProfile.SetReliability(reliabilityPolicy);
                 qosProfile.SetHistory(historyPolicy, historyDepth);
                 qosProfile.SetDurability(durabilityPolicy);
-                this.mLidarModifier = new LidarModifier(this.transform, lidarTopicName, this.mNode, qosProfile);
+                this.mLidarModifier = new LidarModifier(this.transform, lidarTopicName, this.mLiDARComputeShader, this.mNode, qosProfile);
             }
         }
 
