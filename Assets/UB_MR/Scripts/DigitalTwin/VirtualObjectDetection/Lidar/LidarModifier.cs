@@ -19,6 +19,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         ISubscription<LaserScan> mLidarSubscriber;
         Transform mLidarTransform;
         ComputeShader mLiDARComputeShader;
+        ComputeBuffer mBuffer;
+        LidarData[] mData;
+        LidarData[] mModifiedData;
+        bool mIsUpdatingBuffer;
 
         public LidarModifier(Transform inLidarSensorTransform, string inTopicName, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile)
         {
@@ -29,41 +33,53 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader = inComputeShader;
             this.mLidarTransform =  inLidarSensorTransform;
             this.mNode = inNode;
-            this.mLidarSubscriber = this.mNode.CreateSubscription<LaserScan>(inTopicName, GPU_LidarModification, qosProfile);
+            this.mLidarSubscriber = this.mNode.CreateSubscription<LaserScan>(inTopicName, ReadLiDAR, qosProfile);
+            this.mIsUpdatingBuffer = false;
         }
 
-        void GPU_LidarModification(LaserScan inLaserScan)
+        void ReadLiDAR(LaserScan inLaserScan)
         {
-            LidarData[] data = PreprocessLiDAR(inLaserScan);
-            LidarData[] output = new LidarData[data.Length];
-            ComputeBuffer buffer = new ComputeBuffer(data.Length, sizeof(float) * 2); //Multiply by 2 because each scan contains 2 floats (angle, range)
-            buffer.SetData(data);
+            if (this.mData == null)
+                this.mData = new LidarData[inLaserScan.Ranges.Length];
+            if (this.mModifiedData== null)
+                this.mModifiedData = new LidarData[this.mData.Length];
+            PreprocessLiDAR(inLaserScan); 
+        }
+
+        public void ModifyLiDAR()
+        {
+            if (this.mData == null || this.mModifiedData == null)
+                return;
+            if (this.mBuffer == null)
+                this.mBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 2); //Multiply by 2 because each scan contains 2 floats (angle, range)
+
+            if (this.mIsUpdatingBuffer)
+                return;
+            
+            this.mBuffer.SetData(this.mData);
             int kernel = this.mLiDARComputeShader.FindKernel("CartesianConvert");
-            this.mLiDARComputeShader.SetBuffer(kernel, "lidarBuffer", buffer);
-            this.mLiDARComputeShader.Dispatch(kernel, data.Length, 1, 1);
-            buffer.GetData(output);
-            buffer.Dispose();
+            this.mLiDARComputeShader.SetBuffer(kernel, "lidarBuffer", this.mBuffer);
+            this.mLiDARComputeShader.Dispatch(kernel, this.mData.Length, 1, 1);
+            this.mBuffer.GetData(this.mModifiedData);
+            
         }
 
-        LidarData[] PreprocessLiDAR(LaserScan inLaserScan)
+        void PreprocessLiDAR(LaserScan inLaserScan)
         {
-            LidarData[] lidarScanData = new LidarData[inLaserScan.Ranges.Length];
+            this.mIsUpdatingBuffer = true;
             float currentAngle = inLaserScan.Angle_min;
             int j = 0;
             for (int i = 0; i < inLaserScan.Ranges.Length; i++)
             {
-                LidarData data = new LidarData();
-                data.angle = currentAngle;
-                data.range = inLaserScan.Ranges[i];
-
+                this.mData[j].angle = currentAngle;
+                this.mData[j].range = inLaserScan.Ranges[i];
                 // TODO: Insert Logic to keep track of the bad LiDAR Readings (index) and reinstate them after GPU modification
-                if (!IsValidMeasurement(data.range, inLaserScan.Range_min, inLaserScan.Range_max))
-                    data.range = 0;
-                lidarScanData[j] = data;
+                if (!IsValidMeasurement(this.mData[j].range, inLaserScan.Range_min, inLaserScan.Range_max))
+                    this.mData[j].range = 0;
                 currentAngle += inLaserScan.Angle_increment;
                 j++;
             }
-            return lidarScanData;
+            this.mIsUpdatingBuffer = false;
         }
         
         bool IsValidMeasurement(float range, float rangeMin, float rangeMax)
@@ -73,7 +89,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public void CleanUp()
         {
-            
+            this.mBuffer.Dispose();
         }
 
     }

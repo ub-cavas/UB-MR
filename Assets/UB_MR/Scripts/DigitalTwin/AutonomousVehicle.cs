@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using ROS2;
 using System.Collections;
@@ -98,9 +99,10 @@ namespace CAVAS.UB_MR.DT
             }
         }
 
-        void Update()
+        protected virtual void Update()
         {
-            
+            if (IsOwner)
+                this.mLidarModifier.ModifyLiDAR();
         }
 
         void ConnectToROS()

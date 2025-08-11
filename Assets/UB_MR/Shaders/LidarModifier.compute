@@ -12,6 +12,5 @@ RWStructuredBuffer<LidarData> lidarBuffer;
 [numthreads(8,8,1)]
 void CartesianConvert (uint3 id : SV_DispatchThreadID)
 {
-    // TODO: insert actual code here!
-    //Result[id.xy] = float4(id.x & id.y, (id.x & 15)/15.0, (id.y & 15)/15.0, 0.0);
+    lidarBuffer[id.x].angle = lidarBuffer[id.x].angle + 1;
 }
