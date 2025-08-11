@@ -6,8 +6,9 @@ namespace CAVAS.UB_MR.DT
     public class AV_Reflect : AutonomousVehicle
     {
 
-        void Update()
+        protected override void Update()
         {
+            base.Update();
             SnapUpdate();
         }
 
