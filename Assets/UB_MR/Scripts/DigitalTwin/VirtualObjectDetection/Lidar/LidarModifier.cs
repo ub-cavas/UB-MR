@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
+    //TODO: Support 3D angles
     struct LidarData
     {
         public float angle;
@@ -23,18 +24,36 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         LidarData[] mData;
         LidarData[] mModifiedData;
         bool mIsUpdatingBuffer;
+        int mKernel;
 
-        public LidarModifier(Transform inLidarSensorTransform, string inTopicName, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile)
+        SDFTexture mSDF;
+        // Raymarching Parameters (Global to all SDFs)
+        float maxDistance = 10f;
+        float hitThreshold = 0.001f;
+        int maxIterations = 128;
+        float stepScale = 0.9f;
+        
+
+        public LidarModifier(Transform inLidarSensorTransform, string inTopicName, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
         {
-            QualityOfServiceProfile qosProfile = new QualityOfServiceProfile();
-            qosProfile.SetReliability(ReliabilityPolicy.QOS_POLICY_RELIABILITY_BEST_EFFORT);
-            qosProfile.SetHistory(HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST, 2);
-            qosProfile.SetDurability(DurabilityPolicy.QOS_POLICY_DURABILITY_VOLATILE);
             this.mLiDARComputeShader = inComputeShader;
             this.mLidarTransform =  inLidarSensorTransform;
             this.mNode = inNode;
-            this.mLidarSubscriber = this.mNode.CreateSubscription<LaserScan>(inTopicName, ReadLiDAR, qosProfile);
+            this.mLidarSubscriber = this.mNode.CreateSubscription<LaserScan>(inTopicName, ReadLiDAR, inQoSProfile);
             this.mIsUpdatingBuffer = false;
+            
+            // TODO: Support multiple SDFs
+            this.mKernel = this.mLiDARComputeShader.FindKernel("LiDAR_Modifier");
+            this.mSDF = inSDFs;
+            // This part should be done for each SDF
+            this.mLiDARComputeShader.SetTexture(this.mKernel, "_SDFTexture", this.mSDF.sdf);
+            this.mLiDARComputeShader.SetMatrix("_SDFToWorld", this.mSDF.worldToSDFTexCoords.inverse);
+            this.mLiDARComputeShader.SetMatrix("_WorldToSDF", this.mSDF.worldToSDFTexCoords);
+            // This part is global for all SDFs
+            this.mLiDARComputeShader.SetFloat("_MaxDistance", maxDistance);
+            this.mLiDARComputeShader.SetFloat("_HitThreshold", hitThreshold);
+            this.mLiDARComputeShader.SetInt("_MaxIterations", maxIterations);
+            this.mLiDARComputeShader.SetFloat("_StepScale", stepScale);
         }
 
         void ReadLiDAR(LaserScan inLaserScan)
@@ -51,17 +70,16 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             if (this.mData == null || this.mModifiedData == null)
                 return;
             if (this.mBuffer == null)
-                this.mBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 2); //Multiply by 2 because each scan contains 2 floats (angle, range)
+                this.mBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 2); // Multiply by 2 because each scan contains 2 floats (angle, range)
 
             if (this.mIsUpdatingBuffer)
                 return;
             
             this.mBuffer.SetData(this.mData);
-            int kernel = this.mLiDARComputeShader.FindKernel("CartesianConvert");
-            this.mLiDARComputeShader.SetBuffer(kernel, "lidarBuffer", this.mBuffer);
-            this.mLiDARComputeShader.Dispatch(kernel, this.mData.Length, 1, 1);
-            this.mBuffer.GetData(this.mModifiedData);
             
+            this.mLiDARComputeShader.SetBuffer(this.mKernel, "lidarBuffer", this.mBuffer);
+            this.mLiDARComputeShader.Dispatch(this.mKernel, this.mData.Length, 1, 1);
+            this.mBuffer.GetData(this.mModifiedData);
         }
 
         void PreprocessLiDAR(LaserScan inLaserScan)
@@ -89,7 +107,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public void CleanUp()
         {
-            this.mBuffer.Dispose();
+            this.mBuffer?.Dispose();
+            this.mBuffer?.Release();
         }
 
     }
