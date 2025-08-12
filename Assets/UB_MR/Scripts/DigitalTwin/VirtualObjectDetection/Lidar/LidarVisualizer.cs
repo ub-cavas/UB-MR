@@ -13,7 +13,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         [SerializeField] Gradient mDistanceGradient; // Gradient for color coding distances
         
         ROS2Node mNode;
-        ISubscription<LaserScan> mLidarSubscriber;
+        ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber;
         
         // LineRenderer components for visualization
         List<LineRenderer> mLineRenderers = new List<LineRenderer>();
@@ -35,7 +35,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 qosProfile.SetReliability(ReliabilityPolicy.QOS_POLICY_RELIABILITY_BEST_EFFORT);
                 qosProfile.SetHistory(HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST, 2);
                 qosProfile.SetDurability(DurabilityPolicy.QOS_POLICY_DURABILITY_VOLATILE);
-                this.mLidarSubscriber = this.mNode.CreateSubscription<LaserScan>(mLidarTopicName, UpdateCartesianData, qosProfile);
+                this.mLidarSubscriber = this.mNode.CreateSubscription<sensor_msgs.msg.LaserScan>(mLidarTopicName, UpdateCartesianData, qosProfile);
             }
             
             // Initialize visualization components
@@ -141,7 +141,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return lr;
         }
             
-        void UpdateCartesianData(LaserScan scan)
+        void UpdateCartesianData(sensor_msgs.msg.LaserScan scan)
         {
             if (!this.mIsReading)
             {

@@ -14,24 +14,15 @@ float _HitThreshold;         // Distance threshold to consider a hit (e.g., 0.00
 int _MaxIterations;          // Maximum iterations (e.g., 128)
 float _StepScale;           // Scale factor for stepping (0.5 to 1.0, lower = more accurate but slower)
 
-struct LidarData
+struct UnityLaserScan
 {
     float3 direction;
-    float distance;
+    float3 position;
+    float range;
+    uint hasIntersection;
 };
 
-struct LidarHit
-{
-    float3 point;
-};
-
-RWStructuredBuffer<LidarData> lidarBuffer;
-
-[numthreads(8,8,1)]
-void LiDAR_Modifier (uint3 id : SV_DispatchThreadID)
-{
-    //lidarBuffer[id.x].angle = lidarBuffer[id.x].angle + 1;
-}
+RWStructuredBuffer<UnityLaserScan> laserScanBuffer;
 
 float SampleSDF(float3 worldPosition, Texture3D<float> sdf)
 {
@@ -46,37 +37,52 @@ float SampleSDF(float3 worldPosition, Texture3D<float> sdf)
     return sdf.SampleLevel(sampler_SDFTexture, sdfPos.xyz, 0).r;
 }
 
-LidarHit Raymarch(LidarData lidarData)
+float3 Raymarch(float3 rayDirection, float3 initialPosition)
 {
-    LidarHit lidarHit;
-    lidarHit.point = float3(0,0,0);
-    
-    float3 currentPos = origin;
+    float3 currentPosition = origin;
     float totalDistance = 0.0;
-    // TODO: Iterate all SDFs
     for (int i = 0; i < _MaxIterations; i++)
     {
-        float sdfDistance = SampleSDF(currentPos, _SDFTexture);
-        if (sdfDistance < _HitThreshold)
+        // Sample the SDF at current position
+        float distance = SampleSDF(currentPosition, _SDFTexture);
+        
+        // Check if we hit the surface
+        if (distance < _HitThreshold)
         {
-            if (sdfDistance < lidarData.distance)
-                lidarHit.point = currentPos;
-            else 
-                lidarHit.point = lidarData.direction * lidarData.distance;
-            
-            break;
+            return currentPosition; // Hit point found
         }
-        if (totalDistance > _MaxDistance)
+        
+        // Check if we've exceeded maximum distance
+        if (totalDistance >= _MaxDistance)
         {
-            break;
+            break; // No intersection within max distance
         }
-        // Step forward along the ray
-        // The SDF gives us the minimum safe distance we can step
-        float stepDistance = sdfDistance * _StepScale;
-        currentPos += lidarData.direction * stepDistance;
-        totalDistance += stepDistance;
+        
+        // Step along the ray
+        float stepSize = distance * _StepScale;
+        currentPosition += rayDirection * stepSize;
+        totalDistance += stepSize;
     }
-    return lidarHit;
     
-    
+    // No intersection found - return initial position far away
+    return initialPosition;
 }
+
+[numthreads(64,1,1)]
+void LiDAR_Modifier (uint3 id : SV_DispatchThreadID)
+{
+    UnityLaserScan scan = laserScanBuffer[id.x];
+    float3 hitPosition = Raymarch(scan.direction, scan.position);
+    float distanceToHit = length(hitPosition - origin);
+    if (distanceToHit < scan.range)
+    {
+        // Valid hit found
+        scan.position = hitPosition;
+        scan.range = distanceToHit;
+        scan.hasIntersection = 1;
+    }
+    // Write back to buffer
+    laserScanBuffer[id.x] = scan;
+}
+
+
