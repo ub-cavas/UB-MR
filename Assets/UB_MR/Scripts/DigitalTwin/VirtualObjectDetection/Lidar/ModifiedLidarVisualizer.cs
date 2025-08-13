@@ -5,9 +5,34 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
     public class ModifiedLidarVisualizer : LidarVisualizer
     {
+        [SerializeField] private bool useGPU = false;
+        [SerializeField] private float interval = 0.1f; // 1/10th of a second
         [SerializeField] ComputeShader lidarModComputeShader;
         [SerializeField] SDFTexture sdfTexture;
         LidarModifier mLidarModifier;
+        private float timer = 0f;
+        
+
+        protected override void Update()
+        {
+            timer += Time.deltaTime;
+        
+            if (timer >= interval && this.mLidarModifier != null)
+            {
+                UnityLaserScan[] scan;
+                if (this.useGPU)
+                {
+                    scan = this.mLidarModifier.GetModifiedScan(this.transform);
+                }
+                else
+                {
+                    scan = this.mLidarModifier.GetScan();
+                }
+                //
+                VisualizeModifiedScan(scan);
+                timer = 0f; // Reset timer
+            }
+        }
 
 
         protected override void Awake()
@@ -69,17 +94,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                     SetVisual(true, this.mLineRenderers[i], inScan[i].position);
             }
             this.mIsReading = false;
-        }
-
-        protected override void Update()
-        {
-            if (this.mLidarModifier != null)
-            {
-                //UnityLaserScan[] scan = this.mLidarModifier.ModifyLiDAR(this.transform);
-                UnityLaserScan[] scan = this.mLidarModifier.GetScan();
-                //VisualizeModifiedScan(scan);
-                Debug.Log("Modified Lidar");
-            }
         }
         
         public void OnDestroy()

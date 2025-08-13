@@ -64,17 +64,16 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         {
             if (this.mIsDirty || this.mData == null || this.mModifiedData == null)
                 return null;
-            
-            // Update position + rotation of LiDAR
-            this.mWorldPosition = inTransform.position;
-            this.mRotation = inTransform.rotation.eulerAngles;
-            
             if (this.mBuffer == null)
             {
                 int size = (sizeof(float) * 3) + sizeof(uint);
                 this.mBuffer = new ComputeBuffer(this.mData.Length, size);
             }
             
+            // Update position + rotation of LiDAR
+            this.mWorldPosition = inTransform.position;
+            this.mRotation = inTransform.rotation.eulerAngles;
+            // Prepare data for GPU
             this.mBuffer.SetData(this.mData);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "laserScanBuffer", this.mBuffer);
             this.mLiDARComputeShader.Dispatch(this.mKernel, 19, 1, 1);
