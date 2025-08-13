@@ -76,11 +76,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             if (this.mLidarModifier != null)
             {
                 //UnityLaserScan[] scan = this.mLidarModifier.ModifyLiDAR(this.transform);
-                VisualizeModifiedScan(this.mLidarModifier.GetScan());
+                UnityLaserScan[] scan = this.mLidarModifier.GetScan();
+                //VisualizeModifiedScan(scan);
                 Debug.Log("Modified Lidar");
             }
-               
-            //base.Update();
         }
         
         public void OnDestroy()

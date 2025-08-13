@@ -756,7 +756,7 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  lidarModComputeShader: {fileID: 7200000, guid: 9179a9ab794eb7c1fb1ad145d0a993e5, type: 3}
+  lidarModComputeShader: {fileID: 7200000, guid: 40570204bf259f53c8d8d21fa12dc81c, type: 3}
   sdfTexture: {fileID: 917409067}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
