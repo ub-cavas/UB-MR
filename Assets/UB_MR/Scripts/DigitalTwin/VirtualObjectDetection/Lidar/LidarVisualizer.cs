@@ -112,7 +112,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mIsReading = false;
         }
 
-        protected void SetVisual(bool inRender, LineRenderer inLineRenderer, (Vector3, float) inScan)
+        void SetVisual(bool inRender, LineRenderer inLineRenderer, (Vector3, float) inScan)
         {
             if (inRender)
             {
@@ -126,7 +126,20 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             {
                 inLineRenderer.gameObject.SetActive(false);
             }
-            
+        }
+
+        protected void SetVisual(bool inRender, LineRenderer inLineRenderer, Vector3 inPosition)
+        {
+            if (inRender)
+            {
+                inLineRenderer.gameObject.SetActive(true);
+                inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin
+                inLineRenderer.SetPosition(1, inPosition); // Set the end point 
+            }
+            else
+            {
+                inLineRenderer.gameObject.SetActive(false);
+            }
         }
 
         protected LineRenderer CreateScanVisual(int idx)

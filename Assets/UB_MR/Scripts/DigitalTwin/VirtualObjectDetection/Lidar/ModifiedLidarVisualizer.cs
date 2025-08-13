@@ -51,22 +51,22 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 }
                 // Render them
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(true, this.mLineRenderers[i], (inScan[i].direction, inScan[i].range));
+                    SetVisual(true, this.mLineRenderers[i], inScan[i].position);
             }
             // "Remove" some lines
             else if (inScan.Length < mLineRenderers.Count)
             {
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(true, this.mLineRenderers[i], (inScan[i].direction, inScan[i].range));
+                    SetVisual(true, this.mLineRenderers[i], inScan[i].position);
                 // Don't render excess lines
                 for (int i = mLineRenderers.Count - 1; i >= inScan.Length; i--)
-                    SetVisual(false, this.mLineRenderers[i], (Vector3.zero, 0f));
+                    SetVisual(false, this.mLineRenderers[i], Vector3.zero);
             }
             else
             {
                 // Update existing lines
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(true, this.mLineRenderers[i], (inScan[i].direction, inScan[i].range));
+                    SetVisual(true, this.mLineRenderers[i], inScan[i].position);
             }
             this.mIsReading = false;
         }

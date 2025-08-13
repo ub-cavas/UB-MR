@@ -7,9 +7,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
     //TODO: Support 3D angles
     public struct UnityLaserScan
     {
-        public Vector3 direction;
         public Vector3 position;
-        public float range;
         public uint hasIntersection;
     }
     
@@ -94,8 +92,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "laserScanBuffer", this.mBuffer);
             this.mLiDARComputeShader.Dispatch(this.mKernel, this.mData.Length, 1, 1);
             this.mBuffer.GetData(this.mModifiedData);  
-            foreach (UnityLaserScan scan in this.mModifiedData)
-                Debug.Log(scan.direction +" " + scan.range);
             return this.mModifiedData;
         }
 
@@ -106,14 +102,12 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             int j = 0;
             for (int i = 0; i < inLaserScan.Ranges.Length; i++)
             {
-                this.mData[j].direction = GetNormalizedDirection(currentAngle);
-                this.mData[j].range = inLaserScan.Ranges[i];
-                this.mData[j].position = this.mWorldPosition + mData[j].direction * this.mData[j].range;
+                this.mData[j].position = this.mWorldPosition + GetPointPosition(currentAngle, inLaserScan.Ranges[i]);
                 this.mData[j].hasIntersection = 0;
                 
                 // TODO: Insert Logic to keep track of the bad LiDAR Readings (index) and reinstate them after GPU modification
-                if (!IsValidMeasurement(this.mData[j].range, inLaserScan.Range_min, inLaserScan.Range_max))
-                    this.mData[j].range = 0;
+                if (!IsValidMeasurement(inLaserScan.Ranges[i], inLaserScan.Range_min, inLaserScan.Range_max))
+                    this.mData[j].position = new Vector3(0,0,0);
                 
                 currentAngle += inLaserScan.Angle_increment;
                 j++;
@@ -121,9 +115,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mIsUpdatingBuffer = false;
         }
 
-        Vector3 GetNormalizedDirection(float inAngle)
+        Vector3 GetPointPosition(float inAngle, float inRange)
         {
-            return new Vector3(Mathf.Cos(inAngle), 0f, Mathf.Sin(inAngle));
+            return new Vector3(inRange * Mathf.Cos(inAngle), 0f, inRange * Mathf.Sin(inAngle));
         }
         
         bool IsValidMeasurement(float range, float rangeMin, float rangeMax)
