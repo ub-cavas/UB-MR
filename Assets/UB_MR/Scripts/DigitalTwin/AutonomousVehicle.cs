@@ -106,7 +106,7 @@ namespace CAVAS.UB_MR.DT
         {
             if (IsOwner)
             {
-                this.mLidarModifier.ModifyLiDAR(this.mLidar); 
+                this.mLidarModifier.GetModifiedScan(this.mLidar); 
             }
                 
         }

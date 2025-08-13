@@ -1,0 +1,35 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel LidarExtender
+
+Texture3D<float> _SDFTexture; // mesh-to-sdf texture
+SamplerState sampler_SDFTexture;
+float4x4 _WorldToSDF;        // Transforms from world space to SDF texture space (0-1)
+float4x4 _SDFToWorld;        // Transform SDF texture space (0-1) to world space
+
+float3 origin;
+// Raymarching parameters
+float _MaxDistance;          // Maximum distance to march
+float _HitThreshold;         // Distance threshold to consider a hit (e.g., 0.001)
+int _MaxIterations;          // Maximum iterations (e.g., 128)
+float _StepScale;           // Scale factor for stepping (0.5 to 1.0, lower = more accurate but slower)
+
+struct UnityLaserScan
+{
+    float3 position;
+    uint hasIntersection;
+};
+
+RWStructuredBuffer<UnityLaserScan> laserScanBuffer;
+
+[numthreads(64,1,1)]
+void LidarExtender (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= 1210) return;
+    
+    UnityLaserScan scan = laserScanBuffer[id.x];
+    scan.position = float3(scan.position.x, scan.position.y, scan.position.z);
+    // Write back to buffer
+    laserScanBuffer[id.x] = scan;
+}
+
+
