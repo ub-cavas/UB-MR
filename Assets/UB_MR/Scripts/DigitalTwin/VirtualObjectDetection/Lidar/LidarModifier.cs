@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
     //TODO: Support 3D angles
-    struct UnityLaserScan
+    public struct UnityLaserScan
     {
         public Vector3 direction;
         public Vector3 position;
@@ -32,16 +32,18 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         float hitThreshold = 0.001f;
         int maxIterations = 128;
         float stepScale = 0.9f;
+        Vector3 mWorldPosition = Vector3.zero;
+        Vector3 mRotation = Vector3.zero;
         
 
         public LidarModifier(Transform inLidarSensorTransform, string inTopicName, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
         {
             this.mLiDARComputeShader = inComputeShader;
-            this.mLidarTransform =  inLidarSensorTransform;
+            this.mLidarTransform = inLidarSensorTransform;
             this.mNode = inNode;
             this.mLidarSubscriber = this.mNode.CreateSubscription<sensor_msgs.msg.LaserScan>(inTopicName, ReadLiDAR, inQoSProfile);
             this.mIsUpdatingBuffer = false;
-            
+
             // TODO: Support multiple SDFs
             this.mKernel = this.mLiDARComputeShader.FindKernel("LiDAR_Modifier");
             this.mSDF = inSDFs;
@@ -56,6 +58,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.SetFloat("_StepScale", stepScale);
         }
 
+        public UnityLaserScan[] GetScan()
+        {
+            return this.mData;
+        }
+
         void ReadLiDAR(sensor_msgs.msg.LaserScan inLaserScan)
         {
             if (this.mData == null)
@@ -65,10 +72,14 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             PreprocessLiDAR(inLaserScan); 
         }
 
-        public void ModifyLiDAR()
+        public UnityLaserScan[] ModifyLiDAR(Transform inTransform)
         {
+            // Update position + rotation of LiDAR
+            this.mWorldPosition = inTransform.position;
+            this.mRotation = inTransform.rotation.eulerAngles;
+            
             if (this.mData == null || this.mModifiedData == null)
-                return;
+                return null;
             if (this.mBuffer == null)
             {
                 int size = (2 * sizeof(float) * 3) + sizeof(float) + sizeof(uint);
@@ -77,12 +88,15 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 
 
             if (this.mIsUpdatingBuffer)
-                return;
+                return this.mModifiedData;
             
             this.mBuffer.SetData(this.mData);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "laserScanBuffer", this.mBuffer);
             this.mLiDARComputeShader.Dispatch(this.mKernel, this.mData.Length, 1, 1);
             this.mBuffer.GetData(this.mModifiedData);  
+            foreach (UnityLaserScan scan in this.mModifiedData)
+                Debug.Log(scan.direction +" " + scan.range);
+            return this.mModifiedData;
         }
 
         void PreprocessLiDAR(sensor_msgs.msg.LaserScan inLaserScan)
@@ -94,7 +108,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             {
                 this.mData[j].direction = GetNormalizedDirection(currentAngle);
                 this.mData[j].range = inLaserScan.Ranges[i];
-                this.mData[j].position = this.mLidarTransform.position + mData[j].direction * this.mData[j].range;
+                this.mData[j].position = this.mWorldPosition + mData[j].direction * this.mData[j].range;
                 this.mData[j].hasIntersection = 0;
                 
                 // TODO: Insert Logic to keep track of the bad LiDAR Readings (index) and reinstate them after GPU modification
@@ -109,8 +123,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         Vector3 GetNormalizedDirection(float inAngle)
         {
-            float rad = inAngle * Mathf.Deg2Rad;
-            return new Vector3(Mathf.Sin(rad), 0f, Mathf.Cos(rad));
+            return new Vector3(Mathf.Cos(inAngle), 0f, Mathf.Sin(inAngle));
         }
         
         bool IsValidMeasurement(float range, float rangeMin, float rangeMax)
