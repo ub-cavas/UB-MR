@@ -43,7 +43,8 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] float publishRate = 1.0f; // 1 FPS
 
 
-        [Header("LiDAR Capture Parameters")] 
+        [Header("LiDAR Capture Parameters")] [SerializeField]
+        private Transform mLidar;
         [SerializeField] List<SDFTexture> mSDFs;
         [SerializeField] ComputeShader mLiDARComputeShader;
         [SerializeField] ReliabilityPolicy reliabilityPolicy = ReliabilityPolicy.QOS_POLICY_RELIABILITY_BEST_EFFORT;
@@ -104,7 +105,10 @@ namespace CAVAS.UB_MR.DT
         protected virtual void Update()
         {
             if (IsOwner)
-                this.mLidarModifier.ModifyLiDAR();
+            {
+                this.mLidarModifier.ModifyLiDAR(this.mLidar); 
+            }
+                
         }
 
         void ConnectToROS()

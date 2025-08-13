@@ -7,21 +7,21 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
     public class LidarVisualizer : MonoBehaviour
     {
-        [SerializeField] string mLidarTopicName = "/scan"; // Topic name for Lidar scans
+        [SerializeField] protected string mLidarTopicName = "/scan"; // Topic name for Lidar scans
         [SerializeField] Material mLidarVisualMaterial; // Material for the line renderer
         [SerializeField] float mLineWidth = 0.02f; // Width of the lines
         [SerializeField] Gradient mDistanceGradient; // Gradient for color coding distances
         
-        ROS2Node mNode;
-        ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber;
+        protected ROS2Node mNode;
+        protected ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber;
         
         // LineRenderer components for visualization
-        List<LineRenderer> mLineRenderers = new List<LineRenderer>();
-        List<(Vector3, float)> mCartesianData = new List<(Vector3, float)>();
-        GameObject mLineParent;
-        bool mIsReading = false;
+        protected List<LineRenderer> mLineRenderers = new List<LineRenderer>();
+        protected List<(Vector3, float)> mCartesianData = new List<(Vector3, float)>();
+        protected GameObject mLineParent;
+        protected bool mIsReading = false;
 
-        void Awake()
+        protected virtual void Awake()
         {
             if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
             {
@@ -42,12 +42,12 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             InitializeVisualization();
         }
 
-        void Update()
+        protected virtual void Update()
         {
             VisualizeMostRecentScan();
         }
 
-        void InitializeVisualization()
+        protected void InitializeVisualization()
         {
             // Create parent object for organization
             mLineParent = new GameObject("LidarLines");
@@ -69,6 +69,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 mDistanceGradient.SetKeys(colorKeys, alphaKeys);
             }
         }
+
+        
 
         void VisualizeMostRecentScan()
         {
@@ -110,7 +112,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mIsReading = false;
         }
 
-        void SetVisual(bool inRender, LineRenderer inLineRenderer, (Vector3, float) inScan)
+        protected void SetVisual(bool inRender, LineRenderer inLineRenderer, (Vector3, float) inScan)
         {
             if (inRender)
             {
@@ -127,7 +129,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             
         }
 
-        LineRenderer CreateScanVisual(int idx)
+        protected LineRenderer CreateScanVisual(int idx)
         {
             GameObject lineObj = new GameObject($"LidarLine_{mLineRenderers.Count + idx}");
             lineObj.transform.SetParent(mLineParent.transform);
