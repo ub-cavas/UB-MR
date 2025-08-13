@@ -16,9 +16,7 @@ float _StepScale;           // Scale factor for stepping (0.5 to 1.0, lower = mo
 
 struct UnityLaserScan
 {
-    float3 direction;
     float3 position;
-    float range;
     uint hasIntersection;
 };
 
