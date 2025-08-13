@@ -1,6 +1,10 @@
 // Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel LidarModifier
 
+#define MAX_STEPS 256
+#define MAX_DISTANCE 128.0
+#define PRECISION 0.01
+#define SURFACE_THRESHOLD 0.001
 
 Texture3D<float> _SDFTexture; // mesh-to-sdf texture
 SamplerState sampler_SDFTexture;
@@ -67,11 +71,54 @@ float3 Raymarch(float3 position)
     return position;
 }
 
+float3 RaymarchSpecial(float3 position)
+{
+    // Ray origin at world position (0,0,0)
+    float3 rayOrigin = float3(0.0, 0.0, 0.0);
+    
+    // Ensure ray direction is normalized
+    float3 rayDir = normalize(position);
+    
+    // Initialize raymarch variables
+    float totalDistance = 0.0;
+    float3 currentPos = rayOrigin;
+    bool hit = false;
+    float3 hitPoint = float3(0.0, 0.0, 0.0);
+    
+    // Raymarch loop
+    for (int i = 0; i < MAX_STEPS; i++)
+    {
+        // Sample SDF at current position
+        float sdfDistance = SampleSDF(currentPos, _SDFTexture);
+        
+        // Check if we're close enough to the surface
+        if (abs(sdfDistance) < SURFACE_THRESHOLD)
+        {
+            return currentPos;
+        }
+        
+        // Move along the ray by the SDF distance
+        // This is safe because SDF gives us the minimum distance to any surface
+        float stepSize = max(sdfDistance, PRECISION);
+        totalDistance += stepSize;
+        
+        // Check if we've exceeded maximum distance
+        if (totalDistance > MAX_DISTANCE)
+        {
+            break;
+        }
+        
+        // Update current position
+        currentPos = rayOrigin + rayDir * totalDistance;
+    }
+    return position;
+}
+
 [numthreads(64,1,1)]
 void LidarModifier (uint3 id : SV_DispatchThreadID)
 {
     UnityLaserScan scan = laserScanBuffer[id.x];
-    float3 hitPosition = Raymarch(scan.position);
+    float3 hitPosition = RaymarchSpecial(scan.position);
     if (all(hitPosition == scan.position))
     {
         scan.hasIntersection = 0;
