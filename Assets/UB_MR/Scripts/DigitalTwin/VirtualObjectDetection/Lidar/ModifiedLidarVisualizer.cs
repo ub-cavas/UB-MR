@@ -23,13 +23,15 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 if (this.useGPU)
                 {
                     scan = this.mLidarModifier.GetModifiedScan(this.transform);
+                    VisualizeScanIntersections(scan);
+                    int intersections = CountIntersections(scan);
+                    Debug.Log("Intersections: " + intersections);
                 }
                 else
                 {
                     scan = this.mLidarModifier.GetScan();
+                    VisualizeModifiedScan(scan);
                 }
-                //
-                VisualizeModifiedScan(scan);
                 timer = 0f; // Reset timer
             }
         }
@@ -96,10 +98,63 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mIsReading = false;
         }
         
+        void VisualizeScanIntersections(UnityLaserScan[] inScan)
+        {
+            if (inScan == null || inScan.Length == 0)
+            {
+                Debug.LogWarning("No valid points to visualize in Lidar scan.");
+                return;
+            }
+            this.mIsReading = true;
+            if (inScan.Length > mLineRenderers.Count)
+            {
+                // Add more lines
+                int newScans = inScan.Length - mLineRenderers.Count;
+                for (int i = 0; i < newScans; i++)
+                {
+                    LineRenderer lr = CreateScanVisual(i);
+                    mLineRenderers.Add(lr);
+                }
+                // Render them
+                for (int i = 0; i < inScan.Length; i++)
+                    SetVisual(inScan[i].hasIntersection == 1, this.mLineRenderers[i], inScan[i].position);
+            }
+            // "Remove" some lines
+            else if (inScan.Length < mLineRenderers.Count)
+            {
+                for (int i = 0; i < inScan.Length; i++)
+                    SetVisual(inScan[i].hasIntersection == 1, this.mLineRenderers[i], inScan[i].position);
+                // Don't render excess lines
+                for (int i = mLineRenderers.Count - 1; i >= inScan.Length; i--)
+                    SetVisual(false, this.mLineRenderers[i], Vector3.zero);
+            }
+            else
+            {
+                // Update existing lines
+                for (int i = 0; i < inScan.Length; i++)
+                    SetVisual(inScan[i].hasIntersection == 1, this.mLineRenderers[i], inScan[i].position);
+            }
+            this.mIsReading = false;
+        }
+        
         public void OnDestroy()
         {
             if (this.mLidarModifier != null)
                 this.mLidarModifier.CleanUp();
+        }
+        
+        public static int CountIntersections(UnityLaserScan[] laserScans)
+        {
+            if (laserScans == null)
+                return 0;
+            
+            int count = 0;
+            for (int i = 0; i < laserScans.Length; i++)
+            {
+                if (laserScans[i].hasIntersection == 1)
+                    count++;
+            }
+            return count;
         }
     }
 }
