@@ -26,7 +26,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         SDFTexture mSDF;
         // Raymarching Parameters (Global to all SDFs)
         float maxDistance = 10f;
-        float hitThreshold = 0.001f;
+        float hitThreshold = 0.01f;
         int maxIterations = 128;
         float stepScale = 0.9f;
         Vector3 mWorldPosition = Vector3.zero;
@@ -84,7 +84,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         void ReadLiDAR(sensor_msgs.msg.LaserScan inLaserScan)
         {
             this.mIsDirty = true;
-            Debug.Log(inLaserScan.Ranges.Length);
+            //Debug.Log(inLaserScan.Ranges.Length);
             if (this.mData == null)
                 this.mData = new UnityLaserScan[inLaserScan.Ranges.Length];
             if (this.mModifiedData== null)

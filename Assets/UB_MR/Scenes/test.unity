@@ -222,7 +222,7 @@ Transform:
   m_GameObject: {fileID: 569577019}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 1.675}
   m_LocalScale: {x: 2, y: 1.5424, z: 1.5424}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -317,7 +317,7 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   useGPU: 0
   interval: 0.1
-  lidarModComputeShader: {fileID: 7200000, guid: 40570204bf259f53c8d8d21fa12dc81c, type: 3}
+  lidarModComputeShader: {fileID: 7200000, guid: 9179a9ab794eb7c1fb1ad145d0a993e5, type: 3}
   sdfTexture: {fileID: 917409067}
 --- !u!114 &676050278
 MonoBehaviour:
@@ -449,7 +449,7 @@ Transform:
   m_GameObject: {fileID: 676050276}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.058, y: 0.40322146, z: -2.738}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.1, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -911,7 +911,7 @@ Transform:
   m_GameObject: {fileID: 1861058804}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.058, y: 0.40322146, z: -2.738}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.1, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -964,7 +964,7 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   useGPU: 1
   interval: 0.1
-  lidarModComputeShader: {fileID: 7200000, guid: 40570204bf259f53c8d8d21fa12dc81c, type: 3}
+  lidarModComputeShader: {fileID: 7200000, guid: 9179a9ab794eb7c1fb1ad145d0a993e5, type: 3}
   sdfTexture: {fileID: 917409067}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
