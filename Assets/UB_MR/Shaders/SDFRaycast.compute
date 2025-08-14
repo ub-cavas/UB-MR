@@ -1,0 +1,47 @@
+#pragma kernel CSMain
+
+StructuredBuffer<float3> _Directions;
+RWStructuredBuffer<float4> _Intersections;
+
+float4x4 _WorldToSDFSpace;
+Texture3D<float> _SDF;
+SamplerState sampler_SDF;
+float _Margin;
+int _MaxIterations;
+float _MaxDistance;
+float _HitThreshold;
+
+float SampleSDF(float3 worldPos)
+{
+    float3 sdfLocalPos = mul(_WorldToSDFSpace, float4(worldPos, 1.0)).xyz;
+    return _SDF.SampleLevel(sampler_SDF, sdfLocalPos, 0).r - _Margin;
+}
+
+[numthreads(64,1,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    uint count, stride;
+    _Directions.GetDimensions(count, stride);
+    if (id.x >= count)
+        return;
+
+    float3 dir = normalize(_Directions[id.x]);
+    float t = 0.0;
+    float3 pos = float3(0.0, 0.0, 0.0);
+    float hit = 0.0;
+
+    for (uint i = 0; i < (uint)_MaxIterations && t < _MaxDistance; ++i)
+    {
+        float dist = SampleSDF(pos);
+        if (dist < _HitThreshold)
+        {
+            hit = 1.0;
+            break;
+        }
+        t += dist;
+        pos = dir * t;
+    }
+
+    _Intersections[id.x] = float4(pos, hit);
+}
+
