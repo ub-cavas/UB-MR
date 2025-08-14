@@ -104,7 +104,7 @@ namespace CAVAS.UB_MR.DT
 
         protected virtual void Update()
         {
-            if (IsOwner)
+            if (IsOwner && this.mLidarModifier != null && this.mLidar != null)
             {
                 this.mLidarModifier.GetModifiedScan(this.mLidar); 
             }
@@ -133,7 +133,7 @@ namespace CAVAS.UB_MR.DT
                 qosProfile.SetDurability(durabilityPolicy);
                 
                 //TODO: dynamic lists of SDFS... currently just supports 1 sdf
-                this.mLidarModifier = new LidarModifier(this.transform, lidarTopicName, this.mLiDARComputeShader, this.mNode, qosProfile, this.mSDFs[0]);
+                //this.mLidarModifier = new LidarModifier(this.transform, lidarTopicName, this.mLiDARComputeShader, this.mNode, qosProfile, this.mSDFs[0]);
             }
         }
 
