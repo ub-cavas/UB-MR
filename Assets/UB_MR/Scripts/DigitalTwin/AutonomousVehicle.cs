@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
 using ROS2;
 using System.Collections;
 using Unity.Cinemachine;
+using System.Collections.Generic;
 using CAVAS.UB_MR.DT.VirtualObjectDetection;
+using CAVAS.UB_MR.DT.VirtualObjectDetection.Camera;
+using CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar;
 
 namespace CAVAS.UB_MR.DT
 {
@@ -18,10 +22,14 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] bool enableBoundingBoxCapture = true; // Enable detection of virtual objects
         [SerializeField] bool enableImageCapture = true; // Enable image capture
         [SerializeField] bool enableLidarModifier = true; // Enable Lidar modifier for virtual objects
+        [Space]
         [SerializeField] string worldTransformationTopicName = "/world_transform"; // Topic name for world transformation updates
+        [Space]
         [SerializeField] string boundingBoxTopicName = "/virtual_obstacles"; // Topic name for publishing virtual object bounding boxes
+        [Space]
         [SerializeField] string virtualCameraImageTopicName = "/virtual_camera/image_raw"; // Topic name for publishing virtual camera images
         [SerializeField] string virtualCameraDepthTopicName = "/virtual_camera/depth"; // Topic name for publishing virtual camera depth images
+        [Space]
         [SerializeField] string lidarTopicName = "/lidar/scan"; // Topic name for Lidar scans
 
         [Space]
@@ -35,6 +43,15 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] float publishRate = 1.0f; // 1 FPS
 
 
+        [Header("LiDAR Capture Parameters")] [SerializeField]
+        private Transform mLidar;
+        [SerializeField] List<SDFTexture> mSDFs;
+        [SerializeField] ComputeShader mLiDARComputeShader;
+        [SerializeField] ReliabilityPolicy reliabilityPolicy = ReliabilityPolicy.QOS_POLICY_RELIABILITY_BEST_EFFORT;
+        [SerializeField] HistoryPolicy historyPolicy = HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST;
+        [SerializeField] int historyDepth = 2;
+        [SerializeField] DurabilityPolicy durabilityPolicy = DurabilityPolicy.QOS_POLICY_DURABILITY_VOLATILE;
+
         protected Vector3 mWorldPosition = Vector3.zero;
         protected Vector3 mAngularVelocity = Vector3.zero;
         protected Vector3 mLinearVelocity = Vector3.zero; 
@@ -47,7 +64,6 @@ namespace CAVAS.UB_MR.DT
         ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
 
         
-
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -86,10 +102,13 @@ namespace CAVAS.UB_MR.DT
             }
         }
 
-        void Update()
+        protected virtual void Update()
         {
-            if (enableLidarModifier && this.mLidarModifier != null)
-                this.mLidarModifier.UpdateMovingObjects();
+            if (IsOwner)
+            {
+                this.mLidarModifier.GetModifiedScan(this.mLidar); 
+            }
+                
         }
 
         void ConnectToROS()
@@ -98,15 +117,23 @@ namespace CAVAS.UB_MR.DT
             {
                 string name = gameObject.name.Replace("(Clone)", "");
                 name = name.Replace(" Variant", "");
-                // This is sort of cheating but ROS2_Bridge is not immediately deleting nodes so this avoids a collision
+                // This is sort of cheating but ROS2_Bridge is not immediately deleting nodes so this avoids a collision (~99% of the time)
                 int randomSuffix = UnityEngine.Random.Range(0, 1000);
                 this.mNode = ROS2_Bridge.ROS_CORE.CreateNode(name + "_Digital_Twin_" + randomSuffix.ToString());
                 // World Transformation Subscriber
                 this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>(worldTransformationTopicName, WorldTransformationUpdate);
-                // Obstacle Bounding Box Publisher
+                // Bounding Box (Ground Truth)
                 this.mVirtualBoundingBoxDetector = new VirtualBoundingBoxDetector(boundingBoxTopicName, this.mNode, this.transform);
+                // Camera
                 this.mVirtualCameraOverlay = new VirtualCameraOverlay(this, virtualCameraImageTopicName, virtualCameraDepthTopicName, this.mNode, FindFirstObjectByType<Camera>(), imageWidth, imageHeight);
-                this.mLidarModifier = new LidarModifier(this.transform, this.mNode, lidarTopicName);
+                // LiDAR
+                QualityOfServiceProfile qosProfile = new QualityOfServiceProfile();
+                qosProfile.SetReliability(reliabilityPolicy);
+                qosProfile.SetHistory(historyPolicy, historyDepth);
+                qosProfile.SetDurability(durabilityPolicy);
+                
+                //TODO: dynamic lists of SDFS... currently just supports 1 sdf
+                this.mLidarModifier = new LidarModifier(this.transform, lidarTopicName, this.mLiDARComputeShader, this.mNode, qosProfile, this.mSDFs[0]);
             }
         }
 
