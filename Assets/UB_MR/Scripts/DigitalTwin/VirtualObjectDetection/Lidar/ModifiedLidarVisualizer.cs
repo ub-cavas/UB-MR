@@ -5,6 +5,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
     public class ModifiedLidarVisualizer : LidarVisualizer
     {
+        [SerializeField] private float maxRaytraceDistance = 100.0f;
+        [SerializeField] private float hitThreshold = 0.01f;
+        [SerializeField] private int maxIterations = 32;
         [SerializeField] private bool useGPU = false;
         [SerializeField] private float interval = 0.1f; // 1/10th of a second
         [SerializeField] ComputeShader lidarModComputeShader;
@@ -21,7 +24,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             {
                 Vector4[] scan;
                 if (this.useGPU)
+                {
+                    this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
                     scan = this.mLidarModifier.GetModifiedScan(this.transform);
+                }
                 else
                     scan = this.mLidarModifier.GetScan();
                 timer = 0f; // Reset timer

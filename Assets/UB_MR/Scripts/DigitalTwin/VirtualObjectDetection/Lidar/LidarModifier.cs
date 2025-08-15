@@ -16,10 +16,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         SDFTexture mSDF;
         // Raymarching Parameters (Global to all SDFs)
-        float maxDistance = 10f;
-        float hitThreshold = 0.01f;
-        int maxIterations = 128;
-        float stepScale = 0.9f;
+        
         Vector3 mWorldPosition = Vector3.zero;
         private bool mIsDirty;
         
@@ -36,12 +33,29 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             // This part should be done for each SDF
             this.mLiDARComputeShader.SetTexture(this.mKernel, "_SDF", this.mSDF.sdf);
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
-            // This part is global for all SDFs
-            this.mLiDARComputeShader.SetFloat("_Margin", 0.0f);
-            this.mLiDARComputeShader.SetFloat("_MaxDistance", maxDistance);
-            this.mLiDARComputeShader.SetFloat("_HitThreshold", hitThreshold);
-            this.mLiDARComputeShader.SetInt("_MaxIterations", maxIterations);
+            
+            // Global for ALL SDFs
+            // (Default Parameters)
+            float maxDistance = 10f;
+            float hitThreshold = 0.01f;
+            int maxIterations = 128;
+            this.UpdateSDFRaytraceParameters(maxDistance, hitThreshold, maxIterations);
             this.mLiDARComputeShader.SetVector("_Origin", this.mWorldPosition);
+        }
+        
+        /// <summary>
+        /// This is mostly a Debugging Method ... don't call it in Update() if in production 
+        /// </summary>
+        /// <param name="inMaxDistance"></param>
+        /// <param name="inHitThreshold"></param>
+        /// <param name="inMaxIterations"></param>
+        /// <param name="inMargin"></param>
+        public void UpdateSDFRaytraceParameters(float inMaxDistance, float inHitThreshold, int inMaxIterations, float inMargin = 0.1f)
+        {
+            this.mLiDARComputeShader.SetFloat("_Margin", inMargin);
+            this.mLiDARComputeShader.SetFloat("_MaxDistance", inMaxDistance);
+            this.mLiDARComputeShader.SetFloat("_HitThreshold", inHitThreshold);
+            this.mLiDARComputeShader.SetInt("_MaxIterations", inMaxIterations);
         }
 
         public Vector4[] GetScan()
