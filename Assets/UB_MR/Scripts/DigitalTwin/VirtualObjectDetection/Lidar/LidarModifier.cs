@@ -8,7 +8,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
     {
         ROS2Node mNode;
         ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber;
-        Transform mLidarTransform;
         ComputeShader mLiDARComputeShader;
         ComputeBuffer mBuffer;
         Vector4[] mData;
@@ -25,10 +24,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         private bool mIsDirty;
         
 
-        public LidarModifier(Transform inLidarSensorTransform, string inTopicName, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
+        public LidarModifier(string inTopicName, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
         {
             this.mLiDARComputeShader = inComputeShader;
-            this.mLidarTransform = inLidarSensorTransform;
             this.mNode = inNode;
             this.mLidarSubscriber = this.mNode.CreateSubscription<sensor_msgs.msg.LaserScan>(inTopicName, ReadLiDAR, inQoSProfile);
 
@@ -37,7 +35,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mSDF = inSDFs;
             // This part should be done for each SDF
             this.mLiDARComputeShader.SetTexture(this.mKernel, "_SDF", this.mSDF.sdf);
-            
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
             // This part is global for all SDFs
             this.mLiDARComputeShader.SetFloat("_Margin", 0.0f);
@@ -47,12 +44,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.SetVector("_Origin", this.mWorldPosition);
         }
 
-        public Vector4[] GetScanAsVector4()
+        public Vector4[] GetScan()
         {
-            return System.Array.ConvertAll(this.mData, v => new Vector4(v.x, v.y, v.z, 1f));
+            return this.mData;
         }
-
-       
         
         public Vector4[] GetModifiedScan(Transform inTransform)
         {
@@ -61,9 +56,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             if (this.mBuffer == null)
                 this.mBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 4);
             
-            // Update position + rotation of LiDAR
+            // Update position of LiDAR
             // TODO: ROTATION?
-            this.mLiDARComputeShader.SetVector("_Origin", inTransform.position); ;
+            this.mLiDARComputeShader.SetVector("_Origin", inTransform.position);
+            this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
             // Prepare data for GPU
             this.mBuffer.SetData(this.mData);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mBuffer);

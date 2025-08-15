@@ -24,6 +24,9 @@ void SDFRaycast (uint3 id : SV_DispatchThreadID)
     if (id.x >= count)
         return;
 
+    if (length(_Points[id.x].xyz) <= 0.0001f)
+        return;
+
     float3 dirWorld = normalize(_Points[id.x].xyz);
 
     // Transform direction into SDF space
@@ -45,7 +48,7 @@ void SDFRaycast (uint3 id : SV_DispatchThreadID)
 
     if (tEnter >= tExit)
     {
-        _Points[id.x] = float4(dirWorld * _MaxDistance, 0.0);
+        //_Points[id.x] = float4(dirWorld * _MaxDistance, 0.0);
         return;
     }
 
@@ -75,7 +78,7 @@ void SDFRaycast (uint3 id : SV_DispatchThreadID)
     // Compare with original LiDAR hit and take minimum (might be able to optimize and not use an if-statement)
     if (length(worldPos - _Origin) > length(_Points[id.x].xyz - _Origin))
     {
-        worldPos = _Points[id.x];
+        worldPos = _Points[id.x].xyz;
         hit = 0;
     }
     
