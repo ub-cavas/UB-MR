@@ -154,7 +154,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 inLineRenderer.gameObject.SetActive(true);
                 inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin
                 inLineRenderer.SetPosition(1, inPosition); // Set the end point 
-                //inLineRenderer.endColor = Color.red;
             }
             else
             {

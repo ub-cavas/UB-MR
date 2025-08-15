@@ -21,21 +21,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             {
                 Vector4[] scan;
                 if (this.useGPU)
-                {
                     scan = this.mLidarModifier.GetModifiedScan(this.transform);
-                    VisualizeModifiedScan(scan);
-                    //VisualizeScanIntersectionsOnly(scan);
-                    
-                    //int intersections = CountIntersections(scan);
-                    //Debug.Log("Intersections: " + intersections);
-                    //PrintScanData(scan);
-                }
                 else
-                {
                     scan = this.mLidarModifier.GetScan();
-                    VisualizeModifiedScan(scan);
-                }
                 timer = 0f; // Reset timer
+                VisualizeModifiedScan(scan);
             }
         }
 
@@ -97,84 +87,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 // Update existing lines
                 for (int i = 0; i < inScan.Length; i++)
                     SetVisual(true, this.mLineRenderers[i], inScan[i]);
-            }
-            this.mIsReading = false;
-        }
-        
-        void VisualizeScanIntersections(Vector4[] inScan)
-        {
-            if (inScan == null || inScan.Length == 0)
-            {
-                Debug.LogWarning("No valid points to visualize in Lidar scan.");
-                return;
-            }
-            this.mIsReading = true;
-            if (inScan.Length > mLineRenderers.Count)
-            {
-                // Add more lines
-                int newScans = inScan.Length - mLineRenderers.Count;
-                for (int i = 0; i < newScans; i++)
-                {
-                    LineRenderer lr = CreateScanVisual(i);
-                    mLineRenderers.Add(lr);
-                }
-                // Render them
-                for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(this.mLineRenderers[i],inScan[i].w == 1, new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
-            }
-            // "Remove" some lines
-            else if (inScan.Length < mLineRenderers.Count)
-            {
-                for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(this.mLineRenderers[i],inScan[i].w == 1, new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
-                // Don't render excess lines
-                for (int i = mLineRenderers.Count - 1; i >= inScan.Length; i--)
-                    SetVisual(false, this.mLineRenderers[i], Vector3.zero);
-            }
-            else
-            {
-                // Update existing lines
-                for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(this.mLineRenderers[i],inScan[i].w == 1, new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
-            }
-            this.mIsReading = false;
-        }
-        
-        void VisualizeScanIntersectionsOnly(Vector4[] inScan)
-        {
-            if (inScan == null || inScan.Length == 0)
-            {
-                Debug.LogWarning("No valid points to visualize in Lidar scan.");
-                return;
-            }
-            this.mIsReading = true;
-            if (inScan.Length > mLineRenderers.Count)
-            {
-                // Add more lines
-                int newScans = inScan.Length - mLineRenderers.Count;
-                for (int i = 0; i < newScans; i++)
-                {
-                    LineRenderer lr = CreateScanVisual(i);
-                    mLineRenderers.Add(lr);
-                }
-                // Render them
-                for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(inScan[i].w == 1, this.mLineRenderers[i], new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
-            }
-            // "Remove" some lines
-            else if (inScan.Length < mLineRenderers.Count)
-            {
-                for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(inScan[i].w == 1, this.mLineRenderers[i], new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
-                // Don't render excess lines
-                for (int i = mLineRenderers.Count - 1; i >= inScan.Length; i--)
-                    SetVisual(false, this.mLineRenderers[i], Vector3.zero);
-            }
-            else
-            {
-                // Update existing lines
-                for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(inScan[i].w == 1, this.mLineRenderers[i], new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
             }
             this.mIsReading = false;
         }
