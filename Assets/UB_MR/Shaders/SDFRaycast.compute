@@ -1,7 +1,6 @@
-#pragma kernel CSMain
+#pragma kernel SDFRaycast
 
-StructuredBuffer<float3> _Directions;
-RWStructuredBuffer<float4> _Intersections;
+RWStructuredBuffer<float4> _Points;
 
 float4x4 _WorldToSDFSpace;
 Texture3D<float> _SDF;
@@ -10,6 +9,7 @@ float _Margin;
 int _MaxIterations;
 float _MaxDistance;
 float _HitThreshold;
+float3 _Origin;
 
 float SampleSDF(float3 sdfPos)
 {
@@ -17,14 +17,14 @@ float SampleSDF(float3 sdfPos)
 }
 
 [numthreads(64,1,1)]
-void CSMain (uint3 id : SV_DispatchThreadID)
+void SDFRaycast (uint3 id : SV_DispatchThreadID)
 {
     uint count, stride;
-    _Directions.GetDimensions(count, stride);
+    _Points.GetDimensions(count, stride);
     if (id.x >= count)
         return;
 
-    float3 dirWorld = normalize(_Directions[id.x]);
+    float3 dirWorld = normalize(_Points[id.x].xyz);
 
     // Transform direction into SDF space
     float3 dirSDFTrans = mul((float3x3)_WorldToSDFSpace, dirWorld);
@@ -32,7 +32,7 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     float3 dirSDF = dirSDFTrans / dirScale;
 
     // Ray origin in SDF space
-    float3 originSDF = mul(_WorldToSDFSpace, float4(0.0, 0.0, 0.0, 1.0)).xyz;
+    float3 originSDF = mul(_WorldToSDFSpace, float4(_Origin, 1.0)).xyz;
 
     // Compute entry/exit of ray with unit SDF volume
     float3 invDir = 1.0 / dirSDF;
@@ -45,7 +45,7 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 
     if (tEnter >= tExit)
     {
-        _Intersections[id.x] = float4(dirWorld * _MaxDistance, 0.0);
+        _Points[id.x] = float4(dirWorld * _MaxDistance, 0.0);
         return;
     }
 
@@ -72,6 +72,14 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     float worldT = t / dirScale;
     float3 worldPos = dirWorld * worldT;
 
-    _Intersections[id.x] = float4(worldPos, hit);
+    // Compare with original LiDAR hit and take minimum (might be able to optimize and not use an if-statement)
+    if (length(worldPos - _Origin) > length(_Points[id.x].xyz - _Origin))
+    {
+        worldPos = _Points[id.x];
+        hit = 0;
+    }
+    
+
+    _Points[id.x] = float4(worldPos, hit);
 }
 

@@ -19,7 +19,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         
             if (timer >= interval && this.mLidarModifier != null)
             {
-                UnityLaserScan[] scan;
+                Vector4[] scan;
                 if (this.useGPU)
                 {
                     scan = this.mLidarModifier.GetModifiedScan(this.transform);
@@ -29,7 +29,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 }
                 else
                 {
-                    scan = this.mLidarModifier.GetScan();
+                    scan = this.mLidarModifier.GetScanAsVector4();
                     VisualizeModifiedScan(scan);
                 }
                 timer = 0f; // Reset timer
@@ -59,7 +59,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             InitializeVisualization();
         }
         
-        void VisualizeModifiedScan(UnityLaserScan[] inScan)
+        void VisualizeModifiedScan(Vector4[] inScan)
         {
             if (inScan == null || inScan.Length == 0)
             {
@@ -78,13 +78,13 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 }
                 // Render them
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(true, this.mLineRenderers[i], inScan[i].position);
+                    SetVisual(true, this.mLineRenderers[i], new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
             }
             // "Remove" some lines
             else if (inScan.Length < mLineRenderers.Count)
             {
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(true, this.mLineRenderers[i], inScan[i].position);
+                    SetVisual(true, this.mLineRenderers[i], new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
                 // Don't render excess lines
                 for (int i = mLineRenderers.Count - 1; i >= inScan.Length; i--)
                     SetVisual(false, this.mLineRenderers[i], Vector3.zero);
@@ -93,12 +93,12 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             {
                 // Update existing lines
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(true, this.mLineRenderers[i], inScan[i].position);
+                    SetVisual(true, this.mLineRenderers[i], new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
             }
             this.mIsReading = false;
         }
         
-        void VisualizeScanIntersections(UnityLaserScan[] inScan)
+        void VisualizeScanIntersections(Vector4[] inScan)
         {
             if (inScan == null || inScan.Length == 0)
             {
@@ -117,13 +117,13 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 }
                 // Render them
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(inScan[i].hasIntersection == 1, this.mLineRenderers[i], inScan[i].position);
+                    SetVisual(inScan[i].w == 1, this.mLineRenderers[i], new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
             }
             // "Remove" some lines
             else if (inScan.Length < mLineRenderers.Count)
             {
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(inScan[i].hasIntersection == 1, this.mLineRenderers[i], inScan[i].position);
+                    SetVisual(inScan[i].w == 1, this.mLineRenderers[i], new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
                 // Don't render excess lines
                 for (int i = mLineRenderers.Count - 1; i >= inScan.Length; i--)
                     SetVisual(false, this.mLineRenderers[i], Vector3.zero);
@@ -132,7 +132,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             {
                 // Update existing lines
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(inScan[i].hasIntersection == 1, this.mLineRenderers[i], inScan[i].position);
+                    SetVisual(inScan[i].w == 1, this.mLineRenderers[i], new Vector3(inScan[i].x, inScan[i].y, inScan[i].z));
             }
             this.mIsReading = false;
         }
@@ -143,7 +143,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 this.mLidarModifier.CleanUp();
         }
         
-        public static int CountIntersections(UnityLaserScan[] laserScans)
+        public static int CountIntersections(Vector4[] laserScans)
         {
             if (laserScans == null)
                 return 0;
@@ -151,7 +151,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             int count = 0;
             for (int i = 0; i < laserScans.Length; i++)
             {
-                if (laserScans[i].hasIntersection == 1)
+                if (laserScans[i].w == 1)
                     count++;
             }
             return count;

@@ -4,14 +4,6 @@ using UnityEngine;
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
-    //TODO: Support 3D angles
-    public struct UnityLaserScan
-    {
-        public Vector3 position;
-        public uint hasIntersection;
-    }
-    
-    
     public class LidarModifier
     {
         ROS2Node mNode;
@@ -19,8 +11,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         Transform mLidarTransform;
         ComputeShader mLiDARComputeShader;
         ComputeBuffer mBuffer;
-        UnityLaserScan[] mData;
-        UnityLaserScan[] mModifiedData;
+        Vector4[] mData;
+        Vector4[] mModifiedData;
         int mKernel;
 
         SDFTexture mSDF;
@@ -30,7 +22,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         int maxIterations = 128;
         float stepScale = 0.9f;
         Vector3 mWorldPosition = Vector3.zero;
-        Vector3 mRotation = Vector3.zero;
         private bool mIsDirty;
         
 
@@ -45,37 +36,39 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mKernel = this.mLiDARComputeShader.FindKernel(inComputeShader.name);
             this.mSDF = inSDFs;
             // This part should be done for each SDF
-            this.mLiDARComputeShader.SetTexture(this.mKernel, "_SDFTexture", this.mSDF.sdf);
-            this.mLiDARComputeShader.SetMatrix("_SDFToWorld", this.mSDF.worldToSDFTexCoords.inverse);
-            this.mLiDARComputeShader.SetMatrix("_WorldToSDF", this.mSDF.worldToSDFTexCoords);
+            this.mLiDARComputeShader.SetTexture(this.mKernel, "_SDF", this.mSDF.sdf);
+            
+            this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
             // This part is global for all SDFs
+            this.mLiDARComputeShader.SetFloat("_Margin", 0.0f);
             this.mLiDARComputeShader.SetFloat("_MaxDistance", maxDistance);
             this.mLiDARComputeShader.SetFloat("_HitThreshold", hitThreshold);
             this.mLiDARComputeShader.SetInt("_MaxIterations", maxIterations);
             this.mLiDARComputeShader.SetFloat("_StepScale", stepScale);
+            this.mLiDARComputeShader.SetVector("_Origin", this.mWorldPosition);
         }
 
-        public UnityLaserScan[] GetScan()
+        public Vector4[] GetScanAsVector4()
         {
-            return this.mData;
+            return System.Array.ConvertAll(this.mData, v => new Vector4(v.x, v.y, v.z, 1f));
         }
+
+       
         
-        public UnityLaserScan[] GetModifiedScan(Transform inTransform)
+        public Vector4[] GetModifiedScan(Transform inTransform)
         {
             if (this.mIsDirty || this.mData == null || this.mModifiedData == null)
                 return null;
             if (this.mBuffer == null)
-            {
-                int size = (sizeof(float) * 3) + sizeof(uint);
-                this.mBuffer = new ComputeBuffer(this.mData.Length, size);
-            }
+                this.mBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 4);
             
             // Update position + rotation of LiDAR
-            this.mWorldPosition = inTransform.position;
-            this.mRotation = inTransform.rotation.eulerAngles;
+            // TODO: ROTATION?
+            this.mLiDARComputeShader.SetVector("_Origin", inTransform.position); ;
             // Prepare data for GPU
             this.mBuffer.SetData(this.mData);
-            this.mLiDARComputeShader.SetBuffer(this.mKernel, "laserScanBuffer", this.mBuffer);
+            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mBuffer);
+            // TODO: Add logic for scans with more than 1210 rays
             this.mLiDARComputeShader.Dispatch(this.mKernel, 19, 1, 1);
             this.mBuffer.GetData(this.mModifiedData);  
             return this.mModifiedData;
@@ -84,21 +77,23 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         void ReadLiDAR(sensor_msgs.msg.LaserScan inLaserScan)
         {
             this.mIsDirty = true;
-            //Debug.Log(inLaserScan.Ranges.Length);
             if (this.mData == null)
-                this.mData = new UnityLaserScan[inLaserScan.Ranges.Length];
+                this.mData = new Vector4[inLaserScan.Ranges.Length];
             if (this.mModifiedData== null)
-                this.mModifiedData = new UnityLaserScan[this.mData.Length];
+                this.mModifiedData = new Vector4[this.mData.Length];
             // Preprocess Data
             float currentAngle = inLaserScan.Angle_min;
             int j = 0;
             for (int i = 0; i < inLaserScan.Ranges.Length; i++)
             {
-                this.mData[j].position = this.mWorldPosition + new Vector3(inLaserScan.Ranges[i] * Mathf.Cos(currentAngle), 0f, inLaserScan.Ranges[i] * Mathf.Sin(currentAngle));
-                this.mData[j].hasIntersection = 0;
-                // TODO: Insert Logic to keep track of the bad LiDAR Readings (index) and reinstate them after GPU modification
                 if (!IsValidMeasurement(inLaserScan.Ranges[i], inLaserScan.Range_min, inLaserScan.Range_max))
-                    this.mData[j].position = new Vector3(0,0,0);
+                    this.mData[j] = new Vector4(0,0,0,0);
+                else
+                {
+                    Vector3 pos = this.mWorldPosition + new Vector3(inLaserScan.Ranges[i] * Mathf.Cos(currentAngle), 0f, inLaserScan.Ranges[i] * Mathf.Sin(currentAngle));
+                    this.mData[j] = new Vector4(pos.x, pos.y, pos.z, 0); // TODO: Do this calculation on GPU
+                }
+                    
                 currentAngle += inLaserScan.Angle_increment;
                 j++;
             }

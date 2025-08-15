@@ -34,6 +34,7 @@ public class SDFRaycaster : MonoBehaviour
         raycastShader.SetInt("_MaxIterations", maxIterations);
         raycastShader.SetFloat("_MaxDistance", maxDistance);
         raycastShader.SetFloat("_HitThreshold", hitThreshold);
+        raycastShader.SetVector("_Origin", transform.position);
 
         uint threadGroupSizeX;
         raycastShader.GetKernelThreadGroupSizes(kernel, out threadGroupSizeX, out _, out _);
