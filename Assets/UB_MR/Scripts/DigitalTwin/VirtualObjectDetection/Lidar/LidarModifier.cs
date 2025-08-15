@@ -44,7 +44,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.SetFloat("_MaxDistance", maxDistance);
             this.mLiDARComputeShader.SetFloat("_HitThreshold", hitThreshold);
             this.mLiDARComputeShader.SetInt("_MaxIterations", maxIterations);
-            this.mLiDARComputeShader.SetFloat("_StepScale", stepScale);
             this.mLiDARComputeShader.SetVector("_Origin", this.mWorldPosition);
         }
 
