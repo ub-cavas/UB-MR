@@ -11,10 +11,9 @@ int _MaxIterations;
 float _MaxDistance;
 float _HitThreshold;
 
-float SampleSDF(float3 worldPos)
+float SampleSDF(float3 sdfPos)
 {
-    float3 sdfLocalPos = mul(_WorldToSDFSpace, float4(worldPos, 1.0)).xyz;
-    return _SDF.SampleLevel(sampler_SDF, sdfLocalPos, 0).r - _Margin;
+    return _SDF.SampleLevel(sampler_SDF, sdfPos, 0).r - _Margin;
 }
 
 [numthreads(64,1,1)]
@@ -25,23 +24,54 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     if (id.x >= count)
         return;
 
-    float3 dir = normalize(_Directions[id.x]);
-    float t = 0.0;
-    float3 pos = float3(0.0, 0.0, 0.0);
+    float3 dirWorld = normalize(_Directions[id.x]);
+
+    // Transform direction into SDF space
+    float3 dirSDFTrans = mul((float3x3)_WorldToSDFSpace, dirWorld);
+    float dirScale = length(dirSDFTrans);
+    float3 dirSDF = dirSDFTrans / dirScale;
+
+    // Ray origin in SDF space
+    float3 originSDF = mul(_WorldToSDFSpace, float4(0.0, 0.0, 0.0, 1.0)).xyz;
+
+    // Compute entry/exit of ray with unit SDF volume
+    float3 invDir = 1.0 / dirSDF;
+    float3 t0 = (0.0 - originSDF) * invDir;
+    float3 t1 = (1.0 - originSDF) * invDir;
+    float3 tmin = min(t0, t1);
+    float3 tmax = max(t0, t1);
+    float tEnter = max(max(tmin.x, tmin.y), max(tmin.z, 0.0));
+    float tExit = min(min(tmax.x, tmax.y), tmax.z);
+
+    if (tEnter >= tExit)
+    {
+        _Intersections[id.x] = float4(dirWorld * _MaxDistance, 0.0);
+        return;
+    }
+
+    float t = tEnter;
+    float3 pos = originSDF + dirSDF * t;
+    float maxDistance = min(_MaxDistance * dirScale, tExit);
     float hit = 0.0;
 
-    for (uint i = 0; i < (uint)_MaxIterations && t < _MaxDistance; ++i)
+    for (uint i = 0; i < (uint)_MaxIterations && t < maxDistance; ++i)
     {
-        float dist = SampleSDF(pos);
-        if (dist < _HitThreshold)
+        float distWorld = SampleSDF(pos);
+        if (distWorld < _HitThreshold)
         {
             hit = 1.0;
             break;
         }
-        t += dist;
-        pos = dir * t;
+
+        float distSDF = distWorld * dirScale;
+        t += distSDF;
+        pos += dirSDF * distSDF;
     }
 
-    _Intersections[id.x] = float4(pos, hit);
+    t = min(t, maxDistance);
+    float worldT = t / dirScale;
+    float3 worldPos = dirWorld * worldT;
+
+    _Intersections[id.x] = float4(worldPos, hit);
 }
 
