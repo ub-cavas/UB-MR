@@ -32,6 +32,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                     scan = this.mLidarModifier.GetScan();
                 timer = 0f; // Reset timer
                 VisualizeModifiedScan(scan);
+                PrintScanData(scan);
             }
         }
 
