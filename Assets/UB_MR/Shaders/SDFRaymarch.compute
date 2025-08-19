@@ -45,12 +45,12 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
     worldDir = normalize(worldDir);
 
     // Transform Ray to texture space
-    float3 texRayOrigin = WorldToTexPoint(float4(0,0,0,1.0));
+    float3 texRayOrigin = WorldToTexPoint(float4(_Origin, 1.0));
     float3 texRayDir = WorldToTexDir(float4(worldDir, 1.0));
 
     // Clip to Unit Cube
     float tEnter, tExit;
-    if (!RayBoxUnit(texRayOrigin, texRayDir, tEnter, tExit)) { _Points[id.x] = float4(0,0,0,0); return; }
+    if (!RayBoxUnit(texRayOrigin, texRayDir, tEnter, tExit)) { return; } // No intersection do nothing
     float step  = max(tEnter, 0.0);
     float dist = 0;
     
@@ -63,11 +63,15 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
         if (dist < _HitThreshold)
         {
             float3 worldHit = mul(_SDFToWorldSpace, float4(texPoint, 1.0)).xyz;
-            _Points[id.x] = float4(worldHit, 1.0);
+            if (length(worldHit - _Origin) < length(_Points[id.x].xyz - _Origin))
+            {
+                _Points[id.x] = float4(worldHit, 1.0);
+            }
             return;
         }
         step += dist;
     }
-    // No hit
-    _Points[id.x] = float4(0,0,0,step);
+    // No intersection do nothing
+    
+    
 }

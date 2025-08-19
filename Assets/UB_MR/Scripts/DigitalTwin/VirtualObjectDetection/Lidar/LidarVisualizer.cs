@@ -10,7 +10,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         [SerializeField] protected string mLidarTopicName = "/scan"; // Topic name for Lidar scans
         [SerializeField] Material mLidarVisualMaterial; // Material for the line renderer
         [SerializeField] float mLineWidth = 0.02f; // Width of the lines
-        [SerializeField] Gradient mDistanceGradient; // Gradient for color coding distances
+        
         
         protected ROS2Node mNode;
         protected ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber;
@@ -20,6 +20,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         protected List<(Vector3, float)> mCartesianData = new List<(Vector3, float)>();
         protected GameObject mLineParent;
         protected bool mIsReading = false;
+        protected Gradient mDistanceGradient; // Gradient for color coding distances
 
         protected virtual void Awake()
         {
@@ -144,22 +145,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             else
             {
                 inLineRenderer.gameObject.SetActive(false);
-            }
-        }
-
-        protected void SetVisual(LineRenderer inLineRenderer, bool isVirtualHit, Vector3 inPosition)
-        {
-            if (isVirtualHit)
-            {
-                inLineRenderer.gameObject.SetActive(true);
-                inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin
-                inLineRenderer.SetPosition(1, inPosition); // Set the end point 
-            }
-            else
-            {
-                //inLineRenderer.gameObject.SetActive(true);
-                inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin
-                inLineRenderer.SetPosition(1, inPosition); // Set the end point 
             }
         }
 
