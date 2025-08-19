@@ -10,7 +10,6 @@ SamplerState sampler_SDF;
 // Units are in SDF space
 float _Margin;
 int   _MaxIterations;
-float _MaxDistance;
 float _HitThreshold;
 
 // NEW: object transform inputs
@@ -64,7 +63,6 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
     {
         float3 texPoint = texRayOrigin + step * texRayDir;
         float dist = SampleSDF(texPoint);
-
         if (dist < _HitThreshold)
         {
             float3 worldHit = mul(_SDFToWorldSpace, float4(texPoint, 1.0)).xyz;
