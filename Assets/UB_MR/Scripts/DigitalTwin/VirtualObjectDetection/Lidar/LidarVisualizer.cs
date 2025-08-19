@@ -133,7 +133,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             if (inRender)
             {
                 inLineRenderer.gameObject.SetActive(true);
-                inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin
+                inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin of the object
                 inLineRenderer.SetPosition(1, inPoint); // Set the end point 
                 inLineRenderer.startColor = Color.white;
                 if (inPoint.w > 0)

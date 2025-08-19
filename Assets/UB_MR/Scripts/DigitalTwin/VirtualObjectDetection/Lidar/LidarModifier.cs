@@ -71,11 +71,14 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             if (this.mBuffer == null)
                 this.mBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 4);
             
-            // Update position of LiDAR
-            // TODO: ROTATION?
-            this.mLiDARComputeShader.SetVector("_Origin", inTransform.position);
+            // Update SDF Matrices
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
             this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
+            // Update LiDAR Transform on Compute Shader
+            this.mLiDARComputeShader.SetVector("_RayOriginWorld", inTransform.position);
+            Matrix4x4 rs = Matrix4x4.TRS(Vector3.zero, inTransform.rotation, inTransform.lossyScale);
+            this.mLiDARComputeShader.SetMatrix("_LocalToWorldRS", rs);
+            this.mLiDARComputeShader.SetMatrix("_WorldToLocalRS", rs.inverse);
             // Prepare data for GPU
             this.mBuffer.SetData(this.mData);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mBuffer);
