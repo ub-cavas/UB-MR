@@ -1,9 +1,10 @@
 #pragma kernel SDFRaymarch
 
-RWStructuredBuffer<float4> _Points; // in: ray dir (world), out: hit position (world.xyz), hit (w)
+StructuredBuffer<float4> _InputPoints; // in: Live LiDAR scan points 
+RWStructuredBuffer<float4> _OutputPoints; // out: modified LiDAR scan (world.xyz), hit (w)
 
 float4x4 _WorldToSDFSpace;
-float4x4 _SDFToWorldSpace;          // <-- provide inverse
+float4x4 _SDFToWorldSpace;
 Texture3D<float> _SDF;
 SamplerState sampler_SDF;
 
@@ -36,12 +37,12 @@ bool RayBoxUnit(float3 rayOrigin, float3 rayDirection, out float tEnter, out flo
 void SDFRaymarch (uint3 id : SV_DispatchThreadID)
 {
     uint count, stride;
-    _Points.GetDimensions(count, stride);
+    _InputPoints.GetDimensions(count, stride);
     if (id.x >= count) return;
 
     // Ray in world space
-    float3 worldDir = _Points[id.x].xyz;
-    if (all(abs(worldDir) < 1e-6)) { _Points[id.x] = float4(0,0,0,0); return; } // Early return if bad input vector (0,0,0)ish
+    float3 worldDir = _InputPoints[id.x].xyz;
+    if (all(abs(worldDir) < 1e-6)) { _OutputPoints[id.x] = float4(0,0,0,0); return; } // Early return if bad input vector (0,0,0)ish
     worldDir = normalize(worldDir);
 
     // Transform Ray to texture space
@@ -50,7 +51,7 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
 
     // Clip to Unit Cube
     float tEnter, tExit;
-    if (!RayBoxUnit(texRayOrigin, texRayDir, tEnter, tExit)) { return; } // No intersection do nothing
+    if (!RayBoxUnit(texRayOrigin, texRayDir, tEnter, tExit)) { _OutputPoints[id.x] = _InputPoints[id.x]; return; } // No intersection, use original data
     float step  = max(tEnter, 0.0);
     float dist = 0;
     
@@ -63,15 +64,13 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
         if (dist < _HitThreshold)
         {
             float3 worldHit = mul(_SDFToWorldSpace, float4(texPoint, 1.0)).xyz;
-            if (length(worldHit - _Origin) < length(_Points[id.x].xyz - _Origin))
+            if (length(worldHit - _Origin) < length(_InputPoints[id.x].xyz - _Origin))
             {
-                _Points[id.x] = float4(worldHit, 1.0);
+                _OutputPoints[id.x] = float4(worldHit, 1.0);
             }
             return;
         }
         step += dist;
     }
-    // No intersection do nothing
-    
-    
+    _OutputPoints[id.x] = _InputPoints[id.x]; // No intersection, use original data
 }

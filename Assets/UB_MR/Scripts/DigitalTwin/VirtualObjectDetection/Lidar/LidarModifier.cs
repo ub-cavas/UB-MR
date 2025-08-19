@@ -9,7 +9,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         ROS2Node mNode;
         ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber;
         ComputeShader mLiDARComputeShader;
-        ComputeBuffer mBuffer;
+        ComputeBuffer mInputBuffer;
+        ComputeBuffer mOutputBuffer;
         Vector4[] mData;
         Vector4[] mModifiedData;
         int mKernel;
@@ -68,8 +69,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         {
             if (this.mIsDirty || this.mData == null || this.mModifiedData == null)
                 return null;
-            if (this.mBuffer == null)
-                this.mBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 4);
+            if (this.mInputBuffer == null)
+                this.mInputBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 4);
+            if (this.mOutputBuffer == null)
+                this.mOutputBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 4);
             
             // Update position of LiDAR
             // TODO: ROTATION?
@@ -77,11 +80,12 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
             this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
             // Prepare data for GPU
-            this.mBuffer.SetData(this.mData);
-            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mBuffer);
+            this.mInputBuffer.SetData(this.mData);
+            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_InputPoints", this.mInputBuffer);
+            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_OutputPoints", this.mOutputBuffer);
             // TODO: Add logic for scans with more than 1210 rays
             this.mLiDARComputeShader.Dispatch(this.mKernel, 19, 1, 1);
-            this.mBuffer.GetData(this.mModifiedData);  
+            this.mOutputBuffer.GetData(this.mModifiedData);  
             return this.mModifiedData;
         }
 
@@ -117,8 +121,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public void CleanUp()
         {
-            this.mBuffer?.Dispose();
-            this.mBuffer?.Release();
+            this.mInputBuffer?.Dispose();
+            this.mInputBuffer?.Release();
         }
 
     }
