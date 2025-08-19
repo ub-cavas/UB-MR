@@ -3,7 +3,7 @@
 RWStructuredBuffer<float4> _Points; // in: ray dir (world), out: hit position (world.xyz), hit (w)
 
 float4x4 _WorldToSDFSpace;
-float4x4 _SDFToWorldSpace;          // <-- provide inverse
+float4x4 _SDFToWorldSpace;    
 Texture3D<float> _SDF;
 SamplerState sampler_SDF;
 
@@ -12,8 +12,6 @@ float _Margin;           // expands/erodes surface in SDF units (voxels/normaliz
 int   _MaxIterations;
 float _MaxDistance;      // max travel in SDF units
 float _HitThreshold;     // threshold in SDF units
-float3 _Origin;          // world-space ray origin
-
 
 float3 WorldToTexPoint(float3 worldPos)  { return mul(_WorldToSDFSpace, float4(worldPos, 1.0)).xyz; }
 float3 WorldToTexDir  (float3 worldDir)  { return mul(_WorldToSDFSpace, float4(worldDir, 0.0)).xyz; }
@@ -45,7 +43,7 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
     worldDir = normalize(worldDir);
 
     // Transform Ray to texture space
-    float3 texRayOrigin = WorldToTexPoint(float4(_Origin, 1.0));
+    float3 texRayOrigin = WorldToTexPoint(float4(0,0,0, 1.0));
     float3 texRayDir = WorldToTexDir(float4(worldDir, 1.0));
 
     // Clip to Unit Cube
@@ -63,10 +61,7 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
         if (dist < _HitThreshold)
         {
             float3 worldHit = mul(_SDFToWorldSpace, float4(texPoint, 1.0)).xyz;
-            if (length(worldHit - _Origin) < length(_Points[id.x].xyz - _Origin))
-            {
-                _Points[id.x] = float4(worldHit, 1.0);
-            }
+            _Points[id.x] = float4(worldHit, 1.0);
             return;
         }
         step += dist;
