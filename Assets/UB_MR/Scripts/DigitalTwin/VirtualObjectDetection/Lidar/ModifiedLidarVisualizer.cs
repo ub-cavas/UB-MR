@@ -1,3 +1,4 @@
+using System.Collections;
 using ROS2;
 using UnityEngine;
 
@@ -33,13 +34,13 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                     scan = this.mLidarModifier.GetScan();
                 timer = 0f; // Reset timer
                 VisualizeModifiedScan(scan);
-                PrintScanData(scan);
+                //PrintScanData(scan);
             }
         }
 
-
-        protected override void Awake()
+        IEnumerator CreateLidarModifier()
         {
+            yield return new WaitForSeconds(3);
             if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
             {
                 string name = gameObject.name.Replace("(Clone)", "");
@@ -58,6 +59,12 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             
             // Initialize visualization components
             InitializeVisualization();
+        }
+
+
+        protected override void Awake()
+        {
+            StartCoroutine(this.CreateLidarModifier());
         }
         
         void VisualizeModifiedScan(Vector4[] inScan)
