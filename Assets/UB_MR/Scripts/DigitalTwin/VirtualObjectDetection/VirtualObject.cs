@@ -17,8 +17,16 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             // Bounding Box Database
             VirtualBoundingBoxDetector.AddVirtualObjectToDatabase(this);
             // Render Tex for LiDAR modification
-            this.meshToSDF.sdfTexture = sdfTexture;
-            this.sdfTexture.sdf = SetupSDF();
+            if (sdfTexture != null)
+            {
+                this.meshToSDF.sdfTexture = sdfTexture;
+                this.sdfTexture.sdf = SetupSDF();
+            }
+            else
+            {
+                Debug.LogWarning("No SDF texture found for: " + this.gameObject.name);
+            }
+            
         }
 
         RenderTexture SetupSDF()
@@ -44,7 +52,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
 
         void OnDestroy()
         {
-            if (this.sdfTexture.sdf != null)
+            if (this.sdfTexture != null && this.sdfTexture.sdf != null)
             {
                 Debug.Log("Destroying SDFTexture");
                 Destroy(this.sdfTexture.sdf);
