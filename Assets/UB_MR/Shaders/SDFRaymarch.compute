@@ -1,20 +1,35 @@
 #pragma kernel SDFRaymarch
 
-RWStructuredBuffer<float4> _Points;
+RWStructuredBuffer<float4> _Points; // in: ray dir (world), out: hit position (world.xyz), hit (w)
 
 float4x4 _WorldToSDFSpace;
+float4x4 _SDFToWorldSpace;          // <-- provide inverse
 Texture3D<float> _SDF;
 SamplerState sampler_SDF;
-float _Margin;
-int _MaxIterations;
-float _MaxDistance;
-float _HitThreshold;
-float3 _Origin;
 
-float SampleSDF(float3 worldPos)
+// Units are in SDF space now
+float _Margin;           // expands/erodes surface in SDF units (voxels/normalized cube)
+int   _MaxIterations;
+float _MaxDistance;      // max travel in SDF units
+float _HitThreshold;     // threshold in SDF units
+float3 _Origin;          // world-space ray origin
+
+
+float3 WorldToTexPoint(float3 worldPos)  { return mul(_WorldToSDFSpace, float4(worldPos, 1.0)).xyz; }
+float3 WorldToTexDir  (float3 worldDir)  { return mul(_WorldToSDFSpace, float4(worldDir, 0.0)).xyz; }
+float SampleSDF(float3 texPos) { return _SDF.SampleLevel(sampler_SDF, texPos, 0).r - _Margin; }
+
+bool RayBoxUnit(float3 rayOrigin, float3 rayDirection, out float tEnter, out float tExit)
 {
-    float3 sdfLocalPos = mul(_WorldToSDFSpace, float4(worldPos, 1.0)).xyz;
-    return _SDF.SampleLevel(sampler_SDF, sdfLocalPos, 0).r - _Margin;
+    // Axis-aligned unit cube: [0,1]^3
+    float3 inverseDirection = 1.0 / rayDirection;
+    float3 t0  = (0.0 - rayOrigin) * inverseDirection;
+    float3 t1  = (1.0 - rayOrigin) * inverseDirection;
+    float3 tmin = min(t0, t1);
+    float3 tmax = max(t0, t1);
+    tEnter = max(max(tmin.x, tmin.y), tmin.z);
+    tExit  = min(min(tmax.x, tmax.y), tmax.z);
+    return (tExit >= max(tEnter, 0.0));
 }
 
 [numthreads(64,1,1)]
@@ -22,27 +37,37 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
 {
     uint count, stride;
     _Points.GetDimensions(count, stride);
-    if (id.x >= count)
-        return;
+    if (id.x >= count) return;
+
+    // Ray in world space
+    float3 worldDir = _Points[id.x].xyz;
+    if (all(abs(worldDir) < 1e-6)) { _Points[id.x] = float4(0,0,0,0); return; } // Early return if bad input vector (0,0,0)ish
+    worldDir = normalize(worldDir);
+
+    // Transform Ray to texture space
+    float3 texRayOrigin = WorldToTexPoint(float4(0,0,0,1.0));
+    float3 texRayDir = WorldToTexDir(float4(worldDir, 1.0));
+
+    // Clip to Unit Cube
+    float tEnter, tExit;
+    if (!RayBoxUnit(texRayOrigin, texRayDir, tEnter, tExit)) { _Points[id.x] = float4(0,0,0,0); return; }
+    float step  = max(tEnter, 0.0);
+    float dist = 0;
     
-    if (length(_Points[id.x].xyz) <= 0.0001f)
-        return;
-
-    float3 dir = normalize(_Points[id.x].xyz);
-    float t = 0.0;
-    float3 pos = _Origin;
-    float hit = 0.0;
-
-    for (uint i = 0; i < (uint)_MaxIterations && t < _MaxDistance; ++i)
+    // Raymarch
+    [loop]
+    for (int i = 0; i < _MaxIterations && step <= tExit; ++i)
     {
-        float dist = SampleSDF(pos);
+        float3 texPoint = texRayOrigin + step * texRayDir;
+        dist = SampleSDF(texPoint);
         if (dist < _HitThreshold)
         {
-            hit = 1.0;
-            break;
+            float3 worldHit = mul(_SDFToWorldSpace, float4(texPoint, 1.0)).xyz;
+            _Points[id.x] = float4(worldHit, 1.0);
+            return;
         }
-        t += dist;
-        pos = dir * t;
+        step += dist;
     }
-    _Points[id.x] = float4(pos, hit);
+    // No hit
+    _Points[id.x] = float4(0,0,0,step);
 }

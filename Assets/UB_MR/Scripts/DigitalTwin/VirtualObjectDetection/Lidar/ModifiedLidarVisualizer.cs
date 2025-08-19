@@ -32,7 +32,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                     scan = this.mLidarModifier.GetScan();
                 timer = 0f; // Reset timer
                 VisualizeModifiedScan(scan);
-                PrintScanData(scan);
+                //PrintScanData(scan);
             }
         }
 
@@ -120,6 +120,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public static void PrintScanData(Vector4[] laserScans)
         {
+            if (laserScans == null)
+            {
+                return;
+            }
             for (int i = 0; i < laserScans.Length; i++)
             {
                 print(laserScans[i]);

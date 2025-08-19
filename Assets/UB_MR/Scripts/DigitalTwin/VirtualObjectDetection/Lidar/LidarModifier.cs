@@ -33,11 +33,12 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             // This part should be done for each SDF
             this.mLiDARComputeShader.SetTexture(this.mKernel, "_SDF", this.mSDF.sdf);
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
+            this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
             
             // Global for ALL SDFs
             // (Default Parameters)
             float maxDistance = 10f;
-            float hitThreshold = 0.01f;
+            float hitThreshold = 0.0001f;
             int maxIterations = 128;
             this.UpdateSDFRaytraceParameters(maxDistance, hitThreshold, maxIterations);
             this.mLiDARComputeShader.SetVector("_Origin", this.mWorldPosition);
@@ -74,6 +75,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             // TODO: ROTATION?
             this.mLiDARComputeShader.SetVector("_Origin", inTransform.position);
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
+            this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
             // Prepare data for GPU
             this.mBuffer.SetData(this.mData);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mBuffer);
@@ -102,7 +104,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                     Vector3 pos = this.mWorldPosition + new Vector3(inLaserScan.Ranges[i] * Mathf.Cos(currentAngle), 0f, inLaserScan.Ranges[i] * Mathf.Sin(currentAngle));
                     this.mData[j] = new Vector4(pos.x, pos.y, pos.z, 0); // TODO: Do this calculation on GPU
                 }
-                    
                 currentAngle += inLaserScan.Angle_increment;
                 j++;
             }
