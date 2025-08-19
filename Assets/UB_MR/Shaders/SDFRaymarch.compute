@@ -16,7 +16,7 @@ float _HitThreshold;
 // NEW: object transform inputs
 float3   _RayOriginWorld;  
 float4x4 _LocalToWorldRS;   // rotation & scale only (no translation)
-float4x4 _WorldToLocalRS;
+float4x4 _WorldToLocalRS;   // inverse (rotation + scale)
 
 float3 WorldToTexPoint(float3 worldPos) { return mul(_WorldToSDFSpace, float4(worldPos, 1.0)).xyz; }
 float3 WorldToTexDir  (float3 worldDir) { return mul(_WorldToSDFSpace, float4(worldDir, 0.0)).xyz; }
@@ -69,7 +69,10 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
         {
             float3 worldHit = mul(_SDFToWorldSpace, float4(texPoint, 1.0)).xyz;
             float3 localHit = mul(_WorldToLocalRS, float4(worldHit - _RayOriginWorld, 0.0)).xyz;
-            _Points[id.x] = float4(localHit, 1.0);
+            if (length(localHit) < length(_Points[id.x].xyz))
+            {
+                _Points[id.x] = float4(localHit, 1.0);
+            }
             return;
         }
         step += dist; // distances are already in SDF-space units
