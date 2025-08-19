@@ -6,14 +6,15 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
     public class ModifiedLidarVisualizer : LidarVisualizer
     {
         [SerializeField] private float maxRaytraceDistance = 100.0f;
-        [SerializeField] private float hitThreshold = 0.01f;
-        [SerializeField] private int maxIterations = 32;
+        [SerializeField] private int maxIterations = 64;
         [SerializeField] private bool useGPU = false;
         [SerializeField] private float interval = 0.1f; // 1/10th of a second
         [SerializeField] ComputeShader lidarModComputeShader;
         [SerializeField] SDFTexture sdfTexture;
+        
         LidarModifier mLidarModifier;
         private float timer = 0f;
+        private float hitThreshold = 0.0001f;
         
 
         protected override void Update()
@@ -31,7 +32,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 else
                     scan = this.mLidarModifier.GetScan();
                 timer = 0f; // Reset timer
-                VisualizeModifiedScan(scan);
+                //VisualizeModifiedScan(scan);
                 //PrintScanData(scan);
             }
         }
@@ -87,7 +88,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                     SetVisual(true, this.mLineRenderers[i], inScan[i]);
                 // Don't render excess lines
                 for (int i = mLineRenderers.Count - 1; i >= inScan.Length; i--)
-                    SetVisual(false, this.mLineRenderers[i], Vector3.zero);
+                    SetVisual(false, this.mLineRenderers[i], inScan[i]);
             }
             else
             {

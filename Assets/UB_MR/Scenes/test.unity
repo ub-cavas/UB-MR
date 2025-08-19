@@ -1139,8 +1139,8 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   maxRaytraceDistance: 50
-  hitThreshold: 0.00001
-  maxIterations: 128
+  hitThreshold: 0.0001
+  maxIterations: 64
   useGPU: 1
   interval: 0.1
   lidarModComputeShader: {fileID: 7200000, guid: 7e48dc1be9f94cedc80b5547114c0492, type: 3}
