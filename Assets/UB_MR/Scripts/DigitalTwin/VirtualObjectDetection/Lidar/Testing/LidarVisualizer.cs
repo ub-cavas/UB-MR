@@ -1,9 +1,8 @@
 using UnityEngine;
-using sensor_msgs.msg;
 using ROS2;
 using System.Collections.Generic;
 
-namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
+namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
 {
     public class LidarVisualizer : MonoBehaviour
     {

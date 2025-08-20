@@ -2,7 +2,7 @@ using System.Collections;
 using ROS2;
 using UnityEngine;
 
-namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
+namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
 {
     public class ModifiedLidarVisualizer : LidarVisualizer
     {
