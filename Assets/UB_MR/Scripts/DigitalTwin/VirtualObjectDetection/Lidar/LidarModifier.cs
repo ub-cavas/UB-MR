@@ -51,7 +51,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         /// <param name="inHitThreshold"></param>
         /// <param name="inMaxIterations"></param>
         /// <param name="inMargin"></param>
-        public void UpdateSDFRaytraceParameters(float inMaxDistance, float inHitThreshold, int inMaxIterations, float inMargin = 0.1f)
+        public void UpdateSDFRaytraceParameters(float inMaxDistance, float inHitThreshold, int inMaxIterations, float inMargin = 0.05f)
         {
             this.mLiDARComputeShader.SetFloat("_Margin", inMargin);
             this.mLiDARComputeShader.SetFloat("_MaxDistance", inMaxDistance);
