@@ -71,8 +71,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
         }
 
-        
-
         void VisualizeMostRecentScan()
         {
             List<(Vector3, float)> inScan = mCartesianData;

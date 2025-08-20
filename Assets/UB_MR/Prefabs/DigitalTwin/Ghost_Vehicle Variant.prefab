@@ -396,8 +396,12 @@ MonoBehaviour:
   imageWidth: 1280
   imageHeight: 960
   publishRate: 30
+  visualizeLidar: 1
+  lidarRenderer: {fileID: 3823033999797214442}
+  interval: 0.1
   mLidar: {fileID: 7951046745334963840}
-  mSdfs: []
+  mSdfs:
+  - {fileID: 0}
   mLidarComputeShader: {fileID: 7200000, guid: 7e48dc1be9f94cedc80b5547114c0492, type: 3}
   reliabilityPolicy: 2
   historyPolicy: 1
@@ -412,6 +416,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3823033999797214442 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5228723185404508341, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+  m_PrefabInstance: {fileID: 9051686742297748575}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602795477179330169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d997a4ad3eaf1237a15711aa29dbaf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &7951046745334963840 stripped

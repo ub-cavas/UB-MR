@@ -46,6 +46,8 @@ namespace CAVAS.UB_MR.DT
 
         [Header("LiDAR Capture Parameters")] 
         [SerializeField] bool visualizeLidar = true;
+        [SerializeField] LidarRenderer lidarRenderer;
+        [SerializeField] float interval = 0.1f; // 1/10th of a second
         [SerializeField] Transform mLidar;
         [SerializeField] List<SDFTexture> mSdfs;
         [SerializeField] ComputeShader mLidarComputeShader;
@@ -69,14 +71,16 @@ namespace CAVAS.UB_MR.DT
         VirtualCameraOverlay mVirtualCameraOverlay;
         LidarModifier mLidarModifier;
         ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
-
-        
         
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
             if (IsOwner)
+            {
                 ConnectToROS();
+                   
+            }
+                
             StartCoroutine(PublishVirtualObjects());
         }
 
@@ -112,13 +116,19 @@ namespace CAVAS.UB_MR.DT
 
         protected virtual void Update()
         {
-            lidarTimer += Time.deltaTime;
-            if (IsOwner && this.mLidarModifier != null)
+            if (IsOwner && this.mLidarModifier != null && enableLidarModifier)
             {
-                this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-                this.mLidarModifier.GetModifiedScan(this.mLidar); 
+                lidarTimer += Time.deltaTime;
+                if (lidarTimer >= interval)
+                {
+                    this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
+                    Vector4[] scan = this.mLidarModifier.GetModifiedScan(this.mLidar); 
+                    lidarTimer = 0f; // Reset publish timer
+                    // Visualization
+                    if (visualizeLidar)
+                        lidarRenderer.VisualizeScan(scan, this.mLidar);
+                }
             }
-                
         }
 
         void ConnectToROS()
@@ -142,6 +152,7 @@ namespace CAVAS.UB_MR.DT
                 qosProfile.SetHistory(historyPolicy, historyDepth);
                 qosProfile.SetDurability(durabilityPolicy);
                 //TODO: dynamic lists of SDFS... currently just supports 1 sdf
+                this.mSdfs[0] = FindFirstObjectByType<SDFTexture>();
                 this.mLidarModifier = new LidarModifier(lidarTopicName, this.mLidarComputeShader, this.mNode, qosProfile, this.mSdfs[0]);
             }
         }
