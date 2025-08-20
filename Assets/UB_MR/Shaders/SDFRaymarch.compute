@@ -73,6 +73,10 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
             }
             return;
         }
+        if (dist >= 1.0)
+        {
+            dist = 0.05;
+        }
         step += dist; // distances are already in SDF-space units
     }
 
