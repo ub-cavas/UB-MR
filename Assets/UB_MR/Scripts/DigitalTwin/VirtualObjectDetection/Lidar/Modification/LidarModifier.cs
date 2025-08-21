@@ -1,8 +1,6 @@
 using ROS2;
 using UnityEngine;
 using System.Linq;
-using Unity.Collections;
-using Unity.Mathematics;
 using sensor_msgs.msg;
 
 
@@ -25,7 +23,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         Vector3[] mData;
         Vector4[] mModifiedData;
         int mKernel;
-        //NativeArray<float3> cpuPoints;
 
         SDFTexture mSDF;
         Vector3 mWorldPosition = Vector3.zero;
@@ -131,21 +128,92 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         void ReadLiDAR(sensor_msgs.msg.PointCloud2 inPointCloud)
         {
-            //this.mIsDirty = true;
-            int xOff=-1, yOff=-1, zOff=-1;
-            bool xF32=false, yF32=false, zF32=false;
-            foreach (var f in inPointCloud.Fields)
+            if (inPointCloud == null || inPointCloud.Data == null || inPointCloud.Fields == null)
             {
-                if (f.Name == "x") { xOff = (int)f.Offset; xF32 = f.Datatype == PointField.FLOAT32; }
-                if (f.Name == "y") { yOff = (int)f.Offset; yF32 = f.Datatype == PointField.FLOAT32; }
-                if (f.Name == "z") { zOff = (int)f.Offset; zF32 = f.Datatype == PointField.FLOAT32; }
+                Debug.LogWarning("Invalid PointCloud2.");
+                return;
             }
             
+            // --- Find x,y,z fields (expect FLOAT32s) ---
+            int xOff = -1, yOff = -1, zOff = -1;
+            const byte FLOAT32 = PointField.FLOAT32; // 7
+            foreach (var f in inPointCloud.Fields)
+            {
+                if (f == null) continue;
+                if (f.Datatype != FLOAT32) continue;
+                switch (f.Name)
+                {
+                    case "x": xOff = (int)f.Offset; break;
+                    case "y": yOff = (int)f.Offset; break;
+                    case "z": zOff = (int)f.Offset; break;
+                }
+            }
+            if (xOff < 0 || yOff < 0 || zOff < 0)
+            {
+                Debug.LogWarning("PointCloud2 is missing float32 x/y/z fields.");
+                return;
+            }
             
-            uint size = inPointCloud.Row_step * inPointCloud.Height;
-            Debug.Log("Scans: " + size);
-            Debug.Log("F32: " + xF32 + ", " + yF32 + ", " + zF32);
-            //this.mIsDirty = false;
+            // --- Dimensions & sanity ---
+            int width  = (int)inPointCloud.Width;
+            int height = (int)inPointCloud.Height;
+            int count  = width * height;
+            int pointStep = (int)inPointCloud.Point_step; // bytes per point
+            int rowStep   = (int)inPointCloud.Row_step;   // bytes per row
+            if (count == 0 || pointStep <= 0 || rowStep < pointStep)
+            {
+                Debug.LogWarning("PointCloud2 has invalid dimensions/steps.");
+                return;
+            }
+            // Some publishers may set row_step == width*point_step; tolerate both
+            if (inPointCloud.Data.Length < (height - 1) * rowStep + width * pointStep)
+            {
+                Debug.LogWarning("PointCloud2 data buffer is smaller than expected.");
+                return;
+            }
+            // Ensure output buffer
+            if (this.mData == null || this.mData.Length != count)
+                this.mData = new Vector3[count];
+            
+            
+            // --- Read function (handles endianness) ---
+            unsafe float ReadF32(byte* ptr)
+            {
+                if (!inPointCloud.Is_bigendian)
+                    return *(float*)ptr;
+                else
+                {
+                    // Big-endian: byte-swap
+                    uint u =
+                        ((uint)ptr[0] << 24) |
+                        ((uint)ptr[1] << 16) |
+                        ((uint)ptr[2] <<  8) |
+                        ((uint)ptr[3] <<  0);
+                    return *(float*)&u;
+                }
+            }
+            
+            // --- Iterate rows/points using point_step & row_step ---
+            unsafe
+            {
+                fixed (byte* pBase = inPointCloud.Data)
+                {
+                    int idx = 0;
+                    for (int rIdx = 0; rIdx < height; rIdx++)
+                    {
+                        byte* row = pBase + (long)rIdx * rowStep;
+                        for (int cIdx = 0; cIdx < width; cIdx++)
+                        {
+                            byte* pt = row + (long)cIdx * pointStep;
+                            float x = ReadF32(pt + xOff);
+                            float y = ReadF32(pt + yOff);
+                            float z = ReadF32(pt + zOff);
+                            this.mData[idx++] = new Vector3(x, y, z);
+                        }
+                    }
+                }
+            }
+
         }
         
         bool IsValidMeasurement(float range, float rangeMin, float rangeMax)
