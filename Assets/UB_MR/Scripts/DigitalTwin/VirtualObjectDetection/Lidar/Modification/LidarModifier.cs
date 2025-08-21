@@ -106,6 +106,13 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public Vector4[] GetModifiedThreeDimensionalScan(Transform inTransform)
         {
+            if (this.mOutputBuffer == null)
+            {
+                Debug.Log("Output Buffer Not Ready Yet");
+                return new Vector4[1];
+            }
+                
+            
             // Update SDF Matrices
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
             this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
@@ -120,8 +127,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             const int THREADS = 64; // must match shader
             int groupsX = (this.mPoints + THREADS - 1) / THREADS;
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
-            this.mOutputBuffer.GetData(this.mModifiedData);  
-            return this.mModifiedData;
+            //this.mOutputBuffer.GetData(this.mModifiedData);  
+            return new Vector4[1];
         }
 
         void ReadLiDAR(sensor_msgs.msg.LaserScan inLaserScan)
@@ -253,6 +260,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 this.mInputBuffer?.Release();
                 this.mInputBuffer = new ComputeBuffer(count, stride, ComputeBufferType.Structured);
             }
+            
+            if (this.mOutputBuffer == null || this.mOutputBuffer.count != count)  
+                this.mOutputBuffer = new ComputeBuffer(count, sizeof(float) * 4); 
         }
         
         bool IsValidMeasurement(float range, float rangeMin, float rangeMax)
