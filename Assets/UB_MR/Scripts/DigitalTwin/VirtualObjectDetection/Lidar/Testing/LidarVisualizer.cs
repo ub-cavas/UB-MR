@@ -1,16 +1,15 @@
 using UnityEngine;
-using sensor_msgs.msg;
 using ROS2;
 using System.Collections.Generic;
 
-namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
+namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
 {
     public class LidarVisualizer : MonoBehaviour
     {
         [SerializeField] protected string mLidarTopicName = "/scan"; // Topic name for Lidar scans
         [SerializeField] Material mLidarVisualMaterial; // Material for the line renderer
         [SerializeField] float mLineWidth = 0.02f; // Width of the lines
-        [SerializeField] Gradient mDistanceGradient; // Gradient for color coding distances
+        
         
         protected ROS2Node mNode;
         protected ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber;
@@ -20,6 +19,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         protected List<(Vector3, float)> mCartesianData = new List<(Vector3, float)>();
         protected GameObject mLineParent;
         protected bool mIsReading = false;
+        protected Gradient mDistanceGradient; // Gradient for color coding distances
 
         protected virtual void Awake()
         {
@@ -70,8 +70,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
         }
 
-        
-
         void VisualizeMostRecentScan()
         {
             List<(Vector3, float)> inScan = mCartesianData;
@@ -119,8 +117,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 inLineRenderer.gameObject.SetActive(true);
                 inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin
                 inLineRenderer.SetPosition(1, inScan.Item1); // Set the end point at
-                inLineRenderer.startColor = mDistanceGradient.Evaluate(Mathf.InverseLerp(inScan.Item2, 0, inScan.Item2));
-                inLineRenderer.endColor = mDistanceGradient.Evaluate(Mathf.InverseLerp(inScan.Item2, 0, inScan.Item2));
             }
             else
             {
@@ -128,13 +124,20 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
         }
 
-        protected void SetVisual(bool inRender, LineRenderer inLineRenderer, Vector3 inPosition)
+        protected void SetVisual(bool inRender, LineRenderer inLineRenderer, Vector4 inPoint)
         {
+            Vector3 point = new Vector3(inPoint.x, inPoint.y, inPoint.z);
             if (inRender)
             {
                 inLineRenderer.gameObject.SetActive(true);
-                inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin
-                inLineRenderer.SetPosition(1, inPosition); // Set the end point 
+                inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin of the object
+                inLineRenderer.SetPosition(1, inPoint); // Set the end point 
+                inLineRenderer.startColor = Color.white;
+                if (inPoint.w > 0)
+                    inLineRenderer.endColor = Color.red;
+                else
+                    inLineRenderer.endColor = Color.white;
+                
             }
             else
             {
