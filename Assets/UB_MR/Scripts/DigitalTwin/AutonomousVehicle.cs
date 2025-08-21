@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using CAVAS.UB_MR.DT.VirtualObjectDetection;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Camera;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar;
+using UnityEngine.Serialization;
 
 namespace CAVAS.UB_MR.DT
 {
@@ -44,14 +45,23 @@ namespace CAVAS.UB_MR.DT
 
 
         [Header("LiDAR Capture Parameters")] [SerializeField]
-        private Transform mLidar;
-        [SerializeField] List<SDFTexture> mSDFs;
-        [SerializeField] ComputeShader mLiDARComputeShader;
+        private LidarType lidarType = LidarType.TwoD;
+        [SerializeField] bool visualizeLidar = true;
+        [SerializeField] LidarRenderer lidarRenderer;
+        [SerializeField] float interval = 0.1f; // 1/10th of a second
+        [SerializeField] Transform mLidar;
+        [SerializeField] List<SDFTexture> mSdfs;
+        [SerializeField] ComputeShader mLidarComputeShader;
         [SerializeField] ReliabilityPolicy reliabilityPolicy = ReliabilityPolicy.QOS_POLICY_RELIABILITY_BEST_EFFORT;
         [SerializeField] HistoryPolicy historyPolicy = HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST;
         [SerializeField] int historyDepth = 2;
         [SerializeField] DurabilityPolicy durabilityPolicy = DurabilityPolicy.QOS_POLICY_DURABILITY_VOLATILE;
-
+        // More LiDAR variables (Don't touch these unless you know what you're doing)
+        float maxRaytraceDistance = 100.0f;
+        float hitThreshold = 0.0001f;
+        float lidarTimer = 0f;
+        int maxIterations = 64;
+        
         protected Vector3 mWorldPosition = Vector3.zero;
         protected Vector3 mAngularVelocity = Vector3.zero;
         protected Vector3 mLinearVelocity = Vector3.zero; 
@@ -62,13 +72,16 @@ namespace CAVAS.UB_MR.DT
         VirtualCameraOverlay mVirtualCameraOverlay;
         LidarModifier mLidarModifier;
         ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
-
         
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
             if (IsOwner)
+            {
                 ConnectToROS();
+                   
+            }
+                
             StartCoroutine(PublishVirtualObjects());
         }
 
@@ -104,11 +117,19 @@ namespace CAVAS.UB_MR.DT
 
         protected virtual void Update()
         {
-            if (IsOwner && this.mLidarModifier != null && this.mLidar != null)
+            if (IsOwner && this.mLidarModifier != null && enableLidarModifier)
             {
-                this.mLidarModifier.GetModifiedScan(this.mLidar); 
+                lidarTimer += Time.deltaTime;
+                if (lidarTimer >= interval)
+                {
+                    this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
+                    Vector4[] scan = this.mLidarModifier.GetModifiedScan(this.mLidar); 
+                    lidarTimer = 0f; // Reset publish timer
+                    // Visualization
+                    if (visualizeLidar)
+                        lidarRenderer.VisualizeScan(scan, this.mLidar);
+                }
             }
-                
         }
 
         void ConnectToROS()
@@ -124,16 +145,16 @@ namespace CAVAS.UB_MR.DT
                 this.mWorldTransformationSubscriber = this.mNode.CreateSubscription<nav_msgs.msg.Odometry>(worldTransformationTopicName, WorldTransformationUpdate);
                 // Bounding Box (Ground Truth)
                 this.mVirtualBoundingBoxDetector = new VirtualBoundingBoxDetector(boundingBoxTopicName, this.mNode, this.transform);
-                // Camera
+                // Camera Modifier
                 this.mVirtualCameraOverlay = new VirtualCameraOverlay(this, virtualCameraImageTopicName, virtualCameraDepthTopicName, this.mNode, FindFirstObjectByType<Camera>(), imageWidth, imageHeight);
-                // LiDAR
+                // LiDAR Modifier
                 QualityOfServiceProfile qosProfile = new QualityOfServiceProfile();
                 qosProfile.SetReliability(reliabilityPolicy);
                 qosProfile.SetHistory(historyPolicy, historyDepth);
                 qosProfile.SetDurability(durabilityPolicy);
-                
                 //TODO: dynamic lists of SDFS... currently just supports 1 sdf
-                //this.mLidarModifier = new LidarModifier(this.transform, lidarTopicName, this.mLiDARComputeShader, this.mNode, qosProfile, this.mSDFs[0]);
+                this.mSdfs[0] = FindFirstObjectByType<SDFTexture>();
+                this.mLidarModifier = new LidarModifier(lidarType, lidarTopicName, this.mLidarComputeShader, this.mNode, qosProfile, this.mSdfs[0]);
             }
         }
 

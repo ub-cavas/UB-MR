@@ -406,9 +406,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1425890389536176863}
-  - component: {fileID: 3115238304178470237}
   m_Layer: 0
-  m_Name: lidar
+  m_Name: LiDAR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -430,51 +429,6 @@ Transform:
   - {fileID: 5206106473778919017}
   m_Father: {fileID: 2905824729143842076}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3115238304178470237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5091215851681455059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19ff5c35be23f23d09613522b2e03e82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mLidarTopicName: /scan
-  mLidarVisualMaterial: {fileID: 0}
-  mLineWidth: 0.02
-  mDistanceGradient:
-    serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 1}
-    key2: {r: 0, g: 0, b: 0, a: 0}
-    key3: {r: 0, g: 0, b: 0, a: 0}
-    key4: {r: 0, g: 0, b: 0, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 65535
-    ctime2: 0
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_ColorSpace: -1
-    m_NumColorKeys: 2
-    m_NumAlphaKeys: 2
 --- !u!1 &5124931479847987683
 GameObject:
   m_ObjectHideFlags: 0
@@ -584,6 +538,7 @@ GameObject:
   - component: {fileID: 7359342427373692423}
   - component: {fileID: 6417628658900768305}
   - component: {fileID: 682469846908821571}
+  - component: {fileID: 5228723185404508341}
   m_Layer: 0
   m_Name: Ego_Vehicle
   m_TagString: Untagged
@@ -684,12 +639,18 @@ MonoBehaviour:
   boundingBoxTopicName: /virtual_obstacles
   virtualCameraImageTopicName: /virtual_camera/image_raw
   virtualCameraDepthTopicName: /virtual_camera/depth
-  lidarTopicName: /lidar/scan
+  lidarTopicName: /scan
   detectionRadius: 30
   imageWidth: 640
   imageHeight: 480
   publishRate: 30
-  mLiDARComputeShader: {fileID: 7200000, guid: 9179a9ab794eb7c1fb1ad145d0a993e5, type: 3}
+  visualizeLidar: 1
+  lidarRenderer: {fileID: 5228723185404508341}
+  interval: 0.1
+  mLidar: {fileID: 1425890389536176863}
+  mSdfs:
+  - {fileID: 0}
+  mLidarComputeShader: {fileID: 7200000, guid: 7e48dc1be9f94cedc80b5547114c0492, type: 3}
   reliabilityPolicy: 2
   historyPolicy: 1
   historyDepth: 2
@@ -743,6 +704,20 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &5228723185404508341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8485769508998957606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d997a4ad3eaf1237a15711aa29dbaf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mLidarVisualMaterial: {fileID: 2100000, guid: e3d372b3121ab3e8ab4ad00da940a801, type: 2}
+  mLineWidth: 0.02
 --- !u!1 &9091243714969618100
 GameObject:
   m_ObjectHideFlags: 0
