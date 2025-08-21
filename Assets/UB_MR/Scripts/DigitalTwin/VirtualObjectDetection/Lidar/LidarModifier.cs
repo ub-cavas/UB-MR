@@ -1,31 +1,42 @@
 using ROS2;
 using UnityEngine;
+using Unity.Collections;
+using Unity.Mathematics;
 
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
+    public enum LidarType
+    {
+        TwoD,
+        ThreeD
+    }
+    
     public class LidarModifier
     {
         ROS2Node mNode;
-        ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber;
+        ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber2D;
+        ISubscription<sensor_msgs.msg.PointCloud2> mLidarSubscriber3D;
         ComputeShader mLiDARComputeShader;
         ComputeBuffer mBuffer;
         Vector4[] mData;
         Vector4[] mModifiedData;
         int mKernel;
+        NativeArray<float3> cpuPoints;
 
         SDFTexture mSDF;
-        // Raymarching Parameters (Global to all SDFs)
-        
         Vector3 mWorldPosition = Vector3.zero;
         private bool mIsDirty;
         
 
-        public LidarModifier(string inTopicName, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
+        public LidarModifier(LidarType inType, string inTopicName, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
         {
             this.mLiDARComputeShader = inComputeShader;
             this.mNode = inNode;
-            this.mLidarSubscriber = this.mNode.CreateSubscription<sensor_msgs.msg.LaserScan>(inTopicName, ReadLiDAR, inQoSProfile);
+            if (inType == LidarType.TwoD)
+                this.mLidarSubscriber2D = this.mNode.CreateSubscription<sensor_msgs.msg.LaserScan>(inTopicName, ReadLiDAR, inQoSProfile);
+            else
+                this.mLidarSubscriber3D = this.mNode.CreateSubscription<sensor_msgs.msg.PointCloud2>(inTopicName, ReadLiDAR, inQoSProfile);
 
             // TODO: Support multiple SDFs
             this.mKernel = this.mLiDARComputeShader.FindKernel(inComputeShader.name);
@@ -111,6 +122,16 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 j++;
             }
             this.mIsDirty = false;
+        }
+
+        void ReadLiDAR(sensor_msgs.msg.PointCloud2 inPointCloud)
+        {
+            //this.mIsDirty = true;
+            uint size = inPointCloud.Row_step * inPointCloud.Height;
+            Debug.Log("Scans: " + size);
+
+            Debug.Log((uint)inPointCloud.Fields[0].Datatype);
+            //this.mIsDirty = false;
         }
         
         bool IsValidMeasurement(float range, float rangeMin, float rangeMax)

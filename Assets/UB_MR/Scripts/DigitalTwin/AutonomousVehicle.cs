@@ -153,7 +153,7 @@ namespace CAVAS.UB_MR.DT
                 qosProfile.SetDurability(durabilityPolicy);
                 //TODO: dynamic lists of SDFS... currently just supports 1 sdf
                 this.mSdfs[0] = FindFirstObjectByType<SDFTexture>();
-                this.mLidarModifier = new LidarModifier(lidarTopicName, this.mLidarComputeShader, this.mNode, qosProfile, this.mSdfs[0]);
+                this.mLidarModifier = new LidarModifier(LidarType.ThreeD, lidarTopicName, this.mLidarComputeShader, this.mNode, qosProfile, this.mSdfs[0]);
             }
         }
 
