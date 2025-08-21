@@ -1,5 +1,6 @@
 using ROS2;
 using UnityEngine;
+using System.Linq;
 using Unity.Collections;
 using Unity.Mathematics;
 
@@ -18,11 +19,12 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber2D;
         ISubscription<sensor_msgs.msg.PointCloud2> mLidarSubscriber3D;
         ComputeShader mLiDARComputeShader;
-        ComputeBuffer mBuffer;
-        Vector4[] mData;
+        ComputeBuffer mInputBuffer;
+        ComputeBuffer mOutputBuffer;
+        Vector3[] mData;
         Vector4[] mModifiedData;
         int mKernel;
-        NativeArray<float3> cpuPoints;
+        //NativeArray<float3> cpuPoints;
 
         SDFTexture mSDF;
         Vector3 mWorldPosition = Vector3.zero;
@@ -72,15 +74,17 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public Vector4[] GetScan()
         {
-            return this.mData;
+            return this.mData.Select(v => new Vector4(v.x, v.y, v.z, 0f)).ToArray();
         }
         
         public Vector4[] GetModifiedScan(Transform inTransform)
         {
             if (this.mIsDirty || this.mData == null || this.mModifiedData == null)
                 return null;
-            if (this.mBuffer == null)
-                this.mBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 4);
+            if (this.mInputBuffer == null)
+                this.mInputBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 3);
+            if (this.mOutputBuffer == null)
+                this.mOutputBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 4);  
             
             // Update SDF Matrices
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
@@ -90,12 +94,13 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             Matrix4x4 rs = Matrix4x4.TRS(Vector3.zero, inTransform.rotation, inTransform.lossyScale);
             this.mLiDARComputeShader.SetMatrix("_LocalToWorldRS", rs);
             this.mLiDARComputeShader.SetMatrix("_WorldToLocalRS", rs.inverse);
-            // Prepare data for GPU
-            this.mBuffer.SetData(this.mData);
-            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mBuffer);
+            // Prepare input + output buffers for GPU
+            this.mInputBuffer.SetData(this.mData);
+            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mInputBuffer);
+            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutputBuffer);
             // TODO: Add logic for scans with more than 1210 rays
             this.mLiDARComputeShader.Dispatch(this.mKernel, 19, 1, 1);
-            this.mBuffer.GetData(this.mModifiedData);  
+            this.mOutputBuffer.GetData(this.mModifiedData);  
             return this.mModifiedData;
         }
 
@@ -103,7 +108,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         {
             this.mIsDirty = true;
             if (this.mData == null)
-                this.mData = new Vector4[inLaserScan.Ranges.Length];
+                this.mData = new Vector3[inLaserScan.Ranges.Length];
             if (this.mModifiedData== null)
                 this.mModifiedData = new Vector4[this.mData.Length];
             // Preprocess Data
@@ -112,11 +117,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             for (int i = 0; i < inLaserScan.Ranges.Length; i++)
             {
                 if (!IsValidMeasurement(inLaserScan.Ranges[i], inLaserScan.Range_min, inLaserScan.Range_max))
-                    this.mData[j] = new Vector4(0,0,0,0);
+                    this.mData[j] = new Vector3(0,0,0);
                 else
                 {
-                    Vector3 pos = this.mWorldPosition + new Vector3(inLaserScan.Ranges[i] * Mathf.Cos(currentAngle), 0f, inLaserScan.Ranges[i] * Mathf.Sin(currentAngle));
-                    this.mData[j] = new Vector4(pos.x, pos.y, pos.z, 0); // TODO: Do this calculation on GPU
+                    this.mData[j] = this.mWorldPosition + new Vector3(inLaserScan.Ranges[i] * Mathf.Cos(currentAngle), 0f, inLaserScan.Ranges[i] * Mathf.Sin(currentAngle)); // TODO: Do this calculation on GPU
                 }
                 currentAngle += inLaserScan.Angle_increment;
                 j++;
@@ -129,8 +133,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             //this.mIsDirty = true;
             uint size = inPointCloud.Row_step * inPointCloud.Height;
             Debug.Log("Scans: " + size);
-
-            Debug.Log((uint)inPointCloud.Fields[0].Datatype);
             //this.mIsDirty = false;
         }
         
@@ -141,8 +143,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public void CleanUp()
         {
-            this.mBuffer?.Dispose();
-            this.mBuffer?.Release();
+            this.mInputBuffer?.Dispose();
+            this.mInputBuffer?.Release();
         }
 
     }
