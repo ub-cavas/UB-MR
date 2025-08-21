@@ -1,6 +1,7 @@
 #pragma kernel SDFRaymarch
 
-RWStructuredBuffer<float4> _Points; // in: ray dir (LOCAL to object), out: hit position (world.xyz), hit (w)
+StructuredBuffer<float3> _Points; // in: ray dir (LOCAL to object), 
+RWStructuredBuffer<float4> _ModifiedPoints; //out: hit position (world.xyz), hit (w)
 
 float4x4 _WorldToSDFSpace;
 float4x4 _SDFToWorldSpace;
@@ -41,8 +42,8 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
     if (id.x >= count) return;
 
     // Direction in OBJECT-LOCAL space
-    float3 localDir = _Points[id.x].xyz;
-    if (all(abs(localDir) < 1e-6)) { _Points[id.x] = float4(0,0,0,0); return; }
+    float3 localDir = _Points[id.x];
+    if (all(abs(localDir) < 1e-6)) { _ModifiedPoints[id.x] = float4(0,0,0,0); return; }
 
     // Convert to WORLD direction using rotation+scale only (no translation)
     float3 worldDir = mul(_LocalToWorldRS, float4(localDir, 0.0)).xyz;
@@ -54,7 +55,7 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
 
     // Clip to unit cube [0,1]^3
     float tEnter, tExit;
-    if (!RayBoxUnit(texRayOrigin, texRayDir, tEnter, tExit)) { return; }
+    if (!RayBoxUnit(texRayOrigin, texRayDir, tEnter, tExit)) { _ModifiedPoints[id.x] = float4(_Points[id.x], 0.0); return; }
     float step = max(tEnter, 0.0);
     
     // Raymarch
@@ -69,7 +70,11 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
             float3 localHit = mul(_WorldToLocalRS, float4(worldHit - _RayOriginWorld, 0.0)).xyz;
             if (length(localHit) < length(_Points[id.x].xyz))
             {
-                _Points[id.x] = float4(localHit, 1.0);
+                _ModifiedPoints[id.x] = float4(localHit, 1.0);
+            }
+            else
+            {
+                _ModifiedPoints[id.x] = float4(_Points[id.x], 0.0);
             }
             return;
         }
@@ -80,5 +85,6 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
         step += dist; // distances are already in SDF-space units
     }
 
-    // no hit -> leave output as-is (or explicitly clear if you prefer)
+    // no hit
+    _ModifiedPoints[id.x] = float4(_Points[id.x], 0.0);
 }
