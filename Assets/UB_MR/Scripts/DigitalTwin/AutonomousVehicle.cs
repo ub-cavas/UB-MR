@@ -44,7 +44,8 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] float publishRate = 1.0f; // 1 FPS
 
 
-        [Header("LiDAR Capture Parameters")] 
+        [Header("LiDAR Capture Parameters")] [SerializeField]
+        private LidarType lidarType = LidarType.TwoD;
         [SerializeField] bool visualizeLidar = true;
         [SerializeField] LidarRenderer lidarRenderer;
         [SerializeField] float interval = 0.1f; // 1/10th of a second
@@ -153,7 +154,7 @@ namespace CAVAS.UB_MR.DT
                 qosProfile.SetDurability(durabilityPolicy);
                 //TODO: dynamic lists of SDFS... currently just supports 1 sdf
                 this.mSdfs[0] = FindFirstObjectByType<SDFTexture>();
-                this.mLidarModifier = new LidarModifier(LidarType.ThreeD, lidarTopicName, this.mLidarComputeShader, this.mNode, qosProfile, this.mSdfs[0]);
+                this.mLidarModifier = new LidarModifier(lidarType, lidarTopicName, this.mLidarComputeShader, this.mNode, qosProfile, this.mSdfs[0]);
             }
         }
 
