@@ -1,4 +1,5 @@
 #pragma kernel SDFRaymarch
+#define THREADS 64
 
 StructuredBuffer<float3> _Points; // in: ray dir (LOCAL to object), 
 RWStructuredBuffer<float4> _ModifiedPoints; //out: hit position (world.xyz), hit (w)
@@ -34,7 +35,7 @@ bool RayBoxUnit(float3 rayOrigin, float3 rayDirection, out float tEnter, out flo
     return (tExit >= max(tEnter, 0.0));
 }
 
-[numthreads(64,1,1)]
+[numthreads(THREADS,1,1)]
 void SDFRaymarch (uint3 id : SV_DispatchThreadID)
 {
     uint count, stride;

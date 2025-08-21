@@ -123,7 +123,7 @@ namespace CAVAS.UB_MR.DT
                 if (lidarTimer >= interval)
                 {
                     this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-                    Vector4[] scan = this.mLidarModifier.GetModifiedScan(this.mLidar); 
+                    Vector4[] scan = this.mLidarModifier.GetModifiedTwoDimensionalScan(this.mLidar); 
                     lidarTimer = 0f; // Reset publish timer
                     // Visualization
                     if (visualizeLidar)
