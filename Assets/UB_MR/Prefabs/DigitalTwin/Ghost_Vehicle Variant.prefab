@@ -391,7 +391,7 @@ MonoBehaviour:
   boundingBoxTopicName: /virtual_obstacles
   virtualCameraImageTopicName: /virtual_camera/image_raw
   virtualCameraDepthTopicName: /virtual_camera/depth
-  lidarTopicName: /scan
+  lidarTopicName: /sensing/lidar/top/aw_points
   detectionRadius: 30
   imageWidth: 1280
   imageHeight: 960
