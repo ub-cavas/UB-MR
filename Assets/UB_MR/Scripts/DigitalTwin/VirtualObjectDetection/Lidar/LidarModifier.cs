@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Linq;
 using Unity.Collections;
 using Unity.Mathematics;
+using sensor_msgs.msg;
 
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
@@ -131,8 +132,19 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         void ReadLiDAR(sensor_msgs.msg.PointCloud2 inPointCloud)
         {
             //this.mIsDirty = true;
+            int xOff=-1, yOff=-1, zOff=-1;
+            bool xF32=false, yF32=false, zF32=false;
+            foreach (var f in inPointCloud.Fields)
+            {
+                if (f.Name == "x") { xOff = (int)f.Offset; xF32 = f.Datatype == PointField.FLOAT32; }
+                if (f.Name == "y") { yOff = (int)f.Offset; yF32 = f.Datatype == PointField.FLOAT32; }
+                if (f.Name == "z") { zOff = (int)f.Offset; zF32 = f.Datatype == PointField.FLOAT32; }
+            }
+            
+            
             uint size = inPointCloud.Row_step * inPointCloud.Height;
             Debug.Log("Scans: " + size);
+            Debug.Log("F32: " + xF32 + ", " + yF32 + ", " + zF32);
             //this.mIsDirty = false;
         }
         
