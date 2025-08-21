@@ -23,6 +23,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         Vector3[] mData;
         Vector4[] mModifiedData;
         int mKernel;
+        int mPoints;
 
         SDFTexture mSDF;
         Vector3 mWorldPosition = Vector3.zero;
@@ -75,7 +76,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return this.mData.Select(v => new Vector4(v.x, v.y, v.z, 0f)).ToArray();
         }
         
-        public Vector4[] GetModifiedScan(Transform inTransform)
+        public Vector4[] GetModifiedTwoDimensionalScan(Transform inTransform)
         {
             if (this.mIsDirty || this.mData == null || this.mModifiedData == null)
                 return null;
@@ -98,6 +99,26 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutputBuffer);
             // TODO: Add logic for scans with more than 1210 rays
             this.mLiDARComputeShader.Dispatch(this.mKernel, 19, 1, 1);
+            this.mOutputBuffer.GetData(this.mModifiedData);  
+            return this.mModifiedData;
+        }
+
+        public Vector4[] GetModifiedThreeDimensionalScan(Transform inTransform)
+        {
+            // Update SDF Matrices
+            this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
+            this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
+            // Update LiDAR Transform on Compute Shader
+            this.mLiDARComputeShader.SetVector("_RayOriginWorld", inTransform.position);
+            Matrix4x4 rs = Matrix4x4.TRS(Vector3.zero, inTransform.rotation, inTransform.lossyScale);
+            this.mLiDARComputeShader.SetMatrix("_LocalToWorldRS", rs);
+            this.mLiDARComputeShader.SetMatrix("_WorldToLocalRS", rs.inverse);
+            
+            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutputBuffer);
+            
+            const int THREADS = 64; // must match shader
+            int groupsX = (this.mPoints + THREADS - 1) / THREADS;
+            this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
             this.mOutputBuffer.GetData(this.mModifiedData);  
             return this.mModifiedData;
         }
@@ -126,6 +147,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mIsDirty = false;
         }
 
+        // Assumes data "is dense" (no NaN's)
         void ReadLiDAR(sensor_msgs.msg.PointCloud2 inPointCloud)
         {
             if (inPointCloud == null || inPointCloud.Data == null || inPointCloud.Fields == null)
@@ -135,12 +157,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
             
             // --- Find x,y,z fields (expect FLOAT32s) ---
-            int xOff = -1, yOff = -1, zOff = -1;
             const byte FLOAT32 = PointField.FLOAT32; // 7
+            int xOff = -1, yOff = -1, zOff = -1;
             foreach (var f in inPointCloud.Fields)
             {
-                if (f == null) continue;
-                if (f.Datatype != FLOAT32) continue;
+                if (f == null || f.Datatype != FLOAT32) continue;
                 switch (f.Name)
                 {
                     case "x": xOff = (int)f.Offset; break;
@@ -160,21 +181,29 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             int count  = width * height;
             int pointStep = (int)inPointCloud.Point_step; // bytes per point
             int rowStep   = (int)inPointCloud.Row_step;   // bytes per row
-            if (count == 0 || pointStep <= 0 || rowStep < pointStep)
+            if (count <= 0 || pointStep <= 0 || rowStep < pointStep)
             {
                 Debug.LogWarning("PointCloud2 has invalid dimensions/steps.");
                 return;
             }
+            
+            long expectedBytes = (long)(height - 1) * rowStep + (long)width * pointStep;
+            if (inPointCloud.Data.LongLength < expectedBytes)
+            {
+                Debug.LogWarning("PointCloud2 data buffer is smaller than expected.");
+                return;
+            }
+            
             // Some publishers may set row_step == width*point_step; tolerate both
             if (inPointCloud.Data.Length < (height - 1) * rowStep + width * pointStep)
             {
                 Debug.LogWarning("PointCloud2 data buffer is smaller than expected.");
                 return;
             }
-            // Ensure output buffer
-            if (this.mData == null || this.mData.Length != count)
-                this.mData = new Vector3[count];
             
+            
+            // --- Ensure GPU buffer (stride = 12 bytes for float3) ---
+            EnsureBuffer(count);
             
             // --- Read function (handles endianness) ---
             unsafe float ReadF32(byte* ptr)
@@ -184,16 +213,13 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 else
                 {
                     // Big-endian: byte-swap
-                    uint u =
-                        ((uint)ptr[0] << 24) |
-                        ((uint)ptr[1] << 16) |
-                        ((uint)ptr[2] <<  8) |
-                        ((uint)ptr[3] <<  0);
+                    uint u = ((uint)ptr[0] << 24) | ((uint)ptr[1] << 16) | ((uint)ptr[2] <<  8) | ((uint)ptr[3] <<  0);
                     return *(float*)&u;
                 }
             }
             
-            // --- Iterate rows/points using point_step & row_step ---
+            // --- Write directly into the ComputeBuffer (no managed array) ---
+            var writer = this.mInputBuffer.BeginWrite<Vector3>(0, count);
             unsafe
             {
                 fixed (byte* pBase = inPointCloud.Data)
@@ -208,12 +234,24 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                             float x = ReadF32(pt + xOff);
                             float y = ReadF32(pt + yOff);
                             float z = ReadF32(pt + zOff);
-                            this.mData[idx++] = new Vector3(x, y, z);
+                            writer[idx] = new Vector3(x, y, z);
                         }
                     }
                 }
             }
+            this.mInputBuffer.EndWrite<Vector3>(count);
+            this.mPoints = count;
+            Debug.Log("Wrote " + this.mPoints + " to Graphics Buffer.");
+        }
 
+        void EnsureBuffer(int count)
+        {
+            const int stride = 12;
+            if (this.mInputBuffer == null || this.mInputBuffer.count != count || this.mInputBuffer.stride != stride)
+            {
+                this.mInputBuffer?.Release();
+                this.mInputBuffer = new ComputeBuffer(count, stride, ComputeBufferType.Structured);
+            }
         }
         
         bool IsValidMeasurement(float range, float rangeMin, float rangeMax)

@@ -29,7 +29,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                 if (this.useGPU)
                 {
                     this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-                    scan = this.mLidarModifier.GetModifiedScan(this.transform);
+                    scan = this.mLidarModifier.GetModifiedTwoDimensionalScan(this.transform);
                 }
                 else
                     scan = this.mLidarModifier.GetScan();
