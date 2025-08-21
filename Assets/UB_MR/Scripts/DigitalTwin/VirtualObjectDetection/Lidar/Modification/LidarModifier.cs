@@ -97,8 +97,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mInputBuffer.SetData(this.mData);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mInputBuffer);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutputBuffer);
-            // TODO: Add logic for scans with more than 1210 rays
-            this.mLiDARComputeShader.Dispatch(this.mKernel, 19, 1, 1);
+            const int THREADS = 64; // must match shader
+            int groupsX = (this.mData.Length + THREADS - 1) / THREADS;
+            this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
             this.mOutputBuffer.GetData(this.mModifiedData);  
             return this.mModifiedData;
         }
