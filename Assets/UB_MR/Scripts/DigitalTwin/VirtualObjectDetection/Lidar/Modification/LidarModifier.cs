@@ -9,8 +9,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
     public enum LidarType
     {
-        TwoD,
-        ThreeD
+        LaserScan,
+        PointCloud2
     }
     
     public class LidarModifier
@@ -28,14 +28,14 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         SDFTexture mSDF;
         Vector3 mWorldPosition = Vector3.zero;
-        private bool mIsDirty;
+        private bool mIsWritingToBuffer;
         
 
         public LidarModifier(MonoBehaviour inOwner, LidarType inType, string inTopicName, int inRaysPerScan, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
         {
             this.mLiDARComputeShader = inComputeShader;
             this.mNode = inNode;
-            if (inType == LidarType.TwoD)
+            if (inType == LidarType.LaserScan)
                 this.mLidarSubscriber2D = this.mNode.CreateSubscription<sensor_msgs.msg.LaserScan>(inTopicName, ReadLaserScan, inQoSProfile);
             else
                 inOwner.StartCoroutine(CreateBuffersAndSubscribe(inTopicName, inQoSProfile, inRaysPerScan));
@@ -95,7 +95,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         
         public Vector4[] GetModifiedTwoDimensionalScan(Transform inTransform)
         {
-            if (this.mIsDirty || this.mData == null || this.mModifiedData == null)
+            if (this.mIsWritingToBuffer || this.mData == null || this.mModifiedData == null)
                 return null;
             if (this.mInputBuffer == null)
                 this.mInputBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 3);
@@ -123,7 +123,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public Vector4[] GetModifiedThreeDimensionalScan(Transform inTransform)
         {
-            if (this.mInputBuffer == null || this.mOutputBuffer == null || this.mData == null || this.mModifiedData == null)
+            if (this.mInputBuffer == null || this.mOutputBuffer == null || this.mData == null || this.mModifiedData == null || this.mIsWritingToBuffer)
             {
                 Debug.LogWarning("Buffers Not Ready Yet");
                 return new Vector4[1];
@@ -142,14 +142,16 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             Matrix4x4 rs = Matrix4x4.TRS(Vector3.zero, inTransform.rotation, inTransform.lossyScale);
             this.mLiDARComputeShader.SetMatrix("_LocalToWorldRS", rs);
             this.mLiDARComputeShader.SetMatrix("_WorldToLocalRS", rs.inverse);
-            
+            // Set Buffers
+            this.mInputBuffer.SetData(this.mData);
+            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mInputBuffer);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutputBuffer);
             
             const int THREADS = 64; // must match shader
             int groupsX = (this.mPoints + THREADS - 1) / THREADS;
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
             this.mOutputBuffer.GetData(this.mModifiedData, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: this.mPoints);  
-            Debug.Log("MODIFIED: " + this.mPoints + " points");
+            //Debug.Log("MODIFIED: " + this.mPoints + " points");
             return this.mModifiedData;
         }
 
@@ -173,7 +175,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 currentAngle += inLaserScan.Angle_increment;
                 j++;
             }
-            this.mIsDirty = false;
+            this.mIsWritingToBuffer = false;
         }
 
         void ReadPointCloud2(sensor_msgs.msg.PointCloud2 inPointCloud)
@@ -184,7 +186,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 return;
             }
 
-            this.mIsDirty = true;
+            this.mIsWritingToBuffer = true;
             // --- Find x,y,z fields (expect FLOAT32s) ---
             const byte FLOAT32 = PointField.FLOAT32; // 7
             int xOff = -1, yOff = -1, zOff = -1;
@@ -256,12 +258,14 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                             float x = ReadF32(pt + xOff);
                             float y = ReadF32(pt + yOff);
                             float z = ReadF32(pt + zOff);
-                            this.mData[idx++] = new Vector3(x, y, z);
+                            this.mData[idx++] = new Vector3(y, z, x);
+                            //Debug.Log(x+", "+y+", "+z);
                         }
                     }
                 }
             }
             this.mPoints = count;
+            this.mIsWritingToBuffer = false;
             //Debug.Log("Wrote " + this.mPoints + " points to Data Buffer.");
         }
         

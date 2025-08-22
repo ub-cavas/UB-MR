@@ -9,6 +9,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
     {
         [SerializeField] LidarType lidarType;
         [SerializeField] private int raysPerScan = 60_000;
+        [Space]
         [SerializeField] private float maxRaytraceDistance = 100.0f;
         [SerializeField] private int maxIterations = 64;
         [SerializeField] private bool useGPU = false;
@@ -35,22 +36,19 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                 if (this.useGPU)
                 {
                     this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-                    if (this.lidarType == LidarType.ThreeD)
+                    if (this.lidarType == LidarType.PointCloud2)
                     {
-                        Vector4[] originalScan = this.mLidarModifier.GetModifiedThreeDimensionalScan(this.transform);
-                        scan = GetRandomSubset(originalScan, 12100);
+                        scan = this.mLidarModifier.GetModifiedThreeDimensionalScan(this.transform);
                     }
                     else
                     {
                         scan = this.mLidarModifier.GetModifiedTwoDimensionalScan(this.transform);
                     }
-                    
                 }
                 else
                     scan = this.mLidarModifier.GetScan();
                 timer = 0f; // Reset timer
-                VisualizeModifiedScan(scan);
-                //PrintScanData(scan);
+                VisualizeModifiedScan(GetRandomSubset(scan, 1000));
             }
         }
 
@@ -141,13 +139,13 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
             int count = 0;
             for (int i = 0; i < laserScans.Length; i++)
             {
-                if (laserScans[i].w == 1)
+                if (laserScans[i].w > 0)
                     count++;
             }
             return count;
         }
 
-        public static void PrintScanData(Vector4[] laserScans)
+        public static void PrintScanHits(Vector4[] laserScans)
         {
             if (laserScans == null)
             {
@@ -159,6 +157,18 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                     print(laserScans[i]);
             }
             
+        }
+
+        public static void PrintScan(Vector4[] laserScans)
+        {
+            if (laserScans == null)
+            {
+                return;
+            }
+            for (int i = 0; i < laserScans.Length; i++)
+            {
+                print(laserScans[i]);
+            }
         }
     }
 }

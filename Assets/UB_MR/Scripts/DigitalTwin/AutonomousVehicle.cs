@@ -45,7 +45,7 @@ namespace CAVAS.UB_MR.DT
 
 
         [Header("LiDAR Capture Parameters")] 
-        [SerializeField] LidarType lidarType = LidarType.ThreeD;
+        [SerializeField] LidarType lidarType = LidarType.PointCloud2;
 
         [SerializeField] int raysPerScan = 60_000;
         [SerializeField] bool visualizeLidar = true;
