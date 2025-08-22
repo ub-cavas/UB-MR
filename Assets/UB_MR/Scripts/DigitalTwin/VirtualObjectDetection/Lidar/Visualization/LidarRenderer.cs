@@ -39,7 +39,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
         }
 
-        public void VisualizeScan(Vector4[] inScan, Transform inTransform, int inNumOfScans)
+        public void VisualizeScan(Vector4[] inScan, Transform inTransform, int inNumOfScans, bool inRenderAsLine)
         {
             inScan = GetRandomSubset(inScan, inNumOfScans);
             if (!isInitialized)
@@ -62,22 +62,30 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 }
                 // Render them
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(true, this.mLineRenderers[i], inScan[i]);
+                    SetVisual(true, this.mLineRenderers[i], inScan[i], inRenderAsLine);
             }
             // "Remove" some lines
             else if (inScan.Length < mLineRenderers.Count)
             {
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(true, this.mLineRenderers[i], inScan[i]);
+                    SetVisual(true, this.mLineRenderers[i], inScan[i], inRenderAsLine);
                 // Don't render excess lines
-                for (int i = mLineRenderers.Count - 1; i >= inScan.Length; i--)
-                    SetVisual(false, this.mLineRenderers[i], inScan[i]);
+                for (int i = mLineRenderers.Count - 1; i > inScan.Length; i--)
+                {
+                    Vector4 scanPt;
+                    if (i < inScan.Length)
+                        scanPt = inScan[i];
+                    else
+                        scanPt = new Vector4();
+                    SetVisual(false, this.mLineRenderers[i], scanPt, inRenderAsLine);
+                }
+                    
             }
             else
             {
                 // Update existing lines
                 for (int i = 0; i < inScan.Length; i++)
-                    SetVisual(true, this.mLineRenderers[i], inScan[i]);
+                    SetVisual(true, this.mLineRenderers[i], inScan[i], inRenderAsLine);
             }
         }
         
@@ -90,19 +98,32 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             int[] indices = Enumerable.Range(0, source.Length).OrderBy(i => Random.value).ToArray();
             return indices.Take(subsetSize).Select(i => source[i]).ToArray();
         }
-        void SetVisual(bool inRender, LineRenderer inLineRenderer, Vector4 inPoint)
+        void SetVisual(bool inRender, LineRenderer inLineRenderer, Vector4 inPoint, bool inRenderAsLine = false)
         {
             Vector3 point = new Vector3(inPoint.x, inPoint.y, inPoint.z);
             if (inRender)
             {
                 inLineRenderer.gameObject.SetActive(true);
-                inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin of the object
-                inLineRenderer.SetPosition(1, inPoint); // Set the end point 
-                inLineRenderer.startColor = Color.white;
-                if (inPoint.w > 0)
-                    inLineRenderer.endColor = Color.red;
+                if (inRenderAsLine)
+                {
+                    inLineRenderer.gameObject.SetActive(true);
+                    inLineRenderer.SetPosition(0, Vector3.zero); // Set the start point at the origin of the object
+                    inLineRenderer.SetPosition(1, inPoint); // Set the end point 
+                    inLineRenderer.startColor = Color.white;
+                    if (inPoint.w > 0)
+                        inLineRenderer.endColor = Color.red;
+                    else
+                        inLineRenderer.endColor = Color.white;
+                }
                 else
-                    inLineRenderer.endColor = Color.white;
+                {
+                    float size = 0.1f; // ~10cm "point" length
+                    Vector3 offset = Vector3.up * (size * 0.5f); 
+                    inLineRenderer.SetPosition(0, point - offset);
+                    inLineRenderer.SetPosition(1, point + offset);
+                    inLineRenderer.startColor = Color.white;
+                    inLineRenderer.endColor = (inPoint.w > 0) ? Color.red : Color.white;
+                }
                 
             }
             else
