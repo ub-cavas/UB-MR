@@ -46,9 +46,9 @@ namespace CAVAS.UB_MR.DT
 
         [Header("LiDAR Capture Parameters")] 
         [SerializeField] LidarType lidarType = LidarType.PointCloud2;
-
         [SerializeField] int raysPerScan = 60_000;
         [SerializeField] bool visualizeLidar = true;
+        [SerializeField] bool renderAsLine = false;
         [SerializeField] LidarRenderer lidarRenderer;
         [SerializeField] float interval = 0.1f; // 1/10th of a second
         [SerializeField] Transform mLidar;
@@ -130,7 +130,7 @@ namespace CAVAS.UB_MR.DT
                     
                     // -- Visualization --
                     if (visualizeLidar)
-                        lidarRenderer.VisualizeScan(scan, this.mLidar, 1000);
+                        lidarRenderer.VisualizeScan(scan, this.mLidar, 1000, renderAsLine);
                 }
             }
         }
