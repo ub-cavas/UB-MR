@@ -39,11 +39,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 this.mLidarSubscriber2D = this.mNode.CreateSubscription<sensor_msgs.msg.LaserScan>(inTopicName, ReadLiDAR, inQoSProfile);
             else
                 inOwner.StartCoroutine(CreateBuffersAndSubscribe(inTopicName, inQoSProfile));
-                
-               
             
-                
-
             // TODO: Support multiple SDFs
             this.mKernel = this.mLiDARComputeShader.FindKernel(inComputeShader.name);
             this.mSDF = inSDFs;
@@ -160,7 +156,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         void ReadLiDAR(sensor_msgs.msg.LaserScan inLaserScan)
         {
-            this.mIsDirty = true;
             if (this.mData == null)
                 this.mData = new Vector3[inLaserScan.Ranges.Length];
             if (this.mModifiedData== null)
@@ -190,7 +185,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 Debug.LogWarning("Invalid PointCloud2.");
                 return;
             }
-            
+
+            this.mIsDirty = true;
             // --- Find x,y,z fields (expect FLOAT32s) ---
             const byte FLOAT32 = PointField.FLOAT32; // 7
             int xOff = -1, yOff = -1, zOff = -1;
