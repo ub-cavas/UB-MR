@@ -16,8 +16,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
     public class LidarModifier
     {
         ROS2Node mNode;
-        ISubscription<sensor_msgs.msg.LaserScan> mLidarSubscriber2D;
-        ISubscription<sensor_msgs.msg.PointCloud2> mLidarSubscriber3D;
+        ISubscription<LaserScan> mLidarSubscriber2D;
+        ISubscription<PointCloud2> mLidarSubscriber3D;
         ComputeShader mLiDARComputeShader;
         ComputeBuffer mInputBuffer;
         ComputeBuffer mOutputBuffer;
@@ -93,7 +93,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return this.mData.Select(v => new Vector4(v.x, v.y, v.z, 0f)).ToArray();
         }
         
-        public Vector4[] GetModifiedTwoDimensionalScan(Transform inTransform)
+        public Vector4[] GetModifiedLaserScan(Transform inTransform)
         {
             if (this.mIsWritingToBuffer || this.mData == null || this.mModifiedData == null)
                 return null;
@@ -121,7 +121,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return this.mModifiedData;
         }
 
-        public Vector4[] GetModifiedThreeDimensionalScan(Transform inTransform)
+        public Vector4[] GetModifiedPointCloud2(Transform inTransform)
         {
             if (this.mInputBuffer == null || this.mOutputBuffer == null || this.mData == null || this.mModifiedData == null || this.mIsWritingToBuffer)
             {
@@ -280,7 +280,17 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mInputBuffer?.Release();
             this.mOutputBuffer?.Dispose();
             this.mOutputBuffer?.Release();
-            Debug.Log("Cleaned up GPU Buffers!");
+
+            if (Ros2cs.Ok())
+            {
+                if (this.mLidarSubscriber2D != null)
+                    this.mNode.RemoveSubscription<LaserScan>(this.mLidarSubscriber2D);
+                if (this.mLidarSubscriber3D != null)
+                    this.mNode.RemoveSubscription<LaserScan>(this.mLidarSubscriber3D);
+                this.mLidarSubscriber2D = null;
+                this.mLidarSubscriber3D = null;
+            }
+            
         }
 
     }
