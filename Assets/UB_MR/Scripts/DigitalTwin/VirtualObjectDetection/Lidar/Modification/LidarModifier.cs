@@ -1,3 +1,4 @@
+using System.Collections;
 using ROS2;
 using UnityEngine;
 using System.Linq;
@@ -30,14 +31,18 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         private bool mIsDirty;
         
 
-        public LidarModifier(LidarType inType, string inTopicName, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
+        public LidarModifier(MonoBehaviour inOwner, LidarType inType, string inTopicName, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
         {
             this.mLiDARComputeShader = inComputeShader;
             this.mNode = inNode;
             if (inType == LidarType.TwoD)
                 this.mLidarSubscriber2D = this.mNode.CreateSubscription<sensor_msgs.msg.LaserScan>(inTopicName, ReadLiDAR, inQoSProfile);
             else
-                this.mLidarSubscriber3D = this.mNode.CreateSubscription<sensor_msgs.msg.PointCloud2>(inTopicName, ReadLiDAR, inQoSProfile);
+                inOwner.StartCoroutine(CreateBuffersAndSubscribe(inTopicName, inQoSProfile));
+                
+               
+            
+                
 
             // TODO: Support multiple SDFs
             this.mKernel = this.mLiDARComputeShader.FindKernel(inComputeShader.name);
@@ -54,6 +59,23 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             int maxIterations = 128;
             this.UpdateSDFRaytraceParameters(maxDistance, hitThreshold, maxIterations);
             this.mLiDARComputeShader.SetVector("_Origin", this.mWorldPosition);
+        }
+
+        IEnumerator CreateBuffersAndSubscribe(string inTopicName, QualityOfServiceProfile inQoSProfile)
+        {
+            const int count = 60_000; // 50,000 Default Size
+            const int inputStride = sizeof(float) * 3;
+            const int outputStride = sizeof(float) * 4;
+            this.mData = new Vector3[count];
+            this.mModifiedData = new Vector4[count];
+            Debug.Log("CPU Buffers Created!");
+            yield return new WaitForSeconds(0.5f);
+            this.mInputBuffer = new ComputeBuffer(count, inputStride, ComputeBufferType.Structured);
+            this.mOutputBuffer = new ComputeBuffer(count, outputStride);
+            Debug.Log("GPU Buffers Created!");
+            yield return null;
+            this.mLidarSubscriber3D = this.mNode.CreateSubscription<sensor_msgs.msg.PointCloud2>(inTopicName, ReadLiDAR, inQoSProfile);
+            Debug.Log("Subscribed to LiDAR!");
         }
         
         /// <summary>
@@ -106,12 +128,16 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public Vector4[] GetModifiedThreeDimensionalScan(Transform inTransform)
         {
-            if (this.mOutputBuffer == null)
+            if (this.mInputBuffer == null || this.mOutputBuffer == null || this.mData == null || this.mModifiedData == null)
             {
-                Debug.Log("Output Buffer Not Ready Yet");
+                Debug.LogWarning("Buffers Not Ready Yet");
                 return new Vector4[1];
             }
-                
+            if (this.mPoints <= 0)
+            {
+                Debug.LogWarning("No Points Received");
+                return new Vector4[1];
+            }
             
             // Update SDF Matrices
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
@@ -127,8 +153,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             const int THREADS = 64; // must match shader
             int groupsX = (this.mPoints + THREADS - 1) / THREADS;
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
-            //this.mOutputBuffer.GetData(this.mModifiedData);  
-            return new Vector4[1];
+            this.mOutputBuffer.GetData(this.mModifiedData, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: this.mPoints);  
+            Debug.Log("GOT DATA: " + this.mPoints);
+            return this.mModifiedData;
         }
 
         void ReadLiDAR(sensor_msgs.msg.LaserScan inLaserScan)
@@ -155,8 +182,97 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mIsDirty = false;
         }
 
-        // Assumes data "is dense" (no NaN's)
         void ReadLiDAR(sensor_msgs.msg.PointCloud2 inPointCloud)
+        {
+            
+            if (inPointCloud == null || inPointCloud.Data == null || inPointCloud.Fields == null)
+            {
+                Debug.LogWarning("Invalid PointCloud2.");
+                return;
+            }
+            
+            // --- Find x,y,z fields (expect FLOAT32s) ---
+            const byte FLOAT32 = PointField.FLOAT32; // 7
+            int xOff = -1, yOff = -1, zOff = -1;
+            foreach (var f in inPointCloud.Fields)
+            {
+                if (f == null || f.Datatype != FLOAT32) continue;
+                switch (f.Name)
+                {
+                    case "x": xOff = (int)f.Offset; break;
+                    case "y": yOff = (int)f.Offset; break;
+                    case "z": zOff = (int)f.Offset; break;
+                }
+            }
+            if (xOff < 0 || yOff < 0 || zOff < 0)
+            {
+                Debug.LogWarning("PointCloud2 is missing float32 x/y/z fields.");
+                return;
+            }
+            
+            // --- Dimensions & sanity ---
+            int width  = (int)inPointCloud.Width;
+            int height = (int)inPointCloud.Height;
+            int count  = width * height;
+            int pointStep = (int)inPointCloud.Point_step; // bytes per point
+            int rowStep   = (int)inPointCloud.Row_step;   // bytes per row
+            if (count <= 0 || pointStep <= 0 || rowStep < pointStep)
+            {
+                Debug.LogWarning("PointCloud2 has invalid dimensions/steps.");
+                return;
+            }
+            long expectedBytes = (long)(height - 1) * rowStep + (long)width * pointStep;
+            if (inPointCloud.Data.LongLength < expectedBytes)
+            {
+                Debug.LogWarning("PointCloud2 data buffer is smaller than expected.");
+                return;
+            }
+            // Some publishers may set row_step == width*point_step; tolerate both
+            if (inPointCloud.Data.Length < (height - 1) * rowStep + width * pointStep)
+            {
+                Debug.LogWarning("PointCloud2 data buffer is smaller than expected.");
+                return;
+            }
+            
+            // --- Read function (handles endianness) ---
+            unsafe float ReadF32(byte* ptr)
+            {
+                if (!inPointCloud.Is_bigendian)
+                    return *(float*)ptr;
+                else
+                {
+                    // Big-endian: byte-swap
+                    uint u = ((uint)ptr[0] << 24) | ((uint)ptr[1] << 16) | ((uint)ptr[2] <<  8) | ((uint)ptr[3] <<  0);
+                    return *(float*)&u;
+                }
+            }
+            
+            // -- Write into mData --
+            unsafe
+            {
+                fixed (byte* pBase = inPointCloud.Data)
+                {
+                    int idx = 0;
+                    for (int rIdx = 0; rIdx < height; rIdx++)
+                    {
+                        byte* row = pBase + (long)rIdx * rowStep;
+                        for (int cIdx = 0; cIdx < width; cIdx++)
+                        {
+                            byte* pt = row + (long)cIdx * pointStep;
+                            float x = ReadF32(pt + xOff);
+                            float y = ReadF32(pt + yOff);
+                            float z = ReadF32(pt + zOff);
+                            this.mData[idx++] = new Vector3(x, y, z);
+                        }
+                    }
+                }
+            }
+            this.mPoints = count;
+            //Debug.Log("Wrote " + this.mPoints + " points to Data Buffer.");
+        }
+        
+        // Assumes data "is dense" (no NaN's)
+        void CopyLidarToGPU(PointCloud2 inPointCloud)
         {
             if (inPointCloud == null || inPointCloud.Data == null || inPointCloud.Fields == null)
             {
@@ -274,6 +390,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         {
             this.mInputBuffer?.Dispose();
             this.mInputBuffer?.Release();
+            this.mOutputBuffer?.Dispose();
+            this.mOutputBuffer?.Release();
+            Debug.Log("Cleaned up GPU Buffers!");
         }
 
     }

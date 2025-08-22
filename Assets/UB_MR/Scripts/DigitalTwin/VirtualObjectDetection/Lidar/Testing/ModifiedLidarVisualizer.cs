@@ -29,12 +29,13 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                 if (this.useGPU)
                 {
                     this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-                    scan = this.mLidarModifier.GetModifiedTwoDimensionalScan(this.transform);
+                    scan = this.mLidarModifier.GetModifiedThreeDimensionalScan(this.transform);
+                    scan = new Vector4[1];
                 }
                 else
                     scan = this.mLidarModifier.GetScan();
                 timer = 0f; // Reset timer
-                VisualizeModifiedScan(scan);
+                //VisualizeModifiedScan(scan);
                 //PrintScanData(scan);
             }
         }
@@ -55,7 +56,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                 qosProfile.SetHistory(HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST, 2);
                 qosProfile.SetDurability(DurabilityPolicy.QOS_POLICY_DURABILITY_VOLATILE);
                 
-                this.mLidarModifier = new LidarModifier(lidarType, this.mLidarTopicName, lidarModComputeShader, this.mNode, qosProfile, sdfTexture);
+                this.mLidarModifier = new LidarModifier(this, lidarType, this.mLidarTopicName, lidarModComputeShader, this.mNode, qosProfile, sdfTexture);
             }
             
             // Initialize visualization components
