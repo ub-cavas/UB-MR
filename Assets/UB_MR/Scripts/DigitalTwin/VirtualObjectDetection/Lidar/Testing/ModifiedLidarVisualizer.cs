@@ -7,6 +7,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
     public class ModifiedLidarVisualizer : LidarVisualizer
     {
         [SerializeField] LidarType lidarType;
+        [SerializeField] private int raysPerScan = 60_000;
         [SerializeField] private float maxRaytraceDistance = 100.0f;
         [SerializeField] private int maxIterations = 64;
         [SerializeField] private bool useGPU = false;
@@ -54,7 +55,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                 qosProfile.SetHistory(HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST, 2);
                 qosProfile.SetDurability(DurabilityPolicy.QOS_POLICY_DURABILITY_VOLATILE);
                 
-                this.mLidarModifier = new LidarModifier(this, lidarType, this.mLidarTopicName, lidarModComputeShader, this.mNode, qosProfile, sdfTexture);
+                this.mLidarModifier = new LidarModifier(this, lidarType, this.mLidarTopicName, raysPerScan, lidarModComputeShader, this.mNode, qosProfile, sdfTexture);
             }
             
             // Initialize visualization components
