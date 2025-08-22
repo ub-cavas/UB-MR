@@ -31,7 +31,7 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] string virtualCameraImageTopicName = "/virtual_camera/image_raw"; // Topic name for publishing virtual camera images
         [SerializeField] string virtualCameraDepthTopicName = "/virtual_camera/depth"; // Topic name for publishing virtual camera depth images
         [Space]
-        [SerializeField] string lidarTopicName = "/lidar/scan"; // Topic name for Lidar scans
+        [SerializeField] string lidarTopicName = "/sensing/lidar/top/aw_points"; // Topic name for Lidar scans
 
         [Space]
 
@@ -44,8 +44,10 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] float publishRate = 1.0f; // 1 FPS
 
 
-        [Header("LiDAR Capture Parameters")] [SerializeField]
-        private LidarType lidarType = LidarType.TwoD;
+        [Header("LiDAR Capture Parameters")] 
+        [SerializeField] LidarType lidarType = LidarType.ThreeD;
+
+        [SerializeField] int raysPerScan = 60_000;
         [SerializeField] bool visualizeLidar = true;
         [SerializeField] LidarRenderer lidarRenderer;
         [SerializeField] float interval = 0.1f; // 1/10th of a second
@@ -154,7 +156,7 @@ namespace CAVAS.UB_MR.DT
                 qosProfile.SetDurability(durabilityPolicy);
                 //TODO: dynamic lists of SDFS... currently just supports 1 sdf
                 this.mSdfs[0] = FindFirstObjectByType<SDFTexture>();
-                this.mLidarModifier = new LidarModifier(this, lidarType, lidarTopicName, this.mLidarComputeShader, this.mNode, qosProfile, this.mSdfs[0]);
+                this.mLidarModifier = new LidarModifier(this, lidarType, lidarTopicName, raysPerScan, this.mLidarComputeShader, this.mNode, qosProfile, this.mSdfs[0]);
             }
         }
 
