@@ -385,7 +385,7 @@ MonoBehaviour:
   dashCam: {fileID: 3475418834968489395}
   followCam: {fileID: 66811409417692944}
   enableBoundingBoxCapture: 1
-  enableImageCapture: 0
+  enableImageCapture: 1
   enableLidarModifier: 1
   worldTransformationTopicName: /world_transform
   boundingBoxTopicName: /virtual_obstacles
@@ -393,12 +393,13 @@ MonoBehaviour:
   virtualCameraDepthTopicName: /virtual_camera/depth
   lidarTopicName: /sensing/lidar/top/aw_points
   detectionRadius: 30
-  imageWidth: 1920
-  imageHeight: 1080
+  imageWidth: 960
+  imageHeight: 540
   publishRate: 30
   lidarType: 1
   raysPerScan: 70000
   visualizeLidar: 1
+  renderAsLine: 0
   lidarRenderer: {fileID: 3823033999797214442}
   interval: 0.1
   mLidar: {fileID: 7951046745334963840}
