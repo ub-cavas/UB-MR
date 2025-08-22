@@ -79,11 +79,7 @@ namespace CAVAS.UB_MR.DT
         {
             base.OnNetworkSpawn();
             if (IsOwner)
-            {
                 ConnectToROS();
-                   
-            }
-                
             StartCoroutine(PublishVirtualObjects());
         }
 
@@ -125,11 +121,16 @@ namespace CAVAS.UB_MR.DT
                 if (lidarTimer >= interval)
                 {
                     this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-                    Vector4[] scan = this.mLidarModifier.GetModifiedTwoDimensionalScan(this.mLidar); 
+                    Vector4[] scan;
+                    if (lidarType == LidarType.PointCloud2)
+                        scan = this.mLidarModifier.GetModifiedPointCloud2(this.mLidar);
+                    else
+                        scan = this.mLidarModifier.GetModifiedLaserScan(this.mLidar); 
                     lidarTimer = 0f; // Reset publish timer
-                    // Visualization
+                    
+                    // -- Visualization --
                     if (visualizeLidar)
-                        lidarRenderer.VisualizeScan(scan, this.mLidar);
+                        lidarRenderer.VisualizeScan(scan, this.mLidar, 1000);
                 }
             }
         }

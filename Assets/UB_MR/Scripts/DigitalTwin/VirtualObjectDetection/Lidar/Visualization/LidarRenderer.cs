@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.Netcode;
+using System.Linq;
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
@@ -39,8 +39,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
         }
 
-        public void VisualizeScan(Vector4[] inScan, Transform inTransform)
+        public void VisualizeScan(Vector4[] inScan, Transform inTransform, int inNumOfScans)
         {
+            inScan = GetRandomSubset(inScan, inNumOfScans);
             if (!isInitialized)
                 InitializeVisualization(inTransform);
             if (inScan == null || inScan.Length == 0)
@@ -80,6 +81,15 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
         }
         
+        Vector4[] GetRandomSubset(Vector4[] source, int subsetSize)
+        {
+            if (subsetSize > source.Length)
+            {
+                subsetSize = source.Length;
+            }
+            int[] indices = Enumerable.Range(0, source.Length).OrderBy(i => Random.value).ToArray();
+            return indices.Take(subsetSize).Select(i => source[i]).ToArray();
+        }
         void SetVisual(bool inRender, LineRenderer inLineRenderer, Vector4 inPoint)
         {
             Vector3 point = new Vector3(inPoint.x, inPoint.y, inPoint.z);
