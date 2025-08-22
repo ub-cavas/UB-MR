@@ -340,6 +340,7 @@ MonoBehaviour:
   mLidarVisualMaterial: {fileID: 2100000, guid: ba128a66cee48f403902b2babfc43d51, type: 2}
   mLineWidth: 0.01
   lidarType: 0
+  raysPerScan: 60000
   maxRaytraceDistance: 0
   maxIterations: 0
   useGPU: 0
@@ -1251,10 +1252,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9406cbd295d8d444084af59c24a569ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mLidarTopicName: /sensing/lidar/top/aw_points
+  mLidarTopicName: /scan
   mLidarVisualMaterial: {fileID: 2100000, guid: e3d372b3121ab3e8ab4ad00da940a801, type: 2}
   mLineWidth: 0.01
-  lidarType: 1
+  lidarType: 0
+  raysPerScan: 13000
   maxRaytraceDistance: 50
   maxIterations: 64
   useGPU: 1
