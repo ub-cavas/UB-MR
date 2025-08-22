@@ -30,13 +30,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                 {
                     this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
                     scan = this.mLidarModifier.GetModifiedThreeDimensionalScan(this.transform);
-                    scan = new Vector4[1];
                 }
                 else
                     scan = this.mLidarModifier.GetScan();
                 timer = 0f; // Reset timer
                 //VisualizeModifiedScan(scan);
-                //PrintScanData(scan);
             }
         }
 
