@@ -1,6 +1,7 @@
 using System.Collections;
 using ROS2;
 using UnityEngine;
+using System.Linq;
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
 {
@@ -19,6 +20,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
         private float timer = 0f;
         private float hitThreshold = 0.0001f;
         
+        protected override void Awake()
+        {
+            StartCoroutine(this.CreateLidarModifier());
+        }
 
         protected override void Update()
         {
@@ -30,12 +35,22 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                 if (this.useGPU)
                 {
                     this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-                    scan = this.mLidarModifier.GetModifiedThreeDimensionalScan(this.transform);
+                    if (this.lidarType == LidarType.ThreeD)
+                    {
+                        Vector4[] originalScan = this.mLidarModifier.GetModifiedThreeDimensionalScan(this.transform);
+                        scan = GetRandomSubset(originalScan, 12100);
+                    }
+                    else
+                    {
+                        scan = this.mLidarModifier.GetModifiedTwoDimensionalScan(this.transform);
+                    }
+                    
                 }
                 else
                     scan = this.mLidarModifier.GetScan();
                 timer = 0f; // Reset timer
-                //VisualizeModifiedScan(scan);
+                VisualizeModifiedScan(scan);
+                //PrintScanData(scan);
             }
         }
 
@@ -63,9 +78,14 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
         }
 
 
-        protected override void Awake()
+        Vector4[] GetRandomSubset(Vector4[] source, int subsetSize)
         {
-            StartCoroutine(this.CreateLidarModifier());
+            if (subsetSize > source.Length)
+            {
+                subsetSize = source.Length;
+            }
+            int[] indices = Enumerable.Range(0, source.Length).OrderBy(i => Random.value).ToArray();
+            return indices.Take(subsetSize).Select(i => source[i]).ToArray();
         }
         
         void VisualizeModifiedScan(Vector4[] inScan)
