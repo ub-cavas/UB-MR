@@ -123,9 +123,13 @@ namespace CAVAS.UB_MR.DT
                     this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
                     Vector4[] scan;
                     if (lidarType == LidarType.PointCloud2)
-                        scan = this.mLidarModifier.GetModifiedPointCloud2(this.mLidar);
+                        scan = this.mLidarModifier.PublishModifiedPointCloud2(this.mLidar);
                     else
+                    {
+                        // TODO: Pack a LaserScan message + publish
                         scan = this.mLidarModifier.GetModifiedLaserScan(this.mLidar); 
+                    }
+                        
                     lidarTimer = 0f; // Reset publish timer
                     
                     // -- Visualization --

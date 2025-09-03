@@ -69,7 +69,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             vision_msgs.msg.BoundingBox3DArray msg = new vision_msgs.msg.BoundingBox3DArray();
             // Header
             msg.Header = new std_msgs.msg.Header();
-            msg.Header.Frame_id = "world";
+            msg.Header.Frame_id = "map";
             builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
             time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
             msg.Header.Stamp = time;
