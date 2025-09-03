@@ -3,6 +3,8 @@ using ROS2;
 using UnityEngine;
 using System.Linq;
 using sensor_msgs.msg;
+using System;
+using std_msgs.msg;
 
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
@@ -18,6 +20,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         ROS2Node mNode;
         ISubscription<LaserScan> mLidarSubscriber2D;
         ISubscription<PointCloud2> mLidarSubscriber3D;
+        IPublisher<PointCloud2> mModifiedLidarPublisher;
         ComputeShader mLiDARComputeShader;
         ComputeBuffer mInputBuffer;
         ComputeBuffer mOutputBuffer;
@@ -38,7 +41,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             if (inType == LidarType.LaserScan)
                 this.mLidarSubscriber2D = this.mNode.CreateSubscription<sensor_msgs.msg.LaserScan>(inTopicName, ReadLaserScan, inQoSProfile);
             else
+            {
                 inOwner.StartCoroutine(CreateBuffersAndSubscribe(inTopicName, inQoSProfile, inRaysPerScan));
+                this.mModifiedLidarPublisher = inNode.CreatePublisher<PointCloud2>(inTopicName + "_modified");
+            }
+                
             
             // TODO: Support multiple SDFs
             this.mKernel = this.mLiDARComputeShader.FindKernel(inComputeShader.name);
@@ -155,7 +162,66 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return this.mModifiedData;
         }
 
-        void ReadLaserScan(sensor_msgs.msg.LaserScan inLaserScan)
+        public Vector4[] PublishModifiedPointCloud2(Transform inTransform, string inLidarFrameID = "base_link")
+        {
+            Vector4[] pcd = GetModifiedLaserScan(inTransform);
+            string frameId = inLidarFrameID;
+            var msg = new sensor_msgs.msg.PointCloud2();
+            msg.Header.Frame_id = inLidarFrameID;
+            builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
+            time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
+            msg.Header.Stamp = time;
+            
+            PointField[] fields = new PointField[3];
+            // X Data
+            fields[0] = new PointField();
+            fields[0].Name = "x";
+            fields[0].Offset = 0;
+            fields[0].Datatype = PointField.FLOAT32;
+            fields[0].Count = 1;
+            // Y DATA
+            fields[1] = new PointField();
+            fields[1].Name = "y";
+            fields[1].Offset = 4;
+            fields[1].Datatype = PointField.FLOAT32;
+            fields[1].Count = 1;
+            // Z DATA
+            fields[2] = new PointField();
+            fields[2].Name = "z";
+            fields[2].Offset = 8;
+            fields[2].Datatype = PointField.FLOAT32;
+            fields[2].Count = 1;
+            // Point DATA
+            const int pointStep = 3 * sizeof(float);
+            uint width = (uint)pcd.Length;
+            uint height = 1;
+            uint rowStep = pointStep * width;
+            byte[] data = new byte[pcd.Length * pointStep];
+            int off = 0;
+            for (int i = 0; i < pcd.Length; i++)
+            {
+                Vector3 p = Ros2UnityConversions.UnityToRosPoint(pcd[i]);
+                Array.Copy(BitConverter.GetBytes(p.x), 0, data, off, 4); off += 4;
+                Array.Copy(BitConverter.GetBytes(p.y), 0, data, off, 4); off += 4;
+                Array.Copy(BitConverter.GetBytes(p.z), 0, data, off, 4); off += 4;
+            }
+            bool isBigEndian = !BitConverter.IsLittleEndian;
+
+            msg.Width = width;
+            msg.Height = height;
+            msg.Fields = fields;
+            msg.Is_bigendian = isBigEndian;
+            msg.Point_step = (uint)pointStep;
+            msg.Row_step = (uint)rowStep;
+            msg.Data = data;
+            msg.Is_dense = false;
+            
+            msg.WriteNativeMessage();
+            this.mModifiedLidarPublisher.Publish(msg);
+            return pcd; // return for downstream vizualization / analysis 
+        }
+        
+        void ReadLaserScan(LaserScan inLaserScan)
         {
             if (this.mData == null)
                 this.mData = new Vector3[inLaserScan.Ranges.Length];
@@ -178,7 +244,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mIsWritingToBuffer = false;
         }
 
-        void ReadPointCloud2(sensor_msgs.msg.PointCloud2 inPointCloud)
+        void ReadPointCloud2(PointCloud2 inPointCloud)
         {
             if (inPointCloud == null || inPointCloud.Data == null || inPointCloud.Fields == null)
             {
@@ -258,8 +324,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                             float x = ReadF32(pt + xOff);
                             float y = ReadF32(pt + yOff);
                             float z = ReadF32(pt + zOff);
-                            this.mData[idx++] = new Vector3(y, z, x);
-                            //Debug.Log(x+", "+y+", "+z);
+                            this.mData[idx++] = Ros2UnityConversions.RosToUnityPoint(new Vector3(x, y, z));
                         }
                     }
                 }
