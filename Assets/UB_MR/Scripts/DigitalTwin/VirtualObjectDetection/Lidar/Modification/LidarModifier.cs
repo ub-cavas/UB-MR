@@ -164,7 +164,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public Vector4[] PublishModifiedPointCloud2(Transform inTransform, string inLidarFrameID = "base_link")
         {
-            Vector4[] pcd = GetModifiedLaserScan(inTransform);
+            Vector4[] pcd = GetModifiedLaserScan(inTransform); 
+            if (pcd == null)
+                return null;
             string frameId = inLidarFrameID;
             var msg = new sensor_msgs.msg.PointCloud2();
             msg.Header.Frame_id = inLidarFrameID;
