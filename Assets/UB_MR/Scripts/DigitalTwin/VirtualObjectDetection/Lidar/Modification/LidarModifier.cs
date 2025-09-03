@@ -149,8 +149,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             if (this.mIsWritingToBuffer)
             {
                 // TODO: Should I Send Previous Modified Scan or Original Scan?????
-                Debug.LogError("GPU Took Too Long, Sending Last Valid PCD"); 
-                return GetOriginalScan();
+                Debug.LogWarning("GPU Time Out"); 
+                return Array.Empty<Vector4>();
             }
             
             
@@ -182,8 +182,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 return null;
             
             Vector4[] pcd = GetModifiedPointCloud2(inTransform); 
-            if (pcd == null)
+            if (pcd == null || pcd.Length == 0)
                 return null;
+            
             string frameId = inLidarFrameID;
             var msg = new sensor_msgs.msg.PointCloud2();
             msg.Header.Frame_id = inLidarFrameID;
