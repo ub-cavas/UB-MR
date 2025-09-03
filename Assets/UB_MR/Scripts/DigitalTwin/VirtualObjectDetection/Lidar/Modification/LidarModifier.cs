@@ -95,7 +95,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.SetInt("_MaxIterations", inMaxIterations);
         }
 
-        public Vector4[] GetScan()
+        public Vector4[] GetOriginalScan()
         {
             return this.mData.Select(v => new Vector4(v.x, v.y, v.z, 0f)).ToArray();
         }
@@ -103,7 +103,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         public Vector4[] GetModifiedLaserScan(Transform inTransform)
         {
             if (this.mIsWritingToBuffer || this.mData == null || this.mModifiedData == null)
-                return null;
+                return GetOriginalScan(); // Return the Original Scan
             if (this.mInputBuffer == null)
                 this.mInputBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 3);
             if (this.mOutputBuffer == null)
@@ -130,16 +130,28 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public Vector4[] GetModifiedPointCloud2(Transform inTransform)
         {
-            if (this.mInputBuffer == null || this.mOutputBuffer == null || this.mData == null || this.mModifiedData == null || this.mIsWritingToBuffer)
+            if (this.mInputBuffer == null || this.mOutputBuffer == null)
             {
-                Debug.LogWarning("Buffers Not Ready Yet");
-                return new Vector4[1];
+                Debug.LogError("Compute Buffers Not Initialized!");
+                return GetOriginalScan();
             }
-            if (this.mPoints <= 0)
+
+            if (this.mData == null || this.mPoints <= 0)
             {
-                Debug.LogWarning("No Points Received");
-                return new Vector4[1];
+                if (this.mData == null)
+                    Debug.LogError("Data Buffer Not Initialized!");
+                else
+                    Debug.LogError("No Points Received! Publishing 0 Points!");
+                return Array.Empty<Vector4>();
             }
+
+            if (this.mIsWritingToBuffer)
+            {
+                // TODO: Should I Send Previous Modified Scan or Original Scan?????
+                Debug.LogError("GPU Took Too Long, Sending Last Valid PCD"); 
+                return GetOriginalScan();
+            }
+            
             
             // Update SDF Matrices
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
@@ -158,7 +170,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             int groupsX = (this.mPoints + THREADS - 1) / THREADS;
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
             this.mOutputBuffer.GetData(this.mModifiedData, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: this.mPoints);  
-            //Debug.Log("MODIFIED: " + this.mPoints + " points");
+            
+            Debug.Log("MODIFIED: " + this.mPoints + " points");
             return this.mModifiedData;
         }
 
@@ -230,6 +243,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             if (this.mModifiedData== null)
                 this.mModifiedData = new Vector4[this.mData.Length];
             // Preprocess Data
+            this.mIsWritingToBuffer = true;
             float currentAngle = inLaserScan.Angle_min;
             int j = 0;
             for (int i = 0; i < inLaserScan.Ranges.Length; i++)
