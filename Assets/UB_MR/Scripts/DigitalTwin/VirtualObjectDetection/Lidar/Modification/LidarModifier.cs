@@ -28,6 +28,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         Vector4[] mModifiedData;
         int mKernel;
         int mPoints;
+        builtin_interfaces.msg.Time mLastStamp;
 
         SDFTexture mSDF;
         Vector3 mWorldPosition = Vector3.zero;
@@ -171,21 +172,22 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
             this.mOutputBuffer.GetData(this.mModifiedData, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: this.mPoints);  
             
-            Debug.Log("MODIFIED: " + this.mPoints + " points");
+            //Debug.Log("MODIFIED: " + this.mPoints + " points");
             return this.mModifiedData;
         }
 
         public Vector4[] PublishModifiedPointCloud2(Transform inTransform, string inLidarFrameID = "base_link")
         {
-            Vector4[] pcd = GetModifiedLaserScan(inTransform); 
+            if (this.mLastStamp == null)
+                return null;
+            
+            Vector4[] pcd = GetModifiedPointCloud2(inTransform); 
             if (pcd == null)
                 return null;
             string frameId = inLidarFrameID;
             var msg = new sensor_msgs.msg.PointCloud2();
             msg.Header.Frame_id = inLidarFrameID;
-            builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
-            time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
-            msg.Header.Stamp = time;
+            msg.Header.Stamp = this.mLastStamp;
             
             PointField[] fields = new PointField[3];
             // X Data
@@ -244,6 +246,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 this.mModifiedData = new Vector4[this.mData.Length];
             // Preprocess Data
             this.mIsWritingToBuffer = true;
+            this.mLastStamp = inLaserScan.Header.Stamp;
             float currentAngle = inLaserScan.Angle_min;
             int j = 0;
             for (int i = 0; i < inLaserScan.Ranges.Length; i++)
@@ -287,6 +290,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 Debug.LogWarning("PointCloud2 is missing float32 x/y/z fields.");
                 return;
             }
+            
+            // Update time stamp
+            // TODO: Implement in other publishers
+            this.mLastStamp = inPointCloud.Header.Stamp;
             
             // --- Dimensions & sanity ---
             int width  = (int)inPointCloud.Width;
