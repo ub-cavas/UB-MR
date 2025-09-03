@@ -133,7 +133,7 @@ namespace CAVAS.UB_MR.DT
                     lidarTimer = 0f; // Reset publish timer
                     
                     // -- Visualization --
-                    if (visualizeLidar)
+                    if (visualizeLidar && scan != null)
                         lidarRenderer.VisualizeScan(scan, this.mLidar, 1000, renderAsLine);
                 }
             }
