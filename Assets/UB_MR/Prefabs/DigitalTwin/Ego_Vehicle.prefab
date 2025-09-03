@@ -644,9 +644,12 @@ MonoBehaviour:
   imageWidth: 640
   imageHeight: 480
   publishRate: 30
-  visualizeLidar: 1
+  lidarType: 1
+  raysPerScan: 60000
+  visualizeLidar: 0
+  renderAsLine: 0
   lidarRenderer: {fileID: 5228723185404508341}
-  interval: 0.1
+  interval: 0.07
   mLidar: {fileID: 1425890389536176863}
   mSdfs:
   - {fileID: 0}

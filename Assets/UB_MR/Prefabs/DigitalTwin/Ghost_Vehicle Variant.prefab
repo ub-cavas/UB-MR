@@ -398,10 +398,10 @@ MonoBehaviour:
   publishRate: 30
   lidarType: 1
   raysPerScan: 70000
-  visualizeLidar: 1
+  visualizeLidar: 0
   renderAsLine: 0
   lidarRenderer: {fileID: 3823033999797214442}
-  interval: 0.1
+  interval: 0.07
   mLidar: {fileID: 7951046745334963840}
   mSdfs:
   - {fileID: 0}
