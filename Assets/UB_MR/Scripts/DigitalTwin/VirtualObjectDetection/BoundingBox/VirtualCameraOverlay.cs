@@ -2,6 +2,7 @@ using ROS2;
 using sensor_msgs.msg;
 using UnityEngine;
 using System;
+using std_msgs.msg;
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Camera
 {
@@ -173,6 +174,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Camera
             }
 
             var image = new Image();
+            Header header = new Header();
+            
             image.Height = (uint)IMAGE_HEIGHT;
             image.Width = (uint)IMAGE_WIDTH;
             image.Encoding = "rgb8";  // RGB24 in Unity maps to "rgb8" in ROS2
