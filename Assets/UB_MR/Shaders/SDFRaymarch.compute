@@ -1,5 +1,5 @@
 #pragma kernel SDFRaymarch
-#define THREADS 64
+#define THREADS 128
 
 StructuredBuffer<float3> _Points; // in: ray dir (LOCAL to object), 
 RWStructuredBuffer<float4> _ModifiedPoints; //out: hit position (world.xyz), hit (w)
