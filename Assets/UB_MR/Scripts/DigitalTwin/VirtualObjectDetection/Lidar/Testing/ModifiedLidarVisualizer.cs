@@ -38,11 +38,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                     this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
                     if (this.lidarType == LidarType.PointCloud2)
                     {
-                        scan = this.mLidarModifier.GetModifiedPointCloud2(this.transform);
+                        scan = this.mLidarModifier.ModifyPointCloud2(this.transform);
                     }
                     else
                     {
-                        scan = this.mLidarModifier.GetModifiedLaserScan(this.transform);
+                        scan = this.mLidarModifier.ModifyLaserScan(this.transform);
                     }
                 }
                 else

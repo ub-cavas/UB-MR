@@ -50,7 +50,6 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] bool visualizeLidar = true;
         [SerializeField] bool renderAsLine = false;
         [SerializeField] LidarRenderer lidarRenderer;
-        [SerializeField] float interval = 0.1f; // 1/10th of a second
         [SerializeField] Transform mLidar;
         [SerializeField] List<SDFTexture> mSdfs;
         [SerializeField] ComputeShader mLidarComputeShader;
@@ -79,7 +78,10 @@ namespace CAVAS.UB_MR.DT
         {
             base.OnNetworkSpawn();
             if (IsOwner)
+            {
                 ConnectToROS();
+                this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
+            }
             StartCoroutine(PublishVirtualObjects());
         }
 
@@ -118,24 +120,18 @@ namespace CAVAS.UB_MR.DT
             if (IsOwner && this.mLidarModifier != null && enableLidarModifier)
             {
                 lidarTimer += Time.deltaTime;
-                if (lidarTimer >= interval)
+                Vector4[] scan;
+                if (lidarType == LidarType.PointCloud2)
+                    scan = this.mLidarModifier.PublishModifiedPointCloud2(this.mLidar);
+                else
                 {
-                    this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-                    Vector4[] scan;
-                    if (lidarType == LidarType.PointCloud2)
-                        scan = this.mLidarModifier.PublishModifiedPointCloud2(this.mLidar);
-                    else
-                    {
-                        // TODO: Pack a LaserScan message + publish
-                        scan = this.mLidarModifier.GetModifiedLaserScan(this.mLidar); 
-                    }
-                        
-                    lidarTimer = 0f; // Reset publish timer
-                    
-                    // -- Visualization --
-                    if (visualizeLidar && scan != null)
-                        lidarRenderer.VisualizeScan(scan, this.mLidar, 1000, renderAsLine);
+                    // TODO: Pack a LaserScan message + publish
+                    scan = this.mLidarModifier.ModifyLaserScan(this.mLidar); 
                 }
+                
+                // -- Visualization --
+                if (visualizeLidar && scan != null)
+                    lidarRenderer.VisualizeScan(scan, this.mLidar, 1000, renderAsLine);
             }
         }
 

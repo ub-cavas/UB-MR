@@ -1,9 +1,9 @@
 using System.Collections;
 using ROS2;
 using UnityEngine;
-using System.Linq;
 using sensor_msgs.msg;
 using System;
+using System.Linq;
 using std_msgs.msg;
 
 
@@ -27,13 +27,33 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         Vector3[] mData;
         Vector4[] mModifiedData;
         int mKernel;
-        int mPoints;
+        int points;
         builtin_interfaces.msg.Time mLastStamp;
+        private string mFrameID = "base_link"; // gets overwritten from first LiDAR msg
 
         SDFTexture mSDF;
         Vector3 mWorldPosition = Vector3.zero;
-        private bool mIsWritingToBuffer;
         
+        
+        private bool mIsUpdatingDataBuffer;
+        private bool mIsFreshData;
+        private bool mIsUpdatingModifiedDataBuffer;
+        private bool mIsFreshModifiedData;
+        // STATS
+        private float totalPoints;
+        private int scansProcessed;
+        private float avgPoints;
+
+        IEnumerator AnalyzeLiDAR()
+        {
+            float time = 0;
+            while (true)
+            {
+                yield return new WaitForSeconds(60.0f);
+                time += 60;
+                Debug.Log("Timestep: " + time + " | Avg # of Points: " + avgPoints);
+            }
+        }
 
         public LidarModifier(MonoBehaviour inOwner, LidarType inType, string inTopicName, int inRaysPerScan, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
         {
@@ -63,6 +83,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             int maxIterations = 128;
             this.UpdateSDFRaytraceParameters(maxDistance, hitThreshold, maxIterations);
             this.mLiDARComputeShader.SetVector("_Origin", this.mWorldPosition);
+            inOwner.StartCoroutine(AnalyzeLiDAR());
         }
 
         IEnumerator CreateBuffersAndSubscribe(string inTopicName, QualityOfServiceProfile inQoSProfile, int inCount)
@@ -101,9 +122,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return this.mData.Select(v => new Vector4(v.x, v.y, v.z, 0f)).ToArray();
         }
         
-        public Vector4[] GetModifiedLaserScan(Transform inTransform)
+        public Vector4[] ModifyLaserScan(Transform inTransform)
         {
-            if (this.mIsWritingToBuffer || this.mData == null || this.mModifiedData == null)
+            if (this.mIsUpdatingDataBuffer || this.mData == null || this.mModifiedData == null)
                 return GetOriginalScan(); // Return the Original Scan
             if (this.mInputBuffer == null)
                 this.mInputBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 3);
@@ -129,7 +150,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return this.mModifiedData;
         }
 
-        public Vector4[] GetModifiedPointCloud2(Transform inTransform)
+        public Vector4[] ModifyPointCloud2(Transform inTransform)
         {
             if (this.mInputBuffer == null || this.mOutputBuffer == null)
             {
@@ -137,7 +158,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 return GetOriginalScan();
             }
 
-            if (this.mData == null || this.mPoints <= 0)
+            if (this.mData == null || this.points <= 0)
             {
                 if (this.mData == null)
                     Debug.LogError("Data Buffer Not Initialized!");
@@ -146,14 +167,17 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 return Array.Empty<Vector4>();
             }
 
-            if (this.mIsWritingToBuffer)
+            if (this.mIsFreshData && !this.mIsUpdatingDataBuffer)
+                return ModifyOnGPU(inTransform);
+            else
             {
-                // TODO: Should I Send Previous Modified Scan or Original Scan?????
-                Debug.LogWarning("GPU Time Out"); 
+                //Debug.LogWarning("No fresh data to modify!");
                 return Array.Empty<Vector4>();
             }
-            
-            
+        }
+
+        Vector4[] ModifyOnGPU(Transform inTransform)
+        {
             // Update SDF Matrices
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
             this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
@@ -167,29 +191,42 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mInputBuffer);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutputBuffer);
             
-            const int THREADS = 64; // must match shader
-            int groupsX = (this.mPoints + THREADS - 1) / THREADS;
+            const int THREADS = 128; // ** MUST MATCH SHADER **
+            int groupsX = (this.points + THREADS - 1) / THREADS;
+
+            // Dispatch to GPU + lock the ModifiedData Buffer from reads
+            this.mIsUpdatingModifiedDataBuffer = true;
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
-            this.mOutputBuffer.GetData(this.mModifiedData, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: this.mPoints);  
+            this.mOutputBuffer.GetData(this.mModifiedData, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: this.points);
+            this.mIsUpdatingModifiedDataBuffer = false;
+            
+            // Data Age Updated
+            this.mIsFreshData = false;
+            this.mIsFreshModifiedData = true;
             
             //Debug.Log("MODIFIED: " + this.mPoints + " points");
             return this.mModifiedData;
         }
 
-        public Vector4[] PublishModifiedPointCloud2(Transform inTransform, string inLidarFrameID = "base_link")
+        public Vector4[] PublishModifiedPointCloud2(Transform inTransform)
         {
             if (this.mLastStamp == null)
                 return null;
             
-            Vector4[] pcd = GetModifiedPointCloud2(inTransform); 
-            if (pcd == null || pcd.Length == 0)
+            // Attempt to modify the buffered PCD
+            Vector4[] pcd = ModifyPointCloud2(inTransform);
+            if (!this.mIsFreshModifiedData || this.mIsUpdatingModifiedDataBuffer || pcd == null || pcd.Length == 0)
+            {
+                //Debug.LogWarning("No valid data to publish!");
                 return null;
+            }
             
-            string frameId = inLidarFrameID;
+            // HEADER
             var msg = new sensor_msgs.msg.PointCloud2();
-            msg.Header.Frame_id = inLidarFrameID;
+            msg.Header.Frame_id = this.mFrameID;
             msg.Header.Stamp = this.mLastStamp;
             
+            // Field DATA
             PointField[] fields = new PointField[3];
             // X Data
             fields[0] = new PointField();
@@ -209,6 +246,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             fields[2].Offset = 8;
             fields[2].Datatype = PointField.FLOAT32;
             fields[2].Count = 1;
+            
             // Point DATA
             const int pointStep = 3 * sizeof(float);
             uint width = (uint)pcd.Length;
@@ -225,6 +263,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
             bool isBigEndian = !BitConverter.IsLittleEndian;
 
+            // METADATA
             msg.Width = width;
             msg.Height = height;
             msg.Fields = fields;
@@ -233,10 +272,13 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             msg.Row_step = (uint)rowStep;
             msg.Data = data;
             msg.Is_dense = false;
-            
             msg.WriteNativeMessage();
+            
+            // Update Data Age
             this.mModifiedLidarPublisher.Publish(msg);
-            return pcd; // return for downstream vizualization / analysis 
+            this.mIsFreshModifiedData = false;
+            
+            return pcd; // return for downstream visualization / analysis 
         }
         
         void ReadLaserScan(LaserScan inLaserScan)
@@ -246,7 +288,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             if (this.mModifiedData== null)
                 this.mModifiedData = new Vector4[this.mData.Length];
             // Preprocess Data
-            this.mIsWritingToBuffer = true;
+            this.mIsUpdatingDataBuffer = true;
             this.mLastStamp = inLaserScan.Header.Stamp;
             float currentAngle = inLaserScan.Angle_min;
             int j = 0;
@@ -261,18 +303,21 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 currentAngle += inLaserScan.Angle_increment;
                 j++;
             }
-            this.mIsWritingToBuffer = false;
+            this.mIsUpdatingDataBuffer = false;
         }
 
         void ReadPointCloud2(PointCloud2 inPointCloud)
         {
             if (inPointCloud == null || inPointCloud.Data == null || inPointCloud.Fields == null)
             {
-                Debug.LogWarning("Invalid PointCloud2.");
+                Debug.LogWarning("Invalid Incoming PointCloud2.");
                 return;
             }
 
-            this.mIsWritingToBuffer = true;
+            // Lock the Data Buffer from reads
+            this.mIsUpdatingDataBuffer = true;
+            this.mFrameID = inPointCloud.Header.Frame_id;
+            
             // --- Find x,y,z fields (expect FLOAT32s) ---
             const byte FLOAT32 = PointField.FLOAT32; // 7
             int xOff = -1, yOff = -1, zOff = -1;
@@ -353,9 +398,15 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                     }
                 }
             }
-            this.mPoints = count;
-            this.mIsWritingToBuffer = false;
-            //Debug.Log("Wrote " + this.mPoints + " points to Data Buffer.");
+            this.points = count;
+            
+            // Unlock the Data Buffer so it can be sent to the GPU
+            this.mIsUpdatingDataBuffer = false;
+            this.mIsFreshData = true;
+            // STATS
+            this.scansProcessed += 1;
+            totalPoints += this.points;
+            avgPoints = totalPoints / this.scansProcessed;
         }
         
         bool IsValidMeasurement(float range, float rangeMin, float rangeMax)
