@@ -11,6 +11,10 @@ namespace UB_MR.Redis_Networking
 {
     public class TrafficReceiver : MonoBehaviour
     {
+        public System.Action<VehicleData> OnSpawnNewVehicle;
+        public System.Action<VehicleData> OnDespawnVehicle;
+        public System.Action<VehicleData> OnVehicleUpdate;
+        
         [System.Serializable]
         public class Location
         {
@@ -35,8 +39,8 @@ namespace UB_MR.Redis_Networking
         private bool isReceiving = false;
         public int port = 12345;
         // Latest received data
-        private Dictionary<string, VehicleData> trafficData;
-        private bool hasNewData = false;
+        public static Dictionary<string, VehicleData> trafficData;
+        public static bool hasNewData = false;
         
         void Start()
         {
@@ -110,17 +114,28 @@ namespace UB_MR.Redis_Networking
                         {
                             if (trafficData.ContainsKey(kvp.Key))
                             {
+                                trafficData[kvp.Key].id = kvp.Key;
                                 trafficData[kvp.Key].location = kvp.Value.location; 
                                 trafficData[kvp.Key].yaw = kvp.Value.yaw;
+                                
+                                OnVehicleUpdate?.Invoke(kvp.Value); // Let the listeners know
                             }
                             else
+                            {
                                 trafficData.Add(kvp.Key, kvp.Value);
+                                OnSpawnNewVehicle?.Invoke(kvp.Value);// Let the listeners know
+                            }
+                                
                         }
                         // Remove deleted vehicles
+                        //Debug.Log(receivedDataDict.Count + ": expected: " + trafficData.Keys.Count);
                         if (receivedDataDict.Count != trafficData.Keys.Count)
                             foreach (string id in trafficData.Keys)
-                                if (trafficData.ContainsKey(id))
+                                if (!receivedDataDict.ContainsKey(id))
+                                {
                                     trafficData.Remove(id);
+                                    OnDespawnVehicle?.Invoke(trafficData[id]); // Let the listeners know
+                                }
                         hasNewData = true;
                     }
                 }
@@ -142,8 +157,6 @@ namespace UB_MR.Redis_Networking
                 Debug.Log($"Received traffic at position: {position}, yaw: {yaw}, blueprint: {vehicle.Value.blueprint}");
             }
         }
-        
-        
 
     }
 

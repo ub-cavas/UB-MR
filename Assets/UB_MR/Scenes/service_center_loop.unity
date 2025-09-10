@@ -370,6 +370,66 @@ Transform:
   m_Children: []
   m_Father: {fileID: 90104803}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 180}
+--- !u!1 &250590652
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 250590654}
+  - component: {fileID: 250590653}
+  - component: {fileID: 250590655}
+  m_Layer: 0
+  m_Name: TrafficReciever
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &250590653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250590652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df534e1267e57986fbcd0258a4dcba48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 12345
+--- !u!4 &250590654
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250590652}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &250590655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250590652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea9107b68a7d57690b600d1c81ede0ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  receiver: {fileID: 250590653}
+  defaultTrafficAgent: {fileID: 8984838423299727567, guid: 3c69fdf63be8cf21192a2ffcb2b02556, type: 3}
 --- !u!1 &285627478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1500,3 +1560,4 @@ SceneRoots:
   - {fileID: 211020085}
   - {fileID: 10525331}
   - {fileID: 1250665413}
+  - {fileID: 250590654}
