@@ -30,7 +30,6 @@ namespace UB_MR.Redis_Networking
         }
         
         
-        
         private UdpClient udpClient;
         private Thread receiveThread;
         private bool isReceiving = false;
@@ -100,24 +99,25 @@ namespace UB_MR.Redis_Networking
                     string jsonString = Encoding.UTF8.GetString(data);
                 
                     // Parse JSON
-                    List<VehicleData> receivedDataList = JsonConvert.DeserializeObject<List<VehicleData>>(jsonString);
-                
+                    Dictionary<string, VehicleData> receivedDataDict = 
+                        JsonConvert.DeserializeObject<Dictionary<string, VehicleData>>(jsonString);
+                    print(receivedDataDict.Count);
                     // Thread-safe update
                     lock (this)
                     {
                         // Add New Vehicles + Update Existing Vehicles
-                        foreach (VehicleData vehicleData in receivedDataList)
+                        foreach (KeyValuePair<string, VehicleData> kvp in receivedDataDict)
                         {
-                            if (trafficData.ContainsKey(vehicleData.id))
+                            if (trafficData.ContainsKey(kvp.Key))
                             {
-                                trafficData[vehicleData.id].location = vehicleData.location; 
-                                trafficData[vehicleData.id].yaw = vehicleData.yaw;
+                                trafficData[kvp.Key].location = kvp.Value.location; 
+                                trafficData[kvp.Key].yaw = kvp.Value.yaw;
                             }
                             else
-                                trafficData.Add(vehicleData.id, vehicleData);
+                                trafficData.Add(kvp.Key, kvp.Value);
                         }
                         // Remove deleted vehicles
-                        if (receivedDataList.Count != trafficData.Keys.Count)
+                        if (receivedDataDict.Count != trafficData.Keys.Count)
                             foreach (string id in trafficData.Keys)
                                 if (trafficData.ContainsKey(id))
                                     trafficData.Remove(id);
@@ -133,7 +133,7 @@ namespace UB_MR.Redis_Networking
         
         void ProcessTrafficData()
         {
-            Debug.Log("Traffic Agents: " + trafficData.Count);
+            //Debug.Log("Traffic Agents: " + trafficData.Count);
             foreach (KeyValuePair<string, VehicleData> vehicle in trafficData)
             {
                 // Use your traffic data here
