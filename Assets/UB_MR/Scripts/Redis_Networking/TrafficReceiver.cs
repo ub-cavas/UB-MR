@@ -105,30 +105,28 @@ namespace UB_MR.Redis_Networking
                     // Parse JSON
                     Dictionary<string, VehicleData> receivedDataDict = 
                         JsonConvert.DeserializeObject<Dictionary<string, VehicleData>>(jsonString);
-                    print(receivedDataDict.Count);
+                    print("Before");
                     // Thread-safe update
                     lock (this)
                     {
-                        // Add New Vehicles + Update Existing Vehicles
-                        foreach (KeyValuePair<string, VehicleData> kvp in receivedDataDict)
+                        foreach (VehicleData vehicleData in receivedDataDict.Values)
                         {
-                            if (trafficData.ContainsKey(kvp.Key))
+                            //Update Existing Vehicles
+                            if (trafficData.ContainsKey(vehicleData.id))
                             {
-                                trafficData[kvp.Key].id = kvp.Key;
-                                trafficData[kvp.Key].location = kvp.Value.location; 
-                                trafficData[kvp.Key].yaw = kvp.Value.yaw;
-                                
-                                OnVehicleUpdate?.Invoke(kvp.Value); // Let the listeners know
+                                trafficData[vehicleData.id].location = vehicleData.location; 
+                                trafficData[vehicleData.id].yaw = vehicleData.yaw;
+                                OnVehicleUpdate?.Invoke(vehicleData); // Let the listeners know
                             }
+                            // Add New Vehicles
                             else
                             {
-                                trafficData.Add(kvp.Key, kvp.Value);
-                                OnSpawnNewVehicle?.Invoke(kvp.Value);// Let the listeners know
+                                trafficData.Add(vehicleData.id, vehicleData);
+                                OnSpawnNewVehicle?.Invoke(vehicleData);// Let the listeners know
                             }
                                 
                         }
                         // Remove deleted vehicles
-                        //Debug.Log(receivedDataDict.Count + ": expected: " + trafficData.Keys.Count);
                         if (receivedDataDict.Count != trafficData.Keys.Count)
                             foreach (string id in trafficData.Keys)
                                 if (!receivedDataDict.ContainsKey(id))

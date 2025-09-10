@@ -38,19 +38,7 @@ namespace UB_MR.Redis_Networking
                 receiver.OnDespawnVehicle -= TrafficReceiver_OnDespawnVehicle;
             }
         }
-
-        IEnumerator CreateTrafficAgent(TrafficReceiver.VehicleData creationBP)
-        {
-            
-            Vector3 position = new Vector3(creationBP.location.x, creationBP.location.z, creationBP.location.y);
-            Quaternion orientation = Quaternion.identity;
-            GameObject trafficAgent = GameObject.Instantiate(defaultTrafficAgent, position, orientation);
-            trafficAgents.Add(creationBP.id, trafficAgent);
-            yield return new WaitForSeconds(0.1f);
-            trafficAgent.transform.SetPositionAndRotation(position, orientation);
-            
-        }
-
+        
         private void Update()
         {
             if (trafficAgents == null)
@@ -59,7 +47,11 @@ namespace UB_MR.Redis_Networking
             // Creation Queue
             while (CREATE_Q.TryDequeue(out TrafficReceiver.VehicleData creationBP))
             { 
-                StartCoroutine(CreateTrafficAgent(creationBP));
+                Vector3 position = new Vector3(creationBP.location.x, creationBP.location.z, creationBP.location.y);
+                Quaternion orientation = Quaternion.identity;
+                GameObject trafficAgent = GameObject.Instantiate(defaultTrafficAgent, position, orientation);
+                trafficAgents.Add(creationBP.id, trafficAgent);
+                trafficAgent.transform.SetPositionAndRotation(position, orientation);
             }
             
             // Removal Queue
@@ -82,7 +74,7 @@ namespace UB_MR.Redis_Networking
             }
         }
 
-        private void TrafficReceiver_OnSpawnNewVehicle(TrafficReceiver.VehicleData inData )
+        private void TrafficReceiver_OnSpawnNewVehicle(TrafficReceiver.VehicleData inData)
         {
             CREATE_Q.Enqueue(inData);
         }
