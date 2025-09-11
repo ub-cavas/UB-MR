@@ -105,24 +105,24 @@ namespace UB_MR.Redis_Networking
                     // Parse JSON
                     Dictionary<string, VehicleData> receivedDataDict = 
                         JsonConvert.DeserializeObject<Dictionary<string, VehicleData>>(jsonString);
-                    print("Before");
                     // Thread-safe update
                     lock (this)
                     {
-                        foreach (VehicleData vehicleData in receivedDataDict.Values)
+                        foreach (string vehicleID in receivedDataDict.Keys)
                         {
+                            receivedDataDict[vehicleID].id = vehicleID;
                             //Update Existing Vehicles
-                            if (trafficData.ContainsKey(vehicleData.id))
+                            if (trafficData.ContainsKey(vehicleID))
                             {
-                                trafficData[vehicleData.id].location = vehicleData.location; 
-                                trafficData[vehicleData.id].yaw = vehicleData.yaw;
-                                OnVehicleUpdate?.Invoke(vehicleData); // Let the listeners know
+                                trafficData[vehicleID].location = receivedDataDict[vehicleID].location; 
+                                trafficData[vehicleID].yaw = receivedDataDict[vehicleID].yaw;
+                                OnVehicleUpdate?.Invoke(receivedDataDict[vehicleID]); // Let the listeners know
                             }
                             // Add New Vehicles
                             else
                             {
-                                trafficData.Add(vehicleData.id, vehicleData);
-                                OnSpawnNewVehicle?.Invoke(vehicleData);// Let the listeners know
+                                trafficData.Add(vehicleID, receivedDataDict[vehicleID]);
+                                OnSpawnNewVehicle?.Invoke(receivedDataDict[vehicleID]);// Let the listeners know
                             }
                                 
                         }

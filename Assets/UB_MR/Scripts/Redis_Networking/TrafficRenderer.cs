@@ -70,7 +70,7 @@ namespace UB_MR.Redis_Networking
                 // TODO: Convert from Unreal to Unity Coordinate system and set yaw
                 Vector3 position = new Vector3(updateBP.location.x, updateBP.location.z, updateBP.location.y);
                 Quaternion orientation = Quaternion.identity;
-                agent.transform.SetParent(defaultTrafficAgent.transform);
+                agent.transform.SetPositionAndRotation(position, orientation);
             }
         }
 
