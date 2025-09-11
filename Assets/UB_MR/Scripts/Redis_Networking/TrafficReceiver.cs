@@ -27,10 +27,38 @@ namespace UB_MR.Redis_Networking
         public class VehicleData
         {
             public string id;
-            public Location location;
-            public float yaw;
+            public Location location; // Don't use this... use Position()
+            public float yaw; // Don;t use this... Use Orientation()
             public string blueprint;
             public string color;
+
+            public Vector3 Position()
+            {
+                return ConvertPositionUEToUnity(new Vector3(location.x, location.y, location.z), 100);
+            }
+
+            public Quaternion Orientation()
+            {
+                return Quaternion.Euler(ConvertRotationUEToUnity(new Vector3(0, 0, yaw)));
+            }
+        }
+        
+        public static Vector3 ConvertPositionUEToUnity(Vector3 uePosition, float scale = 1)
+        {
+            return new Vector3(
+                uePosition.y * scale / 100f,   // UE Y → Unity X
+                uePosition.z * scale / 100f,   // UE Z → Unity Y
+                uePosition.x * scale / 100f    // UE X → Unity Z
+            );
+        }
+
+        public static Vector3 ConvertRotationUEToUnity(Vector3 ueRotation)
+        {
+            return new Vector3(
+                -ueRotation.x,  // -Pitch
+                -ueRotation.y,  // -Yaw
+                ueRotation.z    // Roll
+            );
         }
         
         

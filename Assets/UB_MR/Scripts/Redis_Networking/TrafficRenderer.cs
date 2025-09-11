@@ -47,8 +47,8 @@ namespace UB_MR.Redis_Networking
             // Creation Queue
             while (CREATE_Q.TryDequeue(out TrafficReceiver.VehicleData creationBP))
             { 
-                Vector3 position = new Vector3(creationBP.location.x, creationBP.location.z, creationBP.location.y);
-                Quaternion orientation = Quaternion.identity;
+                Vector3 position = creationBP.Position();
+                Quaternion orientation = creationBP.Orientation();
                 GameObject trafficAgent = GameObject.Instantiate(defaultTrafficAgent, position, orientation);
                 trafficAgents.Add(creationBP.id, trafficAgent);
                 trafficAgent.transform.SetPositionAndRotation(position, orientation);
@@ -68,8 +68,8 @@ namespace UB_MR.Redis_Networking
                 
                 GameObject agent = trafficAgents[updateBP.id];
                 // TODO: Convert from Unreal to Unity Coordinate system and set yaw
-                Vector3 position = new Vector3(updateBP.location.x, updateBP.location.z, updateBP.location.y);
-                Quaternion orientation = Quaternion.identity;
+                Vector3 position = updateBP.Position();
+                Quaternion orientation = updateBP.Orientation();
                 agent.transform.SetPositionAndRotation(position, orientation);
             }
         }
