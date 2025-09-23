@@ -4,6 +4,7 @@ using UnityEngine;
 using sensor_msgs.msg;
 using System;
 using System.Linq;
+using Awsim.Common;
 using std_msgs.msg;
 
 
@@ -161,9 +162,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             if (this.mData == null || this.points <= 0)
             {
                 if (this.mData == null)
-                    Debug.LogError("Data Buffer Not Initialized!");
+                    Debug.LogWarning("Data Buffer Not Initialized!");
                 else
-                    Debug.LogError("No Points Received! Publishing 0 Points!");
+                    Debug.LogWarning("No Points Received! Publishing 0 Points!");
                 return Array.Empty<Vector4>();
             }
 
@@ -256,7 +257,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             int off = 0;
             for (int i = 0; i < pcd.Length; i++)
             {
-                Vector3 p = Ros2UnityConversions.UnityToRosPoint(pcd[i]);
+                Vector3 p = Ros2Utility.Ros2ToUnityPosition(pcd[i]);
                 Array.Copy(BitConverter.GetBytes(p.x), 0, data, off, 4); off += 4;
                 Array.Copy(BitConverter.GetBytes(p.y), 0, data, off, 4); off += 4;
                 Array.Copy(BitConverter.GetBytes(p.z), 0, data, off, 4); off += 4;
@@ -393,7 +394,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                             float x = ReadF32(pt + xOff);
                             float y = ReadF32(pt + yOff);
                             float z = ReadF32(pt + zOff);
-                            this.mData[idx++] = Ros2UnityConversions.RosToUnityPoint(new Vector3(x, y, z));
+                            this.mData[idx++] = Ros2Utility.Ros2ToUnityPosition(new Vector3(x, y, z));
                         }
                     }
                 }
