@@ -22,7 +22,8 @@ namespace CAVAS.UB_MR.UI
             if (this.mDigitalTwin == null)
                 return;
 
-            Vector3 linear = this.mDigitalTwin.GetLinearVelocity();
+            // TODO: implement linear velocity
+            Vector3 linear = new Vector3(0, 0, 0);
             string display = string.Format("Linear: ({0:0.00}, {1:0.00}, {2:0.00})m/s", linear.x, linear.y, linear.z);
             this.mLinearVelocityText.text = display;
         }
@@ -32,7 +33,8 @@ namespace CAVAS.UB_MR.UI
             if (this.mDigitalTwin == null)
                 return;
 
-            Vector3 angular = this.mDigitalTwin.GetAngularVelocity();
+            // TODO: implement angular velocity
+            Vector3 angular = new Vector3(0, 0, 0);
             string display = string.Format("Angular: ({0:0.00}, {1:0.00}, {2:0.00})rad/s", angular.x, angular.y, angular.z);
             this.mAngularVelocityText.text = display;
         }
