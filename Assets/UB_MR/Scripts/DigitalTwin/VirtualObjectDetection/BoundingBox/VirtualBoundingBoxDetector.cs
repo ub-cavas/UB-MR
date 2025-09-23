@@ -1,5 +1,6 @@
 using ROS2;
 using System.Collections.Generic;
+using Awsim.Common;
 using vision_msgs.msg;
 using UnityEngine;
 
@@ -84,20 +85,23 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
                 bbox.Center = new geometry_msgs.msg.Pose();
                 // Position
                 bbox.Center.Position = new geometry_msgs.msg.Point();
-                bbox.Center.Position.X = bounds.center.x;
-                bbox.Center.Position.Y = bounds.center.y;
-                bbox.Center.Position.Z = bounds.center.z;
+                Vector3 ros2Center = Ros2Utility.UnityToRos2Position(new Vector3(bounds.center.x, bounds.center.y, bounds.center.z));
+                bbox.Center.Position.X = ros2Center.x;
+                bbox.Center.Position.Y = ros2Center.y;
+                bbox.Center.Position.Z = ros2Center.z;
                 // Orientation
                 bbox.Center.Orientation = new geometry_msgs.msg.Quaternion();
-                bbox.Center.Orientation.X = virtualObject.transform.rotation.x;
-                bbox.Center.Orientation.Y = virtualObject.transform.rotation.y;
-                bbox.Center.Orientation.Z = virtualObject.transform.rotation.z;
-                bbox.Center.Orientation.W = virtualObject.transform.rotation.w;
+                Quaternion ros2Rotation = Ros2Utility.UnityToRosRotation(virtualObject.transform.rotation);
+                bbox.Center.Orientation.X = ros2Rotation.x;
+                bbox.Center.Orientation.Y = ros2Rotation.y;
+                bbox.Center.Orientation.Z = ros2Rotation.z;
+                bbox.Center.Orientation.W = ros2Rotation.w;
                 // Size
                 bbox.Size = new geometry_msgs.msg.Vector3();
-                bbox.Size.X = bounds.size.x;
-                bbox.Size.Y = bounds.size.y;
-                bbox.Size.Z = bounds.size.z;
+                Vector3 ros2Size = Ros2Utility.UnityToRos2Scale(bounds.size);
+                bbox.Size.X = ros2Size.x;
+                bbox.Size.Y = ros2Size.y;
+                bbox.Size.Z = ros2Size.z;
 
                 boxes[i] = bbox;
             }
