@@ -257,7 +257,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             int off = 0;
             for (int i = 0; i < pcd.Length; i++)
             {
-                Vector3 p = Ros2Utility.Ros2ToUnityPosition(pcd[i]);
+                Vector3 p = Ros2Utility.UnityToRos2Position(pcd[i]);
                 Array.Copy(BitConverter.GetBytes(p.x), 0, data, off, 4); off += 4;
                 Array.Copy(BitConverter.GetBytes(p.y), 0, data, off, 4); off += 4;
                 Array.Copy(BitConverter.GetBytes(p.z), 0, data, off, 4); off += 4;

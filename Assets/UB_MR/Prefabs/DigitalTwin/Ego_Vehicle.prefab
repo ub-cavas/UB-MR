@@ -254,7 +254,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1821701817078511035}
-  - component: {fileID: 77017872676619029}
   m_Layer: 0
   m_Name: sensor_kit_base_link
   m_TagString: Untagged
@@ -278,22 +277,6 @@ Transform:
   - {fileID: 8171965963381824194}
   m_Father: {fileID: 2905824729143842076}
   m_LocalEulerAnglesHint: {x: -0.86, y: -2.068, z: -0.03}
---- !u!114 &77017872676619029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4314018240229825634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43d1045691bad80e6897dbe5b56b7229, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 4314018240229825634}
-  rosPosition: {x: 0.9, y: 0, z: 2}
-  rosRPY: {x: -0.001, y: 0.015, z: -0.0364}
-  autoApply: 1
 --- !u!1 &4819517397896996802
 GameObject:
   m_ObjectHideFlags: 0
