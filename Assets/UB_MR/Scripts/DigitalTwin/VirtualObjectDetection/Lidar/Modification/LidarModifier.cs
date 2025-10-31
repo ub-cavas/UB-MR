@@ -5,6 +5,7 @@ using sensor_msgs.msg;
 using System;
 using Awsim.Common;
 using System.Collections.Concurrent;
+using System.Threading;
 
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
@@ -13,7 +14,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
     {
         ComputeShader mLiDARComputeShader;
         int mKernel;
-        int mPoints;
         Vector3 mWorldPosition = Vector3.zero;
 
         #region Data Queues
@@ -49,6 +49,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mNode = inNode;
             inOwner.StartCoroutine(Subscribe_To_PCD2(inTopicName, inQoSProfile, inRaysPerScan));
             this.mPointCloudPublisher = inNode.CreatePublisher<PointCloud2>(inTopicName + "_modified");
+            // Set up Queues
+            this.mInput_PCD_Queue = new ConcurrentQueue<PointCloud2>();
+            this.mOutput_PCD_Queue = new ConcurrentQueue<PointCloud2>();
 
             // TODO: Support multiple SDFs
             this.mKernel = this.mLiDARComputeShader.FindKernel(inComputeShader.name);
@@ -184,8 +187,8 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         PointCloud2 DequeuePCD(ConcurrentQueue<PointCloud2> inQueue)
         {
-            inQueue.TryDequeue(out PointCloud2 pcd);
-            return pcd;
+                inQueue.TryDequeue(out PointCloud2 pcd);
+                return pcd;
         }
 
         void StagePCD(PointCloud2 inPointCloud)
@@ -274,7 +277,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                         }
                     }
                 }
-                this.mPoints = count;
             }
         }
 
@@ -313,11 +315,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         {
             // No-op if no data
             PointCloud2 originalPCD = DequeuePCD(this.mInput_PCD_Queue); //TODO: verify this is the most recent PCD from the sensor
-            if (originalPCD is null){ return; }
+            if (originalPCD is null) { return; }
 
-
+            int count = (int)originalPCD.Width * (int)originalPCD.Height;
             const int THREADS = 128; // ** MUST MATCH COMPUTE SHADER **
-            int groupsX = (this.mPoints + THREADS - 1) / THREADS;
+            int groupsX = (count + THREADS - 1) / THREADS;
 
             // -- Update GPU cached transforms of SDFs --
             UpdateSDFTransforms(inTransform);
@@ -332,7 +334,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
             lock (_ready_lock)
             {
-                this.mOutput_GPU_Buffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: this.mPoints);
+                this.mOutput_GPU_Buffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count:count);
                 // -- Create new message with GPU results --
                 PointCloud2 pcd = CreateModifiedPCD(originalPCD, this.mReadyPCD);
                 EnqueuePCD(pcd, this.mOutput_PCD_Queue);
