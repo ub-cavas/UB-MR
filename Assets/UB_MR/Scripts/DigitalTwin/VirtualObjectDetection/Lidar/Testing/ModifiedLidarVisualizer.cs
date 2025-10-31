@@ -38,7 +38,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                     this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
                     if (this.lidarType == LidarType.PointCloud2)
                     {
-                        scan = this.mLidarModifier.ModifyPointCloud2(this.transform);
+                        scan = this.mLidarModifier.ModifyPCD(this.transform);
                     }
                     else
                     {
@@ -68,7 +68,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
                 qosProfile.SetHistory(HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST, 2);
                 qosProfile.SetDurability(DurabilityPolicy.QOS_POLICY_DURABILITY_VOLATILE);
                 
-                this.mLidarModifier = new LidarModifier(this, lidarType, this.mLidarTopicName, raysPerScan, lidarModComputeShader, this.mNode, qosProfile, sdfTexture);
+                this.mLidarModifier = new LidarModifier(this, this.mLidarTopicName, raysPerScan, lidarModComputeShader, this.mNode, qosProfile, sdfTexture);
             }
             
             // Initialize visualization components
