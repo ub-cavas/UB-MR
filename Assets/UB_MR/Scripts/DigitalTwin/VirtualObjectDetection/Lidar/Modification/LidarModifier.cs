@@ -95,13 +95,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         {
             PointCloud2 msg = DequeuePCD(this.mOutput_PCD_Queue);
             if (msg is not null)
-            {
                 this.mPointCloudPublisher.Publish(msg);
-            }
-            
         }
 
-        PointCloud2 CreateModifiedPCD(PointCloud2 inOriginalMessage, Vector4[] inNewData)
+        PointCloud2 ModifyPCD_InPlace(PointCloud2 inOriginalMessage, Vector4[] inNewData)
         {
             const byte FLOAT32 = PointField.FLOAT32;
             int xOff = -1, yOff = -1, zOff = -1;
@@ -116,11 +113,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 }
             }
 
-            int width  = (int)inOriginalMessage.Width;
+            int width = (int)inOriginalMessage.Width;
             int height = (int)inOriginalMessage.Height;
-            int count  = width * height;
+            int count = width * height;
             int pointStep = (int)inOriginalMessage.Point_step;
-            int rowStep   = (int)inOriginalMessage.Row_step;
+            int rowStep = (int)inOriginalMessage.Row_step;
 
             // --- Write function (handles endianness) ---
             unsafe void WriteF32(byte* ptr, float value)
@@ -140,9 +137,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
 
             // --- Write modified points back into PointCloud2.Data ---
-            lock (this._ready_lock)
-            {
-                unsafe
+            unsafe
                 {
                     fixed (byte* pBase = inOriginalMessage.Data)
                     {
@@ -167,11 +162,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                         }
                     }
                 }
-            }
 
             return inOriginalMessage;
         }
-        
+
         #endregion
 
         #region Data Queue Operations
@@ -184,12 +178,20 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             }
             inQueue.Enqueue(inPointCloud);
         }
-
+        
+        /// <summary>
+        /// Pops the MOST RECENT PCD, older messages are discarded 
+        /// </summary>
+        /// <param name="inQueue"></param>
+        /// <returns></returns>
         PointCloud2 DequeuePCD(ConcurrentQueue<PointCloud2> inQueue)
         {
-                inQueue.TryDequeue(out PointCloud2 pcd);
-                return pcd;
+            PointCloud2 retPCD = null;
+            while (inQueue.TryDequeue(out PointCloud2 pcd))
+                retPCD = pcd;
+            return retPCD;
         }
+
 
         void StagePCD(PointCloud2 inPointCloud)
         {
@@ -311,10 +313,15 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         }
         #endregion
 
-        public void ModifyPCD(Transform inTransform)
+        /// <summary>
+        /// Modifies the most recently received point cloud.
+        /// This function should be called from the main thread.
+        /// </summary>
+        /// <param name="inTransform"></param>
+        public void TryModify(Transform inTransform)
         {
             // No-op if no data
-            PointCloud2 originalPCD = DequeuePCD(this.mInput_PCD_Queue); //TODO: verify this is the most recent PCD from the sensor
+            PointCloud2 originalPCD = DequeuePCD(this.mInput_PCD_Queue);
             if (originalPCD is null) { return; }
 
             int count = (int)originalPCD.Width * (int)originalPCD.Height;
@@ -325,21 +332,21 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             UpdateSDFTransforms(inTransform);
 
             // -- Prepare GPU data buffers with new data --
-            StagePCD(originalPCD); // (atomically) updates this.mStaged_Data
-            this.mInput_GPU_Buffer.SetData(Get_StagedPCD());
+            StagePCD(originalPCD); // (atomically) updates this.mStaged_PCD
+            this.mInput_GPU_Buffer.SetData(this.mStaged_PCD);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mInput_GPU_Buffer);
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutput_GPU_Buffer);
 
             // -- Dispatch to GPU --
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
-            lock (_ready_lock)
+            lock (_ready_lock) // NOTE: I suspect this is where we will hold up the main thread
             {
-                this.mOutput_GPU_Buffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count:count);
+                this.mOutput_GPU_Buffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: count);
                 // -- Create new message with GPU results --
-                PointCloud2 pcd = CreateModifiedPCD(originalPCD, this.mReadyPCD);
+                PointCloud2 pcd = ModifyPCD_InPlace(originalPCD, this.mReadyPCD);
                 EnqueuePCD(pcd, this.mOutput_PCD_Queue);
             }
-            
+
         }
 
         Vector3[] Get_StagedPCD()
