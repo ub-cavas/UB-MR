@@ -84,9 +84,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             yield return null;
 
             // LiDAR Queued for GPU Processing
-            this.mPointCloudSubscriber = this.mNode.CreateSubscription<PointCloud2>(
-                inTopicName, (inPointCloud) => EnqueuePCD(inPointCloud),
-                inQoSProfile);
+            this.mPointCloudSubscriber = this.mNode.CreateSubscription<PointCloud2>(inTopicName, (inPointCloud) => EnqueuePCD(inPointCloud, this.mInput_PCD_Queue),inQoSProfile);
             Debug.Log("Subscribed to: " + inTopicName);
         }
         
@@ -102,54 +100,73 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         PointCloud2 CreateModifiedPCD(PointCloud2 inOriginalMessage, Vector4[] inNewData)
         {
-            var msg = new PointCloud2();
-            // -- Modify Field DATA --
-            PointField[] fields = new PointField[3];
-            // X Data
-            fields[0] = new PointField();
-            fields[0].Name = "x";
-            fields[0].Offset = 0;
-            fields[0].Datatype = PointField.FLOAT32;
-            fields[0].Count = 1;
-            // Y DATA
-            fields[1] = new PointField();
-            fields[1].Name = "y";
-            fields[1].Offset = 4;
-            fields[1].Datatype = PointField.FLOAT32;
-            fields[1].Count = 1;
-            // Z DATA
-            fields[2] = new PointField();
-            fields[2].Name = "z";
-            fields[2].Offset = 8;
-            fields[2].Datatype = PointField.FLOAT32;
-            fields[2].Count = 1;
-
-            // -- Modify Point Data --
-            const int pointStep = 3 * sizeof(float);
-            byte[] data = new byte[inNewData.Length * pointStep];
-            int off = 0;
-            for (int i = 0; i < inNewData.Length; i++)
+            const byte FLOAT32 = PointField.FLOAT32;
+            int xOff = -1, yOff = -1, zOff = -1;
+            foreach (var f in inOriginalMessage.Fields)
             {
-                Vector3 p = Ros2Utility.UnityToRos2Position(inNewData[i]);
-                Array.Copy(BitConverter.GetBytes(p.x), 0, data, off, 4);
-                off += 4;
-                Array.Copy(BitConverter.GetBytes(p.y), 0, data, off, 4);
-                off += 4;
-                Array.Copy(BitConverter.GetBytes(p.z), 0, data, off, 4);
-                off += 4;
+                if (f == null || f.Datatype != FLOAT32) continue;
+                switch (f.Name)
+                {
+                    case "x": xOff = (int)f.Offset; break;
+                    case "y": yOff = (int)f.Offset; break;
+                    case "z": zOff = (int)f.Offset; break;
+                }
             }
 
-            // METADATA
-            msg.Width = (uint)inNewData.Length;
-            msg.Height = 1;
-            msg.Fields = fields;
-            msg.Is_bigendian = !BitConverter.IsLittleEndian;
-            msg.Point_step = (uint)pointStep;
-            msg.Row_step = (uint)pointStep * msg.Width;
-            msg.Data = data;
-            msg.Is_dense = false;
-            msg.WriteNativeMessage();
-            return msg;
+            int width  = (int)inOriginalMessage.Width;
+            int height = (int)inOriginalMessage.Height;
+            int count  = width * height;
+            int pointStep = (int)inOriginalMessage.Point_step;
+            int rowStep   = (int)inOriginalMessage.Row_step;
+
+            // --- Write function (handles endianness) ---
+            unsafe void WriteF32(byte* ptr, float value)
+            {
+                if (!inOriginalMessage.Is_bigendian)
+                {
+                    *(float*)ptr = value;
+                }
+                else
+                {
+                    uint u = *(uint*)&value;
+                    ptr[0] = (byte)(u >> 24);
+                    ptr[1] = (byte)(u >> 16);
+                    ptr[2] = (byte)(u >> 8);
+                    ptr[3] = (byte)(u >> 0);
+                }
+            }
+
+            // --- Write modified points back into PointCloud2.Data ---
+            lock (this._ready_lock)
+            {
+                unsafe
+                {
+                    fixed (byte* pBase = inOriginalMessage.Data)
+                    {
+                        int idx = 0;
+                        for (int rIdx = 0; rIdx < height; rIdx++)
+                        {
+                            byte* row = pBase + (long)rIdx * rowStep;
+                            for (int cIdx = 0; cIdx < width; cIdx++)
+                            {
+                                byte* pt = row + (long)cIdx * pointStep;
+
+                                // Convert back to ROS coordinate frame
+                                Vector3 v3 = new Vector3(this.mReadyPCD[idx].x, this.mReadyPCD[idx].y, this.mReadyPCD[idx].z);
+                                Vector3 rosPos = Ros2Utility.UnityToRos2Position(v3);
+
+                                WriteF32(pt + xOff, rosPos.x);
+                                WriteF32(pt + yOff, rosPos.y);
+                                WriteF32(pt + zOff, rosPos.z);
+
+                                idx++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return inOriginalMessage;
         }
         
         #endregion
@@ -235,7 +252,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 }
             }
 
-            // -- Write into mData... use a lock to ensure mutual exclusion --
+            // -- Write into this.mStaged_PCD... use a lock to ensure mutual exclusion --
             lock (this._staged_lock)
             {
                 unsafe
@@ -294,6 +311,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public void ModifyPCD(Transform inTransform)
         {
+            // No-op if no data
+            PointCloud2 originalPCD = DequeuePCD(this.mInput_PCD_Queue); //TODO: verify this is the most recent PCD from the sensor
+            if (originalPCD is null){ return; }
+
+
             const int THREADS = 128; // ** MUST MATCH COMPUTE SHADER **
             int groupsX = (this.mPoints + THREADS - 1) / THREADS;
 
@@ -301,7 +323,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             UpdateSDFTransforms(inTransform);
 
             // -- Prepare GPU data buffers with new data --
-            PointCloud2 originalPCD = DequeuePCD(this.mInput_PCD_Queue); //TODO: verify this is the most recent PCD from the sensor
             StagePCD(originalPCD); // (atomically) updates this.mStaged_Data
             this.mInput_GPU_Buffer.SetData(Get_StagedPCD());
             this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mInput_GPU_Buffer);
@@ -309,15 +330,14 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
             // -- Dispatch to GPU --
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
-            lock(_ready_lock)
+            lock (_ready_lock)
             {
                 this.mOutput_GPU_Buffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: this.mPoints);
+                // -- Create new message with GPU results --
+                PointCloud2 pcd = CreateModifiedPCD(originalPCD, this.mReadyPCD);
+                EnqueuePCD(pcd, this.mOutput_PCD_Queue);
             }
             
-
-            // -- Create new message with GPU results --
-            PointCloud2 pcd = CreateModifiedPCD(originalPCD, this.mReadyPCD);
-            EnqueuePCD(pcd, this.mOutput_PCD_Queue);
         }
 
         Vector3[] Get_StagedPCD()

@@ -7,7 +7,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
 {
     public class ModifiedLidarVisualizer : LidarVisualizer
     {
-        [SerializeField] LidarType lidarType;
         [SerializeField] private int raysPerScan = 60_000;
         [Space]
         [SerializeField] private float maxRaytraceDistance = 100.0f;
@@ -28,28 +27,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar.Testing
 
         protected override void Update()
         {
-            timer += Time.deltaTime;
-        
-            if (timer >= interval && this.mLidarModifier != null)
-            {
-                Vector4[] scan;
-                if (this.useGPU)
-                {
-                    this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-                    if (this.lidarType == LidarType.PointCloud2)
-                    {
-                        scan = this.mLidarModifier.ModifyPCD(this.transform);
-                    }
-                    else
-                    {
-                        scan = this.mLidarModifier.ModifyLaserScan(this.transform);
-                    }
-                }
-                else
-                    scan = this.mLidarModifier.GetOriginalScan();
-                timer = 0f; // Reset timer
-                VisualizeModifiedScan(GetRandomSubset(scan, 1000));
-            }
+            
         }
 
         IEnumerator CreateLidarModifier()
