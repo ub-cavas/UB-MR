@@ -3,72 +3,53 @@ using ROS2;
 using UnityEngine;
 using sensor_msgs.msg;
 using System;
-using System.Linq;
 using Awsim.Common;
-using std_msgs.msg;
+using System.Collections.Concurrent;
 
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
-    public enum LidarType
-    {
-        LaserScan,
-        PointCloud2
-    }
-    
     public class LidarModifier
     {
-        ROS2Node mNode;
-        ISubscription<LaserScan> mLidarSubscriber2D;
-        ISubscription<PointCloud2> mLidarSubscriber3D;
-        IPublisher<PointCloud2> mModifiedLidarPublisher;
         ComputeShader mLiDARComputeShader;
-        ComputeBuffer mInputBuffer;
-        ComputeBuffer mOutputBuffer;
-        Vector3[] mData;
-        Vector4[] mModifiedData;
         int mKernel;
-        int points;
-        builtin_interfaces.msg.Time mLastStamp;
-        private string mFrameID = "base_link"; // gets overwritten from first LiDAR msg
-
-        SDFTexture mSDF;
+        int mPoints;
         Vector3 mWorldPosition = Vector3.zero;
-        
-        
-        private bool mIsUpdatingDataBuffer;
-        private bool mIsFreshData;
-        private bool mIsUpdatingModifiedDataBuffer;
-        private bool mIsFreshModifiedData;
-        // STATS
-        private float totalPoints;
-        private int scansProcessed;
-        private float avgPoints;
 
-        IEnumerator AnalyzeLiDAR()
-        {
-            float time = 0;
-            while (true)
-            {
-                yield return new WaitForSeconds(60.0f);
-                time += 60;
-                Debug.Log("Timestep: " + time + " | Avg # of Points: " + avgPoints);
-            }
-        }
+        #region Data Queues
+        // Incoming Point Clouds
+        ConcurrentQueue<PointCloud2> mInput_PCD_Queue;
+        readonly object _staged_lock = new object();
+        Vector3[] mStaged_PCD;
+        // Outgoing Point Clouds
+        ConcurrentQueue<PointCloud2> mOutput_PCD_Queue;
+        readonly object _ready_lock = new object();
+        Vector4[] mReadyPCD;
+        // GPU Buffers
+        ComputeBuffer mInput_GPU_Buffer;
+        ComputeBuffer mOutput_GPU_Buffer;
+        #endregion
 
-        public LidarModifier(MonoBehaviour inOwner, LidarType inType, string inTopicName, int inRaysPerScan, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
+        #region ROS2
+        ROS2Node mNode;
+        ISubscription<PointCloud2> mPointCloudSubscriber;
+        IPublisher<PointCloud2> mPointCloudPublisher;
+        #endregion
+        
+        #region SDF
+        SDFTexture mSDF;
+        #endregion
+
+        public LidarModifier(MonoBehaviour inOwner, string inTopicName, int inRaysPerScan, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
         {
+            // -- Cache the provided compute shader --
             this.mLiDARComputeShader = inComputeShader;
+
+            // -- Set up subscriptions to LiDAR topics and create topic for modified LiDAR data
             this.mNode = inNode;
-            if (inType == LidarType.LaserScan)
-                this.mLidarSubscriber2D = this.mNode.CreateSubscription<sensor_msgs.msg.LaserScan>(inTopicName, ReadLaserScan, inQoSProfile);
-            else
-            {
-                inOwner.StartCoroutine(CreateBuffersAndSubscribe(inTopicName, inQoSProfile, inRaysPerScan));
-                this.mModifiedLidarPublisher = inNode.CreatePublisher<PointCloud2>(inTopicName + "_modified");
-            }
-                
-            
+            inOwner.StartCoroutine(Subscribe_To_PCD2(inTopicName, inQoSProfile, inRaysPerScan));
+            this.mPointCloudPublisher = inNode.CreatePublisher<PointCloud2>(inTopicName + "_modified");
+
             // TODO: Support multiple SDFs
             this.mKernel = this.mLiDARComputeShader.FindKernel(inComputeShader.name);
             this.mSDF = inSDFs;
@@ -76,7 +57,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mLiDARComputeShader.SetTexture(this.mKernel, "_SDF", this.mSDF.sdf);
             this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
             this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
-            
             // Global for ALL SDFs
             // (Default Parameters)
             float maxDistance = 10f;
@@ -84,150 +64,46 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             int maxIterations = 128;
             this.UpdateSDFRaytraceParameters(maxDistance, hitThreshold, maxIterations);
             this.mLiDARComputeShader.SetVector("_Origin", this.mWorldPosition);
-            inOwner.StartCoroutine(AnalyzeLiDAR());
         }
 
-        IEnumerator CreateBuffersAndSubscribe(string inTopicName, QualityOfServiceProfile inQoSProfile, int inCount)
+        #region ROS2 Subscription Initialization
+        IEnumerator Subscribe_To_PCD2(string inTopicName, QualityOfServiceProfile inQoSProfile, int inCount)
         {
-            const int inputStride = sizeof(float) * 3;
-            const int outputStride = sizeof(float) * 4;
-            this.mData = new Vector3[inCount];
-            this.mModifiedData = new Vector4[inCount];
+            // -- Optimization: Pre-allocate the "staging" CPU Buffers --
+            this.mStaged_PCD = new Vector3[inCount];
+            this.mReadyPCD = new Vector4[inCount];
             Debug.Log("CPU Buffers Created!");
             yield return new WaitForSeconds(0.5f);
-            this.mInputBuffer = new ComputeBuffer(inCount, inputStride, ComputeBufferType.Structured);
-            this.mOutputBuffer = new ComputeBuffer(inCount, outputStride);
+
+            // -- Optimization: Pre-allocate compute buffers (matched with "staging" buffers) --
+            const int inputStride = sizeof(float) * 3;
+            const int outputStride = sizeof(float) * 4;
+            this.mInput_GPU_Buffer = new ComputeBuffer(inCount, inputStride, ComputeBufferType.Structured);
+            this.mOutput_GPU_Buffer = new ComputeBuffer(inCount, outputStride);
             Debug.Log("GPU Buffers Created!");
             yield return null;
-            this.mLidarSubscriber3D = this.mNode.CreateSubscription<sensor_msgs.msg.PointCloud2>(inTopicName, ReadPointCloud2, inQoSProfile);
-            Debug.Log("Subscribed to LiDAR!");
+
+            // LiDAR Queued for GPU Processing
+            this.mPointCloudSubscriber = this.mNode.CreateSubscription<PointCloud2>(
+                inTopicName, (inPointCloud) => EnqueuePCD(inPointCloud),
+                inQoSProfile);
+            Debug.Log("Subscribed to: " + inTopicName);
         }
         
-        /// <summary>
-        /// This is mostly a Debugging Method ... don't call it in Update() if in production 
-        /// </summary>
-        /// <param name="inMaxDistance"></param>
-        /// <param name="inHitThreshold"></param>
-        /// <param name="inMaxIterations"></param>
-        /// <param name="inMargin"></param>
-        public void UpdateSDFRaytraceParameters(float inMaxDistance, float inHitThreshold, int inMaxIterations, float inMargin = 0.05f)
+        public void PublishPCD()
         {
-            this.mLiDARComputeShader.SetFloat("_Margin", inMargin);
-            this.mLiDARComputeShader.SetFloat("_MaxDistance", inMaxDistance);
-            this.mLiDARComputeShader.SetFloat("_HitThreshold", inHitThreshold);
-            this.mLiDARComputeShader.SetInt("_MaxIterations", inMaxIterations);
-        }
-
-        public Vector4[] GetOriginalScan()
-        {
-            return this.mData.Select(v => new Vector4(v.x, v.y, v.z, 0f)).ToArray();
-        }
-        
-        public Vector4[] ModifyLaserScan(Transform inTransform)
-        {
-            if (this.mIsUpdatingDataBuffer || this.mData == null || this.mModifiedData == null)
-                return GetOriginalScan(); // Return the Original Scan
-            if (this.mInputBuffer == null)
-                this.mInputBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 3);
-            if (this.mOutputBuffer == null)
-                this.mOutputBuffer = new ComputeBuffer(this.mData.Length, sizeof(float) * 4);  
-            
-            // Update SDF Matrices
-            this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
-            this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
-            // Update LiDAR Transform on Compute Shader
-            this.mLiDARComputeShader.SetVector("_RayOriginWorld", inTransform.position);
-            Matrix4x4 rs = Matrix4x4.TRS(Vector3.zero, inTransform.rotation, inTransform.lossyScale);
-            this.mLiDARComputeShader.SetMatrix("_LocalToWorldRS", rs);
-            this.mLiDARComputeShader.SetMatrix("_WorldToLocalRS", rs.inverse);
-            // Prepare input + output buffers for GPU
-            this.mInputBuffer.SetData(this.mData);
-            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mInputBuffer);
-            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutputBuffer);
-            const int THREADS = 64; // must match shader
-            int groupsX = (this.mData.Length + THREADS - 1) / THREADS;
-            this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
-            this.mOutputBuffer.GetData(this.mModifiedData);  
-            return this.mModifiedData;
-        }
-
-        public Vector4[] ModifyPointCloud2(Transform inTransform)
-        {
-            if (this.mInputBuffer == null || this.mOutputBuffer == null)
+            PointCloud2 msg = DequeuePCD(this.mOutput_PCD_Queue);
+            if (msg is not null)
             {
-                Debug.LogError("Compute Buffers Not Initialized!");
-                return GetOriginalScan();
-            }
-
-            if (this.mData == null || this.points <= 0)
-            {
-                if (this.mData == null)
-                    Debug.LogWarning("Data Buffer Not Initialized!");
-                else
-                    Debug.LogWarning("No Points Received! Publishing 0 Points!");
-                return Array.Empty<Vector4>();
-            }
-
-            if (this.mIsFreshData && !this.mIsUpdatingDataBuffer)
-                return ModifyOnGPU(inTransform);
-            else
-            {
-                //Debug.LogWarning("No fresh data to modify!");
-                return Array.Empty<Vector4>();
-            }
-        }
-
-        Vector4[] ModifyOnGPU(Transform inTransform)
-        {
-            // Update SDF Matrices
-            this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
-            this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
-            // Update LiDAR Transform on Compute Shader
-            this.mLiDARComputeShader.SetVector("_RayOriginWorld", inTransform.position);
-            Matrix4x4 rs = Matrix4x4.TRS(Vector3.zero, inTransform.rotation, inTransform.lossyScale);
-            this.mLiDARComputeShader.SetMatrix("_LocalToWorldRS", rs);
-            this.mLiDARComputeShader.SetMatrix("_WorldToLocalRS", rs.inverse);
-            // Set Buffers
-            this.mInputBuffer.SetData(this.mData);
-            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mInputBuffer);
-            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutputBuffer);
-            
-            const int THREADS = 128; // ** MUST MATCH SHADER **
-            int groupsX = (this.points + THREADS - 1) / THREADS;
-
-            // Dispatch to GPU + lock the ModifiedData Buffer from reads
-            this.mIsUpdatingModifiedDataBuffer = true;
-            this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
-            this.mOutputBuffer.GetData(this.mModifiedData, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: this.points);
-            this.mIsUpdatingModifiedDataBuffer = false;
-            
-            // Data Age Updated
-            this.mIsFreshData = false;
-            this.mIsFreshModifiedData = true;
-            
-            //Debug.Log("MODIFIED: " + this.mPoints + " points");
-            return this.mModifiedData;
-        }
-
-        public Vector4[] PublishModifiedPointCloud2(Transform inTransform)
-        {
-            if (this.mLastStamp == null)
-                return null;
-            
-            // Attempt to modify the buffered PCD
-            Vector4[] pcd = ModifyPointCloud2(inTransform);
-            if (!this.mIsFreshModifiedData || this.mIsUpdatingModifiedDataBuffer || pcd == null || pcd.Length == 0)
-            {
-                //Debug.LogWarning("No valid data to publish!");
-                return null;
+                this.mPointCloudPublisher.Publish(msg);
             }
             
-            // HEADER
-            var msg = new sensor_msgs.msg.PointCloud2();
-            msg.Header.Frame_id = this.mFrameID;
-            msg.Header.Stamp = this.mLastStamp;
-            
-            // Field DATA
+        }
+
+        PointCloud2 CreateModifiedPCD(PointCloud2 inOriginalMessage, Vector4[] inNewData)
+        {
+            var msg = new PointCloud2();
+            // -- Modify Field DATA --
             PointField[] fields = new PointField[3];
             // X Data
             fields[0] = new PointField();
@@ -247,77 +123,61 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             fields[2].Offset = 8;
             fields[2].Datatype = PointField.FLOAT32;
             fields[2].Count = 1;
-            
-            // Point DATA
+
+            // -- Modify Point Data --
             const int pointStep = 3 * sizeof(float);
-            uint width = (uint)pcd.Length;
-            uint height = 1;
-            uint rowStep = pointStep * width;
-            byte[] data = new byte[pcd.Length * pointStep];
+            byte[] data = new byte[inNewData.Length * pointStep];
             int off = 0;
-            for (int i = 0; i < pcd.Length; i++)
+            for (int i = 0; i < inNewData.Length; i++)
             {
-                Vector3 p = Ros2Utility.UnityToRos2Position(pcd[i]);
-                Array.Copy(BitConverter.GetBytes(p.x), 0, data, off, 4); off += 4;
-                Array.Copy(BitConverter.GetBytes(p.y), 0, data, off, 4); off += 4;
-                Array.Copy(BitConverter.GetBytes(p.z), 0, data, off, 4); off += 4;
+                Vector3 p = Ros2Utility.UnityToRos2Position(inNewData[i]);
+                Array.Copy(BitConverter.GetBytes(p.x), 0, data, off, 4);
+                off += 4;
+                Array.Copy(BitConverter.GetBytes(p.y), 0, data, off, 4);
+                off += 4;
+                Array.Copy(BitConverter.GetBytes(p.z), 0, data, off, 4);
+                off += 4;
             }
-            bool isBigEndian = !BitConverter.IsLittleEndian;
 
             // METADATA
-            msg.Width = width;
-            msg.Height = height;
+            msg.Width = (uint)inNewData.Length;
+            msg.Height = 1;
             msg.Fields = fields;
-            msg.Is_bigendian = isBigEndian;
+            msg.Is_bigendian = !BitConverter.IsLittleEndian;
             msg.Point_step = (uint)pointStep;
-            msg.Row_step = (uint)rowStep;
+            msg.Row_step = (uint)pointStep * msg.Width;
             msg.Data = data;
             msg.Is_dense = false;
             msg.WriteNativeMessage();
-            
-            // Update Data Age
-            this.mModifiedLidarPublisher.Publish(msg);
-            this.mIsFreshModifiedData = false;
-            
-            return pcd; // return for downstream visualization / analysis 
+            return msg;
         }
         
-        void ReadLaserScan(LaserScan inLaserScan)
+        #endregion
+
+        #region Data Queue Operations
+        void EnqueuePCD(PointCloud2 inPointCloud, ConcurrentQueue<PointCloud2> inQueue)
         {
-            if (this.mData == null)
-                this.mData = new Vector3[inLaserScan.Ranges.Length];
-            if (this.mModifiedData== null)
-                this.mModifiedData = new Vector4[this.mData.Length];
-            // Preprocess Data
-            this.mIsUpdatingDataBuffer = true;
-            this.mLastStamp = inLaserScan.Header.Stamp;
-            float currentAngle = inLaserScan.Angle_min;
-            int j = 0;
-            for (int i = 0; i < inLaserScan.Ranges.Length; i++)
+            if (inPointCloud == null || inPointCloud.Data == null || inPointCloud.Fields == null)
             {
-                if (!IsValidMeasurement(inLaserScan.Ranges[i], inLaserScan.Range_min, inLaserScan.Range_max))
-                    this.mData[j] = new Vector3(0,0,0);
-                else
-                {
-                    this.mData[j] = this.mWorldPosition + new Vector3(inLaserScan.Ranges[i] * Mathf.Cos(currentAngle), 0f, inLaserScan.Ranges[i] * Mathf.Sin(currentAngle)); // TODO: Do this calculation on GPU
-                }
-                currentAngle += inLaserScan.Angle_increment;
-                j++;
+                Debug.LogWarning("Invalid PointCloud2!");
+                return;
             }
-            this.mIsUpdatingDataBuffer = false;
+            inQueue.Enqueue(inPointCloud);
         }
 
-        void ReadPointCloud2(PointCloud2 inPointCloud)
+        PointCloud2 DequeuePCD(ConcurrentQueue<PointCloud2> inQueue)
+        {
+            inQueue.TryDequeue(out PointCloud2 pcd);
+            return pcd;
+        }
+
+        void StagePCD(PointCloud2 inPointCloud)
         {
             if (inPointCloud == null || inPointCloud.Data == null || inPointCloud.Fields == null)
             {
                 Debug.LogWarning("Invalid Incoming PointCloud2.");
                 return;
             }
-
-            // Lock the Data Buffer from reads
-            this.mIsUpdatingDataBuffer = true;
-            this.mFrameID = inPointCloud.Header.Frame_id;
             
             // --- Find x,y,z fields (expect FLOAT32s) ---
             const byte FLOAT32 = PointField.FLOAT32; // 7
@@ -337,10 +197,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 Debug.LogWarning("PointCloud2 is missing float32 x/y/z fields.");
                 return;
             }
-            
-            // Update time stamp
-            // TODO: Implement in other publishers
-            this.mLastStamp = inPointCloud.Header.Stamp;
             
             // --- Dimensions & sanity ---
             int width  = (int)inPointCloud.Width;
@@ -374,42 +230,101 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 else
                 {
                     // Big-endian: byte-swap
-                    uint u = ((uint)ptr[0] << 24) | ((uint)ptr[1] << 16) | ((uint)ptr[2] <<  8) | ((uint)ptr[3] <<  0);
+                    uint u = ((uint)ptr[0] << 24) | ((uint)ptr[1] << 16) | ((uint)ptr[2] << 8) | ((uint)ptr[3] << 0);
                     return *(float*)&u;
                 }
             }
-            
-            // -- Write into mData --
-            unsafe
+
+            // -- Write into mData... use a lock to ensure mutual exclusion --
+            lock (this._staged_lock)
             {
-                fixed (byte* pBase = inPointCloud.Data)
+                unsafe
                 {
-                    int idx = 0;
-                    for (int rIdx = 0; rIdx < height; rIdx++)
+                    fixed (byte* pBase = inPointCloud.Data)
                     {
-                        byte* row = pBase + (long)rIdx * rowStep;
-                        for (int cIdx = 0; cIdx < width; cIdx++)
+                        int idx = 0;
+                        for (int rIdx = 0; rIdx < height; rIdx++)
                         {
-                            byte* pt = row + (long)cIdx * pointStep;
-                            float x = ReadF32(pt + xOff);
-                            float y = ReadF32(pt + yOff);
-                            float z = ReadF32(pt + zOff);
-                            this.mData[idx++] = Ros2Utility.Ros2ToUnityPosition(new Vector3(x, y, z));
+                            byte* row = pBase + (long)rIdx * rowStep;
+                            for (int cIdx = 0; cIdx < width; cIdx++)
+                            {
+                                byte* pt = row + (long)cIdx * pointStep;
+                                float x = ReadF32(pt + xOff);
+                                float y = ReadF32(pt + yOff);
+                                float z = ReadF32(pt + zOff);
+                                this.mStaged_PCD[idx++] = Ros2Utility.Ros2ToUnityPosition(new Vector3(x, y, z));
+                            }
                         }
                     }
                 }
+                this.mPoints = count;
             }
-            this.points = count;
-            
-            // Unlock the Data Buffer so it can be sent to the GPU
-            this.mIsUpdatingDataBuffer = false;
-            this.mIsFreshData = true;
-            // STATS
-            this.scansProcessed += 1;
-            totalPoints += this.points;
-            avgPoints = totalPoints / this.scansProcessed;
         }
-        
+
+        #endregion
+
+        #region SDF Operations
+        /// <summary>
+        /// This is mostly a Debugging Method ... don't call it in Update() if in production 
+        /// </summary>
+        /// <param name="inMaxDistance"></param>
+        /// <param name="inHitThreshold"></param>
+        /// <param name="inMaxIterations"></param>
+        /// <param name="inMargin"></param>
+        public void UpdateSDFRaytraceParameters(float inMaxDistance, float inHitThreshold, int inMaxIterations, float inMargin = 0.05f)
+        {
+            this.mLiDARComputeShader.SetFloat("_Margin", inMargin);
+            this.mLiDARComputeShader.SetFloat("_MaxDistance", inMaxDistance);
+            this.mLiDARComputeShader.SetFloat("_HitThreshold", inHitThreshold);
+            this.mLiDARComputeShader.SetInt("_MaxIterations", inMaxIterations);
+        }
+
+        void UpdateSDFTransforms(Transform inTransform)
+        {
+            // Update SDF Matrices
+            this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
+            this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
+            // Update LiDAR Transform on Compute Shader
+            this.mLiDARComputeShader.SetVector("_RayOriginWorld", inTransform.position);
+            Matrix4x4 rs = Matrix4x4.TRS(Vector3.zero, inTransform.rotation, inTransform.lossyScale);
+            this.mLiDARComputeShader.SetMatrix("_LocalToWorldRS", rs);
+            this.mLiDARComputeShader.SetMatrix("_WorldToLocalRS", rs.inverse);
+        }
+        #endregion
+
+        public void ModifyPCD(Transform inTransform)
+        {
+            const int THREADS = 128; // ** MUST MATCH COMPUTE SHADER **
+            int groupsX = (this.mPoints + THREADS - 1) / THREADS;
+
+            // -- Update GPU cached transforms of SDFs --
+            UpdateSDFTransforms(inTransform);
+
+            // -- Prepare GPU data buffers with new data --
+            PointCloud2 originalPCD = DequeuePCD(this.mInput_PCD_Queue); //TODO: verify this is the most recent PCD from the sensor
+            StagePCD(originalPCD); // (atomically) updates this.mStaged_Data
+            this.mInput_GPU_Buffer.SetData(Get_StagedPCD());
+            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mInput_GPU_Buffer);
+            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutput_GPU_Buffer);
+
+            // -- Dispatch to GPU --
+            this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
+            lock(_ready_lock)
+            {
+                this.mOutput_GPU_Buffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: this.mPoints);
+            }
+            
+
+            // -- Create new message with GPU results --
+            PointCloud2 pcd = CreateModifiedPCD(originalPCD, this.mReadyPCD);
+            EnqueuePCD(pcd, this.mOutput_PCD_Queue);
+        }
+
+        Vector3[] Get_StagedPCD()
+        {
+            return this.mStaged_PCD;
+        }
+
         bool IsValidMeasurement(float range, float rangeMin, float rangeMax)
         {
             return !float.IsNaN(range) && !float.IsInfinity(range) && range >= rangeMin && range <= rangeMax && range > 0;
@@ -417,19 +332,15 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         public void CleanUp()
         {
-            this.mInputBuffer?.Dispose();
-            this.mInputBuffer?.Release();
-            this.mOutputBuffer?.Dispose();
-            this.mOutputBuffer?.Release();
+            this.mInput_GPU_Buffer?.Dispose();
+            this.mInput_GPU_Buffer?.Release();
+            this.mOutput_GPU_Buffer?.Dispose();
+            this.mOutput_GPU_Buffer?.Release();
 
-            if (Ros2cs.Ok())
+            if (Ros2cs.Ok() && this .mPointCloudSubscriber != null)
             {
-                if (this.mLidarSubscriber2D != null)
-                    this.mNode.RemoveSubscription<LaserScan>(this.mLidarSubscriber2D);
-                if (this.mLidarSubscriber3D != null)
-                    this.mNode.RemoveSubscription<LaserScan>(this.mLidarSubscriber3D);
-                this.mLidarSubscriber2D = null;
-                this.mLidarSubscriber3D = null;
+                this.mNode.RemoveSubscription<LaserScan>(this.mPointCloudSubscriber);
+                this.mPointCloudSubscriber = null; 
             }
             
         }
