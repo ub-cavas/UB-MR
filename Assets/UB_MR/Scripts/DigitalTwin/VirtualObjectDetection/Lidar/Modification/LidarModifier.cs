@@ -2,10 +2,8 @@ using System.Collections;
 using ROS2;
 using UnityEngine;
 using sensor_msgs.msg;
-using System;
 using Awsim.Common;
 using System.Collections.Concurrent;
-using System.Threading;
 
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
@@ -349,16 +347,6 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
         }
 
-        Vector3[] Get_StagedPCD()
-        {
-            return this.mStaged_PCD;
-        }
-
-        bool IsValidMeasurement(float range, float rangeMin, float rangeMax)
-        {
-            return !float.IsNaN(range) && !float.IsInfinity(range) && range >= rangeMin && range <= rangeMax && range > 0;
-        }
-
         public void CleanUp()
         {
             this.mInput_GPU_Buffer?.Dispose();
@@ -366,9 +354,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             this.mOutput_GPU_Buffer?.Dispose();
             this.mOutput_GPU_Buffer?.Release();
 
-            if (Ros2cs.Ok() && this .mPointCloudSubscriber != null)
+            if (Ros2cs.Ok() && this.mPointCloudSubscriber != null)
             {
-                this.mNode.RemoveSubscription<LaserScan>(this.mPointCloudSubscriber);
+                this.mNode.RemoveSubscription<PointCloud2>(this.mPointCloudSubscriber);
                 this.mPointCloudSubscriber = null; 
             }
             
