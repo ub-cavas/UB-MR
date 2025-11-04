@@ -47,9 +47,6 @@ namespace CAVAS.UB_MR.DT
 
         [Header("LiDAR Capture Parameters")] 
         [SerializeField] int raysPerScan = 60_000;
-        [SerializeField] bool visualizeLidar = true;
-        [SerializeField] bool renderAsLine = false;
-        [SerializeField] LidarRenderer lidarRenderer;
         [SerializeField] Transform mLidar;
         [SerializeField] List<SDFTexture> mSdfs;
         [SerializeField] ComputeShader mLidarComputeShader;
@@ -60,7 +57,6 @@ namespace CAVAS.UB_MR.DT
         // More LiDAR variables (Don't touch these unless you know what you're doing)
         float maxRaytraceDistance = 100.0f;
         float hitThreshold = 0.0001f;
-        float lidarTimer = 0f;
         int maxIterations = 64;
         
         protected Vector3 mWorldPosition = Vector3.zero;
