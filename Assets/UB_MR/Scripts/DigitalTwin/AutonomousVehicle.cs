@@ -4,6 +4,7 @@ using ROS2;
 using System.Collections;
 using Unity.Cinemachine;
 using System.Collections.Generic;
+using Awsim.Common;
 using CAVAS.UB_MR.DT.VirtualObjectDetection;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Camera;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar;
@@ -31,7 +32,7 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] string virtualCameraImageTopicName = "/virtual_camera/image_raw"; // Topic name for publishing virtual camera images
         [SerializeField] string virtualCameraDepthTopicName = "/virtual_camera/depth"; // Topic name for publishing virtual camera depth images
         [Space]
-        [SerializeField] string lidarTopicName = "/lidar/scan"; // Topic name for Lidar scans
+        [SerializeField] string lidarTopicName = "/sensing/lidar/top/aw_points"; // Topic name for Lidar scans
 
         [Space]
 
@@ -44,11 +45,8 @@ namespace CAVAS.UB_MR.DT
         [SerializeField] float publishRate = 1.0f; // 1 FPS
 
 
-        [Header("LiDAR Capture Parameters")] [SerializeField]
-        private LidarType lidarType = LidarType.TwoD;
-        [SerializeField] bool visualizeLidar = true;
-        [SerializeField] LidarRenderer lidarRenderer;
-        [SerializeField] float interval = 0.1f; // 1/10th of a second
+        [Header("LiDAR Capture Parameters")] 
+        [SerializeField] int raysPerScan = 60_000;
         [SerializeField] Transform mLidar;
         [SerializeField] List<SDFTexture> mSdfs;
         [SerializeField] ComputeShader mLidarComputeShader;
@@ -59,12 +57,9 @@ namespace CAVAS.UB_MR.DT
         // More LiDAR variables (Don't touch these unless you know what you're doing)
         float maxRaytraceDistance = 100.0f;
         float hitThreshold = 0.0001f;
-        float lidarTimer = 0f;
         int maxIterations = 64;
         
         protected Vector3 mWorldPosition = Vector3.zero;
-        protected Vector3 mAngularVelocity = Vector3.zero;
-        protected Vector3 mLinearVelocity = Vector3.zero; 
         protected Quaternion mWorldRotation = Quaternion.identity;
 
         ROS2Node mNode;
@@ -79,9 +74,8 @@ namespace CAVAS.UB_MR.DT
             if (IsOwner)
             {
                 ConnectToROS();
-                   
+                this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
             }
-                
             StartCoroutine(PublishVirtualObjects());
         }
 
@@ -119,16 +113,8 @@ namespace CAVAS.UB_MR.DT
         {
             if (IsOwner && this.mLidarModifier != null && enableLidarModifier)
             {
-                lidarTimer += Time.deltaTime;
-                if (lidarTimer >= interval)
-                {
-                    this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-                    Vector4[] scan = this.mLidarModifier.GetModifiedScan(this.mLidar); 
-                    lidarTimer = 0f; // Reset publish timer
-                    // Visualization
-                    if (visualizeLidar)
-                        lidarRenderer.VisualizeScan(scan, this.mLidar);
-                }
+                this.mLidarModifier.TryModify(this.mLidar.transform);
+                this.mLidarModifier.PublishPCD();
             }
         }
 
@@ -154,7 +140,7 @@ namespace CAVAS.UB_MR.DT
                 qosProfile.SetDurability(durabilityPolicy);
                 //TODO: dynamic lists of SDFS... currently just supports 1 sdf
                 this.mSdfs[0] = FindFirstObjectByType<SDFTexture>();
-                this.mLidarModifier = new LidarModifier(lidarType, lidarTopicName, this.mLidarComputeShader, this.mNode, qosProfile, this.mSdfs[0]);
+                this.mLidarModifier = new LidarModifier(this, lidarTopicName, raysPerScan, this.mLidarComputeShader, this.mNode, qosProfile, this.mSdfs[0]);
             }
         }
 
@@ -172,16 +158,6 @@ namespace CAVAS.UB_MR.DT
                 }
                 yield return new WaitForSeconds(1.0f / publishRate);
             }
-        }
-
-        public virtual Vector3 GetLinearVelocity()
-        {
-            return this.mLinearVelocity;
-        }
-
-        public virtual Vector3 GetAngularVelocity()
-        {
-            return this.mAngularVelocity;
         }
 
         public void EnableDashCam(bool inEnable)
@@ -229,39 +205,8 @@ namespace CAVAS.UB_MR.DT
 
         void WorldTransformationUpdate(nav_msgs.msg.Odometry msg)
         {
-            this.mWorldPosition = new Vector3(
-                -(float)msg.Pose.Pose.Position.Y,
-                (float)msg.Pose.Pose.Position.Z,
-                (float)msg.Pose.Pose.Position.X
-            );
-
-            // Build a C# quaternion from the raw ROS values
-            var q_ros = new Quaternion(
-                (float)msg.Pose.Pose.Orientation.X,
-                (float)msg.Pose.Pose.Orientation.Y,
-                (float)msg.Pose.Pose.Orientation.Z,
-                (float)msg.Pose.Pose.Orientation.W
-            );
-            // Remap axes: FLU → URF
-            Quaternion q_unity = new Quaternion(
-                 -q_ros.y,    // Unity X = ROS Y
-                 q_ros.z,    // Unity Y =  ROS Z
-                 q_ros.x,    // Unity Z =  ROS X
-                 -q_ros.w
-            );
-            q_unity.Normalize(); // Normalize the quaternion to ensure it's a valid rotation
-            this.mWorldRotation = q_unity;
-
-            this.mAngularVelocity = new Vector3(
-                -(float)msg.Twist.Twist.Angular.Y,
-                (float)msg.Twist.Twist.Angular.Z,
-                (float)msg.Twist.Twist.Angular.X
-            );
-            this.mLinearVelocity = new Vector3(
-                -(float)msg.Twist.Twist.Linear.Y,
-                (float)msg.Twist.Twist.Linear.Z,
-                (float)msg.Twist.Twist.Linear.X
-            );
+            this.mWorldPosition = Ros2Utility.Ros2ToUnityPosition(msg.Pose.Pose.Position);
+            this.mWorldRotation = Ros2Utility.Ros2ToUnityRotation(msg.Pose.Pose.Orientation);
         }
 
 
