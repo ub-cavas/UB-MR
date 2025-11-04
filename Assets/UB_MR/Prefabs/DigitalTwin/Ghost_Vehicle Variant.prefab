@@ -60,6 +60,46 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 35e5c7fbc7d18b24b8e0b2c87fdc17fb, type: 2}
+    - target: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1499768184316703144, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -164,6 +204,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 35e5c7fbc7d18b24b8e0b2c87fdc17fb, type: 2}
+    - target: {fileID: 5091215851681455059, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+      propertyPath: m_Name
+      value: velodyne_top
+      objectReference: {fileID: 0}
     - target: {fileID: 5278803576053142078, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -384,22 +428,24 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   dashCam: {fileID: 3475418834968489395}
   followCam: {fileID: 66811409417692944}
-  enableBoundingBoxCapture: 1
+  enableBoundingBoxCapture: 0
   enableImageCapture: 0
   enableLidarModifier: 1
   worldTransformationTopicName: /world_transform
   boundingBoxTopicName: /virtual_obstacles
   virtualCameraImageTopicName: /virtual_camera/image_raw
   virtualCameraDepthTopicName: /virtual_camera/depth
-  lidarTopicName: /scan
+  lidarTopicName: /sensing/lidar/top/pointcloud_raw_ex
   detectionRadius: 30
-  imageWidth: 1280
-  imageHeight: 960
+  imageWidth: 960
+  imageHeight: 540
   publishRate: 30
-  visualizeLidar: 1
+  lidarType: 1
+  raysPerScan: 70000
+  visualizeLidar: 0
+  renderAsLine: 0
   lidarRenderer: {fileID: 3823033999797214442}
-  interval: 0.1
-  mLidar: {fileID: 7951046745334963840}
+  mLidar: {fileID: 934121566012309149}
   mSdfs:
   - {fileID: 0}
   mLidarComputeShader: {fileID: 7200000, guid: 7e48dc1be9f94cedc80b5547114c0492, type: 3}
@@ -407,6 +453,11 @@ MonoBehaviour:
   historyPolicy: 1
   historyDepth: 2
   durabilityPolicy: 2
+--- !u!4 &934121566012309149 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8171965963381824194, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
+  m_PrefabInstance: {fileID: 9051686742297748575}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3475418834968489395 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5594920057050925548, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
@@ -429,8 +480,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d997a4ad3eaf1237a15711aa29dbaf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &7951046745334963840 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1425890389536176863, guid: 2e8165f9f969429419e4a8f79e26d675, type: 3}
-  m_PrefabInstance: {fileID: 9051686742297748575}
-  m_PrefabAsset: {fileID: 0}

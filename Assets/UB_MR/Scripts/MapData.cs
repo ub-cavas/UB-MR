@@ -49,11 +49,6 @@ public class MapData : MonoBehaviour
                 Debug.LogWarning("Failed to set datum: ");
             }
         });
-        /*var response = setDatumClient.Call(request);
-        if (response != null)
-        {
-            Debug.Log("Datum set successfully");
-        }*/
     }
 }
 
