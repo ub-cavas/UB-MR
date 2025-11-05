@@ -316,11 +316,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         /// This function should be called from the main thread.
         /// </summary>
         /// <param name="inTransform"></param>
-        public void TryModify(Transform inTransform)
+        public bool TryModify(Transform inTransform)
         {
             // No-op if no data
             PointCloud2 originalPCD = DequeuePCD(this.mInput_PCD_Queue);
-            if (originalPCD is null) { return; }
+            if (originalPCD is null) { return false; }
 
             int count = (int)originalPCD.Width * (int)originalPCD.Height;
             const int THREADS = 128; // ** MUST MATCH COMPUTE SHADER **
@@ -344,7 +344,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
                 PointCloud2 pcd = ModifyPCD_InPlace(originalPCD, this.mReadyPCD);
                 EnqueuePCD(pcd, this.mOutput_PCD_Queue);
             }
-
+            return true;
         }
 
         public void CleanUp()
