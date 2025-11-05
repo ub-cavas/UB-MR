@@ -534,6 +534,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 01135c52825bde859a8d59c07f33d128, type: 2}
+    - target: {fileID: -6363183407643702449, guid: a783fe2a8d25ad7e7a99e6687b05ce16, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -5687873073893766240, guid: a783fe2a8d25ad7e7a99e6687b05ce16, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
@@ -550,6 +554,14 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[4]'
       value: 
       objectReference: {fileID: -3319527327043254868, guid: 282e573d38ee63741986ff1b8fe62fd8, type: 3}
+    - target: {fileID: -2985110328160311153, guid: a783fe2a8d25ad7e7a99e6687b05ce16, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2113485337070415615, guid: a783fe2a8d25ad7e7a99e6687b05ce16, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a783fe2a8d25ad7e7a99e6687b05ce16, type: 3}
       propertyPath: m_Name
       value: NEW_ServiceCenterLoopMR
@@ -606,6 +618,14 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 3705159867082093326, guid: 282e573d38ee63741986ff1b8fe62fd8, type: 3}
+    - target: {fileID: 6565353476813214468, guid: a783fe2a8d25ad7e7a99e6687b05ce16, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7872305991489195559, guid: a783fe2a8d25ad7e7a99e6687b05ce16, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9072198815269872995, guid: a783fe2a8d25ad7e7a99e6687b05ce16, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
