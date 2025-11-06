@@ -113,8 +113,8 @@ namespace CAVAS.UB_MR.DT
         {
             if (IsOwner && this.mLidarModifier != null && enableLidarModifier)
             {
-                this.mLidarModifier.TryModify(this.mLidar.transform);
-                this.mLidarModifier.PublishPCD();
+                if (this.mLidarModifier.TryModify(this.mLidar.transform))
+                    this.mLidarModifier.PublishPCD();
             }
         }
 

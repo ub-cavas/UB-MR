@@ -1,0 +1,386 @@
+fileFormatVersion: 2
+guid: a783fe2a8d25ad7e7a99e6687b05ce16
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Asphalt1
+    second: {fileID: 2100000, guid: 090e76906530f5f35bd3a46a83f22167, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Asphalt_Worn3_rrx
+    second: {fileID: 2100000, guid: 2848d909d8757433da764749cc213af7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Backhoe_Body
+    second: {fileID: 2100000, guid: 05b26c212bed5cf6c876fad885ffcdd3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Backhoe_Cabin
+    second: {fileID: 2100000, guid: 28e96c16a4b0a420bb2aa480474fea77, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Backhoe_Windows
+    second: {fileID: 2100000, guid: 76416efe20b33b043b3336249d1c86e9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Barrel_02_8-bit_Diffuse
+    second: {fileID: 2100000, guid: 108cadd737fca4fe7ad802d82478975b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Concrete1
+    second: {fileID: 2100000, guid: f8237b9c2c2ec4a0b8cdc3591b10074a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ConstructionProps
+    second: {fileID: 2100000, guid: 564470c8570410407a8707ab44960941, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Default
+    second: {fileID: 2100000, guid: becbfe21969990baca7d2acc99fd7275, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fence01
+    second: {fileID: 2100000, guid: 6001f6a1dbdf3734eb374a88d7565684, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gas_Tank_BaseColor
+    second: {fileID: 2100000, guid: 6fbae6fc5103bcb59ad1eea28f06473a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gas_Tank_Support
+    second: {fileID: 2100000, guid: 79e467d9e8a260445b9ba24c211d3913, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gas_Tank_Valve
+    second: {fileID: 2100000, guid: 1e5184f2d95bd4871b4acd31b2ec504c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grass1
+    second: {fileID: 2100000, guid: 6ef86bb43a77e8fd38074f41b38459ec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Gravel1_rrx
+    second: {fileID: 2100000, guid: e3c0640727390a7c48c8f21575f1dbac, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LaneMarking1
+    second: {fileID: 2100000, guid: 154eebb278ac35ec1a45d13e9fa19825, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LaneMarkingYellow1
+    second: {fileID: 2100000, guid: 462d3ef2b4c3d99b18ff96a75e7cc82b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: e6273b6d8c9b3a13c81c6317952e6046, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal1
+    second: {fileID: 2100000, guid: f1287e14967715a079961addcccaf0c1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal_Signals
+    second: {fileID: 2100000, guid: 28399c5d7203d3a219c02ffe9f53a7a9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_R2-1(30)-Back.png
+    second: {fileID: 2100000, guid: a441bcd1d74c6212b9403e3251137405, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sign_R2-1(30).svg_rrx
+    second: {fileID: 2100000, guid: c88add923299268a98da94c3f1c69826, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: TrafficControl
+    second: {fileID: 2100000, guid: bbf05813254bed5d88523542ff32b282, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: bark_elmTree
+    second: {fileID: 2100000, guid: fa9bfc9a4240fbfc8ad0d0f612e95526, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cargo_container_mat_bcolor
+    second: {fileID: 2100000, guid: 8f457a4a37d26e00f9fec207a1666759, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: cloth_Utility2
+    second: {fileID: 2100000, guid: 4d42f3009869a0c7c925ebafa1694ede, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: glass_DeliveryVan
+    second: {fileID: 2100000, guid: 3324aa15a21663a5994ce963da44855d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: glass_Pickup
+    second: {fileID: 2100000, guid: 951987faf429b2271844b1a0b0901827, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: glass_Utility1
+    second: {fileID: 2100000, guid: 8f53e36075509eca7996e0083e8ad394, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: glass_Windows
+    second: {fileID: 2100000, guid: 031891dfe7ef8381997704e4a78ee444, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leaf_Tree_lowLOD
+    second: {fileID: 2100000, guid: f984ffe1a3a270bd1a4bc5d9c5a2a6b0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leaf_elmTree
+    second: {fileID: 2100000, guid: ab91dfcd60451c336af081eab618776d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leather_Pickup
+    second: {fileID: 2100000, guid: 12c053c6cb3a1c72094241c39bfd4cfd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: leather_carSeats
+    second: {fileID: 2100000, guid: 732fa62fbb1e03e639de85e47d0dfc9e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_DeliveryVan
+    second: {fileID: 2100000, guid: c13402a16edff8b8f89b66cbe7c8150e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_Pickup
+    second: {fileID: 2100000, guid: 3052015740e1cdd5cb9a0109d18ae1ba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_TruckFront
+    second: {fileID: 2100000, guid: bef5498f03658dcddbe94151d6348a15, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_UtilityTruck
+    second: {fileID: 2100000, guid: 524a9931ec19937df9f8055a793ead8f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_UtilityTruck_Details
+    second: {fileID: 2100000, guid: 242a1a0b62a27ad6bb112a9bab8a740c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_cab
+    second: {fileID: 2100000, guid: e7b37af87fc9e562c8f8dfd8dd734039, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_frontBumper
+    second: {fileID: 2100000, guid: f0b1bf09ceabe085c8d6d90535210efa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: metal_post
+    second: {fileID: 2100000, guid: dcd96a9009784eab5845622c5905e10f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: paint
+    second: {fileID: 2100000, guid: 578e7584ebc6b3f3b845ce0fb2b275cf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: plastic_DeliveryVan
+    second: {fileID: 2100000, guid: 7f5a4fbfab91270bba23a76743cce019, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: plastic_Utility1
+    second: {fileID: 2100000, guid: bfdfced43fae88aeeae518c3d28d5385, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: plastic_Utility2
+    second: {fileID: 2100000, guid: b221b8c06bb4b1ffead7c4f7e5e61723, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: plastic_dashBoard
+    second: {fileID: 2100000, guid: 4d37d1bab54538bd885c11fb2a36874c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: plastic_doorTrim
+    second: {fileID: 2100000, guid: fbac93182ef4a96808aba67787a700d3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rubber_DeliveryVan
+    second: {fileID: 2100000, guid: 0a6763d1a293536b9818ffaa65fe86f5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rubber_Pickup
+    second: {fileID: 2100000, guid: b2e65925127c8a55b9cbd1098f209ab5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rubber_UtilityTruck
+    second: {fileID: 2100000, guid: 81ed4b4e8fb18c453a4d22d8ef44e192, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rubber_UtilityTruck_Details
+    second: {fileID: 2100000, guid: f8b747e0ea3700d23937449885a91d87, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rubber_tires
+    second: {fileID: 2100000, guid: 689beb7d76977f079ad76f57758eabe6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: steel_bracket
+    second: {fileID: 2100000, guid: d614cbc78dececebe82a4c89ad8818f1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: wood_UtilityTruck_Details
+    second: {fileID: 2100000, guid: 5b6f6c95be4c2cfb38c3ef5536715dd9, type: 2}
+  materials:
+    materialImportMode: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages:
+    - 0.25
+    - 0.125
+    - 0.0625
+    - 0.01
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
