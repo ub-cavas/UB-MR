@@ -316,11 +316,11 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
         /// This function should be called from the main thread.
         /// </summary>
         /// <param name="inTransform"></param>
-        public void TryModify(Transform inTransform)
+        public bool TryModify(Transform inTransform)
         {
             // No-op if no data
             PointCloud2 originalPCD = DequeuePCD(this.mInput_PCD_Queue);
-            if (originalPCD is null) { return; }
+            if (originalPCD is null) { return false; }
 
             int count = (int)originalPCD.Width * (int)originalPCD.Height;
             const int THREADS = 128; // ** MUST MATCH COMPUTE SHADER **
@@ -337,14 +337,14 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
             // -- Dispatch to GPU --
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
-            lock (_ready_lock) // NOTE: I suspect this is where we will hold up the main thread
+            lock (_ready_lock) // NOTE: I suspect this is where the main thread spends most of its time
             {
                 this.mOutput_GPU_Buffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: count);
                 // -- Create new message with GPU results --
                 PointCloud2 pcd = ModifyPCD_InPlace(originalPCD, this.mReadyPCD);
                 EnqueuePCD(pcd, this.mOutput_PCD_Queue);
             }
-
+            return true;
         }
 
         public void CleanUp()
