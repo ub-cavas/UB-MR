@@ -337,7 +337,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 
             // -- Dispatch to GPU --
             this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
-            lock (_ready_lock) // NOTE: I suspect this is where we will hold up the main thread
+            lock (_ready_lock) // NOTE: I suspect this is where the main thread spends most of its time
             {
                 this.mOutput_GPU_Buffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: count);
                 // -- Create new message with GPU results --
