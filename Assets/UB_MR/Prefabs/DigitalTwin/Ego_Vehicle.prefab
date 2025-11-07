@@ -679,9 +679,7 @@ GameObject:
   - component: {fileID: 5313072702893990253}
   - component: {fileID: 6239312474823750432}
   - component: {fileID: 7359342427373692423}
-  - component: {fileID: 6417628658900768305}
   - component: {fileID: 682469846908821571}
-  - component: {fileID: 5228723185404508341}
   m_Layer: 0
   m_Name: Ego_Vehicle
   m_TagString: Untagged
@@ -760,49 +758,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &6417628658900768305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8485769508998957606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9924ec5c46833743a7d7d3824b4c98c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  dashCam: {fileID: 5594920057050925548}
-  followCam: {fileID: 9039658749950542671}
-  enableBoundingBoxCapture: 1
-  enableImageCapture: 1
-  enableLidarModifier: 1
-  worldTransformationTopicName: /world_transform
-  boundingBoxTopicName: /virtual_obstacles
-  virtualCameraImageTopicName: /virtual_camera/image_raw
-  virtualCameraDepthTopicName: /virtual_camera/depth
-  lidarTopicName: /scan
-  detectionRadius: 30
-  imageWidth: 640
-  imageHeight: 480
-  publishRate: 30
-  lidarType: 1
-  raysPerScan: 60000
-  visualizeLidar: 0
-  renderAsLine: 0
-  lidarRenderer: {fileID: 5228723185404508341}
-  mLidar: {fileID: 0}
-  mSdfs:
-  - {fileID: 0}
-  mLidarComputeShader: {fileID: 7200000, guid: 7e48dc1be9f94cedc80b5547114c0492, type: 3}
-  reliabilityPolicy: 2
-  historyPolicy: 1
-  historyDepth: 2
-  durabilityPolicy: 2
-  mPositionErrorThreshold: 10
-  mLinearVelocity_P_Gain: 1
-  mAngularVelocity_P_Gain: 1
 --- !u!114 &682469846908821571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,20 +804,6 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &5228723185404508341
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8485769508998957606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d997a4ad3eaf1237a15711aa29dbaf8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mLidarVisualMaterial: {fileID: 2100000, guid: e3d372b3121ab3e8ab4ad00da940a801, type: 2}
-  mLineWidth: 0.02
 --- !u!1 &9091243714969618100
 GameObject:
   m_ObjectHideFlags: 0
@@ -992,10 +933,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD
       objectReference: {fileID: 0}
-    - target: {fileID: 4449024889139848588, guid: 552485070c61a4158bfe2fd98a4b0c24, type: 3}
-      propertyPath: mDigitalTwin
-      value: 
-      objectReference: {fileID: 6417628658900768305}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2158124374701177491, guid: 552485070c61a4158bfe2fd98a4b0c24, type: 3}
