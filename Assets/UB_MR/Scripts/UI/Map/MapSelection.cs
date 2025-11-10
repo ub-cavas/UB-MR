@@ -4,16 +4,14 @@ namespace CAVAS.UB_MR.UI.Map
 {
     public class MapSelection : Button_Scroller
     {
-        protected override void Start()
+        void Start()
         {
-            base.Start();
-            for (int i = 0; i < 3; i++)
-                base.AddElement();
+            AddElement("UB Service Center");
         }
 
         protected override void OnButtonClick()
         {
-            print("Test");
+            //TODO: Load the respective map in the background
         }
     }
 }

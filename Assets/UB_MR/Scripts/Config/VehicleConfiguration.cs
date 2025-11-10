@@ -31,20 +31,22 @@ namespace CAVAS.UB_MR.Config
         public Vector3 rotation;
     }
 
-    public static class ConfigManager
+    public static class JSONManager
     {
-        private static readonly string path = Path.Combine(Application.persistentDataPath, "vehicles.json");
-
-        public static void Save(Vehicle data)
+        public static void SaveToJSON(Vehicle data)
         {
+            string filename = "vehicle-" + data.vehicle_name + ".json";
+            string path = Path.Combine(Application.persistentDataPath, filename);
             // Pretty-print JSON for readability
             string json = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(path, json);
             Debug.Log($"Saved vehicle config to {path}");
         }
 
-        public static Vehicle Load()
+        public static Vehicle LoadFromJSON(string inVehicleName)
         {
+            string filename = "vehicle-" + inVehicleName + ".json";
+            string path = Path.Combine(Application.persistentDataPath, filename);
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
@@ -52,8 +54,8 @@ namespace CAVAS.UB_MR.Config
             }
             else
             {
-                Debug.LogWarning("No save.json found, returning empty Vehicle object.");
-                return new Vehicle();
+                Debug.LogWarning(filename + " not found");
+                return null;
             }            
         }
     }
