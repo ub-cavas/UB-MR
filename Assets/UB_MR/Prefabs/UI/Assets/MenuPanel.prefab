@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5452052436077125895}
   - component: {fileID: 1700634321874455789}
   - component: {fileID: 5702373899289280547}
-  - component: {fileID: 736155273137381789}
   m_Layer: 5
   m_Name: MenuPanel
   m_TagString: Untagged
@@ -104,19 +103,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &736155273137381789
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 348054120420642082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8757bbd9865231b94b7f719c5616bcce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mPanel: {fileID: 0}
 --- !u!1 &5345307897794527624
 GameObject:
   m_ObjectHideFlags: 0
