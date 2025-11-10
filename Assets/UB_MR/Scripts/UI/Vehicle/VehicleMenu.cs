@@ -36,7 +36,7 @@ namespace CAVAS.UB_MR.UI
         void AddVehicle()
         {
             vehicleConfigMenu.SetActive(true);
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
         }
 
         void EditVehicle()
