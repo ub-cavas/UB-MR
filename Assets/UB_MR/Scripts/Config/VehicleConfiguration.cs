@@ -26,6 +26,8 @@ namespace CAVAS.UB_MR.Config
     [System.Serializable]
     public class Sensor
     {
+        public string name;
+        public string topic;
         public SensorType type;
         public Vector3 position;
         public Vector3 rotation;

@@ -4,16 +4,15 @@ using System;
 
 namespace CAVAS.UB_MR.UI
 {
-    public class MainMenu : MonoBehaviour
+    public class VehicleMenu : MonoBehaviour
     {
         [SerializeField] Button addVehicleButton;
         [SerializeField] Button loadVehicleButton;
         [SerializeField] Button editVehicleButton;
 
-        public void Awake()
-        {
-            
-        }
+        [Header("Menus")]
+        [SerializeField] GameObject vehicleConfigMenu;
+        [SerializeField] GameObject vehicleSelectionMenu;
 
         void OnEnable()
         {
@@ -36,17 +35,20 @@ namespace CAVAS.UB_MR.UI
 
         void AddVehicle()
         {
-
+            vehicleConfigMenu.SetActive(true);
+            this.gameObject.SetActive(false);
         }
 
         void EditVehicle()
         {
-
+            vehicleSelectionMenu.SetActive(true);
+            this.gameObject.SetActive(false);
         }
 
         void LoadVehicle()
-        { 
-
+        {
+            vehicleSelectionMenu.SetActive(true);
+            this.gameObject.SetActive(false);
         }
     }
 
