@@ -6,35 +6,46 @@ namespace CAVAS.UB_MR.UI
 {
     public class MainMenu : MonoBehaviour
     {
-        public static event Action OnOpenMainMenu;
-        public static event Action OnOpenNetworkMenu;
-        public static event Action OnOpenStatsMenu;
+        [SerializeField] Button addVehicleButton;
+        [SerializeField] Button loadVehicleButton;
+        [SerializeField] Button editVehicleButton;
 
-        [SerializeField] GameObject mPanel;
+        public void Awake()
+        {
+            
+        }
+
+        void OnEnable()
+        {
+            addVehicleButton.onClick.AddListener(AddVehicle);
+            loadVehicleButton.onClick.AddListener(LoadVehicle);
+            editVehicleButton.onClick.AddListener(EditVehicle);
+        }
+
+        void OnDisable()
+        {
+            addVehicleButton.onClick.RemoveListener(AddVehicle);
+            loadVehicleButton.onClick.RemoveListener(LoadVehicle);
+            editVehicleButton.onClick.RemoveListener(EditVehicle);
+        }
 
         public void ExitApplication()
         {
             Application.Quit();
         }
 
-        public void OpenNetworkMenu()
+        void AddVehicle()
         {
-            OnOpenNetworkMenu?.Invoke();
-            TogglePanel();
+
         }
 
-        public void OpenStatsMenu()
+        void EditVehicle()
         {
-            OnOpenStatsMenu?.Invoke();
+
         }
 
-        public void TogglePanel()
-        {
-            this.mPanel.SetActive(!this.mPanel.activeInHierarchy);
-            if (this.mPanel.activeInHierarchy)
-            {
-                OnOpenMainMenu?.Invoke();
-            }
+        void LoadVehicle()
+        { 
 
         }
     }

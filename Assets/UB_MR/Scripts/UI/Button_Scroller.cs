@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace CAVAS.UB_MR.UI
 {
@@ -11,15 +12,12 @@ namespace CAVAS.UB_MR.UI
         float current = 0;
         List<RectTransform> all_elements;
 
-        protected virtual void Start()
+        void Awake()
         {
             all_elements = new List<RectTransform>();
-            // Start adding buttons with an offset from the top
-            //current = -buttonPrefab.GetComponent<RectTransform>().rect.height;
         }
 
-        //TODO: Insert a new text element to the scroll view
-        public void AddElement()
+        public void AddElement(string inName)
         {
             RectTransform newElement = GameObject.Instantiate(buttonPrefab, viewport_content).GetComponent<RectTransform>();
 
@@ -30,7 +28,12 @@ namespace CAVAS.UB_MR.UI
             newElement.anchoredPosition = new Vector2(0, current - newElement.rect.height);
 
             if (newElement.TryGetComponent<Button>(out Button button))
+            {
+                TextMeshProUGUI tmp = button.GetComponentInChildren<TextMeshProUGUI>();
+                tmp.text = inName;
                 button.onClick.AddListener(OnButtonClick);
+            }
+                
 
             all_elements.Add(newElement);
             current -= newElement.rect.height;
@@ -42,6 +45,11 @@ namespace CAVAS.UB_MR.UI
                 button.onClick.RemoveListener(OnButtonClick);
 
             all_elements.Remove(elem);
+        }
+
+        public void ArrangeElements()
+        {
+            
         }
 
         protected abstract void OnButtonClick();
