@@ -17,9 +17,9 @@ namespace CAVAS.UB_MR.Config
     }
 
     [System.Serializable]
-    public class Vehicle
+    public class Agent
     {
-        public string vehicle_name;
+        public string name;
         public Dictionary<string, Sensor> sensors = new Dictionary<string, Sensor>();
     }
 
@@ -33,32 +33,40 @@ namespace CAVAS.UB_MR.Config
         public Vector3 rotation;
     }
 
-    public static class JSONManager
+    public static class ConfigurationManager
     {
-        public static void SaveToJSON(Vehicle data)
+        public static void SaveToJSON(Agent data)
         {
-            string filename = "vehicle-" + data.vehicle_name + ".json";
+            string filename = "agent-" + data.name + ".json";
             string path = Path.Combine(Application.persistentDataPath, filename);
-            // Pretty-print JSON for readability
             string json = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(path, json);
-            Debug.Log($"Saved vehicle config to {path}");
+            Debug.Log($"Saved agent config to {path}");
         }
 
-        public static Vehicle LoadFromJSON(string inVehicleName)
+        public static Agent LoadFromJSON(string inVehicleName)
         {
-            string filename = "vehicle-" + inVehicleName + ".json";
+            string filename = "agent-" + inVehicleName + ".json";
             string path = Path.Combine(Application.persistentDataPath, filename);
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
-                return JsonConvert.DeserializeObject<Vehicle>(json);
+                return JsonConvert.DeserializeObject<Agent>(json);
             }
             else
             {
                 Debug.LogWarning(filename + " not found");
                 return null;
-            }            
+            }
+        }
+        
+        public static List<Agent> GetAllAgents()
+        {
+            List<Agent> agents = new List<Agent>();
+            string[] files = Directory.GetFiles(Application.persistentDataPath);
+            foreach (string file in files)
+                agents.Add(LoadFromJSON(file));
+            return agents;
         }
     }
 }

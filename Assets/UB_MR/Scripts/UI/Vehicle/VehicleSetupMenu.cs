@@ -10,12 +10,12 @@ namespace CAVAS.UB_MR.UI.Vehicle
     public class VehicleSetupMenu : MonoBehaviour
     {
         public Action OnAddSensor;
-        public Action<Config.Vehicle, Config.Sensor> OnEditSensor;
+        public Action<Config.Agent, Config.Sensor> OnEditSensor;
 
         
         [Header("NAME")]
         [SerializeField] GameObject vehicleNamePanel;
-        [SerializeField] InputField nameInputField;
+        [SerializeField] TMP_InputField nameInputField;
         [SerializeField] Button confirmNameButton;
 
         [Header("VEHICLE OVERVIEW")]
@@ -29,18 +29,18 @@ namespace CAVAS.UB_MR.UI.Vehicle
         [Header("SENSOR")]
         [SerializeField] GameObject sensorPanel;
         [SerializeField] Button saveSensorButton;
-        [SerializeField] InputField sensorName;
-        [SerializeField] InputField sensorTopic;
-        [SerializeField] Dropdown sensorType;
-        [SerializeField] InputField posOffX;
-        [SerializeField] InputField posOffY;
-        [SerializeField] InputField posOffZ;
-        [SerializeField] InputField roll;
-        [SerializeField] InputField pitch;
-        [SerializeField] InputField yaw;
+        [SerializeField] TMP_InputField sensorName;
+        [SerializeField] TMP_InputField sensorTopic;
+        [SerializeField] TMP_Dropdown sensorType;
+        [SerializeField] TMP_InputField posOffX;
+        [SerializeField] TMP_InputField posOffY;
+        [SerializeField] TMP_InputField posOffZ;
+        [SerializeField] TMP_InputField roll;
+        [SerializeField] TMP_InputField pitch;
+        [SerializeField] TMP_InputField yaw;
 
 
-        Config.Vehicle activeVehicle;
+        Config.Agent activeAgent;
         Config.Sensor activeSensor;
 
         void OnEnable()
@@ -84,15 +84,15 @@ namespace CAVAS.UB_MR.UI.Vehicle
             //TODO: delete sensor
         }
 
-        void OpenEditVehicleMenu(Config.Vehicle inVehicle)
+        void OpenEditVehicleMenu(Config.Agent inVehicle)
         {
-            activeVehicle = inVehicle;
+            activeAgent = inVehicle;
             // Disable name menu
             this.vehicleNamePanel.SetActive(false);
             // Enable necessary components
             this.vehicleOverviewPanel.SetActive(true);
             // Set title text
-            title.text = inVehicle.vehicle_name;
+            title.text = inVehicle.name;
             // Clear old buttons
             sensorButtonScroller.RemoveAllElements();
             // Create new buttons for each sensor
@@ -109,9 +109,9 @@ namespace CAVAS.UB_MR.UI.Vehicle
             this.sensorPanel.SetActive(true);
             Sensor activeSensor = new Sensor();
             // Prepopulate if existing sensor
-            if (activeVehicle.sensors.ContainsKey(inSensorName))
+            if (activeAgent.sensors.ContainsKey(inSensorName))
             {
-                activeSensor = activeVehicle.sensors[inSensorName];
+                activeSensor = activeAgent.sensors[inSensorName];
                 // Name
                 sensorName.text = activeSensor.name;
                 // Topic
@@ -132,23 +132,24 @@ namespace CAVAS.UB_MR.UI.Vehicle
 
         void SaveSensor()
         {
-            activeVehicle.sensors[activeSensor.name] = activeSensor;
+            activeAgent.sensors[activeSensor.name] = activeSensor;
+            SaveVehicle();
         }
         void SaveVehicle()
         {
-            JSONManager.SaveToJSON(activeVehicle);
+            ConfigurationManager.SaveToJSON(activeAgent);
         }
         
         public void FindOrCreateVehicle()
         {
             name = nameInputField.text;
-            Config.Vehicle vehicle = JSONManager.LoadFromJSON(name);
+            Config.Agent vehicle = ConfigurationManager.LoadFromJSON(name);
             if (vehicle is not null)
                 OpenEditVehicleMenu(vehicle);
             else if (name != "") //TODO: this empty input check logic should be better
             {
-                Config.Vehicle newVehicle = new Config.Vehicle();
-                vehicle.vehicle_name = name;
+                Config.Agent newVehicle = new Config.Agent();
+                vehicle.name = name;
                 OpenEditVehicleMenu(newVehicle);
             }
             else
