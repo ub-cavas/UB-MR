@@ -30,16 +30,15 @@ namespace CAVAS.UB_MR.UI.Network
 
         void OnEnable()
         {
-            MainMenu.OnOpenNetworkMenu += EnableMenu;
-            MainMenu.OnOpenMainMenu += DisableMenu;
+            /*MainMenu.OnOpenNetworkMenu += EnableMenu;
+            MainMenu.OnOpenMainMenu += DisableMenu;*/
 
         }
 
         void OnDisable()
         {
-            MainMenu.OnOpenNetworkMenu -= EnableMenu;
-            MainMenu.OnOpenMainMenu -= DisableMenu;
-
+            /*MainMenu.OnOpenNetworkMenu -= EnableMenu;
+            MainMenu.OnOpenMainMenu -= DisableMenu;*/
         }
 
         public void StartHost()

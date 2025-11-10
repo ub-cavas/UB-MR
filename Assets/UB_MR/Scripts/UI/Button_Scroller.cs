@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
 namespace CAVAS.UB_MR.UI
 {
@@ -45,11 +46,28 @@ namespace CAVAS.UB_MR.UI
                 button.onClick.RemoveListener(OnButtonClick);
 
             all_elements.Remove(elem);
+            Destroy(elem.gameObject);
         }
 
         public void ArrangeElements()
         {
-            
+
+        }
+
+        public void RemoveAllElements()
+        {
+            foreach (RectTransform rt in all_elements)
+                RemoveElement(rt);
+            all_elements.Clear();
+        }
+        
+        public Button TryGetSelectedButton()
+        {
+            foreach (RectTransform rt in all_elements)
+                if (rt.TryGetComponent<Button>(out Button button))
+                    if (EventSystem.current.currentSelectedGameObject == button.gameObject)
+                        return button;
+            return null;
         }
 
         protected abstract void OnButtonClick();
