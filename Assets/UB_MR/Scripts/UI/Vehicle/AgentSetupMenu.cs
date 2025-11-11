@@ -34,6 +34,7 @@ namespace CAVAS.UB_MR.UI.Vehicle
         [SerializeField] TMP_InputField roll;
         [SerializeField] TMP_InputField pitch;
         [SerializeField] TMP_InputField yaw;
+        [SerializeField] Button cancelButton;
 
 
 
@@ -49,6 +50,7 @@ namespace CAVAS.UB_MR.UI.Vehicle
             saveSensorButton.onClick.AddListener(SaveSensor);
             saveSensorButton.onClick.AddListener(OpenEditAgentMenu);
             addSensorButton.onClick.AddListener(sensorButtonScroller.AddSensor);
+            cancelButton.onClick.AddListener(OpenEditAgentMenu);
             sensorButtonScroller.OnSensorClicked += OpenSensorMenu;
 
         }
@@ -61,7 +63,7 @@ namespace CAVAS.UB_MR.UI.Vehicle
             addSensorButton.onClick.RemoveAllListeners();
             removeSensorButton.onClick.RemoveAllListeners();
             saveSensorButton.onClick.RemoveAllListeners();
-
+            cancelButton.onClick.RemoveAllListeners();
             sensorButtonScroller.OnSensorClicked -= OpenSensorMenu;
         }
 

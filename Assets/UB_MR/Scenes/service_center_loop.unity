@@ -1444,6 +1444,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 407625474042462934, guid: 48df5cc2cd74d930aa36c8c7f8ae83cd, type: 3}
   m_PrefabInstance: {fileID: 2735723742282603781}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1549013082 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5946677052237985604, guid: d8bbf8ee5521205f4bf9725adc183ddc, type: 3}
+  m_PrefabInstance: {fileID: 4411074007443321186}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1742621352
 GameObject:
   m_ObjectHideFlags: 0
@@ -2061,6 +2072,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7347579192590131734, guid: d8bbf8ee5521205f4bf9725adc183ddc, type: 3}
+      propertyPath: cancelButton
+      value: 
+      objectReference: {fileID: 1549013082}
     - target: {fileID: 7347579192590131734, guid: d8bbf8ee5521205f4bf9725adc183ddc, type: 3}
       propertyPath: editSelectionMenu
       value: 
