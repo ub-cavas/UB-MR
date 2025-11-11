@@ -7,7 +7,7 @@ using System;
 
 namespace CAVAS.UB_MR.UI.Vehicle
 {
-    public class VehicleSetupMenu : MonoBehaviour
+    public class AgentSetupMenu : MonoBehaviour
     {   
         [Header("NAME")]
         [SerializeField] GameObject vehicleNamePanel;
@@ -36,6 +36,7 @@ namespace CAVAS.UB_MR.UI.Vehicle
         [SerializeField] TMP_InputField yaw;
 
 
+
         Config.Agent activeAgent;
         Config.Sensor activeSensor;
 
@@ -44,14 +45,12 @@ namespace CAVAS.UB_MR.UI.Vehicle
             // Buttons
             confirmNameButton.onClick.AddListener(FindOrCreateVehicle);
             confirmButton.onClick.AddListener(SaveVehicle);
-            
             removeSensorButton.onClick.AddListener(RemoveSensor);
-
             saveSensorButton.onClick.AddListener(SaveSensor);
             saveSensorButton.onClick.AddListener(OpenEditAgentMenu);
-
             addSensorButton.onClick.AddListener(sensorButtonScroller.AddSensor);
             sensorButtonScroller.OnSensorClicked += OpenSensorMenu;
+
         }
 
         void OnDisable()
@@ -76,8 +75,11 @@ namespace CAVAS.UB_MR.UI.Vehicle
             OpenEditAgentMenu(activeAgent);
         }
 
-        void OpenEditAgentMenu(Config.Agent inAgent)
+        public void OpenEditAgentMenu(Config.Agent inAgent)
         {
+            if (!this.gameObject.activeInHierarchy)
+                this.gameObject.SetActive(true);
+
             activeAgent = inAgent;
             // Disable other menus
             this.vehicleNamePanel.SetActive(false);
@@ -115,20 +117,20 @@ namespace CAVAS.UB_MR.UI.Vehicle
             {
                 this.activeSensor = activeAgent.sensors[inSensorName];
                 // Name
-                sensorName.text = sensor.name;
+                sensorName.text = activeSensor.name;
                 // Topic
-                sensorTopic.text = sensor.topic;
+                sensorTopic.text = activeSensor.topic;
                 // Type
-                int index = sensorType.options.FindIndex(option => option.text == sensor.type.ToString());
+                int index = sensorType.options.FindIndex(option => option.text == activeSensor.type.ToString());
                 sensorType.value = index;
                 sensorType.RefreshShownValue();
                 // Offsets
-                posOffX.text = sensor.position.x.ToString();
-                posOffY.text = sensor.position.y.ToString();
-                posOffZ.text = sensor.position.z.ToString();
-                roll.text = sensor.rotation.x.ToString();
-                pitch.text = sensor.rotation.y.ToString();
-                yaw.text = sensor.rotation.z.ToString();
+                posOffX.text = activeSensor.position.x.ToString();
+                posOffY.text = activeSensor.position.y.ToString();
+                posOffZ.text = activeSensor.position.z.ToString();
+                roll.text = activeSensor.rotation.x.ToString();
+                pitch.text = activeSensor.rotation.y.ToString();
+                yaw.text = activeSensor.rotation.z.ToString();
             }
         }
 

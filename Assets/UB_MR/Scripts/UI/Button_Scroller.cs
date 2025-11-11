@@ -56,8 +56,8 @@ namespace CAVAS.UB_MR.UI
 
         public void RemoveAllElements()
         {
-            foreach (RectTransform rt in all_elements)
-                RemoveElement(rt);
+            for(int i = 0; i < all_elements.Count; i++)
+                RemoveElement(all_elements[i]);
             all_elements.Clear();
         }
         
