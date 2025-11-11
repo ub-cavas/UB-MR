@@ -1,10 +1,22 @@
+using System;
 using CAVAS.UB_MR.UI.Vehicle;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
-public class AgentSelectionMenu : AgentSelection
+namespace CAVAS.UB_MR.UI.Vehicle
 {
-    protected override void OnButtonClick()
+    public class AgentSelectionMenu : AgentSelection
     {
-        throw new System.NotImplementedException();
+        public Action<string> OnAgentSelected;
+        protected override void OnButtonClick()
+        {
+            Button button = TryGetSelectedButton();
+            if (button is not null)
+            {
+                string agentName = button.GetComponentInChildren<TextMeshProUGUI>().text;
+                OnAgentSelected?.Invoke(agentName);
+            }
+        }
     }
 }

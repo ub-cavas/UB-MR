@@ -103,17 +103,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
---- !u!114 &4651090174669126316 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5248486252309767081, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
-  m_PrefabInstance: {fileID: 602817898662566149}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &6645652579488185263 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6082034746740351658, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
@@ -225,17 +214,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6082034746740351658, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
   m_PrefabInstance: {fileID: 6114370019344581352}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2021207294953709889 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5248486252309767081, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
-  m_PrefabInstance: {fileID: 6114370019344581352}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7088213505518782486
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -339,17 +317,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
---- !u!114 &3064764213833706431 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5248486252309767081, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
-  m_PrefabInstance: {fileID: 7088213505518782486}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &3907399068331567804 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6082034746740351658, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
@@ -365,7 +332,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 348054120420642082, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
       propertyPath: m_Name
-      value: --Agent-Menu--
+      value: --Base-Menu--
       objectReference: {fileID: 0}
     - target: {fileID: 622526113947193428, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
       propertyPath: m_text
@@ -466,33 +433,8 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2219503712733448234, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 53235346193752130}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 348054120420642082, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2914728443660726779}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
---- !u!1 &7822345812432585481 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 348054120420642082, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
-  m_PrefabInstance: {fileID: 7519330716304772651}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2914728443660726779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7822345812432585481}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8757bbd9865231b94b7f719c5616bcce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  addVehicleButton: {fileID: 3064764213833706431}
-  loadVehicleButton: {fileID: 4651090174669126316}
-  editVehicleButton: {fileID: 2021207294953709889}
-  vehicleConfigMenu: {fileID: 0}
-  vehicleSelectionMenu: {fileID: 0}
 --- !u!224 &8545375425162167809 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2219503712733448234, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
