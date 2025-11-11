@@ -59,6 +59,7 @@ namespace CAVAS.UB_MR.UI
             for(int i = 0; i < all_elements.Count; i++)
                 RemoveElement(all_elements[i]);
             all_elements.Clear();
+            current = 0;
         }
         
         public Button TryGetSelectedButton()
