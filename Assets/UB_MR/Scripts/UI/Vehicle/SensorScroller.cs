@@ -17,7 +17,12 @@ namespace CAVAS.UB_MR.UI.Vehicle
                 string sensorName = selected.GetComponentInChildren<TextMeshProUGUI>().text;
                 OnSensorClicked?.Invoke(sensorName);
             }
-            
+        }
+
+        public void AddSensor()
+        {
+            Button selected = TryGetSelectedButton();
+            OnSensorClicked?.Invoke(null);
         }
     }
 

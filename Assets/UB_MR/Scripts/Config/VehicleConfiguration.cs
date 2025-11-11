@@ -39,14 +39,30 @@ namespace CAVAS.UB_MR.Config
         {
             string filename = "agent-" + data.name + ".json";
             string path = Path.Combine(Application.persistentDataPath, filename);
-            string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+
+            string json = JsonConvert.SerializeObject(data, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver
+                    {
+                        IgnoreSerializableAttribute = true
+                    }
+                });
+
             File.WriteAllText(path, json);
             Debug.Log($"Saved agent config to {path}");
         }
 
-        public static Agent LoadFromJSON(string inVehicleName)
+        // Accepts either JSON file name or agent name
+        public static Agent LoadFromJSON(string inAgentName)
         {
-            string filename = "agent-" + inVehicleName + ".json";
+            string filename;
+            if (inAgentName.Contains(".json"))
+                filename = inAgentName;
+            else
+                filename = "agent-" + inAgentName + ".json";
+
             string path = Path.Combine(Application.persistentDataPath, filename);
             if (File.Exists(path))
             {
@@ -65,7 +81,12 @@ namespace CAVAS.UB_MR.Config
             List<Agent> agents = new List<Agent>();
             string[] files = Directory.GetFiles(Application.persistentDataPath);
             foreach (string file in files)
-                agents.Add(LoadFromJSON(file));
+            {
+                Agent agent = LoadFromJSON(file);
+                if (agent is not null)
+                    agents.Add(agent);
+            }
+                
             return agents;
         }
     }

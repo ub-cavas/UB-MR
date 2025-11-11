@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CAVAS.UB_MR.UI.Vehicle
 {
-    public abstract class VehicleSelectionMenu : Button_Scroller
+    public abstract class AgentSelection : Button_Scroller
     {
         void Start()
         {

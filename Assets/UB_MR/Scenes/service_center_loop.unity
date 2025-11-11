@@ -664,11 +664,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7822345812432585481, guid: 53b1e3af9b5dce0afbd1bd30fab29c7d, type: 3}
       propertyPath: m_Name
-      value: --Vehicle-Menu--
+      value: --Agent-Menu--
       objectReference: {fileID: 0}
     - target: {fileID: 7822345812432585481, guid: 53b1e3af9b5dce0afbd1bd30fab29c7d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1150,7 +1150,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4623821079211914528, guid: acbe88e586d69036cbc81b208d1e12f1, type: 3}
       propertyPath: m_Name
-      value: --Vehicle-Selection-Menu-- Variant
+      value: --Agent-Selection-Menu--
       objectReference: {fileID: 0}
     - target: {fileID: 4623821079211914528, guid: acbe88e586d69036cbc81b208d1e12f1, type: 3}
       propertyPath: m_IsActive
@@ -1842,6 +1842,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3998288545266844154, guid: d8bbf8ee5521205f4bf9725adc183ddc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5217263157136297002, guid: d8bbf8ee5521205f4bf9725adc183ddc, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1936,7 +1940,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5769749814437546899, guid: d8bbf8ee5521205f4bf9725adc183ddc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 300
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6122706105139620992, guid: d8bbf8ee5521205f4bf9725adc183ddc, type: 3}
       propertyPath: m_IsActive
@@ -1944,11 +1948,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6986761048699366899, guid: d8bbf8ee5521205f4bf9725adc183ddc, type: 3}
       propertyPath: m_Name
-      value: --Vehicle-Creation-Menu--
+      value: --Agent-Creation-Menu--
       objectReference: {fileID: 0}
     - target: {fileID: 6986761048699366899, guid: d8bbf8ee5521205f4bf9725adc183ddc, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7790457033981087588, guid: d8bbf8ee5521205f4bf9725adc183ddc, type: 3}
       propertyPath: m_IsActive
@@ -2051,5 +2055,5 @@ SceneRoots:
   - {fileID: 10525331}
   - {fileID: 589119130}
   - {fileID: 4411074007443321186}
-  - {fileID: 2735723742282603781}
   - {fileID: 1177279494}
+  - {fileID: 2735723742282603781}
