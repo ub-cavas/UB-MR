@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 942502661080996944, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
       propertyPath: m_Name
-      value: EditVehicle_Button
+      value: EditAgent_Button
       objectReference: {fileID: 0}
     - target: {fileID: 6082034746740351658, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
       propertyPath: m_Pivot.x
@@ -94,7 +94,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8222130110498794891, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
       propertyPath: m_text
-      value: Edit Vehicle
+      value: 'Edit Agent
+
+'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -127,7 +129,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 942502661080996944, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
       propertyPath: m_Name
-      value: LoadVehicle_Button
+      value: LoadAgent_Button
       objectReference: {fileID: 0}
     - target: {fileID: 6082034746740351658, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
       propertyPath: m_Pivot.x
@@ -211,7 +213,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8222130110498794891, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
       propertyPath: m_text
-      value: Load Vehicle
+      value: Load Agent
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -244,7 +246,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 942502661080996944, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
       propertyPath: m_Name
-      value: AddVehicle_Button
+      value: AddAgent_Button
       objectReference: {fileID: 0}
     - target: {fileID: 6082034746740351658, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
       propertyPath: m_Pivot.x
@@ -328,7 +330,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8222130110498794891, guid: 9aedbe5aade89165e965b214264870ca, type: 3}
       propertyPath: m_text
-      value: Add Vehicle
+      value: 'Add Agent
+
+'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -361,7 +365,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 348054120420642082, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
       propertyPath: m_Name
-      value: --Vehicle-Menu--
+      value: --Agent-Menu--
       objectReference: {fileID: 0}
     - target: {fileID: 622526113947193428, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
       propertyPath: m_text
@@ -488,6 +492,7 @@ MonoBehaviour:
   loadVehicleButton: {fileID: 4651090174669126316}
   editVehicleButton: {fileID: 2021207294953709889}
   vehicleConfigMenu: {fileID: 0}
+  vehicleSelectionMenu: {fileID: 0}
 --- !u!224 &8545375425162167809 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2219503712733448234, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}

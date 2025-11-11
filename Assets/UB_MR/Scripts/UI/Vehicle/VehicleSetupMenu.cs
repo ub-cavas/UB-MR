@@ -8,11 +8,7 @@ using System;
 namespace CAVAS.UB_MR.UI.Vehicle
 {
     public class VehicleSetupMenu : MonoBehaviour
-    {
-        public Action OnAddSensor;
-        public Action<Config.Agent, Config.Sensor> OnEditSensor;
-
-        
+    {   
         [Header("NAME")]
         [SerializeField] GameObject vehicleNamePanel;
         [SerializeField] TMP_InputField nameInputField;
@@ -48,10 +44,13 @@ namespace CAVAS.UB_MR.UI.Vehicle
             // Buttons
             confirmNameButton.onClick.AddListener(FindOrCreateVehicle);
             confirmButton.onClick.AddListener(SaveVehicle);
-            addSensorButton.onClick.AddListener(AddSensor);
+            
             removeSensorButton.onClick.AddListener(RemoveSensor);
-            saveSensorButton.onClick.AddListener(SaveSensor);
 
+            saveSensorButton.onClick.AddListener(SaveSensor);
+            saveSensorButton.onClick.AddListener(OpenEditAgentMenu);
+
+            addSensorButton.onClick.AddListener(sensorButtonScroller.AddSensor);
             sensorButtonScroller.OnSensorClicked += OpenSensorMenu;
         }
 
@@ -67,36 +66,30 @@ namespace CAVAS.UB_MR.UI.Vehicle
             sensorButtonScroller.OnSensorClicked -= OpenSensorMenu;
         }
 
-        void AddSensor()
-        {
-            //TODO: Open sensor add menu
-            OnAddSensor?.Invoke();
-        }
-
-        void EditSensor()
-        {
-            //TODO: Open sensor edit menu
-            //OnEditSensor?.Invoke();
-        }
-
         void RemoveSensor()
         {
             //TODO: delete sensor
         }
 
-        void OpenEditVehicleMenu(Config.Agent inVehicle)
+        void OpenEditAgentMenu()
         {
-            activeAgent = inVehicle;
-            // Disable name menu
+            OpenEditAgentMenu(activeAgent);
+        }
+
+        void OpenEditAgentMenu(Config.Agent inAgent)
+        {
+            activeAgent = inAgent;
+            // Disable other menus
             this.vehicleNamePanel.SetActive(false);
+            this.sensorPanel.SetActive(false);
             // Enable necessary components
             this.vehicleOverviewPanel.SetActive(true);
             // Set title text
-            title.text = inVehicle.name;
+            title.text = inAgent.name;
             // Clear old buttons
             sensorButtonScroller.RemoveAllElements();
             // Create new buttons for each sensor
-            foreach (string name in inVehicle.sensors.Keys)
+            foreach (string name in inAgent.sensors.Keys)
                 sensorButtonScroller.AddElement(name);
         }
 
@@ -107,34 +100,60 @@ namespace CAVAS.UB_MR.UI.Vehicle
             this.vehicleOverviewPanel.SetActive(false);
             // Enable sub-menu
             this.sensorPanel.SetActive(true);
-            Sensor activeSensor = new Sensor();
+            Sensor sensor = new Sensor();
+            // New Sensor
+            if (inSensorName is null)
+            {
+                // Name (Default)
+                sensor.name = "Sensor_1";
+                sensorName.text = sensor.name;
+                this.activeSensor = sensor;
+                return; 
+            }
             // Prepopulate if existing sensor
             if (activeAgent.sensors.ContainsKey(inSensorName))
             {
-                activeSensor = activeAgent.sensors[inSensorName];
+                this.activeSensor = activeAgent.sensors[inSensorName];
                 // Name
-                sensorName.text = activeSensor.name;
+                sensorName.text = sensor.name;
                 // Topic
-                sensorTopic.text = activeSensor.topic;
+                sensorTopic.text = sensor.topic;
                 // Type
-                int index = sensorType.options.FindIndex(option => option.text == activeSensor.type.ToString());
+                int index = sensorType.options.FindIndex(option => option.text == sensor.type.ToString());
                 sensorType.value = index;
                 sensorType.RefreshShownValue();
                 // Offsets
-                posOffX.text = activeSensor.position.x.ToString();
-                posOffY.text = activeSensor.position.y.ToString();
-                posOffZ.text = activeSensor.position.z.ToString();
-                roll.text = activeSensor.rotation.x.ToString();
-                pitch.text = activeSensor.rotation.y.ToString();
-                yaw.text = activeSensor.rotation.z.ToString();
+                posOffX.text = sensor.position.x.ToString();
+                posOffY.text = sensor.position.y.ToString();
+                posOffZ.text = sensor.position.z.ToString();
+                roll.text = sensor.rotation.x.ToString();
+                pitch.text = sensor.rotation.y.ToString();
+                yaw.text = sensor.rotation.z.ToString();
             }
         }
 
         void SaveSensor()
         {
+            // Update sensor values
+            this.activeSensor.name = sensorName.text;
+            this.activeSensor.topic = sensorTopic.text;
+
+            // Get sensor type
+            string label = sensorType.options[sensorType.value].text;
+            if (Enum.TryParse(label, ignoreCase: true, out SensorType sensor))
+                this.activeSensor.type = sensor;
+            else
+                Debug.LogWarning($"'{label}' is not a valid SensorType");
+            
+             
+            this.activeSensor.position = new Vector3(float.Parse(posOffX.text), float.Parse(posOffY.text), float.Parse(posOffZ.text));
+            this.activeSensor.rotation = new Vector3(float.Parse(roll.text), float.Parse(pitch.text), float.Parse(yaw.text));
+
             activeAgent.sensors[activeSensor.name] = activeSensor;
+            print(this.activeSensor.position);
             SaveVehicle();
         }
+        
         void SaveVehicle()
         {
             ConfigurationManager.SaveToJSON(activeAgent);
@@ -143,14 +162,14 @@ namespace CAVAS.UB_MR.UI.Vehicle
         public void FindOrCreateVehicle()
         {
             name = nameInputField.text;
-            Config.Agent vehicle = ConfigurationManager.LoadFromJSON(name);
-            if (vehicle is not null)
-                OpenEditVehicleMenu(vehicle);
+            Config.Agent agent = ConfigurationManager.LoadFromJSON(name);
+            if (agent is not null)
+                OpenEditAgentMenu(agent);
             else if (name != "") //TODO: this empty input check logic should be better
             {
-                Config.Agent newVehicle = new Config.Agent();
-                vehicle.name = name;
-                OpenEditVehicleMenu(newVehicle);
+                Config.Agent newAgent = new Config.Agent();
+                newAgent.name = name;
+                OpenEditAgentMenu(newAgent);
             }
             else
             {

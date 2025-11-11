@@ -46,7 +46,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6369636860483272818, guid: 387e9d2b1b1dd4fcda8c9aa296dcef30, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 300
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6746242188800070562, guid: 387e9d2b1b1dd4fcda8c9aa296dcef30, type: 3}
       propertyPath: m_Pivot.x
@@ -169,7 +169,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 348054120420642082, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
       propertyPath: m_Name
-      value: --Vehicle-Selection-Menu-- Variant
+      value: --Agent-Selection-Menu--
       objectReference: {fileID: 0}
     - target: {fileID: 348054120420642082, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
       propertyPath: m_IsActive
@@ -177,7 +177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 622526113947193428, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
       propertyPath: m_text
-      value: Vehicle Selection
+      value: Agent Selection
       objectReference: {fileID: 0}
     - target: {fileID: 3272679770413240134, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
       propertyPath: m_Pivot.x
@@ -268,14 +268,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 348054120420642082, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 726534517662625281}
+      addedObject: {fileID: 8189994333077795400}
   m_SourcePrefab: {fileID: 100100000, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
 --- !u!1 &4623821079211914528 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 348054120420642082, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
   m_PrefabInstance: {fileID: 4971857057615132674}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &726534517662625281
+--- !u!114 &8189994333077795400
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -284,7 +284,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4623821079211914528}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1654d1906c98179839b6647531ccd060, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d97921ec65d16350ac451bd86abcbf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   buttonPrefab: {fileID: 1254085133815565715, guid: a0a88ed25ba636064bd1458c459a600c, type: 3}
