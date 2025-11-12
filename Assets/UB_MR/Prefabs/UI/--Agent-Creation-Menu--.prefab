@@ -1806,6 +1806,7 @@ MonoBehaviour:
   roll: {fileID: 5091712573392005457}
   pitch: {fileID: 5344537364448637748}
   yaw: {fileID: 6895368613864303768}
+  cancelButton: {fileID: 0}
 --- !u!1 &7790457033981087588 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 593415416763166645, guid: 3c90c64825d9650a88805740dd3a8bfc, type: 3}
