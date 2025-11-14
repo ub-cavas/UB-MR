@@ -28,6 +28,15 @@ namespace CAVAS.UI
             base.LoadPanel();
         }
 
+        public override void UnloadPanel()
+        {
+            addButton.onClick.RemoveAllListeners();
+            editButton.onClick.RemoveAllListeners();
+            removeButton.onClick.RemoveAllListeners();
+            RemoveAllButtons();
+            base.UnloadPanel();
+        }
+
         protected void AddButton(string inLabel)
         {
             if (scroll_buttons is null)
@@ -58,19 +67,16 @@ namespace CAVAS.UI
 
         public void RemoveAllButtons()
         {
-            for (int i = 0; i < scroll_buttons.Count; i++)
-                RemoveButton(scroll_buttons[i]);
-            scroll_buttons.Clear();
+            if (scroll_buttons is not null)
+            {
+                for (int i = 0; i < scroll_buttons.Count; i++)
+                    RemoveButton(scroll_buttons[i]);
+                scroll_buttons.Clear();
+            }
             current = 0;
         }
-        
-        public override void UnloadPanel()
-        {
-            RemoveAllButtons();
-            base.UnloadPanel();
-        }
 
-        protected Button GetSelectedButton()
+        Button GetSelectedButton()
         {
             foreach (Button button in scroll_buttons)
                 if (EventSystem.current.currentSelectedGameObject == button.gameObject)
@@ -78,26 +84,18 @@ namespace CAVAS.UI
             return null;
         }
 
-        protected string GetSelectedButtonLabel()
-        {
-            Button button = GetSelectedButton();
-            if (button)
-                return button.GetComponentInChildren<TextMeshProUGUI>().text;
-            return null;
-        }
-
         protected abstract void OnAddClicked();
         protected abstract void OnRemoveClicked();
         protected abstract void OnEditClicked();
 
-        Button GetActiveButton()
+        protected Button GetActiveButton()
         {
             return activeButton;
         }
         
-        string GetActiveButtonLabel()
+        protected string GetActiveButtonLabel()
         {
-            return GetActiveButton().GetComponentInChildren<TextMeshProUGUI>().text;
+            return activeButton.GetComponentInChildren<TextMeshProUGUI>(true).text;
         }
 
         void OnScrollButtonClick()

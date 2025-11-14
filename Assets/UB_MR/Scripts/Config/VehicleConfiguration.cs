@@ -3,6 +3,7 @@ using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System;
 
 namespace CAVAS.UB_MR.Config
 {
@@ -35,6 +36,8 @@ namespace CAVAS.UB_MR.Config
 
     public static class ConfigurationManager
     {
+        static Agent activeAgent;
+
         public static void SaveToJSON(Agent data)
         {
             string filename = "agent-" + data.name + ".json";
@@ -88,6 +91,11 @@ namespace CAVAS.UB_MR.Config
             }
                 
             return agents;
+        }
+
+        public static void SetActiveAgent(Agent agent)
+        {
+            activeAgent = agent;
         }
     }
 }

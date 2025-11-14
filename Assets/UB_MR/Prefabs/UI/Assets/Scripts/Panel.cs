@@ -22,12 +22,8 @@ namespace CAVAS.UI
                 title = transform.Find("Panel_Title (TMP)").GetComponent<TextMeshProUGUI>();
             if (backButton is null)
                 backButton = transform.Find("Back_Button").GetComponent<Button>();
-            if (allElements is null)
-                allElements = GetComponentsInChildren<RectTransform>(true);
-
-            foreach (RectTransform rt in allElements)
-                rt.gameObject.SetActive(true);
-
+            
+            this.gameObject.SetActive(true);
             backButton.onClick.AddListener(Back);
         }
 
@@ -36,16 +32,17 @@ namespace CAVAS.UI
             if (backButton is not null)
                 backButton.onClick.RemoveAllListeners();
                 
-            if (allElements is null)
-                allElements = GetComponentsInChildren<RectTransform>(true);
-
-            foreach (RectTransform rt in allElements)
-                rt.gameObject.SetActive(false);
+            this.gameObject.SetActive(false);
         }
 
         protected void SetTitle(string inTitle)
         {
             title.text = inTitle;
+        }
+
+        protected Button GetBackButton()
+        {
+            return backButton;
         }
         
         protected void Back()

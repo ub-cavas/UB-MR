@@ -18,11 +18,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2379579238453545156, guid: 1b27b465498fe1c9588a6ec0c8fcd932, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.25804445
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 2566279377356998594, guid: 1b27b465498fe1c9588a6ec0c8fcd932, type: 3}
       propertyPath: m_Size
-      value: 0.378882
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3482136675156532029, guid: 1b27b465498fe1c9588a6ec0c8fcd932, type: 3}
       propertyPath: m_AnchorMax.x
@@ -47,6 +47,10 @@ PrefabInstance:
     - target: {fileID: 4758512874740357770, guid: 1b27b465498fe1c9588a6ec0c8fcd932, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4795294566332322578, guid: 1b27b465498fe1c9588a6ec0c8fcd932, type: 3}
+      propertyPath: m_text
+      value: Load Agent
       objectReference: {fileID: 0}
     - target: {fileID: 4936679231401045650, guid: 1b27b465498fe1c9588a6ec0c8fcd932, type: 3}
       propertyPath: m_Pivot.x
@@ -182,6 +186,8 @@ MonoBehaviour:
   addButton: {fileID: 3002872535163252238}
   editButton: {fileID: 6048080543819551559}
   removeButton: {fileID: 4624905877082803180}
+  loadAgentButton: {fileID: 7154052803264279555}
+  mapSelectionPanel: {fileID: 0}
   createPanel: {fileID: 0}
   editPanel: {fileID: 0}
 --- !u!114 &3002872535163252238 stripped
@@ -214,6 +220,17 @@ MonoBehaviour:
 --- !u!114 &6048080543819551559 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5417023598600889714, guid: 1b27b465498fe1c9588a6ec0c8fcd932, type: 3}
+  m_PrefabInstance: {fileID: 1784053783703287349}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7154052803264279555 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8902057803290968630, guid: 1b27b465498fe1c9588a6ec0c8fcd932, type: 3}
   m_PrefabInstance: {fileID: 1784053783703287349}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
