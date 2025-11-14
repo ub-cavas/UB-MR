@@ -93,6 +93,19 @@ namespace CAVAS.UB_MR.Config
             return agents;
         }
 
+        public static void RemoveAgent(string inAgentName)
+        {
+            string filename;
+            if (inAgentName.Contains(".json"))
+                filename = inAgentName;
+            else
+                filename = "agent-" + inAgentName + ".json";
+            string path = Path.Combine(Application.persistentDataPath, filename);
+            if (File.Exists(path))
+                File.Delete(path);
+            Debug.Log("REMOVED: " + inAgentName);
+        }
+
         public static void SetActiveAgent(Agent agent)
         {
             activeAgent = agent;

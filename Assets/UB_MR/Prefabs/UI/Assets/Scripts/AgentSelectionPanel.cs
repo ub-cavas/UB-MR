@@ -16,6 +16,7 @@ namespace CAVAS.UB_MR.UI
         {
             loadAgentButton.onClick.AddListener(LoadAgent);
 
+            RemoveAllButtons();
             foreach (Config.Agent agent in ConfigurationManager.GetAllAgents())
                 AddButton(agent.name);
 
@@ -47,7 +48,9 @@ namespace CAVAS.UB_MR.UI
 
         protected override void OnRemoveClicked()
         {
-            
+            Config.Agent agent = ConfigurationManager.LoadFromJSON(GetActiveButtonLabel());
+            ConfigurationManager.RemoveAgent(agent.name);
+            UI_Manager.LoadPanel(this);
         }
 
         void LoadAgent()

@@ -9,7 +9,6 @@ namespace CAVAS.UB_MR.UI
 {
     public class SensorEditPanel : Panel
     {
-        [SerializeField] Panel agentSelectionMenu;
         [SerializeField] Button saveButton;
         [Space]
         [SerializeField] TMP_Dropdown sensorType;
@@ -24,6 +23,9 @@ namespace CAVAS.UB_MR.UI
         [SerializeField] TMP_InputField roll;
         [SerializeField] TMP_InputField pitch;
         [SerializeField] TMP_InputField yaw;
+
+        [Header("Panels")]
+        [SerializeField] AgentEditMenu agentEditMenu;
 
         Agent agent;
         Sensor sensor;
@@ -94,7 +96,7 @@ namespace CAVAS.UB_MR.UI
             // Save
             agent.sensors[sensor.name] = sensor;
             ConfigurationManager.SaveToJSON(agent);
-            UI_Manager.LoadPreviousPanel();
+            UI_Manager.LoadPanel(agentEditMenu);
         }
     }
 }

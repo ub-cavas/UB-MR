@@ -60,7 +60,7 @@ namespace CAVAS.UB_MR.UI
 
         protected override void OnRemoveClicked()
         {
-            throw new System.NotImplementedException();
+            
         }
 
         void LoadAgent()

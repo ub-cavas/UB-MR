@@ -10,17 +10,20 @@ namespace CAVAS.UB_MR.UI
     {
         [SerializeField] TMP_InputField nameInputField;
         [SerializeField] Button saveButton;
+        [Header("Panels")]
+        [SerializeField] AgentSelectionPanel agentSelectionPanel;
 
         public override void LoadPanel()
         {
-            base.LoadPanel();
             saveButton.onClick.AddListener(CreateAgent);
+            base.LoadPanel();
         }
 
         public override void UnloadPanel()
         {
-            base.UnloadPanel();
             saveButton.onClick.RemoveAllListeners();
+            base.UnloadPanel();
+            
         }
 
         void CreateAgent()
@@ -33,7 +36,7 @@ namespace CAVAS.UB_MR.UI
                 newAgent.name = name;
                 ConfigurationManager.SaveToJSON(newAgent);
             }
-            Back();
+            UI_Manager.LoadPanel(agentSelectionPanel);
         }        
     }
 }
