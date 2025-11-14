@@ -423,6 +423,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1691801005448650417, guid: 5f07ea4d309279a4c88de5cdf8e48edd, type: 3}
+      propertyPath: agentSelectionPanel
+      value: 
+      objectReference: {fileID: 1959417441}
     - target: {fileID: 6132402836147812992, guid: 5f07ea4d309279a4c88de5cdf8e48edd, type: 3}
       propertyPath: m_Name
       value: Create-Agent-Panel Variant
@@ -878,6 +882,10 @@ PrefabInstance:
       propertyPath: m_Options.m_Options.Array.data[3].m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6088944604561895209, guid: 98dca6b0091928e1da2e5b627092bf61, type: 3}
+      propertyPath: agentEditMenu
+      value: 
+      objectReference: {fileID: 384276438}
     - target: {fileID: 8653353439409632953, guid: 98dca6b0091928e1da2e5b627092bf61, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
