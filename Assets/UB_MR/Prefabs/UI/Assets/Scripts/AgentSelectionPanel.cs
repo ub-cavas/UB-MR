@@ -1,18 +1,32 @@
 using CAVAS.UB_MR.Config;
 using CAVAS.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CAVAS.UB_MR.UI
 {
     public class AgentSelectionPanel : ScrollPanel
     {
+        [SerializeField] Button loadAgentButton;
+        [SerializeField] MapSelectionPanel mapSelectionPanel;
         [SerializeField] AgentCreatePanel createPanel;
         [SerializeField] AgentEditMenu editPanel;
 
         public override void LoadPanel()
         {
+            loadAgentButton.onClick.AddListener(LoadAgent);
+
             foreach (Config.Agent agent in ConfigurationManager.GetAllAgents())
                 AddButton(agent.name);
+
+            base.LoadPanel();
+        }
+
+        public override void UnloadPanel()
+        {
+            loadAgentButton.onClick.RemoveAllListeners();
+
+            base.UnloadPanel();
         }
 
         protected override void OnAddClicked()
@@ -22,7 +36,7 @@ namespace CAVAS.UB_MR.UI
 
         protected override void OnEditClicked()
         {
-            Config.Agent agent = ConfigurationManager.LoadFromJSON(GetSelectedButtonLabel());
+            Config.Agent agent = ConfigurationManager.LoadFromJSON(GetActiveButtonLabel());
             if (agent is not null)
             {
                 editPanel.SetAgent(agent);
@@ -34,6 +48,13 @@ namespace CAVAS.UB_MR.UI
         protected override void OnRemoveClicked()
         {
             
+        }
+
+        void LoadAgent()
+        {
+            Config.Agent agent = ConfigurationManager.LoadFromJSON(GetActiveButtonLabel());
+            ConfigurationManager.SetActiveAgent(agent);
+            UI_Manager.LoadPanel(mapSelectionPanel);
         }
     }
 }

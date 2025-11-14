@@ -14,19 +14,19 @@ namespace CAVAS.UB_MR.UI
 
         public override void LoadPanel()
         {
-            loadSessionButton.onClick.AddListener(LoadSession);
+            newSessionButton.onClick.AddListener(NewSession);
             base.LoadPanel();
             
         }
 
         public override void UnloadPanel()
         {
-            loadSessionButton.onClick.RemoveAllListeners();
+            newSessionButton.onClick.RemoveAllListeners();
             base.UnloadPanel();
             
         }
 
-        void LoadSession()
+        void NewSession()
         {
             UI_Manager.LoadPanel(agentSelectionPanel);
         }
