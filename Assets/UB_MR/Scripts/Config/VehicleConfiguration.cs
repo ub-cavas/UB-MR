@@ -37,6 +37,7 @@ namespace CAVAS.UB_MR.Config
     public static class ConfigurationManager
     {
         static Agent activeAgent;
+        static string activeMap;
 
         public static void SaveToJSON(Agent data)
         {
@@ -106,9 +107,20 @@ namespace CAVAS.UB_MR.Config
             Debug.Log("REMOVED: " + inAgentName);
         }
 
+        public static Tuple<Agent, string> GetConfiguration()
+        {
+            
+            return new Tuple<Agent, string>(activeAgent, activeMap);
+        }
+
         public static void SetActiveAgent(Agent agent)
         {
             activeAgent = agent;
+        }
+
+        public static void SetActiveMap(string inMapName)
+        {
+            activeMap = inMapName;
         }
     }
 }

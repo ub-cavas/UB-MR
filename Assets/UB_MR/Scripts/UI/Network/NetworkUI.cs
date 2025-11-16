@@ -1,7 +1,5 @@
 using UnityEngine;
 using Unity.Netcode;
-using CAVAS.UB_MR.UI;
-using Assets.UB_MR.Scripts.SimpleTraffic;
 
 
 namespace CAVAS.UB_MR.UI.Network
