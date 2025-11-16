@@ -8,9 +8,8 @@ using Awsim.Common;
 using CAVAS.UB_MR.DT.VirtualObjectDetection;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Camera;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar;
-using UnityEngine.Serialization;
 
-namespace CAVAS.UB_MR.DT
+namespace CAVAS.UB_MR.Agent
 {
     public class AutonomousVehicle : DigitalTwin
     {
@@ -68,31 +67,27 @@ namespace CAVAS.UB_MR.DT
         LidarModifier mLidarModifier;
         ISubscription<nav_msgs.msg.Odometry> mWorldTransformationSubscriber;
         
-        public override void OnNetworkSpawn()
+        protected override void OnEnable()
         {
-            base.OnNetworkSpawn();
-            if (IsOwner)
-            {
-                ConnectToROS();
-                this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
-            }
+            base.OnEnable();
+
+            ConnectToROS();
+            this.mLidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations);
             StartCoroutine(PublishVirtualObjects());
         }
 
-        public override void OnDestroy()
+        protected override void OnDisable()
         {
-            base.OnDestroy();
-            if (IsOwner)
-            {
-                if (this.mVirtualCameraOverlay != null)
+            base.OnDisable();
+
+            if (this.mVirtualCameraOverlay != null)
                     this.mVirtualCameraOverlay.CleanUp();
 
-                if (this.mVirtualBoundingBoxDetector != null)
-                    this.mVirtualBoundingBoxDetector.CleanUp();
+            if (this.mVirtualBoundingBoxDetector != null)
+                this.mVirtualBoundingBoxDetector.CleanUp();
 
-                if (this.mLidarModifier != null)
-                    this.mLidarModifier.CleanUp();
-            }
+            if (this.mLidarModifier != null)
+                this.mLidarModifier.CleanUp();
             
 
             if (this.mNode != null && this.mWorldTransformationSubscriber != null)
@@ -111,7 +106,7 @@ namespace CAVAS.UB_MR.DT
 
         protected virtual void Update()
         {
-            if (IsOwner && this.mLidarModifier != null && enableLidarModifier)
+            if (this.mLidarModifier != null && enableLidarModifier)
             {
                 if (this.mLidarModifier.TryModify(this.mLidar.transform))
                     this.mLidarModifier.PublishPCD();
@@ -146,14 +141,14 @@ namespace CAVAS.UB_MR.DT
 
         public IEnumerator PublishVirtualObjects()
         {
-            while (IsOwner)
+            while (true)
             {
                 yield return new WaitForEndOfFrame();
                 if (enableBoundingBoxCapture)
                     this.mVirtualBoundingBoxDetector.PublishNearbyVirtualObjects(detectionRadius);
                 if (enableImageCapture)
                 {
-                    this.mVirtualCameraOverlay.UpdateCameraResolution(this, imageWidth, imageHeight);
+                    this.mVirtualCameraOverlay.UpdateCameraResolution(imageWidth, imageHeight);
                     this.mVirtualCameraOverlay.CaptureAndPublishImage();
                 }
                 yield return new WaitForSeconds(1.0f / publishRate);
@@ -162,22 +157,16 @@ namespace CAVAS.UB_MR.DT
 
         public void EnableDashCam(bool inEnable)
         {
-            if (IsOwner)
-            {
-                base.EnableCameras(false);
-                if (dashCam != null)
-                    dashCam.gameObject.SetActive(inEnable);
-            }
+            DisableAllSpectatorCameras();
+            if (dashCam is not null)
+                EnableSpectatorCamera(dashCam, true);
         }
 
         public void EnableFollowCam(bool inEnable)
         {
-            if (IsOwner)
-            {
-                base.EnableCameras(false);
-                if (followCam != null)
-                    followCam.gameObject.SetActive(inEnable);
-            }
+            DisableAllSpectatorCameras();
+            if (followCam is not null)
+                EnableSpectatorCamera(followCam, true);
         }
 
         public void SetLayerCulling(Camera camera, string layerName, bool shouldRender)

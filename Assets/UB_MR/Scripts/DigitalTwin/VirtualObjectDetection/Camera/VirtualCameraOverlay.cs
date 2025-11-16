@@ -27,9 +27,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Camera
 
         string frameId = "camera_link"; // Default frame ID for the camera
 
-        public VirtualCameraOverlay(DigitalTwin inDT, string inImageTopic, string inDepthTopic, ROS2Node inNode, UnityEngine.Camera inCamera, int inImageWidth = 640, int inImageHeight = 480)
+        public VirtualCameraOverlay(string inImageTopic, string inDepthTopic, ROS2Node inNode, UnityEngine.Camera inCamera, int inImageWidth = 640, int inImageHeight = 480)
         {
-            UpdateCameraResolution(inDT, inImageWidth, inImageHeight);
+            UpdateCameraResolution(inImageWidth, inImageHeight);
             this.targetCamera = inCamera;
             // IMAGE
             this.compressedImagePublisher = inNode.CreatePublisher<CompressedImage>(inImageTopic + "/compressed");
@@ -42,13 +42,10 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Camera
             this.depthTexture2D = new Texture2D(IMAGE_WIDTH, IMAGE_HEIGHT, TextureFormat.RFloat, false);
         }
 
-        public void UpdateCameraResolution(DigitalTwin inDT, int inImageWidth, int inImageHeight)
+        public void UpdateCameraResolution(int inImageWidth, int inImageHeight)
         {
-            if (inDT.IsOwner)
-            {
-                IMAGE_WIDTH = inImageWidth;
-                IMAGE_HEIGHT = inImageHeight;
-            }
+            IMAGE_WIDTH = inImageWidth;
+            IMAGE_HEIGHT = inImageHeight;
         }
 
 
