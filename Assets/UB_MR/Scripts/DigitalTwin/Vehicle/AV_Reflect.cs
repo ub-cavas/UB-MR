@@ -1,0 +1,20 @@
+using UnityEngine;
+
+namespace CAVAS.UB_MR.DT.Vehicle
+{
+    [RequireComponent(typeof(Rigidbody))]
+    public class AV_Reflect : AutonomousVehicle
+    {
+        protected override void Update()
+        {
+            base.Update();
+            SnapUpdate();
+        }
+
+        void SnapUpdate()
+        {
+            this.transform.position = this.mWorldPosition;
+            this.transform.rotation = this.mWorldRotation;
+        }
+    }
+}

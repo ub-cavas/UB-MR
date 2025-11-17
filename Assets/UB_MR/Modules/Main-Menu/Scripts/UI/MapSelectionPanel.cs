@@ -52,7 +52,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
         void Confirm()
         {
             //string mapName = GetActiveButtonLabel(); //TODO: lookup for correct scene name
-            string mapName = "service_center_loop";
+            string mapName = "UB-Service-Center-Loop";
             ConfigurationManager.SetActiveMap(mapName);
             UI_Manager.LoadPanel(confirmationPanel);
         }

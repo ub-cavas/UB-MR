@@ -23,7 +23,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
             base.LoadPanel();
 
             // Update the button labels
-            Tuple<Agent, string> config = ConfigurationManager.GetConfiguration();
+            Tuple<Config.Agent, string> config = ConfigurationManager.GetConfiguration();
             if (config.Item1 is null)
                 agentButton.GetComponentInChildren<TextMeshProUGUI>().text = "Change Agent";
             else
@@ -59,7 +59,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
 
         void StartMR()
         {
-            Tuple<Agent, string> config = ConfigurationManager.GetConfiguration();
+            Tuple<Config.Agent, string> config = ConfigurationManager.GetConfiguration();
             SceneManager.LoadScene(config.Item2);
         }
     }
