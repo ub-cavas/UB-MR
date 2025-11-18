@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CAVAS.UB_MR.Config;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -7,7 +8,11 @@ namespace CAVAS.UB_MR.DT
     public class Agent : MonoBehaviour
     {
         Transform baseLink;
+        Transform visRoot;
         Transform spectatorCameras;
+
+        List<GameObject> sensors;
+
         HUD hud;
         CinemachineCamera[] cinemachineCameras;
         int camIdx = 0;
@@ -27,14 +32,18 @@ namespace CAVAS.UB_MR.DT
         {
             this.gameObject.name = inAgent.name;
 
-            // Sensors
             baseLink = transform.Find("base_link");
+            // Sensors
+            sensors = new List<GameObject>();
             foreach (Sensor sensor in inAgent.sensors.Values)
             {
                 GameObject sensorGO = GameObject.Instantiate(new GameObject(), baseLink);
                 sensorGO.name = sensor.name;
                 sensorGO.transform.SetLocalPositionAndRotation(sensor.position, Quaternion.Euler(sensor.rotation));
+                sensors.Add(sensorGO);
             }
+            // Visuals
+            visRoot = GameObject.Instantiate(new GameObject(), baseLink).transform;
                 
             // Spectator Cameras
             spectatorCameras = transform.Find("spectator_cameras");
