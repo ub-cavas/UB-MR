@@ -44,11 +44,11 @@ namespace CAVAS.UB_MR
                 if (task.IsCompletedSuccessfully)
                 {
                     SetDatum_Response response = task.Result;
-                    Debug.Log("Datum set successfully: ");
+                    Debug.Log("Datum set successfully!");
                 }
                 else
                 {
-                    Debug.LogWarning("Failed to set datum: ");
+                    Debug.LogWarning("Failed to set datum!");
                 }
             });
         }
