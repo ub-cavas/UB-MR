@@ -1,5 +1,5 @@
+using System;
 using CAVAS.UB_MR.Config;
-using CAVAS.UB_MR.UI;
 using CAVAS.UI;
 using TMPro;
 using UnityEngine;
@@ -10,6 +10,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
     public class AgentCreatePanel : Panel
     {
         [SerializeField] TMP_InputField nameInputField;
+        [SerializeField] TMP_Dropdown modelDropdown;
         [SerializeField] Button saveButton;
         [Header("Panels")]
         [SerializeField] AgentSelectionPanel agentSelectionPanel;
@@ -24,7 +25,6 @@ namespace CAVAS.UB_MR.Modules.MainMenu
         {
             saveButton.onClick.RemoveAllListeners();
             base.UnloadPanel();
-            
         }
 
         void CreateAgent()
@@ -35,6 +35,12 @@ namespace CAVAS.UB_MR.Modules.MainMenu
             {
                 Config.Agent newAgent = new Config.Agent();
                 newAgent.name = name;
+                // Visual Model: TODO - Fix dropdown in Unity editor
+                string label = modelDropdown.options[modelDropdown.value].text;
+                if (Enum.TryParse(label, ignoreCase: true, out VisualModel visualModel))
+                    newAgent.model = visualModel;
+                else
+                    Debug.LogWarning($"'{label}' is not a valid Vehicle Model");
                 ConfigurationManager.SaveToJSON(newAgent);
             }
             UI_Manager.LoadPanel(agentSelectionPanel);

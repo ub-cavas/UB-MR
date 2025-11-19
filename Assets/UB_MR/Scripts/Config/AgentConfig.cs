@@ -21,10 +21,10 @@ namespace CAVAS.UB_MR.Config
     [JsonConverter(typeof(StringEnumConverter))] // Makes JSON readable ("LiDAR" instead of 0)
     public enum VisualModel
     {
-        LincolnMKZ,
-        JeepRenegade,
-        OlliBus,
-        TrafficLight,
+        Lincoln_MKZ,
+        Jeep_Renegade,
+        Olli_Bus,
+        Traffic_Light,
     }
 
     [System.Serializable]
@@ -32,7 +32,7 @@ namespace CAVAS.UB_MR.Config
     {
         public string name;
         public bool isDynamic = false;
-        public VisualModel model = VisualModel.LincolnMKZ;
+        public VisualModel model = VisualModel.Lincoln_MKZ;
         public Dictionary<string, Sensor> sensors = new Dictionary<string, Sensor>();
     }
 
