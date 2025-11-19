@@ -65,13 +65,18 @@ namespace CAVAS.UB_MR.DT
 
         protected virtual void Update()
         {
+            //TODO: change datastructure to TupleList
             // LiDAR Modification
-            foreach (KeyValuePair<string, LidarModifier> lidar in lidarModifiers)
+            /*if (lidarModifiers is not null)
             {
-                Transform lidarTransform = sensors[lidar.Key].transform;
-                if (lidar.Value.TryModify(lidarTransform))
-                    lidar.Value.PublishPCD();
-            }
+                foreach (KeyValuePair<string, LidarModifier> lidar in lidarModifiers)
+                {
+                    Transform lidarTransform = sensors[lidar.Key].transform;
+                    if (lidar.Value.TryModify(lidarTransform))
+                        lidar.Value.PublishPCD();
+                }
+            }*/
+            
         }
 
         public virtual void Setup(Config.Agent inAgent, Module inModule)
@@ -201,6 +206,7 @@ namespace CAVAS.UB_MR.DT
             {
                 string name = gameObject.name.Replace("(Clone)", "");
                 name = name.Replace(" Variant", "");
+                name = name.Replace(" ", "_");
                 // This is sort of cheating but ROS2_Bridge is not immediately deleting nodes so this avoids a collision (~99% of the time)
                 int randomSuffix = UnityEngine.Random.Range(0, 1000);
                 this.mNode = ROS2_Bridge.ROS_CORE.CreateNode(name + "_Agent_" + randomSuffix.ToString());

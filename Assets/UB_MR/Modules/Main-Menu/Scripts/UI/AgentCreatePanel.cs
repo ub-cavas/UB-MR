@@ -42,6 +42,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
                 else
                     Debug.LogWarning($"'{label}' is not a valid Vehicle Model");
                 ConfigurationManager.SaveToJSON(newAgent);
+                
             }
             UI_Manager.LoadPanel(agentSelectionPanel);
         }        

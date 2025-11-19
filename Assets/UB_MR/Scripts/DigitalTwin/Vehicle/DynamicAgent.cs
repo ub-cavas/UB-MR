@@ -1,5 +1,6 @@
 using ROS2;
 using CAVAS.UB_MR.ROS2;
+using System.Diagnostics;
 
 namespace CAVAS.UB_MR.DT.Vehicle
 {
@@ -13,6 +14,7 @@ namespace CAVAS.UB_MR.DT.Vehicle
         
         public override void Setup(Config.Agent inAgent, Module inModule)
         {
+            print("Spawning Dynamic Agent: " + inAgent.name);
             base.Setup(inAgent, inModule);
 
             // Odometry
