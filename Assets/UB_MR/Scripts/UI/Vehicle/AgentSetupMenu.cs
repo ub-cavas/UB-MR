@@ -104,7 +104,7 @@ namespace CAVAS.UB_MR.UI.Vehicle
             this.vehicleOverviewPanel.SetActive(false);
             // Enable sub-menu
             this.sensorPanel.SetActive(true);
-            Sensor sensor = new Sensor();
+            Config.Sensor sensor = new Config.Sensor();
             // New Sensor
             if (inSensorName is null)
             {

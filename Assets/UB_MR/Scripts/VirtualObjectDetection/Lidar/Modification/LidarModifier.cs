@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
 {
-    public class LidarModifier
+    public class LidarModifier : Sensor
     {
         ComputeShader mLiDARComputeShader;
         int mKernel;
@@ -347,7 +347,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
             return true;
         }
 
-        public void CleanUp()
+        public override void CleanUp()
         {
             this.mInput_GPU_Buffer?.Dispose();
             this.mInput_GPU_Buffer?.Release();

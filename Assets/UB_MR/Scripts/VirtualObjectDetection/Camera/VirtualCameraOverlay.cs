@@ -6,7 +6,7 @@ using std_msgs.msg;
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Camera
 {
-    public class VirtualCameraOverlay
+    public class VirtualCameraOverlay : Sensor
     {
         public static int IMAGE_WIDTH = 640;
         public static int IMAGE_HEIGHT = 480;
@@ -218,8 +218,9 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Camera
             return image;
         }
 
-        public void CleanUp()
+        public override void CleanUp()
         {
+            base.CleanUp();
             // Clean up resources
             if (imageRenderTexture != null)
                 imageRenderTexture.Release();

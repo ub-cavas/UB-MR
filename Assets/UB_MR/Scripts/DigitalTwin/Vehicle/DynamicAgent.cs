@@ -9,7 +9,6 @@ namespace CAVAS.UB_MR.DT.Vehicle
         string worldTransformationTopicName = "/world_transform";
         string virtualCameraImageTopicName = "/virtual_camera/image_raw";
         string virtualCameraDepthTopicName = "/virtual_camera/depth";
-        string lidarTopicName = "/sensing/lidar/top/aw_points";
         ISubscription<nav_msgs.msg.Odometry> odometrySubscriber;
         
         protected override void Update()
