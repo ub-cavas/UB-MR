@@ -312,6 +312,8 @@ MonoBehaviour:
   origin_latitude: 42.9899575863
   origin_longitude: -78.7980738989
   origin_altitude: 0
+  mSdfs:
+  - {fileID: 1196883501}
 --- !u!1 &226096398
 GameObject:
   m_ObjectHideFlags: 0
