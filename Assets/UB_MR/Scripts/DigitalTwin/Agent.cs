@@ -62,19 +62,43 @@ namespace CAVAS.UB_MR.DT
         float detectionRadius = 30.0f;
         VirtualBoundingBoxDetector mVirtualBoundingBoxDetector;
 
+        float timer = 0f;
+
+        protected virtual IEnumerator Start()
+        {
+            yield return new WaitUntil(() => ROS2_Bridge.ROS_CORE.Ok() && this.mNode is not null);
+            
+            foreach (Tuple<Config.Sensor, Sensor, Transform> sensor in sensors)
+            {
+                switch(sensor.Item1.type)
+                {
+                    case SensorType.Camera:
+                        StartCoroutine(PublishImage()); // TODO: cache a ref to the running courutine 
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         protected virtual void Update()
         {
+            timer += Time.deltaTime;
+            
             // LiDAR Modification
             foreach (Tuple<Config.Sensor, Sensor, Transform> sensor in sensors)
             {
-                if (sensor.Item1.type == SensorType.LiDAR)
+                switch(sensor.Item1.type)
                 {
-                    LidarModifier lidarModifier = (LidarModifier)sensor.Item2;
-                    if (lidarModifier.TryModify(sensor.Item3))
-                        lidarModifier.PublishPCD();
+                    case SensorType.LiDAR:
+                        LidarModifier lidarModifier = (LidarModifier)sensor.Item2;
+                        if (lidarModifier.TryModify(sensor.Item3))
+                            lidarModifier.PublishPCD();
+                        break;
+                    default:
+                        break;
                 }
             }
-            
         }
 
         public virtual void Setup(Config.Agent inAgent, Module inModule)
@@ -114,7 +138,7 @@ namespace CAVAS.UB_MR.DT
                     case SensorType.Camera:
                         //TODO: Implement Camera Modification
                         //TODO: Store Camera Resolution in Sensor Data
-                        sensor = new VirtualCameraOverlay(sensor_config.topic, sensor_config.topic + "_depth", ROSNode(), FindFirstObjectByType<Camera>(), imageWidth, imageHeight);
+                        sensor = new VirtualCameraOverlay(sensor_config.topic + "/image_raw", sensor_config.topic + "/depth", ROSNode(), FindFirstObjectByType<Camera>(), imageWidth, imageHeight);
                         break;
                         
                     default:
@@ -228,9 +252,25 @@ namespace CAVAS.UB_MR.DT
         //TODO: Call this somewhere
         IEnumerator PublishImage()
         {
-            //this.mVirtualCameraOverlay.UpdateCameraResolution(imageWidth, imageHeight);
-            //this.mVirtualCameraOverlay.CaptureAndPublishImage();
-            yield return new WaitForSeconds(1.0f / gt_pub_rate);
+            while (true)
+            {
+                yield return new WaitForSeconds(1.0f / gt_pub_rate);
+                foreach (var sensor in sensors)
+                {
+                    switch (sensor.Item1.type)
+                    {
+                        case SensorType.Camera:
+                            VirtualCameraOverlay cameraOverlay = (VirtualCameraOverlay)sensor.Item2;
+                            cameraOverlay.UpdateCameraResolution(imageWidth, imageHeight);
+                            cameraOverlay.CaptureAndPublishImage(); 
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
+            }
+            
         }
 
         protected ROS2Node ROSNode()
