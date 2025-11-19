@@ -11,9 +11,9 @@ namespace CAVAS.UB_MR
 {
     public class Module : MonoBehaviour
     {
-        [SerializeField] double origin_latitude = 42.9899575863; 
-        [SerializeField] double origin_longitude = -78.7980738989; 
-        [SerializeField] double origin_altitude = 0;
+        [SerializeField] double origin_latitude = 42.9926175773; 
+        [SerializeField] double origin_longitude = -78.7925575781; 
+        [SerializeField] double origin_altitude = 152.5;
         [Space]
         [SerializeField] List<SDFTexture> mSdfs;
         string agentPath = "Prefabs/Agent";
