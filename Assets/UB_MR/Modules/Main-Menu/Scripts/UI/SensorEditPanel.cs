@@ -28,9 +28,9 @@ namespace CAVAS.UB_MR.Modules.MainMenu
         [SerializeField] AgentEditMenu agentEditMenu;
 
         Config.Agent agent;
-        Sensor sensor;
+        Config.Sensor sensor;
 
-        public void SetSensor(Sensor inSensor, Config.Agent inAgent)
+        public void SetSensor(Config.Sensor inSensor, Config.Agent inAgent)
         {
             agent = inAgent;
             sensor = inSensor;
@@ -43,7 +43,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
             saveButton.onClick.AddListener(SaveSensor);
             if (sensor is null)
             {
-                sensor = new Sensor();
+                sensor = new Config.Sensor();
                 sensor.name = "New Sensor";
                 sensorName.text = String.Empty;
                 sensorTopic.text = String.Empty;

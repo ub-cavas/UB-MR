@@ -8,7 +8,7 @@ using System.Collections;
 using CAVAS.UB_MR.DT.VirtualObjectDetection;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Camera;
-using UnityEngine.Assertions.Must;
+using System;
 
 namespace CAVAS.UB_MR.DT
 {
@@ -17,7 +17,7 @@ namespace CAVAS.UB_MR.DT
         Transform baseLink;
         Transform visRoot;
         Transform spectatorCameras;
-        Dictionary<string, GameObject> sensors;
+        List<Tuple<Config.Sensor, Sensor, Transform>> sensors = new List<Tuple<Config.Sensor, Sensor, Transform>>();
         HUD hud;
         ROS2Node mNode;
         Vector3 mWorldPosition;
@@ -26,7 +26,6 @@ namespace CAVAS.UB_MR.DT
         // TODO: Store QOS settings in the sensor
         #region LiDAR
         ComputeShader lidarModifierComputeShader;
-        Dictionary<string, LidarModifier> lidarModifiers;
 
         // General Parameters
         int raysPerScan = 60_000;
@@ -65,17 +64,16 @@ namespace CAVAS.UB_MR.DT
 
         protected virtual void Update()
         {
-            //TODO: change datastructure to TupleList
             // LiDAR Modification
-            /*if (lidarModifiers is not null)
+            foreach (Tuple<Config.Sensor, Sensor, Transform> sensor in sensors)
             {
-                foreach (KeyValuePair<string, LidarModifier> lidar in lidarModifiers)
+                if (sensor.Item1.type == SensorType.LiDAR)
                 {
-                    Transform lidarTransform = sensors[lidar.Key].transform;
-                    if (lidar.Value.TryModify(lidarTransform))
-                        lidar.Value.PublishPCD();
+                    LidarModifier lidarModifier = (LidarModifier)sensor.Item2;
+                    if (lidarModifier.TryModify(sensor.Item3))
+                        lidarModifier.PublishPCD();
                 }
-            }*/
+            }
             
         }
 
@@ -92,17 +90,14 @@ namespace CAVAS.UB_MR.DT
             ConnectToROS();
 
             // Sensors
-            sensors = new Dictionary<string, GameObject>();
-            lidarModifiers = new Dictionary<string, LidarModifier>();
-            cameraModifiers = new Dictionary<string, VirtualCameraOverlay>();
-
-            foreach (Sensor sensor in inAgent.sensors.Values)
+            foreach (Config.Sensor sensor_config in inAgent.sensors.Values)
             {
-                GameObject sensorGO = new GameObject(sensor.name);
+                GameObject sensorGO = new GameObject(sensor_config.name);
                 sensorGO.transform.SetParent(baseLink);
-                sensorGO.transform.SetLocalPositionAndRotation(sensor.position, Quaternion.Euler(sensor.rotation));
-                sensors[sensor.name] = sensorGO;
-                switch (sensor.type)
+                sensorGO.transform.SetLocalPositionAndRotation(sensor_config.position, Quaternion.Euler(sensor_config.rotation));
+                Sensor sensor;
+                
+                switch (sensor_config.type)
                 {
                     case SensorType.LiDAR:
                         // TODO: Store QOS profile in Sensor
@@ -111,21 +106,22 @@ namespace CAVAS.UB_MR.DT
                         qosProfile.SetHistory(historyPolicy, historyDepth);
                         qosProfile.SetDurability(durabilityPolicy);
 
-                        LidarModifier lidarModifier = new LidarModifier(this, sensor.topic, raysPerScan, lidarModifierComputeShader, ROSNode(), qosProfile, inModule.GetFirstSDF());
+                        sensor = new LidarModifier(this, sensor_config.topic, raysPerScan, lidarModifierComputeShader, ROSNode(), qosProfile, inModule.GetFirstSDF());
+                        LidarModifier lidarModifier = (LidarModifier)sensor;
                         lidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations); // Does this need to be called?
-                        lidarModifiers[sensor.name] = lidarModifier;  
                         break;
                     
                     case SensorType.Camera:
                         //TODO: Implement Camera Modification
                         //TODO: Store Camera Resolution in Sensor Data
-                        VirtualCameraOverlay cameraModifier = new VirtualCameraOverlay(sensor.topic, sensor.topic + "_depth", ROSNode(), FindFirstObjectByType<Camera>(), imageWidth, imageHeight);
-                        cameraModifiers[sensor.name] = cameraModifier;
+                        sensor = new VirtualCameraOverlay(sensor_config.topic, sensor_config.topic + "_depth", ROSNode(), FindFirstObjectByType<Camera>(), imageWidth, imageHeight);
                         break;
                         
                     default:
+                        sensor = null;
                         break;
                 }
+                sensors.Add(new Tuple<Config.Sensor, Sensor, Transform>(sensor_config, sensor, sensorGO.transform));
             }
             // Visuals
             visRoot = new GameObject("visuals").transform;
@@ -151,13 +147,10 @@ namespace CAVAS.UB_MR.DT
         public virtual void Teardown()
         {
             // Sensors
-            foreach (string name in sensors.Keys)
+            foreach (Tuple<Config.Sensor, Sensor, Transform> sensor in sensors)
             {
-                if (lidarModifiers.ContainsKey(name))
-                    lidarModifiers[name].CleanUp();
-                if (cameraModifiers.ContainsKey(name))
-                    cameraModifiers[name].CleanUp();
-                Destroy(sensors[name]);
+                sensor.Item2.CleanUp();
+                Destroy(sensor.Item3.gameObject);
             }
             sensors.Clear();
 
@@ -219,11 +212,6 @@ namespace CAVAS.UB_MR.DT
         {
             this.mWorldPosition = Ros2Utility.Ros2ToUnityPosition(msg.Pose.Pose.Position);
             this.mWorldRotation = Ros2Utility.Ros2ToUnityRotation(msg.Pose.Pose.Orientation);
-        }
-
-        protected GameObject GetSensor(string inName)
-        {
-            return sensors[inName];
         }
 
         //TODO: Call this somewhere
