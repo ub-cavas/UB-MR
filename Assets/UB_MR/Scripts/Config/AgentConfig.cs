@@ -31,7 +31,7 @@ namespace CAVAS.UB_MR.Config
     public class Agent
     {
         public string name;
-        public bool isDynamic = false;
+        public bool isDynamic = true;
         public VisualModel model = VisualModel.Lincoln_MKZ;
         public Dictionary<string, Sensor> sensors = new Dictionary<string, Sensor>();
     }
