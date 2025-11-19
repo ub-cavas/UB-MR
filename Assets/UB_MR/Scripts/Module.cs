@@ -5,6 +5,7 @@ using ROS2;
 using robot_localization.srv;
 using CAVAS.UB_MR.ROS2;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace CAVAS.UB_MR
 {
@@ -13,6 +14,8 @@ namespace CAVAS.UB_MR
         [SerializeField] double origin_latitude = 42.9899575863; 
         [SerializeField] double origin_longitude = -78.7980738989; 
         [SerializeField] double origin_altitude = 0;
+        [Space]
+        [SerializeField] List<SDFTexture> mSdfs;
         string agentPath = "Prefabs/Agent";
         ROS2Node mNode;
 
@@ -62,8 +65,8 @@ namespace CAVAS.UB_MR
         {
             DT.Agent agent;
             GameObject newAgent = Instantiate(Resources.Load<GameObject>(agentPath), new Vector3(0,0,0), Quaternion.identity);
-            if (inAgent.type == AgentType.AutonomousVehicle)
-                agent = newAgent.AddComponent<AutonomousVehicle>();
+            if (inAgent.isDynamic)
+                agent = newAgent.AddComponent<DynamicAgent>();
             else
                 agent = newAgent.AddComponent<DT.Agent>();
 

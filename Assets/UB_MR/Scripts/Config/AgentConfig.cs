@@ -19,14 +19,6 @@ namespace CAVAS.UB_MR.Config
 
     [System.Serializable]
     [JsonConverter(typeof(StringEnumConverter))] // Makes JSON readable ("LiDAR" instead of 0)
-    public enum AgentType
-    {
-        AutonomousVehicle,
-        RoadSideUnit
-    }
-
-    [System.Serializable]
-    [JsonConverter(typeof(StringEnumConverter))] // Makes JSON readable ("LiDAR" instead of 0)
     public enum VisualModel
     {
         LincolnMKZ,
@@ -39,7 +31,7 @@ namespace CAVAS.UB_MR.Config
     public class Agent
     {
         public string name;
-        public AgentType type = AgentType.AutonomousVehicle;
+        public bool isDynamic = false;
         public VisualModel model = VisualModel.LincolnMKZ;
         public Dictionary<string, Sensor> sensors = new Dictionary<string, Sensor>();
     }

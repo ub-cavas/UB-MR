@@ -2,8 +2,7 @@ using UnityEngine;
 
 namespace CAVAS.UB_MR.DT.Vehicle
 {
-    [RequireComponent(typeof(Rigidbody))]
-    public class AV_Reflect : AutonomousVehicle
+    public class AV_Reflect : DynamicAgent
     {
         protected override void Update()
         {
@@ -13,8 +12,8 @@ namespace CAVAS.UB_MR.DT.Vehicle
 
         void SnapUpdate()
         {
-            this.transform.position = this.mWorldPosition;
-            this.transform.rotation = this.mWorldRotation;
+            this.transform.position = WorldPosition();
+            this.transform.rotation = WorldRotation();
         }
     }
 }
