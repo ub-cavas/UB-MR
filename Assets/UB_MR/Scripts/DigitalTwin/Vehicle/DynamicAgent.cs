@@ -12,6 +12,12 @@ namespace CAVAS.UB_MR.DT.Vehicle
         string lidarTopicName = "/sensing/lidar/top/aw_points";
         ISubscription<nav_msgs.msg.Odometry> odometrySubscriber;
         
+        protected override void Update()
+        {
+            base.Update();
+            SnapUpdate();
+        }
+
         public override void Setup(Config.Agent inAgent, Module inModule)
         {
             print("Spawning Dynamic Agent: " + inAgent.name);
@@ -19,7 +25,10 @@ namespace CAVAS.UB_MR.DT.Vehicle
 
             // Odometry
             if (ROS2_Bridge.ROS_CORE.Ok())
+            {
                 this.odometrySubscriber = ROSNode().CreateSubscription<nav_msgs.msg.Odometry>(worldTransformationTopicName, OdometryUpdate);
+                print("Subscribed to odometry");
+            }
         }
 
         public override void Teardown()
@@ -32,6 +41,12 @@ namespace CAVAS.UB_MR.DT.Vehicle
             }
 
             base.Teardown();
+        }
+
+        void SnapUpdate()
+        {
+            this.transform.position = WorldPosition();
+            this.transform.rotation = WorldRotation();
         }
     }
 
