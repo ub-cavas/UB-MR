@@ -56,6 +56,11 @@ namespace CAVAS.UB_MR
             });
         }
 
+        public SDFTexture GetFirstSDF()
+        {
+            return this.mSdfs[0];
+        }
+
         DT.Agent SpawnActiveAgent()
         {
             return SpawnAgent(ConfigurationManager.GetConfiguration().Item1);
@@ -70,7 +75,7 @@ namespace CAVAS.UB_MR
             else
                 agent = newAgent.AddComponent<DT.Agent>();
 
-            agent.Setup(inAgent);
+            agent.Setup(inAgent, this);
             return agent;
         }
     }

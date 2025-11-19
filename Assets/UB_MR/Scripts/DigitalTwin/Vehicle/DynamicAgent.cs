@@ -11,9 +11,9 @@ namespace CAVAS.UB_MR.DT.Vehicle
         string lidarTopicName = "/sensing/lidar/top/aw_points";
         ISubscription<nav_msgs.msg.Odometry> odometrySubscriber;
         
-        public override void Setup(Config.Agent inAgent)
+        public override void Setup(Config.Agent inAgent, Module inModule)
         {
-            base.Setup(inAgent);
+            base.Setup(inAgent, inModule);
 
             // Odometry
             if (ROS2_Bridge.ROS_CORE.Ok())

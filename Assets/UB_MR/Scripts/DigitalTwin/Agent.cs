@@ -8,6 +8,7 @@ using System.Collections;
 using CAVAS.UB_MR.DT.VirtualObjectDetection;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar;
 using CAVAS.UB_MR.DT.VirtualObjectDetection.Camera;
+using UnityEngine.Assertions.Must;
 
 namespace CAVAS.UB_MR.DT
 {
@@ -73,7 +74,7 @@ namespace CAVAS.UB_MR.DT
             }
         }
 
-        public virtual void Setup(Config.Agent inAgent)
+        public virtual void Setup(Config.Agent inAgent, Module inModule)
         {
             // Name
             this.gameObject.name = inAgent.name;
@@ -82,6 +83,9 @@ namespace CAVAS.UB_MR.DT
 
             baseLink = transform.Find("base_link");
 
+            // ROS2
+            ConnectToROS();
+
             // Sensors
             sensors = new Dictionary<string, GameObject>();
             lidarModifiers = new Dictionary<string, LidarModifier>();
@@ -89,8 +93,8 @@ namespace CAVAS.UB_MR.DT
 
             foreach (Sensor sensor in inAgent.sensors.Values)
             {
-                GameObject sensorGO = GameObject.Instantiate(new GameObject(), baseLink);
-                sensorGO.name = sensor.name;
+                GameObject sensorGO = new GameObject(sensor.name);
+                sensorGO.transform.SetParent(baseLink);
                 sensorGO.transform.SetLocalPositionAndRotation(sensor.position, Quaternion.Euler(sensor.rotation));
                 sensors[sensor.name] = sensorGO;
                 switch (sensor.type)
@@ -102,10 +106,9 @@ namespace CAVAS.UB_MR.DT
                         qosProfile.SetHistory(historyPolicy, historyDepth);
                         qosProfile.SetDurability(durabilityPolicy);
 
-                        //LidarModifier lidarModifier = new LidarModifier(this, sensor.topic, raysPerScan, lidarModifierComputeShader, ROSNode(), qosProfile, this.mSdfs[0]);
-                        LidarModifier lidarModifier = new LidarModifier(this, sensor.topic, raysPerScan, lidarModifierComputeShader, ROSNode(), qosProfile, null);
+                        LidarModifier lidarModifier = new LidarModifier(this, sensor.topic, raysPerScan, lidarModifierComputeShader, ROSNode(), qosProfile, inModule.GetFirstSDF());
                         lidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations); // Does this need to be called?
-                        lidarModifiers[sensor.name] = lidarModifier;
+                        lidarModifiers[sensor.name] = lidarModifier;  
                         break;
                     
                     case SensorType.Camera:
@@ -120,8 +123,10 @@ namespace CAVAS.UB_MR.DT
                 }
             }
             // Visuals
-            visRoot = GameObject.Instantiate(new GameObject(), baseLink).transform;
-            visRoot.name = "visuals";
+            visRoot = new GameObject("visuals").transform;
+            visRoot.SetParent(baseLink);
+            SpawnVisuals(visRoot, inAgent);
+
                 
             // Spectator Cameras
             spectatorCameras = transform.Find("spectator_cameras");
@@ -135,8 +140,7 @@ namespace CAVAS.UB_MR.DT
             hud.OnNextSpectatorCamera += NextSpectatorCamera;
             hud.OnPrevSpectatorCamera += PreviousSpectatorCamera;
 
-            // ROS2
-            ConnectToROS();
+            
         }
 
         public virtual void Teardown()
@@ -175,6 +179,20 @@ namespace CAVAS.UB_MR.DT
                 ROS2_Bridge.ROS_CORE.RemoveNode(ROSNode());
                 this.mNode = null;
             }
+        }
+
+
+        void SpawnVisuals(Transform inParent, Config.Agent inAgent)
+        {
+            string prefabPath;
+            switch (inAgent.model)
+            {
+                default:
+                    prefabPath = "Prefabs/Vehicles/Lincoln_MKZ_2020";
+                    break;
+            }
+            GameObject prefab = Resources.Load<GameObject>(prefabPath);
+            GameObject.Instantiate(prefab, inParent);
         }
 
         void ConnectToROS()
@@ -244,7 +262,6 @@ namespace CAVAS.UB_MR.DT
 
         protected void EnableSpectatorCamera(CinemachineCamera inCamera, bool inEnable)
         {
-            DisableAllSpectatorCameras();
             inCamera.gameObject.SetActive(inEnable);
         }
 
