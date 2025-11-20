@@ -76,7 +76,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Camera
             Image depthImage = null;
             if (imagePublisher != null && targetCamera != null)
             {
-                // Capture Camera Image
+                // Capture RGB Image
                 image = CaptureImage();
                 image.Header.Stamp = time;
                 image.Header.Frame_id = frameId;
