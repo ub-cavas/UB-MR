@@ -43,6 +43,7 @@ namespace CAVAS.UB_MR.DT
         #endregion
 
         #region Camera
+        float camera_pub_rate = 24.0f;
         Dictionary<string, VirtualCameraOverlay> cameraModifiers;
         int imageWidth = 640;
         int imageHeight = 480;
@@ -52,15 +53,13 @@ namespace CAVAS.UB_MR.DT
         CinemachineCamera[] cinemachineCameras;
         int camIdx = 0;
         #endregion
-
         
-
-
-        [Header("Ground Truth Bounding Boxes")]
-        float gt_pub_rate = 1.0f; // 1 FPS
+        #region Ground Truth
+        float gt_pub_rate = 30.0f;
         string boundingBoxTopicName = "/virtual_obstacles"; // Topic name for publishing virtual object bounding boxes
         float detectionRadius = 30.0f;
         VirtualBoundingBoxDetector mVirtualBoundingBoxDetector;
+        #endregion
 
         float timer = 0f;
 
@@ -79,6 +78,8 @@ namespace CAVAS.UB_MR.DT
                         break;
                 }
             }
+            // Publish GT bounding boxes
+            // StartCoroutine(PublishGroundTruth());
         }
 
         protected virtual void Update()
@@ -203,7 +204,6 @@ namespace CAVAS.UB_MR.DT
             }
         }
 
-
         void SpawnVisuals(Transform inParent, Config.Agent inAgent)
         {
             string prefabPath;
@@ -243,18 +243,17 @@ namespace CAVAS.UB_MR.DT
         {
             while (true)
             {
-                yield return new WaitForEndOfFrame();
-                this.mVirtualBoundingBoxDetector.PublishNearbyVirtualObjects(detectionRadius);
                 yield return new WaitForSeconds(1.0f / gt_pub_rate);
+                yield return new WaitForEndOfFrame();
+                this.mVirtualBoundingBoxDetector.PublishNearbyVirtualObjects(baseLink, detectionRadius);
             }
         }
 
-        //TODO: Call this somewhere
         IEnumerator PublishImage()
         {
             while (true)
             {
-                yield return new WaitForSeconds(1.0f / gt_pub_rate);
+                yield return new WaitForSeconds(1.0f / camera_pub_rate);
                 foreach (var sensor in sensors)
                 {
                     switch (sensor.Item1.type)
@@ -268,7 +267,6 @@ namespace CAVAS.UB_MR.DT
                             break;
                     }
                 }
-                
             }
             
         }

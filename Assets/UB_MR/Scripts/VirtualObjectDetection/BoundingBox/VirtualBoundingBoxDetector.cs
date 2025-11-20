@@ -53,20 +53,19 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             sVirtualObjects.Clear();
         }
 
-        public List<VirtualObject> GetNearbyObstacles(float radius)
+        public List<VirtualObject> GetNearbyObstacles(Transform baseLink, float radius)
         {
             List<VirtualObject> nearbyObjects = new List<VirtualObject>();
             foreach (VirtualObject vObj in sVirtualObjects)
             {
-                if (Vector3.Distance(vObj.transform.position, this.mTransform.position) <= radius)
+                if (Vector3.Distance(vObj.transform.position, baseLink.position) <= radius)
                     nearbyObjects.Add(vObj);
             }
             return nearbyObjects;
         }
 
-        public void PublishNearbyVirtualObjects(float detectionRadius)
+        public void PublishNearbyVirtualObjects(Transform baseLink, float detectionRadius)
         {
-            // TODO: Bounding Boxes position and orientation should be relative to the Ego-Vehicle, not the world
             vision_msgs.msg.BoundingBox3DArray msg = new vision_msgs.msg.BoundingBox3DArray();
             // Header
             msg.Header = new std_msgs.msg.Header();
@@ -75,23 +74,28 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
             msg.Header.Stamp = time;
 
-            List<VirtualObject> virtualObjects = GetNearbyObstacles(detectionRadius);
+            List<VirtualObject> virtualObjects = GetNearbyObstacles(baseLink, detectionRadius);
             var boxes = new BoundingBox3D[virtualObjects.Count];
             for (int i = 0; i < boxes.Length; i++)
             {
                 VirtualObject virtualObject = virtualObjects[i];
                 Bounds bounds = virtualObject.GetBoundingBox();
+                Vector3 worldCenter = bounds.center;
+                Vector3 localCenter = baseLink.InverseTransformPoint(worldCenter);
+                Quaternion worldRot = virtualObject.transform.rotation;
+                Quaternion localRot = Quaternion.Inverse(baseLink.rotation) * worldRot;
+
                 BoundingBox3D bbox = new BoundingBox3D();
                 bbox.Center = new geometry_msgs.msg.Pose();
                 // Position
                 bbox.Center.Position = new geometry_msgs.msg.Point();
-                Vector3 ros2Center = Ros2Utility.UnityToRos2Position(new Vector3(bounds.center.x, bounds.center.y, bounds.center.z));
+                Vector3 ros2Center = Ros2Utility.UnityToRos2Position(localCenter);
                 bbox.Center.Position.X = ros2Center.x;
                 bbox.Center.Position.Y = ros2Center.y;
                 bbox.Center.Position.Z = ros2Center.z;
                 // Orientation
                 bbox.Center.Orientation = new geometry_msgs.msg.Quaternion();
-                Quaternion ros2Rotation = Ros2Utility.UnityToRosRotation(virtualObject.transform.rotation);
+                Quaternion ros2Rotation = Ros2Utility.UnityToRosRotation(localRot);
                 bbox.Center.Orientation.X = ros2Rotation.x;
                 bbox.Center.Orientation.Y = ros2Rotation.y;
                 bbox.Center.Orientation.Z = ros2Rotation.z;
