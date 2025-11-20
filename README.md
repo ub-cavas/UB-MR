@@ -74,7 +74,7 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
    Launch localization nodes in one terminal:
 
    ```bash
-   ros2 launch mr_pkg dual_ekf.launch.py
+   ros2 launch mr_pkg localization.launch.py
    ```
 
 2. **Run the Mixed Reality Simulator**
