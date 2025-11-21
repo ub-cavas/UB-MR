@@ -188,7 +188,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Camera
                 return null;
 
             RenderTexture currentRT = RenderTexture.active;
-            RenderTexture.active = DepthCaptureRenderFeature.DepthCapturePass.GetDepthRenderTexture(); // This probably needs to get fixed
+            //RenderTexture.active = DepthCaptureRenderFeature.DepthPass.GetDepthRenderTexture(); // This probably needs to get fixed
             depthTexture2D.ReadPixels(new Rect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT), 0, 0);
             depthTexture2D.Apply();
             RenderTexture.active = currentRT;
