@@ -8,6 +8,7 @@ public class DepthPass : ScriptableRenderPass
     RenderTargetIdentifier source;
     RTHandle tempTexture;
     RenderTexture depthRenderTexture;
+    
 
     public DepthPass()
     {
