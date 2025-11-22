@@ -44,7 +44,7 @@ namespace CAVAS.UB_MR.DT
 
         #region Camera
         float camera_pub_rate = 24.0f;
-        Dictionary<string, VirtualCameraOverlay> cameraModifiers;
+        Dictionary<string, CameraModifier> cameraModifiers;
         int imageWidth = 640;
         int imageHeight = 480;
         #endregion
@@ -72,7 +72,7 @@ namespace CAVAS.UB_MR.DT
                 switch(sensor.Item1.type)
                 {
                     case SensorType.Camera:
-                        StartCoroutine(PublishImage()); // TODO: cache a ref to the running courutine 
+                        StartCoroutine(PublishCameraImages()); // TODO: cache a ref to the running courutine 
                         break;
                     default:
                         break;
@@ -94,7 +94,7 @@ namespace CAVAS.UB_MR.DT
                     case SensorType.LiDAR:
                         LidarModifier lidarModifier = (LidarModifier)sensor.Item2;
                         if (lidarModifier.TryModify(sensor.Item3))
-                            lidarModifier.PublishPCD();
+                            lidarModifier.Publish();
                         break;
                     default:
                         break;
@@ -138,9 +138,7 @@ namespace CAVAS.UB_MR.DT
                     
                     case SensorType.Camera:
                         Camera cam = sensorGO.AddComponent<Camera>();
-                        DepthCamera depthCam = sensorGO.AddComponent<DepthCamera>();
-                        //TODO: Store Camera Resolution in Sensor Data
-                        sensor = new VirtualCameraOverlay(sensor_config.topic + "/image_raw", sensor_config.topic + "/depth", ROSNode(), FindFirstObjectByType<Camera>(), imageWidth, imageHeight);
+                        sensor = new CameraModifier(this, sensor_config.topic, cam);
                         break;
                         
                     default:
@@ -166,8 +164,6 @@ namespace CAVAS.UB_MR.DT
                 hud = new HUD();
             hud.OnNextSpectatorCamera += NextSpectatorCamera;
             hud.OnPrevSpectatorCamera += PreviousSpectatorCamera;
-
-            
         }
 
         public virtual void Teardown()
@@ -250,7 +246,7 @@ namespace CAVAS.UB_MR.DT
             }
         }
 
-        IEnumerator PublishImage()
+        IEnumerator PublishCameraImages()
         {
             while (true)
             {
@@ -260,9 +256,8 @@ namespace CAVAS.UB_MR.DT
                     switch (sensor.Item1.type)
                     {
                         case SensorType.Camera:
-                            VirtualCameraOverlay cameraOverlay = (VirtualCameraOverlay)sensor.Item2;
-                            cameraOverlay.UpdateCameraResolution(imageWidth, imageHeight);
-                            cameraOverlay.CaptureAndPublishImage(); 
+                            CameraModifier cameraModifier = (CameraModifier)sensor.Item2;
+                            cameraModifier.Publish(); 
                             break;
                         default:
                             break;
@@ -272,7 +267,7 @@ namespace CAVAS.UB_MR.DT
             
         }
 
-        protected ROS2Node ROSNode()
+        public ROS2Node ROSNode()
         {
             return this.mNode;
         }

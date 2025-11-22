@@ -1,18 +1,18 @@
 using System.Collections;
 using UnityEngine;
 
-namespace CAVAS.UB_MR.DT.Sensors
+namespace CAVAS.UB_MR.DT.Sensors.Camera
 {
-    public class DepthCamera : MonoBehaviour
+    public class DepthCamera
     {
         UnityEngine.Camera renderCamera;
         Shader depthShader;
         Material depthMaterial;
         RenderTexture depthRT;
 
-        void Start()
+        public DepthCamera(UnityEngine.Camera inCamera)
         {
-            renderCamera = GetComponent<UnityEngine.Camera>();
+            renderCamera = inCamera;
             renderCamera.depthTextureMode |= DepthTextureMode.Depth;
 
             depthRT = new RenderTexture(renderCamera.pixelWidth, renderCamera.pixelHeight, 24, RenderTextureFormat.RFloat);
@@ -25,7 +25,7 @@ namespace CAVAS.UB_MR.DT.Sensors
             DepthCaptureRenderFeature.Register(renderCamera, depthRT, depthMaterial);
         }
 
-        void OnDestroy()
+        public void CleanUp()
         {
             DepthCaptureRenderFeature.Unregister(renderCamera);
 
@@ -33,10 +33,10 @@ namespace CAVAS.UB_MR.DT.Sensors
                 depthRT.Release();
 
             if (depthMaterial != null)
-                Destroy(depthMaterial);
+                GameObject.Destroy(depthMaterial);
         }
 
-        public float[,] ReadDepthNow()
+        float[,] ReadDepthNow()
         {
             // Make the depthRT active so we can read from it
             RenderTexture prev = RenderTexture.active;
@@ -58,16 +58,8 @@ namespace CAVAS.UB_MR.DT.Sensors
             }
 
             RenderTexture.active = prev;
-            Destroy(tex);
+            GameObject.Destroy(tex);
             return depthMeters;
-        }
-
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                StartCoroutine(CaptureDepthAtEndOfFrame());
-            }
         }
 
         IEnumerator CaptureDepthAtEndOfFrame()

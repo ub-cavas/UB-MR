@@ -38,7 +38,7 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         SDFTexture mSDF;
         #endregion
 
-        public LidarModifier(MonoBehaviour inOwner, string inTopicName, int inRaysPerScan, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
+        public LidarModifier(Agent inOwner, string inTopicName, int inRaysPerScan, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
         {
             // -- Cache the provided compute shader --
             this.mLiDARComputeShader = inComputeShader;
@@ -89,7 +89,7 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
             Debug.Log("Subscribed to: " + inTopicName);
         }
         
-        public void PublishPCD()
+        public override void Publish()
         {
             PointCloud2 msg = DequeuePCD(this.mOutput_PCD_Queue);
             if (msg is not null)
