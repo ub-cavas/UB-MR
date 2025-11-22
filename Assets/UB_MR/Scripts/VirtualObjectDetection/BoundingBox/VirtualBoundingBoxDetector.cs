@@ -4,7 +4,7 @@ using vision_msgs.msg;
 using UnityEngine;
 using CAVAS.UB_MR.ROS2;
 
-namespace CAVAS.UB_MR.DT.VirtualObjectDetection
+namespace CAVAS.UB_MR.DT.Sensors
 {
     public class VirtualBoundingBoxDetector
     {

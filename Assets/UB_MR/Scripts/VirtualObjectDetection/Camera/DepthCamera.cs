@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace CAVAS.UB_MR.DT.VirtualObjectDetection
+namespace CAVAS.UB_MR.DT.Sensors
 {
     public class DepthCamera : MonoBehaviour
     {

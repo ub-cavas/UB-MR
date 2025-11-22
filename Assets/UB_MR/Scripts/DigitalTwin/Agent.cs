@@ -5,9 +5,9 @@ using UnityEngine;
 using ROS2;
 using CAVAS.UB_MR.ROS2;
 using System.Collections;
-using CAVAS.UB_MR.DT.VirtualObjectDetection;
-using CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar;
-using CAVAS.UB_MR.DT.VirtualObjectDetection.Camera;
+using CAVAS.UB_MR.DT.Sensors;
+using CAVAS.UB_MR.DT.Sensors.Lidar;
+using CAVAS.UB_MR.DT.Sensors.Camera;
 using System;
 
 namespace CAVAS.UB_MR.DT

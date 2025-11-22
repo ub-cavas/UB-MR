@@ -6,7 +6,7 @@ using CAVAS.UB_MR.ROS2;
 using System.Collections.Concurrent;
 
 
-namespace CAVAS.UB_MR.DT.VirtualObjectDetection.Lidar
+namespace CAVAS.UB_MR.DT.Sensors.Lidar
 {
     public class LidarModifier : Sensor
     {

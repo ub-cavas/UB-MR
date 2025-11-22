@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CAVAS.UB_MR.DT.VirtualObjectDetection
+namespace CAVAS.UB_MR.DT.Sensors
 {
     public class VirtualObject : MonoBehaviour
     {
