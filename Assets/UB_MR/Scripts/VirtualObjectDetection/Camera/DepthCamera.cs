@@ -1,46 +1,33 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace CAVAS.UB_MR.DT.VirtualObjectDetection
 {
     public class DepthCamera : MonoBehaviour
     {
-        [SerializeField] UnityEngine.Camera renderCamera;
-        public Shader depthShader;
+        UnityEngine.Camera renderCamera;
+        Shader depthShader;
         Material depthMaterial;
         RenderTexture depthRT;
-        CommandBuffer commandBuffer;
 
         void Start()
         {
-            SetupDepthCamera(renderCamera);
-        }
-
-        //TODO Call this when spawning this Component.
-        public void SetupDepthCamera(UnityEngine.Camera inCamera)
-        {
-            //renderCamera = inCamera;
+            renderCamera = GetComponent<UnityEngine.Camera>();
             renderCamera.depthTextureMode |= DepthTextureMode.Depth;
 
             depthRT = new RenderTexture(renderCamera.pixelWidth, renderCamera.pixelHeight, 24, RenderTextureFormat.RFloat);
             depthRT.name = $"{renderCamera.name}_DepthRT";
             depthRT.Create();
 
-            //depthShader = Resources.Load<Shader>("Scripts/DepthCapture");
+            depthShader = Resources.Load<Shader>("Scripts/DepthCapture");
             depthMaterial = new Material(depthShader);
 
-            commandBuffer = new CommandBuffer();
-            commandBuffer.name = commandBuffer.name + " Depth Capture Pass";
-            commandBuffer.Blit(null, depthRT, depthMaterial);
-
-            renderCamera.AddCommandBuffer(CameraEvent.AfterForwardOpaque, commandBuffer);
+            DepthCaptureRenderFeature.Register(renderCamera, depthRT, depthMaterial);
         }
 
         void OnDestroy()
         {
-            if (commandBuffer != null && renderCamera != null)
-                renderCamera.RemoveCommandBuffer(CameraEvent.AfterForwardOpaque, commandBuffer);
+            DepthCaptureRenderFeature.Unregister(renderCamera);
 
             if (depthRT != null)
                 depthRT.Release();
@@ -67,9 +54,7 @@ namespace CAVAS.UB_MR.DT.VirtualObjectDetection
             {
                 int rowOffset = y * renderCamera.pixelWidth;
                 for (int x = 0; x < renderCamera.pixelWidth; x++)
-                {
                     depthMeters[y, x] = raw[rowOffset + x];
-                }
             }
 
             RenderTexture.active = prev;
