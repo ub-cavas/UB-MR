@@ -1,57 +1,40 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
+/// <summary>
+/// URP render pass that blits the scene depth into user-provided RenderTextures.
+/// DepthCamera registers its RenderTexture/Material per camera; this pass executes
+/// AfterRendering and fills those targets so CPU readback returns real depth.
+/// </summary>
 public class DepthPass : ScriptableRenderPass
 {
-    Material depthCaptureMaterial;
-    RenderTargetIdentifier source;
-    RTHandle tempTexture;
-    RenderTexture depthRenderTexture;
-    
+    Dictionary<Camera, DepthCaptureRenderFeature.Request> requests;
 
-    public DepthPass()
+    public DepthPass(Dictionary<Camera, DepthCaptureRenderFeature.Request> requests)
     {
-        tempTexture = RTHandles.Alloc("_TempDepthTexture", name: "_TempDepthTexture");
-    }
-
-    public void Setup(Material material, RenderTargetIdentifier source)
-    {
-        this.depthCaptureMaterial = material;
-        this.source = source;
+        this.requests = requests;
+        renderPassEvent = RenderPassEvent.AfterRendering;
+        ConfigureInput(ScriptableRenderPassInput.Depth); // ensure depth texture is available
     }
 
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
     {
-        if (depthCaptureMaterial == null)
+        if (requests == null)
             return;
 
-        CommandBuffer cmd = CommandBufferPool.Get("DepthCapture");
-        RenderTextureDescriptor descriptor = renderingData.cameraData.cameraTargetDescriptor;
-        descriptor.colorFormat = RenderTextureFormat.RFloat; // Single channel float for depth
-        descriptor.depthBufferBits = 0;
-        // Get or create the depth render texture from the manager
-        RenderTexture depthRT = GetOrCreateDepthTexture(descriptor.width, descriptor.height);
-        // Render the depth to our texture
-        cmd.Blit(source, depthRT, depthCaptureMaterial);
+        var camera = renderingData.cameraData.camera;
+        if (!requests.TryGetValue(camera, out var request))
+            return;
+
+        if (request == null || request.Material == null || request.Target == null)
+            return;
+
+        var cmd = CommandBufferPool.Get("DepthCapture");
+        // Blit from depth texture (sampled in material) into the requested RT
+        cmd.Blit(source: default, dest: request.Target, request.Material);
         context.ExecuteCommandBuffer(cmd);
         CommandBufferPool.Release(cmd);
     }
-
-    RenderTexture GetOrCreateDepthTexture(int width, int height)
-    {
-        if (depthRenderTexture == null || depthRenderTexture.width != width || depthRenderTexture.height != height)
-        {
-            if (depthRenderTexture != null)
-                depthRenderTexture.Release();
-                
-            depthRenderTexture = new RenderTexture(width, height, 0, RenderTextureFormat.RFloat);
-            depthRenderTexture.name = "DepthCaptureTexture";
-            depthRenderTexture.filterMode = FilterMode.Point; // No filtering for accurate depth values
-            depthRenderTexture.Create();  
-        }
-        return depthRenderTexture;
-    }
-
-    
 }

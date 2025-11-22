@@ -137,7 +137,8 @@ namespace CAVAS.UB_MR.DT
                         break;
                     
                     case SensorType.Camera:
-                        //TODO: Implement Camera Modification
+                        Camera cam = sensorGO.AddComponent<Camera>();
+                        DepthCamera depthCam = sensorGO.AddComponent<DepthCamera>();
                         //TODO: Store Camera Resolution in Sensor Data
                         sensor = new VirtualCameraOverlay(sensor_config.topic + "/image_raw", sensor_config.topic + "/depth", ROSNode(), FindFirstObjectByType<Camera>(), imageWidth, imageHeight);
                         break;
