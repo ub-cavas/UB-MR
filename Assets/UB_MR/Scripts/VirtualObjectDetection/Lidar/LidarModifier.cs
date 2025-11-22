@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 
 namespace CAVAS.UB_MR.DT.Sensors.Lidar
 {
-    public class LidarModifier : Sensor
+    public class LidarModifier : SensorModifier
     {
         ComputeShader mLiDARComputeShader;
         int mKernel;

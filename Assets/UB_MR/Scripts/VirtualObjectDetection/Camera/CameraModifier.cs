@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CAVAS.UB_MR.DT.Sensors.Camera
 {
-    public class CameraModifier : Sensor
+    public class CameraModifier : SensorModifier
     {
         Agent owner;
         UnityEngine.Camera rgbCamera;

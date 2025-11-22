@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CAVAS.UB_MR
 {
-    public abstract class Sensor
+    public abstract class SensorModifier
     {
         public abstract void CleanUp();
         public abstract void Publish();

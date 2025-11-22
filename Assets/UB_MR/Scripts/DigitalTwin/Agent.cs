@@ -17,7 +17,7 @@ namespace CAVAS.UB_MR.DT
         Transform baseLink;
         Transform visRoot;
         Transform spectatorCameras;
-        List<Tuple<Config.Sensor, Sensor, Transform>> sensors = new List<Tuple<Config.Sensor, Sensor, Transform>>();
+        List<Tuple<Config.Sensor, SensorModifier, Transform>> sensors = new List<Tuple<Config.Sensor, SensorModifier, Transform>>();
         HUD hud;
         ROS2Node mNode;
         Vector3 mWorldPosition;
@@ -67,12 +67,12 @@ namespace CAVAS.UB_MR.DT
         {
             yield return new WaitUntil(() => ROS2_Bridge.ROS_CORE.Ok() && this.mNode is not null);
             
-            foreach (Tuple<Config.Sensor, Sensor, Transform> sensor in sensors)
+            foreach (Tuple<Config.Sensor, SensorModifier, Transform> sensor in sensors)
             {
                 switch(sensor.Item1.type)
                 {
                     case SensorType.Camera:
-                        StartCoroutine(PublishCameraImages()); // TODO: cache a ref to the running courutine 
+                        StartCoroutine(PublishCameraImages()); // TODO: cache a ref to the running coroutine 
                         break;
                     default:
                         break;
@@ -87,7 +87,7 @@ namespace CAVAS.UB_MR.DT
             timer += Time.deltaTime;
             
             // LiDAR Modification
-            foreach (Tuple<Config.Sensor, Sensor, Transform> sensor in sensors)
+            foreach (Tuple<Config.Sensor, SensorModifier, Transform> sensor in sensors)
             {
                 switch(sensor.Item1.type)
                 {
@@ -120,7 +120,7 @@ namespace CAVAS.UB_MR.DT
                 GameObject sensorGO = new GameObject(sensor_config.name);
                 sensorGO.transform.SetParent(baseLink);
                 sensorGO.transform.SetLocalPositionAndRotation(sensor_config.position, Quaternion.Euler(sensor_config.rotation));
-                Sensor sensor;
+                SensorModifier sensor;
                 
                 switch (sensor_config.type)
                 {
@@ -145,7 +145,7 @@ namespace CAVAS.UB_MR.DT
                         sensor = null;
                         break;
                 }
-                sensors.Add(new Tuple<Config.Sensor, Sensor, Transform>(sensor_config, sensor, sensorGO.transform));
+                sensors.Add(new Tuple<Config.Sensor, SensorModifier, Transform>(sensor_config, sensor, sensorGO.transform));
             }
             // Visuals
             visRoot = new GameObject("visuals").transform;
@@ -169,7 +169,7 @@ namespace CAVAS.UB_MR.DT
         public virtual void Teardown()
         {
             // Sensors
-            foreach (Tuple<Config.Sensor, Sensor, Transform> sensor in sensors)
+            foreach (Tuple<Config.Sensor, SensorModifier, Transform> sensor in sensors)
             {
                 sensor.Item2.CleanUp();
                 Destroy(sensor.Item3.gameObject);
@@ -264,7 +264,6 @@ namespace CAVAS.UB_MR.DT
                     }
                 }
             }
-            
         }
 
         public ROS2Node ROSNode()
