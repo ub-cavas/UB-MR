@@ -11,15 +11,21 @@ namespace CAVAS.UB_MR.Modules.Sandbox
         Texture2D rosTexture;
         byte[] conversionBuffer;
 
+        void Start()
+        {
+            // Flip RawImage to cleanly display a ROSImage 
+            rawImage.uvRect = new Rect(0, 1, 1, -1);
+        }
+
         public void Render(RenderTexture renderTexture)
         {
             if (rawImage == null || renderTexture == null)
-                return;
+                return; 
 
             rawImage.texture = renderTexture;
         }
 
-        /// <summary>
+        /// <summary> 
         /// Render a ROS2 sensor_msgs/Image onto the RawImage.
         /// Supports rgba8, bgra8, rgb8, bgr8, and mono8 encodings.
         /// </summary>
