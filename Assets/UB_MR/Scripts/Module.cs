@@ -19,7 +19,7 @@ namespace CAVAS.UB_MR
         string agentPath = "Prefabs/Agent";
         ROS2Node mNode;
 
-        void Start()
+        protected virtual void Start()
         {
             SpawnActiveAgent();
             if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)

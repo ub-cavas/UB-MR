@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Buffers.Binary;
 using ROS2;
 using sensor_msgs.msg;
 using UnityEngine;
+using Unity.Collections;
 
 namespace CAVAS.UB_MR.DT.Sensors.Camera
 {
@@ -11,11 +13,17 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
         Agent owner;
         UnityEngine.Camera rgbCamera;
         DepthCamera depthCamera;
+        RenderTexture virtualColorRT;
+        Texture2D virtualColorTex;
 
         ISubscription<Image> rgbSubscriber;
         ISubscription<Image> depthSubscriber;
 
         IPublisher<Image> mrFramePublisher;
+        Image reusableMrImage;
+        byte[] physicalRgbaBuffer;
+        float[] physicalDepthBuffer;
+        byte[] mixedRgbaBuffer;
 
         // Queues for incoming ROS images (timestamp + message)
         readonly Queue<(double stamp, Image msg)> rgbQueue = new();
@@ -127,27 +135,299 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
             }
         }
 
+        void EnsureVirtualResources(int width, int height)
+        {
+            if (width <= 0 || height <= 0)
+                return;
+
+            bool needsResize = virtualColorRT == null || virtualColorRT.width != width || virtualColorRT.height != height;
+            if (needsResize)
+            {
+                if (virtualColorRT != null)
+                    virtualColorRT.Release();
+
+                if (virtualColorTex != null)
+                    GameObject.Destroy(virtualColorTex);
+
+                virtualColorRT = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
+                virtualColorRT.name = $"{rgbCamera.name}_VirtualColorRT";
+                virtualColorRT.Create();
+
+                virtualColorTex = new Texture2D(width, height, TextureFormat.RGBA32, false, false);
+                rgbCamera.targetTexture = virtualColorRT;
+                depthCamera.EnsureResolution(width, height);
+            }
+
+            int pixelCount = width * height;
+            int rgbaBytes = pixelCount * 4;
+            if (physicalRgbaBuffer == null || physicalRgbaBuffer.Length != rgbaBytes)
+                physicalRgbaBuffer = new byte[rgbaBytes];
+
+            if (physicalDepthBuffer == null || physicalDepthBuffer.Length != pixelCount)
+                physicalDepthBuffer = new float[pixelCount];
+
+            if (mixedRgbaBuffer == null || mixedRgbaBuffer.Length != rgbaBytes)
+                mixedRgbaBuffer = new byte[rgbaBytes];
+
+            reusableMrImage ??= new Image();
+        }
+
+        void CaptureVirtualFrame(int width, int height, out NativeArray<byte> colorRaw, out float[] depthRaw)
+        {
+            EnsureVirtualResources(width, height);
+
+            var prevActive = RenderTexture.active;
+            if (rgbCamera.targetTexture != virtualColorRT)
+                rgbCamera.targetTexture = virtualColorRT;
+
+            rgbCamera.Render();
+            RenderTexture.active = virtualColorRT;
+            virtualColorTex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            virtualColorTex.Apply(false, false);
+            RenderTexture.active = prevActive;
+
+            colorRaw = virtualColorTex.GetRawTextureData<byte>();
+            depthRaw = depthCamera.CaptureDepth(width, height);
+        }
+
+        bool TryDecodeRosColor(Image src, byte[] dst)
+        {
+            if (src == null || src.Data == null || dst == null)
+                return false;
+
+            int width = (int)src.Width;
+            int height = (int)src.Height;
+            int pixelCount = width * height;
+            if (dst.Length < pixelCount * 4)
+                return false;
+
+            string encoding = src.Encoding?.ToLowerInvariant() ?? string.Empty;
+            int step = (int)src.Step;
+            byte[] data = src.Data;
+            int expectedLength = step * height;
+            if (data.Length < expectedLength)
+                return false;
+
+            int dstStride = width * 4;
+
+            if (encoding == "rgba8")
+            {
+                if (step == dstStride)
+                {
+                    Buffer.BlockCopy(data, 0, dst, 0, dstStride * height);
+                    return true;
+                }
+
+                for (int y = 0; y < height; y++)
+                    Buffer.BlockCopy(data, y * step, dst, y * dstStride, dstStride);
+                return true;
+            }
+
+            if (encoding == "bgra8")
+            {
+                for (int y = 0, dstRow = 0; y < height; y++, dstRow += dstStride)
+                {
+                    int srcRow = y * step;
+                    for (int x = 0, dstIdx = dstRow, srcIdx = srcRow; x < width; x++, dstIdx += 4, srcIdx += 4)
+                    {
+                        dst[dstIdx] = data[srcIdx + 2];
+                        dst[dstIdx + 1] = data[srcIdx + 1];
+                        dst[dstIdx + 2] = data[srcIdx];
+                        dst[dstIdx + 3] = data[srcIdx + 3];
+                    }
+                }
+                return true;
+            }
+
+            if (encoding == "rgb8" || encoding == "bgr8" || encoding == "mono8")
+            {
+                bool isBgr = encoding == "bgr8";
+                int channels = encoding == "mono8" ? 1 : 3;
+                int srcStride = width * channels;
+
+                for (int y = 0, dstRow = 0; y < height; y++, dstRow += dstStride)
+                {
+                    int srcRow = y * step;
+                    for (int x = 0, dstIdx = dstRow, srcIdx = srcRow; x < width; x++, dstIdx += 4, srcIdx += channels)
+                    {
+                        byte r, g, b;
+                        if (channels == 1)
+                        {
+                            r = g = b = data[srcIdx];
+                        }
+                        else if (isBgr)
+                        {
+                            b = data[srcIdx];
+                            g = data[srcIdx + 1];
+                            r = data[srcIdx + 2];
+                        }
+                        else
+                        {
+                            r = data[srcIdx];
+                            g = data[srcIdx + 1];
+                            b = data[srcIdx + 2];
+                        }
+
+                        dst[dstIdx] = r;
+                        dst[dstIdx + 1] = g;
+                        dst[dstIdx + 2] = b;
+                        dst[dstIdx + 3] = 255;
+                    }
+                }
+                return true;
+            }
+
+            return false;
+        }
+
+        bool TryDecodeRosDepth(Image src, float[] dst)
+        {
+            if (src == null || src.Data == null || dst == null)
+                return false;
+
+            int width = (int)src.Width;
+            int height = (int)src.Height;
+            int pixelCount = width * height;
+            if (dst.Length < pixelCount)
+                return false;
+
+            string encoding = src.Encoding?.ToLowerInvariant() ?? string.Empty;
+            int step = (int)src.Step;
+            byte[] data = src.Data;
+            int expected = step * height;
+            if (data.Length < expected)
+                return false;
+
+            bool bigEndian = src.Is_bigendian != 0;
+
+            if (encoding == "32fc1")
+            {
+                int bytesPerRow = width * 4;
+                if (!bigEndian && step == bytesPerRow)
+                {
+                    Buffer.BlockCopy(data, 0, dst, 0, bytesPerRow * height);
+                    return true;
+                }
+
+                int idx = 0;
+                for (int y = 0; y < height; y++)
+                {
+                    int row = y * step;
+                    for (int x = 0; x < width; x++, idx++)
+                    {
+                        int offset = row + x * 4;
+                        if (bigEndian)
+                        {
+                            uint tmp = BinaryPrimitives.ReadUInt32BigEndian(new ReadOnlySpan<byte>(data, offset, 4));
+                            dst[idx] = BitConverter.Int32BitsToSingle((int)tmp);
+                        }
+                        else
+                        {
+                            dst[idx] = BitConverter.ToSingle(data, offset);
+                        }
+                    }
+                }
+                return true;
+            }
+
+            if (encoding == "16uc1")
+            {
+                int idx = 0;
+                for (int y = 0; y < height; y++)
+                {
+                    int row = y * step;
+                    for (int x = 0; x < width; x++, idx++)
+                    {
+                        int offset = row + x * 2;
+                        ushort depth = bigEndian
+                            ? BinaryPrimitives.ReadUInt16BigEndian(new ReadOnlySpan<byte>(data, offset, 2))
+                            : BitConverter.ToUInt16(data, offset);
+                        dst[idx] = depth * 0.001f; // convert mm to meters
+                    }
+                }
+                return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Combine virtual RGB + physical RGB/Depth into a mixed reality frame.
         /// This is where you’ll do your occlusion logic.
         /// </summary>
         Image ComputeMixedRealityFrame(Image physicalRgb, Image physicalDepth)
         {
-            // TODO:
-            // 1. Use rgbCamera + depthCamera to get virtual RGB + depth.
-            // 2. For each pixel:
-            //    - Decode physical depth from physicalDepth.data
-            //    - Get virtual depth from depthCamera
-            //    - Compare depths, choose which color should be visible.
-            // 3. Return a new Image (or reuse a buffer) as the mixed reality frame.
+            if (physicalRgb == null || physicalDepth == null ||
+                physicalRgb.Data == null || physicalDepth.Data == null)
+                return physicalRgb;
 
-            // For now, just pass through physicalRgb as a placeholder.
-            return physicalRgb;
+            int width = (int)physicalRgb.Width;
+            int height = (int)physicalRgb.Height;
+            if (width <= 0 || height <= 0 ||
+                physicalDepth.Width != physicalRgb.Width ||
+                physicalDepth.Height != physicalRgb.Height)
+                return physicalRgb;
+
+            CaptureVirtualFrame(width, height, out var virtualColorRaw, out var virtualDepthRaw);
+
+            if (!TryDecodeRosColor(physicalRgb, physicalRgbaBuffer) ||
+                !TryDecodeRosDepth(physicalDepth, physicalDepthBuffer))
+                return physicalRgb;
+
+            int pixelCount = width * height;
+            for (int i = 0, dst = 0; i < pixelCount; i++, dst += 4)
+            {
+                float pDepth = physicalDepthBuffer[i];
+                float vDepth = virtualDepthRaw[i];
+
+                bool useVirtual = vDepth > 0f && !float.IsNaN(vDepth) &&
+                                  (pDepth <= 0f || float.IsNaN(pDepth) || pDepth > vDepth);
+
+                if (useVirtual)
+                {
+                    mixedRgbaBuffer[dst] = virtualColorRaw[dst];
+                    mixedRgbaBuffer[dst + 1] = virtualColorRaw[dst + 1];
+                    mixedRgbaBuffer[dst + 2] = virtualColorRaw[dst + 2];
+                    mixedRgbaBuffer[dst + 3] = virtualColorRaw[dst + 3];
+                }
+                else
+                {
+                    mixedRgbaBuffer[dst] = physicalRgbaBuffer[dst];
+                    mixedRgbaBuffer[dst + 1] = physicalRgbaBuffer[dst + 1];
+                    mixedRgbaBuffer[dst + 2] = physicalRgbaBuffer[dst + 2];
+                    mixedRgbaBuffer[dst + 3] = physicalRgbaBuffer[dst + 3];
+                }
+            }
+
+            reusableMrImage.Header = physicalRgb.Header;
+            reusableMrImage.Height = (uint)height;
+            reusableMrImage.Width = (uint)width;
+            reusableMrImage.Encoding = "rgba8";
+            reusableMrImage.Is_bigendian = 0;
+            reusableMrImage.Step = (uint)(width * 4);
+            reusableMrImage.Data = mixedRgbaBuffer;
+
+            return reusableMrImage;
         }
 
         public override void CleanUp()
         {
             // Virtual camera
+            if (virtualColorRT != null)
+            {
+                virtualColorRT.Release();
+                virtualColorRT = null;
+            }
+
+            if (virtualColorTex != null)
+            {
+                GameObject.Destroy(virtualColorTex);
+                virtualColorTex = null;
+            }
+
+            if (rgbCamera != null)
+                rgbCamera.targetTexture = null;
+
             depthCamera?.CleanUp();
 
             if (!Ros2cs.Ok())

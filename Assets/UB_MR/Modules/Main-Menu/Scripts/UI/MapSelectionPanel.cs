@@ -22,8 +22,8 @@ namespace CAVAS.UB_MR.Modules.MainMenu
 
             //Placeholder data
             RemoveAllButtons();
-            AddButton("UB Service Center");
-            AddButton("UB North Campus");
+            AddButton("UB-Service-Center-Loop");
+            AddButton("Sandbox");
             AddButton("ITU Ayazaga");
         }
 
@@ -51,8 +51,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
 
         void Confirm()
         {
-            //string mapName = GetActiveButtonLabel(); //TODO: lookup for correct scene name
-            string mapName = "UB-Service-Center-Loop";
+            string mapName = GetActiveButtonLabel(); 
             ConfigurationManager.SetActiveMap(mapName);
             UI_Manager.LoadPanel(confirmationPanel);
         }
