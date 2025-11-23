@@ -374,13 +374,21 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
                 return physicalRgb;
 
             int pixelCount = width * height;
-            const float MaxDepthMeters = 200f;
+            const float MaxDepthMeters = 200f; 
             const float DepthEpsilon = 0.02f; // bias toward physical 
 
             for (int i = 0, dst = 0; i < pixelCount; i++, dst += 4)
             {
+                int x = i % width;
+                int y = i / width;
+
+                // Physical buffers are interpreted as top-left origin (ROS convention),
+                // while Unity render textures are bottom-left. Flip the virtual index
+                // so virtual color/depth line up with the physical frame.
+                int vIndex = (height - 1 - y) * width + x;
+
                 float pDepth = physicalDepthBuffer[i];
-                float vDepth = virtualDepthRaw[i];
+                float vDepth = virtualDepthRaw[vIndex];
 
                 bool pValid = pDepth > 0f && !float.IsNaN(pDepth) && pDepth < MaxDepthMeters;
                 bool vValid = vDepth > 0f && !float.IsNaN(vDepth) && vDepth < MaxDepthMeters;
@@ -397,10 +405,11 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
 
                 if (useVirtual)
                 {
-                    mixedRgbaBuffer[dst] = virtualColorRaw[dst];
-                    mixedRgbaBuffer[dst + 1] = virtualColorRaw[dst + 1];
-                    mixedRgbaBuffer[dst + 2] = virtualColorRaw[dst + 2];
-                    mixedRgbaBuffer[dst + 3] = virtualColorRaw[dst + 3];
+                    int src = vIndex * 4;
+                    mixedRgbaBuffer[dst] = virtualColorRaw[src];
+                    mixedRgbaBuffer[dst + 1] = virtualColorRaw[src + 1];
+                    mixedRgbaBuffer[dst + 2] = virtualColorRaw[src + 2];
+                    mixedRgbaBuffer[dst + 3] = virtualColorRaw[src + 3];
                 }
                 else
                 {
