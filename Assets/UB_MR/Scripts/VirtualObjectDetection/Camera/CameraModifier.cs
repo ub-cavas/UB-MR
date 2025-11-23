@@ -353,7 +353,6 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
 
         /// <summary>
         /// Combine virtual RGB + physical RGB/Depth into a mixed reality frame.
-        /// This is where you’ll do your occlusion logic.
         /// </summary>
         Image ComputeMixedRealityFrame(Image physicalRgb, Image physicalDepth)
         {
@@ -387,26 +386,14 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
                 bool vValid = vDepth > 0f && !float.IsNaN(vDepth) && vDepth < MaxDepthMeters;
 
                 bool useVirtual;
-                if (!vValid && !pValid)
-                {
-                    // No reliable depth info; keep physical pixel.
+                if (!vValid && !pValid) // No reliable depth info; keep physical pixel.
                     useVirtual = false;
-                }
-                else if (!vValid)
-                {
-                    // Only physical depth is valid.
+                else if (!vValid) // Only physical depth is valid.
                     useVirtual = false;
-                }
-                else if (!pValid)
-                {
-                    // Only virtual depth is valid.
+                else if (!pValid) // Only virtual depth is valid.
                     useVirtual = true;
-                }
-                else
-                {
-                    // Both valid: prefer virtual unless it's clearly behind physical.
+                else // Both valid: prefer virtual unless it's clearly behind physical.
                     useVirtual = vDepth <= pDepth + DepthEpsilon;
-                }
 
                 if (useVirtual)
                 {
