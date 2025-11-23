@@ -51,8 +51,11 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
                 .CreateSubscription<Image>(depthTopicName, OnDepth_Receive);
 
             // Mixed reality output publisher
+            string cameraName = rgbCamera != null ? rgbCamera.name : "camera";
+            cameraName = cameraName.Replace(' ', '_');
+            string mrTopicName = "/mr_camera/" + cameraName + "/image_raw";
             mrFramePublisher = owner.ROSNode()
-                .CreatePublisher<Image>("mixed_reality_frame");
+                .CreatePublisher<Image>(mrTopicName);
         }
 
         // Convert ROS2 builtin_interfaces/Time to double seconds
