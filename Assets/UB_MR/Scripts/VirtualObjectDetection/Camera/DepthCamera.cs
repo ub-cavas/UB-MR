@@ -9,20 +9,23 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
         Shader depthShader;
         Material depthMaterial;
         RenderTexture depthRT;
+        Texture2D depthReadTex;
+        float[] depthBuffer;
+        int currentWidth;
+        int currentHeight;
 
         public DepthCamera(UnityEngine.Camera inCamera)
         {
             renderCamera = inCamera;
             renderCamera.depthTextureMode |= DepthTextureMode.Depth;
 
-            depthRT = new RenderTexture(renderCamera.pixelWidth, renderCamera.pixelHeight, 24, RenderTextureFormat.RFloat);
-            depthRT.name = $"{renderCamera.name}_DepthRT";
-            depthRT.Create();
+            currentWidth = renderCamera.pixelWidth;
+            currentHeight = renderCamera.pixelHeight;
 
             depthShader = Resources.Load<Shader>("Scripts/DepthCapture");
             depthMaterial = new Material(depthShader);
 
-            DepthCaptureRenderFeature.Register(renderCamera, depthRT, depthMaterial);
+            CreateDepthTargets(currentWidth, currentHeight);
         }
 
         public void CleanUp()
@@ -32,8 +35,41 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
             if (depthRT != null)
                 depthRT.Release();
 
+            if (depthReadTex != null)
+                GameObject.Destroy(depthReadTex);
+
             if (depthMaterial != null)
                 GameObject.Destroy(depthMaterial);
+        }
+
+        void CreateDepthTargets(int width, int height)
+        {
+            DepthCaptureRenderFeature.Unregister(renderCamera);
+
+            if (depthRT != null)
+                depthRT.Release();
+
+            depthRT = new RenderTexture(width, height, 24, RenderTextureFormat.RFloat);
+            depthRT.name = $"{renderCamera.name}_DepthRT";
+            depthRT.Create();
+
+            if (depthReadTex != null)
+                GameObject.Destroy(depthReadTex);
+
+            depthReadTex = new Texture2D(width, height, TextureFormat.RFloat, false, true);
+            depthBuffer = new float[width * height];
+
+            DepthCaptureRenderFeature.Register(renderCamera, depthRT, depthMaterial);
+        }
+
+        public void EnsureResolution(int width, int height)
+        {
+            if (width == currentWidth && height == currentHeight && depthRT != null)
+                return;
+
+            currentWidth = width;
+            currentHeight = height;
+            CreateDepthTargets(width, height);
         }
 
         float[,] ReadDepthNow()
@@ -60,6 +96,25 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
             RenderTexture.active = prev;
             GameObject.Destroy(tex);
             return depthMeters;
+        }
+
+        public float[] CaptureDepth(int width, int height)
+        {
+            EnsureResolution(width, height);
+
+            RenderTexture prev = RenderTexture.active;
+            RenderTexture.active = depthRT;
+
+            depthReadTex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            depthReadTex.Apply(false, false);
+
+            var raw = depthReadTex.GetRawTextureData<float>();
+            if (depthBuffer == null || depthBuffer.Length != raw.Length)
+                depthBuffer = new float[raw.Length];
+            raw.CopyTo(depthBuffer);
+
+            RenderTexture.active = prev;
+            return depthBuffer;
         }
 
         IEnumerator CaptureDepthAtEndOfFrame()

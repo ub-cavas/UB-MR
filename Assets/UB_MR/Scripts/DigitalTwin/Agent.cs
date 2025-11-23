@@ -138,7 +138,7 @@ namespace CAVAS.UB_MR.DT
                     
                     case SensorType.Camera:
                         Camera cam = sensorGO.AddComponent<Camera>();
-                        sensor = new CameraModifier(this, sensor_config.topic, sensor_config.topic + "_depth", cam);
+                        sensor = new CameraModifier(this, sensor_config.topic, "/zed/zed_node/depth/depth_registered", cam);
                         break;
                         
                     default:
