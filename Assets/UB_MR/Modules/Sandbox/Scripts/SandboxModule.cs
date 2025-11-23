@@ -9,7 +9,7 @@ namespace CAVAS.UB_MR.Modules
 {
     public class SandboxModule : Module
     {
-        [SerializeField] string imageTopic;
+        [SerializeField] string imageTopic; 
         [SerializeField] CameraRenderer cameraRenderer;
         ROS2Node rosNode;
         ISubscription<Image> imageSubscription;
