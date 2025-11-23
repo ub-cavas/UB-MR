@@ -315,7 +315,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &601519453
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -861,31 +861,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.07
+      value: -0.034232523
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -1.26
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 4.295424
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.81235754
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.5831596
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -893,7 +893,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -71.346
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
