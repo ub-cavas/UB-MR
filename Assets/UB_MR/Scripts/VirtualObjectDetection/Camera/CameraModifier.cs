@@ -376,7 +376,7 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
 
             int pixelCount = width * height;
             const float MaxDepthMeters = 200f;
-            const float DepthEpsilon = 0.02f; // bias toward physical
+            const float DepthEpsilon = 0.02f; // bias toward physical 
 
             for (int i = 0, dst = 0; i < pixelCount; i++, dst += 4)
             {
@@ -386,9 +386,27 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
                 bool pValid = pDepth > 0f && !float.IsNaN(pDepth) && pDepth < MaxDepthMeters;
                 bool vValid = vDepth > 0f && !float.IsNaN(vDepth) && vDepth < MaxDepthMeters;
 
-                // Only let virtual overwrite physical when both depths are valid
-                // and virtual is confidently in front of physical.
-                bool useVirtual = vValid && pValid && (vDepth + DepthEpsilon < pDepth);
+                bool useVirtual;
+                if (!vValid && !pValid)
+                {
+                    // No reliable depth info; keep physical pixel.
+                    useVirtual = false;
+                }
+                else if (!vValid)
+                {
+                    // Only physical depth is valid.
+                    useVirtual = false;
+                }
+                else if (!pValid)
+                {
+                    // Only virtual depth is valid.
+                    useVirtual = true;
+                }
+                else
+                {
+                    // Both valid: prefer virtual unless it's clearly behind physical.
+                    useVirtual = vDepth <= pDepth + DepthEpsilon;
+                }
 
                 if (useVirtual)
                 {
