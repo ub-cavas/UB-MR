@@ -125,7 +125,7 @@ namespace CAVAS.UB_MR.DT
                 switch (sensor_config.type)
                 {
                     case SensorType.LiDAR:
-                        // TODO: Store QOS profile in Sensor
+                        // TODO: Store QOS profile in Config.Sensor
                         QualityOfServiceProfile qosProfile = new QualityOfServiceProfile();
                         qosProfile.SetReliability(reliabilityPolicy);
                         qosProfile.SetHistory(historyPolicy, historyDepth);
@@ -133,12 +133,12 @@ namespace CAVAS.UB_MR.DT
 
                         sensor = new LidarModifier(this, sensor_config.topic, raysPerScan, lidarModifierComputeShader, ROSNode(), qosProfile, inModule.GetFirstSDF());
                         LidarModifier lidarModifier = (LidarModifier)sensor;
-                        lidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations); // Does this need to be called?
+                        lidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations); // TODO: Does this need to be called here?
                         break;
                     
                     case SensorType.Camera:
                         Camera cam = sensorGO.AddComponent<Camera>();
-                        sensor = new CameraModifier(this, sensor_config.topic, cam);
+                        sensor = new CameraModifier(this, sensor_config.topic, sensor_config.topic + "_depth", cam);
                         break;
                         
                     default:
