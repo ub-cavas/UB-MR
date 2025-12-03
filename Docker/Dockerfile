@@ -30,7 +30,6 @@ COPY Builds/Linux ./Linux
 
 RUN chmod +x ./Linux/UB-MR.x86_64
 
-# Default to using Vulkan; windowed 1280x720 so it plays nicely with X11.
-# Log to stdout so crashes/errors are visible in `docker run` output.
+# TODO: Use Vulkan API
 #CMD ["./Linux/UB-MR.x86_64", "-screen-fullscreen", "0", "-screen-width", "1280", "-screen-height", "720", "-force-vulkan", "-logFile", "/dev/stdout"]
 CMD ["./Linux/UB-MR.x86_64", "-screen-fullscreen", "0", "-screen-width", "1920", "-screen-height", "1080"]
