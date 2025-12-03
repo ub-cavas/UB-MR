@@ -9,9 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
+    path: Assets/UB_MR/Modules/Main-Menu/Main-Menu.unity
+    guid: 69f97691b7c76be02817a4c267be2159
+  - enabled: 1
     path: Assets/UB_MR/Modules/UB-Service-Center-Loop/UB-Service-Center-Loop.unity
     guid: ea3c5b6f3f13cf146a46bb81ef9e934b
-  - enabled: 1
+  - enabled: 0
     path: Assets/NGO_Minimal_Setup/NGO_Setup.unity
     guid: ed8f6f86f7e201c28aa2b3a7c7b3112e
   m_configObjects:
