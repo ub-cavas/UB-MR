@@ -10,6 +10,17 @@ using CAVAS.UB_MR.DT.Sensors.Lidar;
 using CAVAS.UB_MR.DT.Sensors.Camera;
 using System;
 
+
+
+/*TODO:
+    1.) Update database to support CAMERA and LiDAR spec configuration
+    2.) Test CameraModification.cs with multiple cameras
+    3.) Add Traffic Light Agent Model
+    4.) Add empty Agent Model
+    5.) Test full stack with KITTI dataset
+*/
+
+
 namespace CAVAS.UB_MR.DT
 {
     public class Agent : MonoBehaviour
