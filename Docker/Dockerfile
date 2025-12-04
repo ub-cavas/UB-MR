@@ -28,6 +28,12 @@ WORKDIR /app
 #   docker build -f Docker/Dockerfile -t ub-mr .
 COPY Builds/Linux ./Linux
 
+# As configured in ProjectSettings/ProjectSettings.asset:
+#   companyName: DefaultCompany
+#   productName: UB-MR
+RUN mkdir -p /root/.config/unity3d/DefaultCompany/UB-MR
+COPY Agents/*.json /root/.config/unity3d/DefaultCompany/UB-MR/
+
 RUN chmod +x ./Linux/UB-MR.x86_64
 
 # TODO: Use Vulkan API

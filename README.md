@@ -104,3 +104,11 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
 
 *For further assistance, please open an issue in the respective GitHub repository.*
 
+docker run --rm -it --gpus all \
+  -e NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility \
+  -e DISPLAY=$DISPLAY \
+  -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
+  ub-mr
+
+echo $DISPLAY       # make sure this prints something like :0 or :1
+xhost +local:root   # or: xhost +local:docker
