@@ -18,6 +18,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
         {
             newSessionButton.onClick.AddListener(NewSession);
             loadSessionButton.onClick.AddListener(LoadSession);
+            exitButton.onClick.AddListener(ExitApp);
             base.LoadPanel();
         }
 
@@ -25,6 +26,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
         {
             newSessionButton.onClick.RemoveAllListeners();
             loadSessionButton.onClick.RemoveAllListeners();
+            exitButton.onClick.RemoveAllListeners();
             base.UnloadPanel();
         }
 
@@ -37,6 +39,11 @@ namespace CAVAS.UB_MR.Modules.MainMenu
         {
             //TODO: Read a config file and set ConfigurationManager variables
             UI_Manager.LoadPanel(confirmationPanel);
+        }
+
+        void ExitApp()
+        {
+            Application.Quit();
         }
     }
 }

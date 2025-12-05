@@ -79,9 +79,24 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
 
 2. **Run the Mixed Reality Simulator**
 
-   OPTION A: Run the executable
+   OPTION A: Docker
 
-   OPTION B: Press Play in the Unity Editor
+   From the UB-MR root directory:
+   ```bash
+   docker build -f Docker/Dockerfile -t ub-mr .
+   ```
+   
+   On the host:
+   ```bash
+   xhost +local:root  
+   ```
+   ```bash
+   docker run --rm -it --gpus all   -e NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility   -e DISPLAY=$DISPLAY   -v /tmp/.X11-unix:/tmp/.X11-unix:ro   ub-mr
+  ```
+   
+   OPTION B: Unity Editor'
+
+   In Unity, navigate to the MainMenu scene and press play
 
 ## Playback a Ros Bag
 
@@ -104,11 +119,17 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
 
 *For further assistance, please open an issue in the respective GitHub repository.*
 
+
+echo $DISPLAY       # make sure this prints something like :0 or :1
+
+
 docker run --rm -it --gpus all \
   -e NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility \
   -e DISPLAY=$DISPLAY \
   -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
   ub-mr
 
-echo $DISPLAY       # make sure this prints something like :0 or :1
-xhost +local:root   # or: xhost +local:docker
+
+
+
+
