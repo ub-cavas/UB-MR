@@ -12,10 +12,20 @@ RUN apt-get update && apt-get install -y locales curl gnupg2 lsb-release \
  && apt-get update && apt-get install -y \
    ros-humble-ros-base \
    ros-humble-robot-localization \
+   git \
+   python3-colcon-common-extensions \
  && rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash","-c"]
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc
+
+WORKDIR /ub_mr_workspace
+RUN mkdir -p src \
+ && cd src \
+ && git clone https://github.com/ub-cavas/mr_pkg.git \
+ && cd /ub_mr_workspace \
+ && source /opt/ros/humble/setup.bash \
+ && colcon build --symlink-install
 
 # Unity Linux player runtime dependencies for X11 + Vulkan
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -50,4 +60,4 @@ COPY Agents/*.json /root/.config/unity3d/DefaultCompany/UB-MR/
 RUN chmod +x ./Linux/UB-MR.x86_64
 
 # TODO: Use Vulkan API
-CMD ["bash", "-lc", "source /opt/ros/humble/setup.bash && ./Linux/UB-MR.x86_64 -screen-fullscreen 0 -screen-width 1920 -screen-height 1080"]
+CMD ["bash", "-lc", "mkdir -p ./Logs && (source /opt/ros/humble/setup.bash && source /ub_mr_workspace/install/setup.bash && ros2 launch mr_pkg localization.launch.py) & source /opt/ros/humble/setup.bash && ./Linux/UB-MR.x86_64 -screen-fullscreen 0 -screen-width 1920 -screen-height 1080 -logFile ./Logs/ub-mr-player.log"]

@@ -91,8 +91,9 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
    xhost +local:root  
    ```
    ```bash
-   docker run --rm -it --gpus all   -e NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility   -e DISPLAY=$DISPLAY   -v /tmp/.X11-unix:/tmp/.X11-unix:ro   ub-mr
-  ```
+   docker run --rm -it --gpus all   --net=host   -e NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility   -e DISPLAY=$DISPLAY   -v /tmp/.X11-unix:/tmp/.X11-unix:ro   -v "$(pwd)/Docker/Logs:/app/Logs"   ub-mr
+
+   ```
    
    OPTION B: Unity Editor'
 
