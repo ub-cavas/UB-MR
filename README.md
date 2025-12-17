@@ -65,6 +65,18 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
      3.) Locate the UB-MR directory that you cloned and add it to the UnityHub
 
      4.) Open the project with Unity Editor 6000.0.36f1
+
+     5.) There is a bug that requires reimporting some files... Unity will crash the first time the project is loaded
+
+     6.) Force Quit the editor and relaunch
+
+     7.) In the editor: navigate to /Assets/UB_MR_Assets/RoadRunner/UB-Service-Center-Loop and reimport ServiceCenterLoopMR.fbx 
+     (Right-Click -> "Reimport" )
+     ![File Location](Docs/RR_Reimport_FBX.png)
+
+     8.) Give it some time to import
+
+     9.) The project should be ready now
 ---
 
 ## Running the Project
