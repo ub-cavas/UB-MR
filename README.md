@@ -78,6 +78,14 @@ xhost +local:root # x11 graphics forwarding - only needed ONCE per shell session
 docker run --rm -it --gpus all   --net=host   -e NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility   -e DISPLAY=$DISPLAY   -v /tmp/.X11-unix:/tmp/.X11-unix:ro   -v "$(pwd)/Docker/Logs:/app/Logs"   ub-mr
 ```
 
+docker run --rm -it \
+--gpus all \
+--net=host \
+-e UB_MR_PLAYER_DIR=/player-dir \  
+-v /path/to/your/build:/player-dir:ro \  
+-v "$PWD/Agents:/root/.config/unity3d/UB-CAVAS/UB-MR:ro" \  
+ub-mr
+
 ### Unity Player (Native)
 ```bash
 chmod +x UB-MR.x86_64 # give execution permissions
