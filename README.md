@@ -1,32 +1,13 @@
 # Mixed Reality Autonomous Vehicle Digital Twin
 
-## Table of Contents
-
-- [Configuration](#configuration)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-  - [ROS 2 Humble on WSL2 Ubuntu 22.04.5 LTS](#ros-2-humble-on-wsl2-ubuntu-22045-lts)
-  - [Clone Repositories](#clone-repositories)
-- [Building the ROS 2 Package](#building-the-ros-2-package)
-- [Sourcing Your Environment](#sourcing-your-environment)
-- [Running the Mixed Reality Package](#running-the-mixed-reality-package)
-  - [Option 1: Live Stream Mixed Reality](#option-1-live-stream-mixed-reality)
-  - [Option 2: Replay a ROS Bag](#option-2-replay-a-ros-bag)
-- [Running the Unity Engine](#running-the-unity-engine)
-- [Troubleshooting & Tips](#troubleshooting--tips)
-
----
-
----
-
 ## Quick-Start Guide
-1. Install the Prerequisites
-   0) Latest NVIDIA Graphics Drivers - tested on RTX 4070-580.95.05 but other versions might work depending on your hardware
-   1) Install Docker [[Link]](https://docs.docker.com/engine/install/ubuntu/)
-   2) Setup docker user to not require sudo when running docker [[Link]](https://docs.docker.com/engine/install/linux-postinstall/)
-   3) Install NVIDIA container toolkit [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and register with docker [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuration)
+### Install Prerequisites
+0) Latest NVIDIA Graphics Drivers (tested on RTX 4070-580.95.05) 
+1) Install Docker [[Link]](https://docs.docker.com/engine/install/ubuntu/)
+2) Setup docker user to not require sudo when running docker [[Link]](https://docs.docker.com/engine/install/linux-postinstall/)
+3) Install NVIDIA container toolkit [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and register with docker [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuration)
 
-2. Pull the Docker Image from DockerHub:
+### Use the Dockerized version of the project
    ```bash
    TODO: Link Upcoming!
    ```
