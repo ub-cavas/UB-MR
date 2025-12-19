@@ -49,13 +49,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Copy the pre-built Unity player into the image.
-COPY Builds/Linux ./Linux
+COPY Builds/Ubuntu2204 ./UB-MR-Player
 
 # Copy the preconfigured vehicle config files
 RUN mkdir -p /root/.config/unity3d/UB-CAVAS/UB-MR
 COPY Agents/*.json /root/.config/unity3d/UB-CAVAS/UB-MR/
 
-RUN chmod +x ./Linux/UB-MR.x86_64
+RUN chmod +x ./UB-MR-Player/UB-MR.x86_64
 
 # TODO: Use Vulkan API
 CMD ["bash", "-lc", "mkdir -p ./Logs && (source /opt/ros/humble/setup.bash && source /ub_mr_workspace/install/setup.bash && ros2 launch mr_pkg localization.launch.py) & source /opt/ros/humble/setup.bash && ./Linux/UB-MR.x86_64 -screen-fullscreen 0 -screen-width 1920 -screen-height 1080 -logFile ./Logs/ub-mr-player.log"]
