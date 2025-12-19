@@ -1,95 +1,64 @@
-using System;
-using System.Collections;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace UB_MR.Redis_Networking
 {
     public class TrafficRenderer : MonoBehaviour
     {
         [SerializeField] TrafficReceiver receiver;
-        [SerializeField] GameObject defaultTrafficAgent;
-        public Dictionary<string, GameObject> trafficAgents;
-        Queue<TrafficReceiver.VehicleData> UPDATE_Q;
-        Queue<TrafficReceiver.VehicleData> CREATE_Q;
-        Queue<TrafficReceiver.VehicleData> REMOVAL_Q;
+
+        [Header("Prefabs")]
+        public GameObject defaultVehicle;
+        public GameObject defaultWalker;
+
+        Dictionary<string, GameObject> actors = new();
+
+        Queue<TrafficReceiver.TrafficActorData> CREATE_Q = new();
+        Queue<TrafficReceiver.TrafficActorData> UPDATE_Q = new();
+        Queue<TrafficReceiver.TrafficActorData> REMOVE_Q = new();
 
         void Start()
         {
-            if (receiver != null)
-            {
-                receiver.OnSpawnNewVehicle += TrafficReceiver_OnSpawnNewVehicle;
-                receiver.OnVehicleUpdate  += TrafficReceiver_OnVehicleUpdate;
-                receiver.OnDespawnVehicle += TrafficReceiver_OnDespawnVehicle;
-                
-                trafficAgents = new Dictionary<string, GameObject>();
-                UPDATE_Q = new Queue<TrafficReceiver.VehicleData>();
-                CREATE_Q = new Queue<TrafficReceiver.VehicleData>();
-                REMOVAL_Q = new Queue<TrafficReceiver.VehicleData>();
-            }
+            receiver.OnSpawnTrafficActor += a => CREATE_Q.Enqueue(a);
+            receiver.OnTrafficActorUpdate += a => UPDATE_Q.Enqueue(a);
+            receiver.OnDespawnTrafficActor += a => REMOVE_Q.Enqueue(a);
         }
 
-        void OnDestroy()
+        void Update()
         {
-            if (receiver != null)
+            while (CREATE_Q.TryDequeue(out var a))
             {
-                receiver.OnSpawnNewVehicle -= TrafficReceiver_OnSpawnNewVehicle;
-                receiver.OnVehicleUpdate -= TrafficReceiver_OnVehicleUpdate;
-                receiver.OnDespawnVehicle -= TrafficReceiver_OnDespawnVehicle;
+                GameObject prefab =
+                    a.actor_type == "walker"
+                        ? defaultWalker
+                        : defaultVehicle;
+
+                GameObject go = Instantiate(
+                    prefab,
+                    a.Position(),
+                    a.Orientation()
+                );
+
+                actors[a.Id] = go;
             }
-        }
-        
-        private void Update()
-        {
-            if (trafficAgents == null)
-                return;
-            
-            // Creation Queue
-            while (CREATE_Q.TryDequeue(out TrafficReceiver.VehicleData creationBP))
-            { 
-                Vector3 position = creationBP.Position();
-                Quaternion orientation = creationBP.Orientation();
-                GameObject trafficAgent = GameObject.Instantiate(defaultTrafficAgent, position, orientation);
-                trafficAgents.Add(creationBP.id, trafficAgent);
-                trafficAgent.transform.SetPositionAndRotation(position, orientation);
-            }
-            
-            // Removal Queue
-            while (REMOVAL_Q.TryDequeue(out TrafficReceiver.VehicleData removalBP))
+
+            while (UPDATE_Q.TryDequeue(out var a))
             {
-                trafficAgents.Remove(removalBP.id);
-                Destroy(trafficAgents[removalBP.id].gameObject);
+                if (!actors.ContainsKey(a.Id)) continue;
+
+                actors[a.Id].transform.SetPositionAndRotation(
+                    a.Position(),
+                    a.Orientation()
+                );
             }
-            
-            // Update Queue
-            while (UPDATE_Q.TryDequeue(out TrafficReceiver.VehicleData updateBP))
+
+            while (REMOVE_Q.TryDequeue(out var a))
             {
-                if (!trafficAgents.ContainsKey(updateBP.id)) return; // leftover (already destroyed)
-                
-                GameObject agent = trafficAgents[updateBP.id];
-                // TODO: Convert from Unreal to Unity Coordinate system and set yaw
-                Vector3 position = updateBP.Position();
-                Quaternion orientation = updateBP.Orientation();
-                agent.transform.SetPositionAndRotation(position, orientation);
+                if (!actors.ContainsKey(a.Id)) continue;
+
+                Destroy(actors[a.Id]);
+                actors.Remove(a.Id);
             }
         }
-
-        private void TrafficReceiver_OnSpawnNewVehicle(TrafficReceiver.VehicleData inData)
-        {
-            CREATE_Q.Enqueue(inData);
-        }
-
-        private void TrafficReceiver_OnVehicleUpdate(TrafficReceiver.VehicleData inData)
-        {
-            UPDATE_Q.Enqueue(inData);
-        }
-
-        private void TrafficReceiver_OnDespawnVehicle(TrafficReceiver.VehicleData inData)
-        {
-            REMOVAL_Q.Enqueue(inData);
-        }
-        
-        
     }
 }
-
