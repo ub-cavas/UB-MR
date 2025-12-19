@@ -11,11 +11,17 @@ namespace UB_MR.Redis_Networking
 {
     public class TrafficReceiver : MonoBehaviour
     {
-        public System.Action<VehicleData> OnSpawnNewVehicle;
-        public System.Action<VehicleData> OnDespawnVehicle;
-        public System.Action<VehicleData> OnVehicleUpdate;
-        
-        [System.Serializable]
+        //Agent events
+        public Action<VehicleData> OnSpawnNewVehicle;
+        public Action<VehicleData> OnDespawnVehicle;
+        public Action<VehicleData> OnVehicleUpdate;
+
+        //Traffic actor events
+        public Action<TrafficActorData> OnSpawnTrafficActor;
+        public Action<TrafficActorData> OnDespawnTrafficActor;
+        public Action<TrafficActorData> OnTrafficActorUpdate;
+
+        [Serializable]
         public class Location
         {
             public float x;
@@ -23,167 +29,213 @@ namespace UB_MR.Redis_Networking
             public float z;
         }
 
-        [System.Serializable]
+        [Serializable]
+        public class Rotation
+        {
+            public float roll;
+            public float pitch;
+            public float yaw;
+        }
+
+        [Serializable]
         public class VehicleData
         {
             public string id;
-            public Location location; // Don't use this... use Position()
-            public float yaw; // Don;t use this... Use Orientation()
+            public Location location;
+            public float yaw;
             public string blueprint;
             public string color;
 
             public Vector3 Position()
             {
-                return ConvertPositionUEToUnity(new Vector3(location.x, location.y, location.z), 100);
+                return ConvertPositionUEToUnity(
+                    new Vector3(location.x, location.y, location.z),
+                    100
+                );
             }
 
             public Quaternion Orientation()
             {
-                return Quaternion.Euler(ConvertRotationUEToUnity(new Vector3(0, 0, yaw)));
+                return Quaternion.Euler(
+                    ConvertRotationUEToUnity(new Vector3(0, yaw, 0))
+                );
             }
         }
-        
-        public static Vector3 ConvertPositionUEToUnity(Vector3 uePosition, float scale = 1)
+
+        [Serializable]
+        public class TrafficActorData
+        {
+            public int actor_id;
+            public string actor_type;
+            public string type_id;
+            public Location location;
+            public Rotation rotation;
+            public Location extent;
+            public Location velocity;
+
+            public string Id => actor_id.ToString();
+
+            public Vector3 Position()
+            {
+                return ConvertPositionUEToUnity(
+                    new Vector3(location.x, location.y, location.z),
+                    100
+                );
+            }
+
+            public Quaternion Orientation()
+            {
+                return Quaternion.Euler(
+                    ConvertRotationUEToUnity(
+                        new Vector3(rotation.pitch, rotation.yaw, rotation.roll)
+                    )
+                );
+            }
+        }
+
+        [Serializable]
+        public class TrafficPayload
+        {
+            public Dictionary<string, VehicleData> vehicles;
+            public List<TrafficActorData> traffic;
+        }
+
+        public static Vector3 ConvertPositionUEToUnity(Vector3 ue, float scale)
         {
             return new Vector3(
-                uePosition.y * scale / 100f,   // UE Y → Unity X
-                uePosition.z * scale / 100f,   // UE Z → Unity Y
-                uePosition.x * scale / 100f    // UE X → Unity Z
+                ue.y * scale / 100f,
+                ue.z * scale / 100f,
+                ue.x * scale / 100f
             );
         }
 
-        public static Vector3 ConvertRotationUEToUnity(Vector3 ueRotation)
+        public static Vector3 ConvertRotationUEToUnity(Vector3 ue)
         {
-            return new Vector3(
-                -ueRotation.x,  // -Pitch
-                -ueRotation.y,  // -Yaw
-                ueRotation.z    // Roll
-            );
+            return new Vector3(-ue.x, -ue.y, ue.z);
         }
-        
-        
+
         private UdpClient udpClient;
         private Thread receiveThread;
-        private bool isReceiving = false;
+        private bool isReceiving;
+
         public int port = 12345;
-        // Latest received data
-        public static Dictionary<string, VehicleData> trafficData;
-        public static bool hasNewData = false;
-        
+
+        private readonly object _lock = new object();
+
+        private Dictionary<string, VehicleData> agents = new();
+        private Dictionary<string, TrafficActorData> trafficActors = new();
+
         void Start()
         {
-            trafficData = new Dictionary<string, VehicleData>();
             StartReceiving();
         }
-        
-        void Update()
-        {
-            // Process new data on main thread
-            if (hasNewData)
-            {
-                lock (this)
-                {
-                    if (trafficData != null)
-                    {
-                        ProcessTrafficData();
-                        hasNewData = false;
-                    }
-                }
-            }
-        }
-        
+
         void OnDestroy()
         {
             isReceiving = false;
-            if (receiveThread != null && receiveThread.IsAlive)
-                receiveThread.Join(1000);
-            if (udpClient != null)
-                udpClient.Close();
+            udpClient?.Close();
+            receiveThread?.Join(500);
         }
-        
+
         void StartReceiving()
         {
-            try
-            {
-                udpClient = new UdpClient(port);
-                isReceiving = true;
-            
-                receiveThread = new Thread(ReceiveData);
-                receiveThread.Start();
-            
-                Debug.Log($"Started listening on port {port}");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Error starting UDP receiver: {e.Message}");
-            }
+            udpClient = new UdpClient(port);
+            isReceiving = true;
+
+            receiveThread = new Thread(ReceiveLoop);
+            receiveThread.Start();
+
+            Debug.Log($"[TrafficReceiver] Listening on UDP {port}");
         }
-        
-        void ReceiveData()
+
+        void ReceiveLoop()
         {
-            IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-        
+            IPEndPoint ep = new IPEndPoint(IPAddress.Any, 0);
+
             while (isReceiving)
             {
                 try
                 {
-                    byte[] data = udpClient.Receive(ref remoteEndPoint);
-                    string jsonString = Encoding.UTF8.GetString(data);
-                
-                    // Parse JSON
-                    Dictionary<string, VehicleData> receivedDataDict = 
-                        JsonConvert.DeserializeObject<Dictionary<string, VehicleData>>(jsonString);
-                    // Thread-safe update
-                    lock (this)
+                    byte[] data = udpClient.Receive(ref ep);
+                    string json = Encoding.UTF8.GetString(data);
+
+                    TrafficPayload payload =
+                        JsonConvert.DeserializeObject<TrafficPayload>(json);
+
+                    lock (_lock)
                     {
-                        foreach (string vehicleID in receivedDataDict.Keys)
-                        {
-                            receivedDataDict[vehicleID].id = vehicleID;
-                            //Update Existing Vehicles
-                            if (trafficData.ContainsKey(vehicleID))
-                            {
-                                trafficData[vehicleID].location = receivedDataDict[vehicleID].location; 
-                                trafficData[vehicleID].yaw = receivedDataDict[vehicleID].yaw;
-                                OnVehicleUpdate?.Invoke(receivedDataDict[vehicleID]); // Let the listeners know
-                            }
-                            // Add New Vehicles
-                            else
-                            {
-                                trafficData.Add(vehicleID, receivedDataDict[vehicleID]);
-                                OnSpawnNewVehicle?.Invoke(receivedDataDict[vehicleID]);// Let the listeners know
-                            }
-                                
-                        }
-                        // Remove deleted vehicles
-                        if (receivedDataDict.Count != trafficData.Keys.Count)
-                            foreach (string id in trafficData.Keys)
-                                if (!receivedDataDict.ContainsKey(id))
-                                {
-                                    trafficData.Remove(id);
-                                    OnDespawnVehicle?.Invoke(trafficData[id]); // Let the listeners know
-                                }
-                        hasNewData = true;
+                        ProcessAgents(payload.vehicles);
+                        ProcessTraffic(payload.traffic);
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Error receiving data: {e.Message}");
+                    Debug.LogError($"[TrafficReceiver] {e.Message}");
                 }
             }
         }
-        
-        void ProcessTrafficData()
+
+        void ProcessAgents(Dictionary<string, VehicleData> incoming)
         {
-            //Debug.Log("Traffic Agents: " + trafficData.Count);
-            foreach (KeyValuePair<string, VehicleData> vehicle in trafficData)
+            foreach (var kv in incoming)
             {
-                // Use your traffic data here
-                Vector3 position = new Vector3(vehicle.Value.location.x, vehicle.Value.location.y, vehicle.Value.location.z);
-                float yaw = vehicle.Value.yaw;
-                Debug.Log($"Received traffic at position: {position}, yaw: {yaw}, blueprint: {vehicle.Value.blueprint}");
+                kv.Value.id = kv.Key;
+
+                if (agents.ContainsKey(kv.Key))
+                {
+                    agents[kv.Key] = kv.Value;
+                    OnVehicleUpdate?.Invoke(kv.Value);
+                }
+                else
+                {
+                    agents.Add(kv.Key, kv.Value);
+                    OnSpawnNewVehicle?.Invoke(kv.Value);
+                }
+            }
+
+            List<string> toRemove = new();
+            foreach (var id in agents.Keys)
+                if (!incoming.ContainsKey(id))
+                    toRemove.Add(id);
+
+            foreach (var id in toRemove)
+            {
+                OnDespawnVehicle?.Invoke(agents[id]);
+                agents.Remove(id);
             }
         }
 
-    }
+        void ProcessTraffic(List<TrafficActorData> incoming)
+        {
+            HashSet<string> seen = new();
 
+            foreach (var actor in incoming)
+            {
+                string id = actor.Id;
+                seen.Add(id);
+
+                if (trafficActors.ContainsKey(id))
+                {
+                    trafficActors[id] = actor;
+                    OnTrafficActorUpdate?.Invoke(actor);
+                }
+                else
+                {
+                    trafficActors.Add(id, actor);
+                    OnSpawnTrafficActor?.Invoke(actor);
+                }
+            }
+
+            List<string> toRemove = new();
+            foreach (var id in trafficActors.Keys)
+                if (!seen.Contains(id))
+                    toRemove.Add(id);
+
+            foreach (var id in toRemove)
+            {
+                OnDespawnTrafficActor?.Invoke(trafficActors[id]);
+                trafficActors.Remove(id);
+            }
+        }
+    }
 }
