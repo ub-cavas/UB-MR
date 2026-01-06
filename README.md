@@ -13,7 +13,6 @@
    ```
    or build it locally:
    ```bash
-   cd Docker
    docker build -f Docker/Dockerfile -t ub-mr .
    ```
    The docker image hosts the Unity Player and required ROS nodes for Mixed Reality
@@ -74,17 +73,9 @@ Install Vulkan Graphics APIs (skip if already installed)
 ### Docker 
 ```bash
 xhost +local:root # x11 graphics forwarding - only needed ONCE per shell session
-
-docker run --rm -it --gpus all   --net=host   -e NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility   -e DISPLAY=$DISPLAY   -v /tmp/.X11-unix:/tmp/.X11-unix:ro   -v "$(pwd)/Docker/Logs:/app/Logs"   ub-mr
+./run_ub_mr.sh 0.0.1
 ```
 
-docker run --rm -it \
---gpus all \
---net=host \
--e UB_MR_PLAYER_DIR=/player-dir \  
--v /path/to/your/build:/player-dir:ro \  
--v "$PWD/Agents:/root/.config/unity3d/UB-CAVAS/UB-MR:ro" \  
-ub-mr
 
 ### Unity Player (Native)
 ```bash
