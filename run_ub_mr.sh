@@ -6,7 +6,7 @@ REPO_ROOT="${SCRIPT_DIR}"
 
 if [[ $# -lt 1 ]]; then
   echo "Usage: $0 <build-folder-name-under-Builds> [additional docker args...]"
-  echo "Example: $0 Ubuntu2204"
+  echo "Example: $0 0.0.1"
   exit 1
 fi
 
