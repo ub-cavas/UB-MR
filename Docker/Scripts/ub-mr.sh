@@ -24,8 +24,13 @@ ROS_PID=$!
 # For now we just launch Unity in the foreground.
 
 # Start Unity in the foreground (container lifetime == Unity lifetime)
+#export __GLX_VENDOR_LIBRARY_NAME=nvidia
+#export __NV_PRIME_RENDER_OFFLOAD=1
+#export LIBGL_ALWAYS_INDIRECT=0
+
 exec "${UB_MR_PLAYER_DIR}/UB-MR.x86_64" \
   -screen-fullscreen 0 \
   -screen-width 1920 \
   -screen-height 1080 \
-  -logFile ./Logs/ub-mr-player.log
+  -logFile ./Logs/ub-mr-player.log \
+  -force-glcore
