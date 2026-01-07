@@ -32,22 +32,22 @@ RUN mkdir -p src \
 
 # Unity Linux player runtime dependencies for X11 + Vulkan
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libvulkan1 \
-    libgl1 \
+    libvulkan1 vulkan-tools \
+    libgl1 libglx0 libegl1 \
     libglu1-mesa \
-    libxcursor1 \
-    libxrandr2 \
-    libxinerama1 \
-    libxi6 \
     libxss1 \
-    libx11-6 \
-    libxext6 \
+    libx11-6 libxext6 libxrandr2 libxi6 libxcursor1 libxinerama1 \
     libxcomposite1 \
     libxkbcommon0 \
     libnss3 \
     libasound2 \
     ca-certificates \
+    mesa-utils \
  && rm -rf /var/lib/apt/lists/*
+
+ENV __GLX_VENDOR_LIBRARY_NAME=nvidia \
+   __NV_PRIME_RENDER_OFFLOAD=1 \
+   LIBGL_ALWAYS_INDIRECT=0
 
 ENV UB_MR_PLAYER_DIR=/app/UB-MR-Player
 
