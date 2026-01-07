@@ -72,7 +72,6 @@ Install Vulkan Graphics APIs (skip if already installed)
 
 ### Docker 
 ```bash
-xhost +local:root # x11 graphics forwarding - only needed ONCE per shell session
 ./run_ub_mr.sh 0.0.1
 ```
 

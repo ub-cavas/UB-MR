@@ -52,6 +52,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV UB_MR_PLAYER_DIR=/app/UB-MR-Player
 
 WORKDIR /app
+COPY Docker/Scripts/ub-mr.sh /app/ub-mr.sh
+RUN chmod +x /app/ub-mr.sh
 
 # Prepare mount points for the Unity player and vehicle config files.
 # The actual content is expected to be bind-mounted from the host at runtime.
@@ -59,4 +61,4 @@ RUN mkdir -p "$UB_MR_PLAYER_DIR" \
  && mkdir -p /root/.config/unity3d/UB-CAVAS/UB-MR
 
 # TODO: Use Vulkan API
-CMD ["bash", "-lc", "mkdir -p ./Logs && chmod +x \"${UB_MR_PLAYER_DIR}/UB-MR.x86_64\" && (source /opt/ros/humble/setup.bash && source /ub_mr_workspace/install/setup.bash && ros2 launch mr_pkg localization.launch.py) & source /opt/ros/humble/setup.bash && \"${UB_MR_PLAYER_DIR}/UB-MR.x86_64\" -screen-fullscreen 0 -screen-width 1920 -screen-height 1080 -logFile ./Logs/ub-mr-player.log"]
+CMD ["bash", "/app/ub-mr.sh"]
