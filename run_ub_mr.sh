@@ -37,6 +37,7 @@ docker run --rm -it \
   --gpus all \
   --net=host \
   --name "${CONTAINER_NAME}" \
+  --runtime=nvidia \
   -e NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility \
   -e DISPLAY="${DISPLAY}" \
   -e UB_MR_PLAYER_DIR=/app/UB-MR-Player \
