@@ -33,7 +33,7 @@ Install Vulkan Graphics APIs (skip if already installed)
    ```
 
 ### Unity Player Installation (the packaged version)
-1. Download the latest release [[Link]] (https://github.com/ub-cavas/UB-MR)
+1. Download the latest release [[Link]](https://github.com/ub-cavas/UB-MR/releases/tag/v0.0.1)
 
 ### Unity Project Installation (with Unity Editor)
 
