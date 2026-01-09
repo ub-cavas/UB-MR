@@ -2,22 +2,43 @@
 
 ## Quick-Start Guide
 ### Install Prerequisites
-0) Latest NVIDIA Graphics Drivers (tested on RTX 4070-580.95.05) 
-1) Install Docker [[Link]](https://docs.docker.com/engine/install/ubuntu/)
+#### ROS2 + cyclonedds
+0) Install ROS2 Humble (ros-humble-desktop recommended) [[Link]](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
+1) Switch ROS Middleware (rmw) to cyclonedds 
+   ```bash
+   sudo apt update
+   sudo apt install -y ros-humble-rmw-cyclonedds-cpp
+   # Update environment ... Replace $USER with your username
+   cp -i Config/cyclonedds.xml /home/{$USER}/cyclonedds.xml # For host <-> container ROS2 topic discovery, both must reference identical cyclonedds config files
+   echo 'export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> ~/.bashrc
+   echo 'export CYCLONEDDS_URI=/home/{$USER}/cyclonedds.xml' >> ~/.bashrc
+   source ~/.bashrc
+   ```
+#### Graphics API's
+0) Install Vulkan Graphics APIs (skip if already installed)
+   ```bash
+   sudo apt update
+   sudo apt install libvulkan1
+   ```
+
+### Use the Dockerized version of the project
+#### Install Docker with NVIDIA support
+0) Install the latest NVIDIA Graphics Drivers (tested on RTX 4070-580.95.05) 
+1) Install the Docker engine [[Link]](https://docs.docker.com/engine/install/ubuntu/)
 2) Setup docker user to not require sudo when running docker [[Link]](https://docs.docker.com/engine/install/linux-postinstall/)
 3) Install NVIDIA container toolkit [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and register with docker [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuration)
 
-### Use the Dockerized version of the project
+#### Pull / Build the image
+The docker image hosts the Unity Player and required ROS nodes for Mixed Reality
    ```bash
-   TODO: Link Upcoming!
+   TODO: DockerHub Link Upcoming!
    ```
    or build it locally:
    ```bash
    docker build -f Docker/Dockerfile -t ub-mr .
    ```
-   The docker image hosts the Unity Player and required ROS nodes for Mixed Reality
    
-
+   
 ---
 
 ## Developer Guide
@@ -26,11 +47,7 @@
 - **Unity Editor - 6000.0.36f1**
 - **ROS 2 Distribution:** Humble
 
-Install Vulkan Graphics APIs (skip if already installed)
-   ```bash
-   sudo apt update
-   sudo apt install libvulkan1
-   ```
+
 
 ### Unity Player Installation (the packaged version)
 **NOTE: you may need to create the `UB-MR/Builds` folder if it does not exist**
