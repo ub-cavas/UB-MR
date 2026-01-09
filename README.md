@@ -1,27 +1,12 @@
 # Mixed Reality Autonomous Vehicle Digital Twin
 
 ## Quick-Start Guide
-### Install Prerequisites
-#### ROS2 + cyclonedds
-0) Install ROS2 Humble (ros-humble-desktop recommended) [[Link]](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
-1) Switch ROS Middleware (rmw) to cyclonedds 
-   ```bash
-   sudo apt update
-   sudo apt install -y ros-humble-rmw-cyclonedds-cpp
-   # Update environment ... Replace $USER with your username
-   cp -i Config/cyclonedds.xml /home/{$USER}/cyclonedds.xml # For host <-> container ROS2 topic discovery, both must reference identical cyclonedds config files
-   echo 'export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> ~/.bashrc
-   echo 'export CYCLONEDDS_URI=/home/{$USER}/cyclonedds.xml' >> ~/.bashrc
-   source ~/.bashrc
-   ```
-#### Graphics API's
-0) Install Vulkan Graphics APIs (skip if already installed)
-   ```bash
-   sudo apt update
-   sudo apt install libvulkan1
-   ```
+### Download the latest release
+**NOTE: you must to create the `UB-MR/Builds` directory if it does not exist**
+1. Download the latest release [[Link]] (https://github.com/ub-cavas/UB-MR)
+2. Extract the folder into `UB-MR/Builds` 
 
-### Use the Dockerized version of the project
+### Docker (recommended)
 #### Install Docker with NVIDIA support
 0) Install the latest NVIDIA Graphics Drivers (tested on RTX 4070-580.95.05) 
 1) Install the Docker engine [[Link]](https://docs.docker.com/engine/install/ubuntu/)
@@ -37,27 +22,69 @@ The docker image hosts the Unity Player and required ROS nodes for Mixed Reality
    ```bash
    docker build -f Docker/Dockerfile -t ub-mr .
    ```
-   
-   
+#### Run the container
+From the host:
+```bash
+./run_ub_mr.sh <RELEASE_FOLDER>
+# example 
+# ./run_ub_mr.sh 0.0.1
+```
+---
+
+### Standard
+#### Suggested Configuration
+- **Ubuntu 2022.04.5** 
+- **Unity Editor - 6000.0.36f1**
+- **ROS 2 Distribution:** Humble 
+
+#### Prerequisites
+0) Install ROS2 Humble (ros-humble-desktop recommended) [[Link]](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
+1) Switch ROS Middleware (rmw) to cyclonedds 
+   ```bash
+   sudo apt update
+   sudo apt install -y ros-humble-rmw-cyclonedds-cpp
+   # Update environment ... Replace $USER with your username
+   cp -i Config/cyclonedds.xml /home/{$USER}/cyclonedds.xml # For host <-> container ROS2 topic discovery, both must reference identical cyclonedds config files
+   echo 'export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> ~/.bashrc
+   echo 'export CYCLONEDDS_URI=/home/{$USER}/cyclonedds.xml' >> ~/.bashrc
+   source ~/.bashrc
+   ```
+2) Install Vulkan Graphics APIs (skip if already installed)
+   ```bash
+   sudo apt update
+   sudo apt install libvulkan1
+   ```   
+3) Create a ros2 workspace [[Link]](https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html)
+4) Clone `mr_pkg` into the workspace
+   ```bash
+   cd /ros2_workspace/src
+   git clone https://github.com/ub-cavas/UB-MR
+   ```
+5) Build the workspace and source it
+   ```bash
+   cd /ros2_workspace
+   colcon build
+   source install/setup.bash
+   ```
+#### Run the project
+0) In one terminal
+   ```bash
+   cd /ros2_workspace
+   source install/setup.bash
+   ros2 launch mr_pkg localization.launch.py
+   ```
+
+1) In another terminal
+   ```bash
+   source /opt/ros/humble/setup.bash
+   cd Builds/<BUILD>
+   chmod +x UB-MR.x86_64 # give execution permissions
+   ./UB-MR.x86_64
+   ```
 ---
 
 ## Developer Guide
-### Suggested Configuration
-- **Ubuntu 2022.04.5** 
-- **Unity Editor - 6000.0.36f1**
-- **ROS 2 Distribution:** Humble
-
-
-
-### Unity Player Installation (the packaged version)
-**NOTE: you may need to create the `UB-MR/Builds` folder if it does not exist**
-1. Download the latest release [[Link]] (https://github.com/ub-cavas/UB-MR)
-2. Extract the folder into `UB-MR/Builds` 
-
-
-
 ### Unity Project Installation (with Unity Editor)
-
 **IMPORTANT: There is a RoadRunner bug that requires reimporting some files... Unity will crash the first time the project is loaded, if this occurs force quit the editor and relaunch**
 1. Install the UnityHub [[Link]](https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux/)
 2. Install Unity Editor - 6000.0.36f1
@@ -71,38 +98,6 @@ The docker image hosts the Unity Player and required ROS nodes for Mixed Reality
 
 ![File Location](Docs/RR_Reimport_FBX.png)
 
-
-### ROS2 Interface
-1. Install ROS2 Humble [[Link]](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
-2. Clone the mr_pkg ROS2 workspace:
-   ```bash
-   git clone https://github.com/ub-cavas/mr_pkg.git
-   ```
-3. Remember: when you update the ROS 2 package, rebuild it and source the workspace:
-   ```bash
-   cd ~/ros2_ws
-   colcon build
-   source install/setup.bash
-   ```
-
-
-
-
-
-## Running the Project
-
-### Docker 
-```bash
-./run_ub_mr.sh 0.0.1
-```
-
-
-### Unity Player (Native)
-```bash
-chmod +x UB-MR.x86_64 # give execution permissions
-
-./UB-MR.x86_64
-```
    
 ### Unity Editor (Native)
 1. Open Assets/Modules/MainMenu.unity 
