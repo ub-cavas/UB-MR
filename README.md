@@ -2,9 +2,10 @@
 
 ## Quick-Start Guide
 ### Download the latest release
-**NOTE: you must to create the `UB-MR/Builds` directory if it does not exist**
-1. Download the latest release [[Link]] (https://github.com/ub-cavas/UB-MR)
-2. Extract the folder into `UB-MR/Builds` 
+0) Download the latest release [[Link]](https://github.com/ub-cavas/UB-MR)
+1) Extract the folder into `UB-MR/Builds` 
+
+   **NOTE: you must to create the `UB-MR/Builds` directory if it does not exist**
 
 ### Docker (recommended)
 #### Install Docker with NVIDIA support
