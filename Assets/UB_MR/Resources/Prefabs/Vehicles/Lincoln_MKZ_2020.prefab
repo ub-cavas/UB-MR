@@ -76,11 +76,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 181170b735e40694799299d506019a65, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.505
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 181170b735e40694799299d506019a65, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.476
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 181170b735e40694799299d506019a65, type: 3}
       propertyPath: m_LocalRotation.w
@@ -120,7 +120,7 @@ PrefabInstance:
       objectReference: {fileID: -2975577217368688508, guid: 181170b735e40694799299d506019a65, type: 3}
     - target: {fileID: 919132149155446097, guid: 181170b735e40694799299d506019a65, type: 3}
       propertyPath: m_Name
-      value: Lincoln
+      value: Lincoln_MKZ_2020
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
