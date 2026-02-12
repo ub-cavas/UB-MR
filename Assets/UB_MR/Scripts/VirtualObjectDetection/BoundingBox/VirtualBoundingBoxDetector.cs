@@ -1,8 +1,10 @@
 using ROS2;
 using System.Collections.Generic;
-using vision_msgs.msg;
+//using vision_msgs.msg;
+using autoware_perception_msgs.msg;
 using UnityEngine;
 using CAVAS.UB_MR.ROS2;
+using System.Linq;
 
 namespace CAVAS.UB_MR.DT.Sensors
 {
@@ -12,7 +14,7 @@ namespace CAVAS.UB_MR.DT.Sensors
 
         float mDetectionRadius;
         Transform mTransform;
-        IPublisher<BoundingBox3DArray> mObstacleBoundingBoxPublisher;
+        IPublisher<DetectedObjects> mObstacleBoundingBoxPublisher;
 
         public VirtualBoundingBoxDetector(string inTopicName, ROS2Node inNode, Transform inTransform)
         {
@@ -21,7 +23,7 @@ namespace CAVAS.UB_MR.DT.Sensors
                 sVirtualObjects = new List<VirtualObject>();
             }
             this.mTransform = inTransform;
-            this.mObstacleBoundingBoxPublisher = inNode.CreatePublisher<BoundingBox3DArray>(inTopicName);
+            this.mObstacleBoundingBoxPublisher = inNode.CreatePublisher<DetectedObjects>(inTopicName);
         }
 
         public static void AddVirtualObjectToDatabase(VirtualObject vObj)
@@ -66,50 +68,57 @@ namespace CAVAS.UB_MR.DT.Sensors
 
         public void PublishNearbyVirtualObjects(Transform baseLink, float detectionRadius)
         {
-            vision_msgs.msg.BoundingBox3DArray msg = new vision_msgs.msg.BoundingBox3DArray();
-            // Header
+            // Message Structure + Header
+            DetectedObjects msg = new DetectedObjects();
             msg.Header = new std_msgs.msg.Header();
-            msg.Header.Frame_id = "base_link";
+            msg.Header.Frame_id = "map";
             builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
             time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
-            msg.Header.Stamp = time;
+            msg.Header.Stamp = time; //TODO: get correct timestamp
 
             List<VirtualObject> virtualObjects = GetNearbyObstacles(baseLink, detectionRadius);
-            var boxes = new BoundingBox3D[virtualObjects.Count];
-            for (int i = 0; i < boxes.Length; i++)
+            DetectedObject[] detectedObjects = new DetectedObject[virtualObjects.Count];
+            for (int i = 0; i < detectedObjects.Length; i++)
             {
+                // Extract Unity Object Properties
                 VirtualObject virtualObject = virtualObjects[i];
                 Bounds bounds = virtualObject.GetBoundingBox();
                 Vector3 worldCenter = bounds.center;
                 Vector3 localCenter = baseLink.InverseTransformPoint(worldCenter);
                 Quaternion worldRot = virtualObject.transform.rotation;
                 Quaternion localRot = Quaternion.Inverse(baseLink.rotation) * worldRot;
-
-                BoundingBox3D bbox = new BoundingBox3D();
-                bbox.Center = new geometry_msgs.msg.Pose();
-                // Position
-                bbox.Center.Position = new geometry_msgs.msg.Point();
                 Vector3 ros2Center = Ros2Utility.UnityToRos2Position(localCenter);
-                bbox.Center.Position.X = ros2Center.x;
-                bbox.Center.Position.Y = ros2Center.y;
-                bbox.Center.Position.Z = ros2Center.z;
-                // Orientation
-                bbox.Center.Orientation = new geometry_msgs.msg.Quaternion();
                 Quaternion ros2Rotation = Ros2Utility.UnityToRosRotation(localRot);
-                bbox.Center.Orientation.X = ros2Rotation.x;
-                bbox.Center.Orientation.Y = ros2Rotation.y;
-                bbox.Center.Orientation.Z = ros2Rotation.z;
-                bbox.Center.Orientation.W = ros2Rotation.w;
-                // Size
-                bbox.Size = new geometry_msgs.msg.Vector3();
-                Vector3 ros2Size = Ros2Utility.UnityToRos2Scale(bounds.size);
-                bbox.Size.X = ros2Size.x;
-                bbox.Size.Y = ros2Size.y;
-                bbox.Size.Z = ros2Size.z;
 
-                boxes[i] = bbox;
+                // ROS Object
+                DetectedObject obj = new DetectedObject();
+
+                // Classification
+                ObjectClassification classification = new ObjectClassification();
+                classification.Label = ObjectClassification.CAR; //TODO: support other types of classifications
+                classification.Probability = 1.0f;
+                obj.Classification.Append(classification);
+
+                // Pose
+                obj.Kinematics.Pose_with_covariance.Pose.Position.X = ros2Center.x;
+                obj.Kinematics.Pose_with_covariance.Pose.Position.Y = ros2Center.y;
+                obj.Kinematics.Pose_with_covariance.Pose.Position.Z = ros2Center.z;
+                obj.Kinematics.Pose_with_covariance.Pose.Orientation.X = ros2Rotation.x;
+                obj.Kinematics.Pose_with_covariance.Pose.Orientation.Y = ros2Rotation.y;
+                obj.Kinematics.Pose_with_covariance.Pose.Orientation.Z = ros2Rotation.z;
+                obj.Kinematics.Pose_with_covariance.Pose.Orientation.W = ros2Rotation.w;
+
+                // Bounding Box
+                Shape bbox = new Shape();
+                bbox.Type = Shape.BOUNDING_BOX;
+                Vector3 ros2Size = Ros2Utility.UnityToRos2Scale(bounds.size);
+                bbox.Dimensions.X = ros2Size.x;
+                bbox.Dimensions.Y = ros2Size.y;
+                bbox.Dimensions.Z = ros2Size.z;
+                obj.Shape = bbox;
+                
+                detectedObjects[i] = obj;
             }
-            msg.Boxes = boxes;
             msg.WriteNativeMessage();
             this.mObstacleBoundingBoxPublisher.Publish(msg);
 
