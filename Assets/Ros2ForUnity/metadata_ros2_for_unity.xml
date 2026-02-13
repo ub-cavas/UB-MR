@@ -2,8 +2,8 @@
 <ros2_for_unity>
    <ros2>humble</ros2>
    <version>
-      <sha>096e46ccd16ac51f21e33804c1623919507e4c27</sha>
-      <desc>1.3.0-7-g096e46c</desc>
-      <date>2024-09-30 10:17:55 +0200</date>
+      <sha>7dd4bad07bdb7ae13c76db16beb2f90c6b5d7b06</sha>
+      <desc>7dd4bad</desc>
+      <date>2026-02-13 09:40:21 -0500</date>
    </version>
 </ros2_for_unity>
