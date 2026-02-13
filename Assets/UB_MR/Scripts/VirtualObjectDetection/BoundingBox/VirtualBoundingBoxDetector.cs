@@ -69,16 +69,15 @@ namespace CAVAS.UB_MR.DT.Sensors
         public void PublishNearbyVirtualObjects(Transform baseLink, float detectionRadius)
         {
             // Message Structure + Header
-            DetectedObjects msg = new DetectedObjects();
-            msg.Header = new std_msgs.msg.Header();
-            msg.Header.Frame_id = "map";
+            DetectedObjects detectedObjectMsg = new DetectedObjects();
+            detectedObjectMsg.Header = new std_msgs.msg.Header();
+            detectedObjectMsg.Header.Frame_id = "map";
             builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
             time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
-            msg.Header.Stamp = time; //TODO: get correct timestamp
+            detectedObjectMsg.Header.Stamp = time; //TODO: get correct timestamp
 
             List<VirtualObject> virtualObjects = GetNearbyObstacles(baseLink, detectionRadius);
-            DetectedObject[] detectedObjects = new DetectedObject[virtualObjects.Count];
-            for (int i = 0; i < detectedObjects.Length; i++)
+            for (int i = 0; i < virtualObjects.Count; i++)
             {
                 // Extract Unity Object Properties
                 VirtualObject virtualObject = virtualObjects[i];
@@ -103,10 +102,14 @@ namespace CAVAS.UB_MR.DT.Sensors
                 obj.Kinematics.Pose_with_covariance.Pose.Position.X = ros2Center.x;
                 obj.Kinematics.Pose_with_covariance.Pose.Position.Y = ros2Center.y;
                 obj.Kinematics.Pose_with_covariance.Pose.Position.Z = ros2Center.z;
+                // Rotation
                 obj.Kinematics.Pose_with_covariance.Pose.Orientation.X = ros2Rotation.x;
                 obj.Kinematics.Pose_with_covariance.Pose.Orientation.Y = ros2Rotation.y;
                 obj.Kinematics.Pose_with_covariance.Pose.Orientation.Z = ros2Rotation.z;
                 obj.Kinematics.Pose_with_covariance.Pose.Orientation.W = ros2Rotation.w;
+                // Twist //TODO: should not be defaulting to 0.0
+                obj.Kinematics.Twist_with_covariance.Twist.Linear.X = 0.0f;
+                obj.Kinematics.Twist_with_covariance.Twist.Linear.Y = 0.0f;
 
                 // Bounding Box
                 Shape bbox = new Shape();
@@ -117,10 +120,10 @@ namespace CAVAS.UB_MR.DT.Sensors
                 bbox.Dimensions.Z = ros2Size.z;
                 obj.Shape = bbox;
                 
-                detectedObjects[i] = obj;
+                detectedObjectMsg.Objects.Append(obj);
             }
-            msg.WriteNativeMessage();
-            this.mObstacleBoundingBoxPublisher.Publish(msg);
+            detectedObjectMsg.WriteNativeMessage();
+            this.mObstacleBoundingBoxPublisher.Publish(detectedObjectMsg);
 
             //Debug.Log("Published " + virtualObjects.Count + " virtual objects");
         }
