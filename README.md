@@ -1,28 +1,39 @@
 # Mixed Reality Autonomous Vehicle Digital Twin
 
-## Quick-Start Guide
-### Install Prerequisites
-0) Latest NVIDIA Graphics Drivers (tested on RTX 4070-580.95.05) 
-1) Install Docker [[Link]](https://docs.docker.com/engine/install/ubuntu/)
-2) Setup docker user to not require sudo when running docker [[Link]](https://docs.docker.com/engine/install/linux-postinstall/)
-3) Install NVIDIA container toolkit [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and register with docker [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuration)
+## Quick-Start User Guide
+If you only intend to run Mixed Reality scenarios, use this method... 
+### Prerequisites
+0) NVIDIA Graphics Drivers 
+1) Docker [[Link]](https://docs.docker.com/engine/install/ubuntu/)
+2) Set up user to not require sudo when running Docker [[Link]](https://docs.docker.com/engine/install/linux-postinstall/)
+3) Install NVIDIA container toolkit [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and register with Docker [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuration)
 
-### Use the Dockerized version of the project
+### Download a Release
+```bash
+# Download latest release
+./download_unity_player.sh
+
+# Download a specific version
+./download_unity_player.sh v0.0.1
+```
+
+### Setup the Runtime Environment
+In order to maximize compatibility and minimize setup time, we use Docker with GPU passthrough. The image hosts the Unity player and the required ROS nodes for Mixed Reality
+
+**Option A).** Pull from Dockerhub (Recommended)
    ```bash
    TODO: Link Upcoming!
    ```
-   or build it locally:
+**Option B).** Build the image locally:
    ```bash
    docker build -f Docker/Dockerfile -t ub-mr .
    ```
-   The docker image hosts the Unity Player and required ROS nodes for Mixed Reality
-   
-
 ---
 
 ## Developer Guide
-### Suggested Configuration
-- **Ubuntu 2022.04.5** 
+If you intend to develop the Mixed Reality Engine, follow these steps...
+### Configuration
+- **Ubuntu 2022.04.5** (Required)
 - **Unity Editor - 6000.0.36f1**
 - **ROS 2 Distribution:** Humble
 
@@ -32,11 +43,6 @@ Install Vulkan Graphics APIs (skip if already installed)
    sudo apt install libvulkan1
    ```
 
-### Unity Player Installation (the packaged version)
-**NOTE: you may need to create the `UB-MR/Builds` folder if it does not exist**
-1. Download the latest release [[Link]](https://github.com/ub-cavas/UB-MR/releases/tag/v0.0.1)
-2. Extract the folder into `UB-MR/Builds` 
-
 
 ### Unity Project Installation (with Unity Editor)
 
@@ -44,7 +50,11 @@ Install Vulkan Graphics APIs (skip if already installed)
 1. Install the UnityHub [[Link]](https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux/)
 2. Install Unity Editor - 6000.0.36f1
 3. Add the project (/UB-MR) to UnityHub
-4. Open the project.. you may need to force quit and relaunch on first load
+4. Download Ros2ForUnity
+   ```bash
+   ./Util/Ros2ForUnity/DownloadRos2ForUnity.sh             # latest release
+   ```
+5. Open the project.. you may need to force quit and relaunch on first load
 
 #### Fix import errors - Only needed if the RoadRunner environments do not load correctly
 1. Navigate to Assets/UB_MR_Assets/RoadRunner/
@@ -52,24 +62,6 @@ Install Vulkan Graphics APIs (skip if already installed)
 3. This takes some time...
 
 ![File Location](Docs/RR_Reimport_FBX.png)
-
-
-### ROS2 Interface
-1. Install ROS2 Humble [[Link]](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
-2. Clone the mr_pkg ROS2 workspace:
-   ```bash
-   git clone https://github.com/ub-cavas/mr_pkg.git
-   ```
-3. Remember: when you update the ROS 2 package, rebuild it and source the workspace:
-   ```bash
-   cd ~/ros2_ws
-   colcon build
-   source install/setup.bash
-   ```
-
-
-
-
 
 ## Running the Project
 

@@ -1,6 +1,6 @@
 # Ros2ForUnity Builder Image (Ubuntu 22.04 + ROS 2 Humble)
 
-This image is intended for building Ros2ForUnity (including `--standalone`) from this repository by running `Util/Ros2ForUnity/UpdateRos2ForUnity.sh`.
+This image is intended for building Ros2ForUnity (including `--standalone`)
 
 It includes the `ros2cs` Ubuntu prerequisites from:
 - `submodules/ros2-for-unity/src/ros2cs/README-UBUNTU.md`
@@ -12,15 +12,9 @@ Installed requirements:
 - `.NET SDK 6.0`
 - `patchelf` (required for `--standalone`)
 
-## Build the image
-
-```bash
-docker build -f Util/Ros2ForUnity/Dockerfile.ros2forunity-builder -t ubmr-ros2forunity:humble .
-```
-
 ## Getting Ros2ForUnity assets
 
-`Assets/Ros2ForUnity/` is not tracked in git. Use one of the following options.
+`Assets/Ros2ForUnity/` is not tracked in git. Use one of the following options to obtain the assets.
 
 ### Option A — Download a prebuilt release (recommended)
 
@@ -39,7 +33,7 @@ Run from the repository root:
 ./Util/Ros2ForUnity/BuildRos2ForUnity.sh
 ```
 
-This starts the container (which runs `UpdateRos2ForUnity.sh` to pull and build), then copies the output to `Assets/Ros2ForUnity` as the host user so Unity has correct file ownership.
+This starts the container (which runs `UpdateRos2ForUnity.sh` to pull and build), then copies the output to `Assets/Ros2ForUnity`
 
 ## Publishing a new release
 
@@ -55,4 +49,4 @@ The **Build Ros2ForUnity** workflow (`.github/workflows/build-ros2forunity.yml`)
    - **Build standalone?** — leave as `y` for Unity (standalone bundles the native `.so` files so ROS 2 does not need to be installed on the target machine)
 5. Click **Run workflow**
 
-The workflow takes ~20–30 minutes. When it completes, the release appears at **Releases** on the repository home page with `Ros2ForUnity.zip` attached.
+The workflow takes ~20 minutes. When it completes, the release appears at **Releases** on the repository home page with `Ros2ForUnity.zip` attached.
