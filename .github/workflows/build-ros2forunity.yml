@@ -1,0 +1,49 @@
+name: Build Ros2ForUnity
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. ros2forunity-v1.0.0)'
+        required: true
+      standalone:
+        description: 'Build standalone? (y/n)'
+        required: false
+        default: 'y'
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build Docker image
+        run: docker build -f Util/Ros2ForUnity/Dockerfile.ros2forunity-builder -t ubmr-ros2forunity:humble .
+
+      - name: Build Ros2ForUnity
+        run: |
+          printf '${{ github.event.inputs.standalone }}\n' | docker run --rm -i \
+            -v "${PWD}/Util/Ros2ForUnity":/workspace/UB-MR/Util/Ros2ForUnity \
+            -v "${PWD}/submodules/ros2-for-unity":/workspace/UB-MR/submodules/ros2-for-unity \
+            ubmr-ros2forunity:humble
+
+      - name: Package artifacts
+        run: |
+          cd submodules/ros2-for-unity/install/asset
+          zip -r "${GITHUB_WORKSPACE}/Ros2ForUnity.zip" Ros2ForUnity/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          name: "Ros2ForUnity ${{ github.event.inputs.tag }}"
+          files: Ros2ForUnity.zip
+          body: |
+            Built from commit ${{ github.sha }} on branch `${{ github.ref_name }}`.
+            Standalone: ${{ github.event.inputs.standalone }}
