@@ -39,7 +39,16 @@ EOF
 echo "Cleaning build directory to remove stale CMake caches..."
 rm -rf ./build
 
-read -r -p "Build standalone Ros2ForUnity [y/N] " standalone_confirm
+if [ -n "${ROS2FORUNITY_STANDALONE:-}" ]; then
+  case "${ROS2FORUNITY_STANDALONE}" in
+    [yY]*) standalone_confirm="y" ;;
+    *)     standalone_confirm="n" ;;
+  esac
+  echo "Standalone mode from environment: ${standalone_confirm}"
+else
+  read -r -p "Build standalone Ros2ForUnity [y/N] " standalone_confirm
+fi
+
 case "$standalone_confirm" in
   [yY]|[yY][eE][sS])
     ./build.sh --clean-install --standalone
