@@ -75,3 +75,7 @@ crashlytics-build.properties
 
 # Unity Player Logs
 Docker/Logs/ub-mr-player.log
+
+# Ros2ForUnity — generated build artifacts, managed via GitHub Releases
+/Assets/Ros2ForUnity/
+/Assets/Ros2ForUnity.meta

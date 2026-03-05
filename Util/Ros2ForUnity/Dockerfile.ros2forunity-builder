@@ -47,15 +47,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-humble-test-msgs \
   && rm -rf /var/lib/apt/lists/*
 
-# robot_localization build dependencies (needed to generate its service message types)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgeographic-dev \
-    libeigen3-dev \
-    ros-humble-diagnostic-updater \
-    ros-humble-message-filters \
-    ros-humble-tf2-eigen \
-  && rm -rf /var/lib/apt/lists/*
-
 # ros2cs prerequisites: vcstool from upstream package source
 RUN curl -s https://packagecloud.io/install/repositories/dirk-thomas/vcstool/script.deb.sh | bash \
   && apt-get update \
@@ -76,9 +67,9 @@ RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-p
     patchelf \
   && rm -rf /var/lib/apt/lists/*
 
-COPY Docker/Ros2ForUnity/ros2forunity-entrypoint.sh /ros2forunity-entrypoint.sh
+COPY Util/Ros2ForUnity/ros2forunity-entrypoint.sh /ros2forunity-entrypoint.sh
 RUN chmod +x /ros2forunity-entrypoint.sh
 
-WORKDIR /workspace/UB-MR
+WORKDIR /workspace/UB-MR/Util/Ros2ForUnity
 ENTRYPOINT ["/ros2forunity-entrypoint.sh"]
-CMD ["bash"]
+CMD ["bash", "UpdateRos2ForUnity.sh"]
