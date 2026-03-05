@@ -29,8 +29,8 @@ jobs:
       - name: Build Ros2ForUnity
         run: |
           printf '${{ github.event.inputs.standalone }}\n' | docker run --rm -i \
-            -v "${PWD}/Util/Ros2ForUnity":/workspace/UB-MR/Util/Ros2ForUnity \
-            -v "${PWD}/submodules/ros2-for-unity":/workspace/UB-MR/submodules/ros2-for-unity \
+            printf '${{ github.event.inputs.standalone }}\n' | docker run --rm -i \
+            -v "${PWD}":/workspace/UB-MR \
             ubmr-ros2forunity:humble
 
       - name: Package artifacts
