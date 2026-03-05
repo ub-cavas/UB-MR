@@ -43,4 +43,16 @@ This starts the container (which runs `UpdateRos2ForUnity.sh` to pull and build)
 
 ## Publishing a new release
 
-Trigger the **Build Ros2ForUnity** GitHub Actions workflow (`workflow_dispatch`) with a tag name. The workflow builds the Docker image, runs the build container, and publishes `Ros2ForUnity.zip` as a GitHub Release asset.
+The **Build Ros2ForUnity** workflow (`.github/workflows/build-ros2forunity.yml`) builds the Docker image, runs the build container, and publishes `Ros2ForUnity.zip` as a GitHub Release asset.
+
+### Trigger the workflow
+
+1. Go to the repository on GitHub
+2. Click **Actions** → **Build Ros2ForUnity**
+3. Click **Run workflow**
+4. Fill in the inputs:
+   - **Release tag** — a unique tag for this release, e.g. `ros2forunity-v1.0.0`. Use a new tag each time; re-using an existing tag will fail.
+   - **Build standalone?** — leave as `y` for Unity (standalone bundles the native `.so` files so ROS 2 does not need to be installed on the target machine)
+5. Click **Run workflow**
+
+The workflow takes ~20–30 minutes. When it completes, the release appears at **Releases** on the repository home page with `Ros2ForUnity.zip` attached.
