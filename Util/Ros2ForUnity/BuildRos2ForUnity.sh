@@ -21,6 +21,7 @@ esac
 docker run --rm -it \
   -v "${REPO_ROOT}/Util/Ros2ForUnity":/workspace/UB-MR/Util/Ros2ForUnity \
   -v "${REPO_ROOT}/submodules/ros2-for-unity":/workspace/UB-MR/submodules/ros2-for-unity \
+  -v "${REPO_ROOT}/.git/modules/submodules/ros2-for-unity":/workspace/UB-MR/.git/modules/submodules/ros2-for-unity \
   ubmr-ros2forunity:humble
 
 echo "Copying Ros2ForUnity assets to Unity project..."
