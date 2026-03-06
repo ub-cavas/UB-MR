@@ -52,9 +52,11 @@ fi
 case "$standalone_confirm" in
   [yY]|[yY][eE][sS])
     ./build.sh --clean-install --standalone
+    echo -e "\nROS2ForUnity built in STANDALONE mode."
     ;;
   *)
     ./build.sh --clean-install
+    echo -e "\nROS2ForUnity built in OVERLAY mode."
     ;;
 esac
 

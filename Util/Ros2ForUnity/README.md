@@ -27,13 +27,25 @@ Requires the [GitHub CLI](https://cli.github.com/) (`gh`). Run from the reposito
 
 ### Option B — Build locally
 
-Run from the repository root:
+The `BuildRos2ForUnity.sh` script expects a local Docker image named `ubmr-ros2forunity:humble`. Build it from the **repository root** (the `COPY` instruction in the Dockerfile requires this context):
+
+```bash
+docker build \
+  -f Util/Ros2ForUnity/Dockerfile.ros2forunity-builder \
+  -t ubmr-ros2forunity:humble \
+  .
+```
+**NOTE:** this only needs to be done once (or whenever the Dockerfile changes).
+
+After building the "builder" image, create the Ros2ForUnity Package:
 
 ```bash
 ./Util/Ros2ForUnity/BuildRos2ForUnity.sh
 ```
 
-This starts the container (which runs `UpdateRos2ForUnity.sh` to pull and build), then copies the output to `Assets/Ros2ForUnity`
+This starts the container (which runs `UpdateRos2ForUnity.sh` to pull the custom repositories and build them), then copies the output to `Assets/Ros2ForUnity`
+
+ After the image is built, proceed with [Option B](#option-b--build-locally) above.
 
 ## Publishing a new release
 
