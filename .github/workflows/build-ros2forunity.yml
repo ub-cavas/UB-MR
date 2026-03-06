@@ -9,7 +9,7 @@ on:
       standalone:
         description: 'Build standalone? (y/n)'
         required: false
-        default: 'y'
+        default: 'n'
 
 jobs:
   build:
