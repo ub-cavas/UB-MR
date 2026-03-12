@@ -937,7 +937,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sdfTextureSize: {x: 0, y: 0, z: 0}
   sdfTextureResolution: 32
-  sdfTexture: {fileID: 1196883501}
+  sdfTexture: {fileID: 0}
   meshToSDF: {fileID: 0}
   boundingBox: {fileID: 1929435456}
 --- !u!1660057539 &9223372036854775807
