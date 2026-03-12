@@ -249,7 +249,6 @@ namespace CAVAS.UB_MR.DT
         //TODO: Call this somewhere
         IEnumerator PublishGroundTruth()
         {
-            Debug.Log("Publishing GT BB!");
             while (true)
             {
                 yield return new WaitForSeconds(1.0f / gt_pub_rate);
