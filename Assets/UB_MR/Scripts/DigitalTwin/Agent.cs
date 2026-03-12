@@ -68,7 +68,7 @@ namespace CAVAS.UB_MR.DT
         #region Ground Truth
         float gt_pub_rate = 30.0f;
         string boundingBoxTopicName = "/virtual_obstacles"; // Topic name for publishing virtual object bounding boxes
-        float detectionRadius = 30.0f;
+        float detectionRadius = 1000.0f;
         VirtualBoundingBoxDetector mVirtualBoundingBoxDetector;
         #endregion
 
@@ -90,14 +90,14 @@ namespace CAVAS.UB_MR.DT
                 }
             }
             // Publish GT bounding boxes
-            // StartCoroutine(PublishGroundTruth());
+            StartCoroutine(PublishGroundTruth());
         }
 
         protected virtual void Update()
         {
             timer += Time.deltaTime;
             
-            // LiDAR Modification
+            // LiDAR Modification... try to modify the LiDAR as quickly as possible / no set Hz
             foreach (Tuple<Config.Sensor, SensorModifier, Transform> sensor in sensors)
             {
                 switch(sensor.Item1.type)
@@ -249,6 +249,7 @@ namespace CAVAS.UB_MR.DT
         //TODO: Call this somewhere
         IEnumerator PublishGroundTruth()
         {
+            Debug.Log("Publishing GT BB!");
             while (true)
             {
                 yield return new WaitForSeconds(1.0f / gt_pub_rate);
