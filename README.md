@@ -26,6 +26,7 @@ In order to maximize compatibility and minimize setup time, we use Docker with G
    ```
 **Option B).** Build the image locally:
    ```bash
+   git submodule update --init --recursive
    docker build -f Docker/Dockerfile -t ub-mr .
    ```
 ---
@@ -102,4 +103,3 @@ chmod +x UB-MR.x86_64 # give execution permissions
 - **Unity Logs:** Check the Console window for errors when launching the scene.
 
 *For further assistance, please open an issue in the respective GitHub repository.*
-
