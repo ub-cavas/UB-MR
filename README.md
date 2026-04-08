@@ -33,29 +33,41 @@ In order to maximize compatibility and minimize setup time, we use Docker with G
 
 ## Developer Guide
 If you intend to develop the Mixed Reality Engine, follow these steps...
+
 ### Configuration
 - **Ubuntu 2022.04.5** (Required)
-- **Unity Editor - 6000.0.36f1**
-- **ROS 2 Distribution:** Humble
+- **Unity Editor - 6000.0.36f1** [[Link]](https://unity.com/releases/editor/archive#:~:text=See%20all-,6000.0.36f1,-Security%20Alert)
+- **ROS 2 Distribution:** Humble [[Link]](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
+- **RMW**: Eclipse Cyclone DDS [[Link]](https://docs.ros.org/en/humble/Installation/RMW-Implementations/DDS-Implementations/Working-with-Eclipse-CycloneDDS.html)
 
-Install Vulkan Graphics APIs (skip if already installed)
+1. Install Vulkan Graphics APIs (skip if already installed)
    ```bash
    sudo apt update
    sudo apt install libvulkan1
    ```
+2. Clone this repo and its submodules, then initialize git lfs for the assets
 
+   ```bash
+   git clone --recurse-submodules git@github.com:ub-cavas/mr_pkg.git
+   cd UB-MR
+   git lfs install
+   ```
 
-### Unity Project Installation (with Unity Editor)
+3. Unity Project Installation (with Unity Editor)
 
-**IMPORTANT: There is a RoadRunner bug that requires reimporting some files... Unity will crash the first time the project is loaded, if this occurs force quit the editor and relaunch**
-1. Install the UnityHub [[Link]](https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux/)
-2. Install Unity Editor - 6000.0.36f1
-3. Add the project (/UB-MR) to UnityHub
-4. Download Ros2ForUnity
+   **IMPORTANT: There is a RoadRunner bug that requires reimporting some files... Unity may crash the first time the project is loaded, if this occurs force quit the editor and relaunch**
+
+   A. Install the UnityHub [[Link]](https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux/)
+
+   B. Install Unity Editor - 6000.0.36f1
+
+   C. Add the project (/UB-MR) to UnityHub
+
+   D. Download Ros2ForUnity
    ```bash
    ./Util/Ros2ForUnity/DownloadRos2ForUnity.sh             # latest release
    ```
-5. Open the project.. you may need to force quit and relaunch on first load
+   E. Open the project.. you may need to force quit and relaunch on first load
 
 #### Fix import errors - Only needed if the RoadRunner environments do not load correctly
 1. Navigate to Assets/UB_MR_Assets/RoadRunner/
