@@ -14,7 +14,7 @@ If you only intend to run Mixed Reality scenarios, use this method...
 ./download_unity_player.sh
 
 # Download a specific version
-./download_unity_player.sh v0.0.1
+./download_unity_player.sh <NAME-OF-BUILD-FOLDER>
 ```
 
 ### Setup the Runtime Environment
