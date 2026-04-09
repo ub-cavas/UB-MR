@@ -5,7 +5,7 @@ namespace CAVAS.UB_MR.DT.Vehicle
 {
     public class DynamicAgent : Agent
     {
-        string worldTransformationTopicName = "/localization/kinematic_state";
+        string worldTransformationTopicName = "/ub-mr/localization";
         
         ISubscription<nav_msgs.msg.Odometry> odometrySubscriber;
         
