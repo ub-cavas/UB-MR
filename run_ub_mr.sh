@@ -38,7 +38,9 @@ docker run --rm -it \
   --net=host \
   --name "${CONTAINER_NAME}" \
   --runtime=nvidia \
-  -e NVIDIA_DRIVER_CAPABILITIES=graphics,compute,utility \
+  --privileged=true \
+  -e NVIDIA_VISIBLE_DEVICES=all \
+  -e NVIDIA_DRIVER_CAPABILITIES=all \
   -e DISPLAY="${DISPLAY}" \
   -e UB_MR_PLAYER_DIR=/app/UB-MR-Player \
   -e CYCLONEDDS_URI=file:///etc/cyclonedds.xml \
