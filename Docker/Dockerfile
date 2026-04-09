@@ -13,11 +13,14 @@ RUN apt-get update && apt-get install -y locales curl gnupg2 lsb-release \
    ros-humble-ros-base \
    ros-humble-robot-localization \
    ros-humble-rmw-cyclonedds-cpp \
+   ros-humble-tf2-ros \
+   ros-humble-vision-msgs \
    python3-colcon-common-extensions \
  && rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash","-c"]
-RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc
+RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc \
+ && echo "source /ub_mr_workspace/install/setup.bash" >> /root/.bashrc
 
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
