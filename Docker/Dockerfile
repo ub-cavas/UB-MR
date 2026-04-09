@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install -y locales curl gnupg2 lsb-release \
 
 SHELL ["/bin/bash","-c"]
 RUN echo "source /opt/ros/humble/setup.bash" >> /root/.bashrc \
- && echo "source /ub_mr_workspace/install/setup.bash" >> /root/.bashrc
+ && echo "source /ub_mr_workspace/install/setup.bash" >> /root/.bashrc \
+ && echo "[ -f /app/cyclone_dds_config.bash ] && source /app/cyclone_dds_config.bash" >> /root/.bashrc
 
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
@@ -52,7 +53,8 @@ ENV UB_MR_PLAYER_DIR=/app/UB-MR-Player
 
 WORKDIR /app
 COPY Docker/Scripts/ub-mr.sh /app/ub-mr.sh
-RUN chmod +x /app/ub-mr.sh
+COPY Docker/Scripts/cyclone_dds_config.bash /app/cyclone_dds_config.bash
+RUN chmod +x /app/ub-mr.sh /app/cyclone_dds_config.bash
 
 # Prepare mount points for the Unity player and vehicle config files.
 # The actual content is expected to be bind-mounted from the host at runtime.
