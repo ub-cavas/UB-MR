@@ -29,13 +29,9 @@ namespace CAVAS.UB_MR.DT.Sensors
         public static void AddVirtualObjectToDatabase(VirtualObject vObj)
         {
             if (sVirtualObjects == null)
-            {
                 sVirtualObjects = new List<VirtualObject>();
-            }
             if (sVirtualObjects.Contains(vObj) == false)
-            {
                 sVirtualObjects.Add(vObj);
-            }
         }
 
         public static void UpdateVirtualObjectDatabase()
@@ -71,12 +67,13 @@ namespace CAVAS.UB_MR.DT.Sensors
             // Message Structure + Header
             DetectedObjects detectedObjectMsg = new DetectedObjects();
             detectedObjectMsg.Header = new std_msgs.msg.Header();
-            detectedObjectMsg.Header.Frame_id = "map";
+            detectedObjectMsg.Header.Frame_id = "base_link";
             builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
             time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
             detectedObjectMsg.Header.Stamp = time; //TODO: get correct timestamp
 
             List<VirtualObject> virtualObjects = GetNearbyObstacles(baseLink, detectionRadius);
+            DetectedObject[] detectedObjects = new DetectedObject[virtualObjects.Count];
             for (int i = 0; i < virtualObjects.Count; i++)
             {
                 // Extract Unity Object Properties
@@ -96,7 +93,7 @@ namespace CAVAS.UB_MR.DT.Sensors
                 ObjectClassification classification = new ObjectClassification();
                 classification.Label = ObjectClassification.CAR; //TODO: support other types of classifications
                 classification.Probability = 1.0f;
-                obj.Classification.Append(classification);
+                obj.Classification = new ObjectClassification[] { classification };
 
                 // Pose
                 obj.Kinematics.Pose_with_covariance.Pose.Position.X = ros2Center.x;
@@ -107,6 +104,13 @@ namespace CAVAS.UB_MR.DT.Sensors
                 obj.Kinematics.Pose_with_covariance.Pose.Orientation.Y = ros2Rotation.y;
                 obj.Kinematics.Pose_with_covariance.Pose.Orientation.Z = ros2Rotation.z;
                 obj.Kinematics.Pose_with_covariance.Pose.Orientation.W = ros2Rotation.w;
+                // Pose Covariance (6x6 matrix, row-major, diagonal elements)
+                obj.Kinematics.Pose_with_covariance.Covariance[0]  = 0.01; // x
+                obj.Kinematics.Pose_with_covariance.Covariance[7]  = 0.01; // y
+                obj.Kinematics.Pose_with_covariance.Covariance[14] = 0.01; // z
+                obj.Kinematics.Pose_with_covariance.Covariance[21] = 0.01; // roll
+                obj.Kinematics.Pose_with_covariance.Covariance[28] = 0.01; // pitch
+                obj.Kinematics.Pose_with_covariance.Covariance[35] = 0.01; // yaw
                 // Twist //TODO: should not be defaulting to 0.0
                 obj.Kinematics.Twist_with_covariance.Twist.Linear.X = 0.0f;
                 obj.Kinematics.Twist_with_covariance.Twist.Linear.Y = 0.0f;
@@ -119,13 +123,12 @@ namespace CAVAS.UB_MR.DT.Sensors
                 bbox.Dimensions.Y = ros2Size.y;
                 bbox.Dimensions.Z = ros2Size.z;
                 obj.Shape = bbox;
-                
-                detectedObjectMsg.Objects.Append(obj);
+
+                detectedObjects[i] = obj;
             }
+            detectedObjectMsg.Objects = detectedObjects;
             detectedObjectMsg.WriteNativeMessage();
             this.mObstacleBoundingBoxPublisher.Publish(detectedObjectMsg);
-
-            //Debug.Log("Published " + virtualObjects.Count + " virtual objects");
         }
 
         public void CleanUp()
