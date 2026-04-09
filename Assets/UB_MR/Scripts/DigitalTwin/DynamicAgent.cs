@@ -22,7 +22,7 @@ namespace CAVAS.UB_MR.DT.Vehicle
             if (ROS2_Bridge.ROS_CORE.Ok())
             {
                 this.odometrySubscriber = ROSNode().CreateSubscription<nav_msgs.msg.Odometry>(worldTransformationTopicName, OdometryUpdate);
-                print("Subscribed to odometry");
+                print("Subscribed to Odometry: " + worldTransformationTopicName);
             }
         }
 

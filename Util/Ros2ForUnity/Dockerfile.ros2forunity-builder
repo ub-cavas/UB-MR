@@ -1,0 +1,75 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+SHELL ["/bin/bash", "-c"]
+
+# Base tools and locale
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    gnupg2 \
+    locales \
+    lsb-release \
+    software-properties-common \
+    wget \
+  && locale-gen en_US en_US.UTF-8 \
+  && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV ROS_DISTRO=humble
+ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+
+# ROS 2 Humble apt source and core build tooling
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
+    | gpg --dearmor -o /usr/share/keyrings/ros-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" \
+    > /etc/apt/sources.list.d/ros2.list \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    git \
+    git-lfs \
+    python3-colcon-common-extensions \
+    ros-humble-ros-base \
+  && rm -rf /var/lib/apt/lists/* \
+  && git lfs install --system
+
+# ros2cs prerequisites: test msgs + DDS implementations
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-humble-angles \
+    ros-humble-cyclonedds \
+    ros-humble-fastrtps \
+    ros-humble-rmw-cyclonedds-cpp \
+    ros-humble-rmw-fastrtps-cpp \
+    ros-humble-test-msgs \
+  && rm -rf /var/lib/apt/lists/*
+
+# ros2cs prerequisites: vcstool from upstream package source
+RUN curl -s https://packagecloud.io/install/repositories/dirk-thomas/vcstool/script.deb.sh | bash \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends python3-vcstool \
+  && rm -rf /var/lib/apt/lists/*
+
+# ros2cs prerequisites: .NET SDK 6.0 and standalone build dependency
+# Pin dotnet packages to Microsoft's feed to avoid conflicts with Ubuntu 22.04's own dotnet packages
+RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb \
+  && dpkg -i /tmp/packages-microsoft-prod.deb \
+  && rm /tmp/packages-microsoft-prod.deb \
+  && printf 'Package: dotnet* aspnet* netstandard*\nPin: origin "packages.microsoft.com"\nPin-Priority: 1001\n' \
+       > /etc/apt/preferences.d/99-dotnet-microsoft \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends \
+    apt-transport-https \
+    dotnet-sdk-6.0 \
+    patchelf \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY Util/Ros2ForUnity/ros2forunity-entrypoint.sh /ros2forunity-entrypoint.sh
+RUN chmod +x /ros2forunity-entrypoint.sh
+
+WORKDIR /workspace/UB-MR/Util/Ros2ForUnity
+ENTRYPOINT ["/ros2forunity-entrypoint.sh"]
+CMD ["bash", "UpdateRos2ForUnity.sh"]
