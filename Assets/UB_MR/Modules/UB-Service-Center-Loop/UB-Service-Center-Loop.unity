@@ -273,8 +273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80302299e8e87f592a5d8cc8e85db6be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  origin_latitude: 42.9926175773
-  origin_longitude: -78.7925575781
+  origin_latitude: 42.9926180599693
+  origin_longitude: -78.7924945927909
   origin_altitude: 152.5
   mSdfs:
   - {fileID: 1196883501}
