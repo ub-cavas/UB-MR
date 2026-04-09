@@ -533,8 +533,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f991144aba588fc04b129b9c98bee2b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  depthTexture: {fileID: 0}
-  debugMode: 1
 --- !u!1 &798976656
 GameObject:
   m_ObjectHideFlags: 0
@@ -937,8 +935,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sdfTextureSize: {x: 0, y: 0, z: 0}
   sdfTextureResolution: 32
-  sdfTexture: {fileID: 0}
-  meshToSDF: {fileID: 0}
+  meshToSDF: {fileID: 1929435454}
   boundingBox: {fileID: 1929435456}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

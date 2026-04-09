@@ -6,8 +6,6 @@ namespace CAVAS.UB_MR.DT.Sensors
     {
         [SerializeField] Vector3 sdfTextureSize;
         [SerializeField] int sdfTextureResolution = 32;
-        
-        [SerializeField] SDFTexture sdfTexture;
         [SerializeField] MeshToSDF meshToSDF;
         [SerializeField] BoxCollider boundingBox;
         
@@ -17,23 +15,14 @@ namespace CAVAS.UB_MR.DT.Sensors
             // Bounding Box Database
             VirtualBoundingBoxDetector.AddVirtualObjectToDatabase(this);
             // Render Tex for LiDAR modification
-            if (sdfTexture != null)
-            {
-                this.meshToSDF.sdfTexture = sdfTexture;
-                this.sdfTexture.sdf = SetupSDF();
-            }
-            else
-            {
-                Debug.LogWarning("No SDF texture found for: " + this.gameObject.name);
-            }
-            
+            this.meshToSDF.sdfTexture.sdf = SetupSDF();
         }
 
         RenderTexture SetupSDF()
         {
             // SDF Texture properties
-            sdfTexture.size = sdfTextureSize;
-            sdfTexture.resolution = sdfTextureResolution;
+            this.meshToSDF.sdfTexture.size = sdfTextureSize;
+            this.meshToSDF.sdfTexture.resolution = sdfTextureResolution;
             // Render Texture properties
             int width = (int)sdfTextureSize.x * sdfTextureResolution;
             int height = (int)sdfTextureSize.y * sdfTextureResolution;
@@ -52,10 +41,10 @@ namespace CAVAS.UB_MR.DT.Sensors
 
         void OnDestroy()
         {
-            if (this.sdfTexture != null && this.sdfTexture.sdf != null)
+            if (this.meshToSDF.sdfTexture != null && this.meshToSDF.sdfTexture.sdf != null)
             {
                 Debug.Log("Destroying SDFTexture");
-                Destroy(this.sdfTexture.sdf);
+                Destroy(this.meshToSDF.sdfTexture.sdf);
             }
            
         }
