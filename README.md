@@ -29,6 +29,15 @@ In order to maximize compatibility and minimize setup time, we use Docker with G
    git submodule update --init --recursive
    docker build -f Docker/Dockerfile -t ub-mr .
    ```
+
+### Run a Mixed Reality session
+```bash
+# Start the Unity executable in the ub-mr-container
+./run_ub_mr.sh <NAME-OF-BUILD-FOLDER>
+# (Optional - in another terminal) Start the dual_ekf package
+docker exec -it ub-mr-container
+ros2 launch mr_pkg localization.launch.py
+```
 ---
 
 ## Developer Guide
