@@ -857,6 +857,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1196883500}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1929435457}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1929435456}
     - targetCorrespondingSourceObject: {fileID: -8197318504490068634, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1929435454}
@@ -891,6 +897,49 @@ MonoBehaviour:
   m_Offset: 0
   m_UpdateMode: 0
   m_Compute: {fileID: 7200000, guid: 21a034c7a3ab6be46873a82e0d02ec7b, type: 3}
+--- !u!1 &1929435455 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
+  m_PrefabInstance: {fileID: 1929435451}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1929435456
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1929435455}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 1.8, z: 4.25}
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1929435457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1929435455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2552f720924cdd5aa9da8e6338f12abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sdfTextureSize: {x: 0, y: 0, z: 0}
+  sdfTextureResolution: 32
+  sdfTexture: {fileID: 0}
+  meshToSDF: {fileID: 0}
+  boundingBox: {fileID: 1929435456}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
