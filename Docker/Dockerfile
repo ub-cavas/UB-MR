@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y locales curl gnupg2 lsb-release \
    ros-humble-tf2-ros \
    ros-humble-vision-msgs \
    python3-colcon-common-extensions \
+   python3-pyproj \
  && rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash","-c"]
