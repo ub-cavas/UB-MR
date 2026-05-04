@@ -22,7 +22,7 @@ In order to maximize compatibility and minimize setup time, we use Docker with G
 
 **Option A).** Pull from Dockerhub (Recommended)
    ```bash
-   TODO: Link Upcoming!
+   docker pull oakleyth/ub-mr:latest
    ```
 **Option B).** Build the image locally:
    ```bash
@@ -80,6 +80,13 @@ If you intend to develop the Mixed Reality Engine, follow these steps...
    ```
    E. Open the project.. you may need to force quit and relaunch on first load
 
+4. Copy agents to Unity Editor's expected path (OPTIONAL)
+
+
+   ```bash
+   ./Util/Development/copy_agents.sh
+   ```
+
 #### Fix import errors - Only needed if the RoadRunner environments do not load correctly
 1. Navigate to Assets/UB_MR_Assets/RoadRunner/
 2. In each subfolder, find the .fbx -> Right-Click -> "Reimport"
@@ -96,6 +103,8 @@ If you intend to develop the Mixed Reality Engine, follow these steps...
 
 
 ### Unity Player (Native)
+If you want the checked-in agent JSON files copied into Unity's persistent-data directory before launch:
+
 ```bash
 chmod +x UB-MR.x86_64 # give execution permissions
 
