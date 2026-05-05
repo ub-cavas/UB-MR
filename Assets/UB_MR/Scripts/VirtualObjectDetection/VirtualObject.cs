@@ -15,7 +15,7 @@ namespace CAVAS.UB_MR.DT.Sensors
             // Bounding Box Database
             VirtualBoundingBoxDetector.AddVirtualObjectToDatabase(this);
             // Render Tex for LiDAR modification
-            this.meshToSDF.sdfTexture.sdf = SetupSDF();
+            //this.meshToSDF.sdfTexture.sdf = SetupSDF();
         }
 
         RenderTexture SetupSDF()
