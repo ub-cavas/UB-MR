@@ -83,9 +83,9 @@ namespace CAVAS.UB_MR
             });
         }
 
-        public SDFTexture GetFirstSDF()
+        public IReadOnlyList<SDFTexture> GetSDFs()
         {
-            return this.mSdfs[0];
+            return this.mSdfs;
         }
 
         DT.Agent SpawnActiveAgent()
