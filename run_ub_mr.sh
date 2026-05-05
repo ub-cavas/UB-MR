@@ -87,10 +87,13 @@ docker run --rm -it \
   -e NVIDIA_DRIVER_CAPABILITIES=all \
   -e DISPLAY="${DISPLAY}" \
   -e UB_MR_PLAYER_DIR=/app/UB-MR-Player \
+  -e UB_MR_ROS_ENV_SCRIPT=/app/Scripts/host_ros2_env.bash \
   -e CYCLONEDDS_URI=file:///etc/cyclonedds.xml \
   -v ${HOME}/cyclonedds.xml:/etc/cyclonedds.xml:ro \
   -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
+  -v "${REPO_ROOT}/Docker/Scripts/ub-mr.sh:/app/ub-mr.sh:ro" \
   -v "${REPO_ROOT}/Docker/Logs:/app/Logs" \
+  -v "${REPO_ROOT}/Scripts:/app/Scripts:ro" \
   -v "${REPO_ROOT}/Agents:/root/.config/unity3d/UB-CAVAS/UB-MR:ro" \
   -v "${HOST_BUILD_DIR}:/app/UB-MR-Player" \
   "${DOCKER_ARGS[@]}" \
