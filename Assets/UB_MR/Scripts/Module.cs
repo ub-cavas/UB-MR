@@ -6,27 +6,54 @@ using robot_localization.srv;
 using CAVAS.UB_MR.ROS2;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace CAVAS.UB_MR
 {
     public class Module : MonoBehaviour
     {
+        [Header("Map Data")]
+        [SerializeField] Transform map_root;
         [SerializeField] double origin_latitude = 42.9926175773; 
         [SerializeField] double origin_longitude = -78.7925575781; 
         [SerializeField] double origin_altitude = 152.5;
+
         [Space]
+
+        [Header("Scene Data")]
         [SerializeField] List<SDFTexture> mSdfs;
+
+        [Space]
+
+        [Header("UI")]
+        [SerializeField] MapPanel mapPanel;
+
+
         string agentPath = "Prefabs/Agent";
         ROS2Node mNode;
 
         protected virtual void Start()
         {
+            mapPanel.SetMapPosition(map_root.position);
+            mapPanel.SetMapRotation(map_root.rotation.eulerAngles);
+            StartCoroutine(MapUpdate());
+            
             SpawnActiveAgent();
             if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
             {
                 this.mNode = ROS2_Bridge.ROS_CORE.CreateNode("Unity_Map");
                 SetDatum();
             }
+        }
+
+        IEnumerator MapUpdate()
+        {
+            while (true)
+            {
+                yield return null;
+                UpdateMap(mapPanel.GetMapPosition(), mapPanel.GetMapRotation());
+            }
+            
         }
 
         void SetDatum()
@@ -78,5 +105,14 @@ namespace CAVAS.UB_MR
             agent.Setup(inAgent, this);
             return agent;
         }
+    
+        void UpdateMap(Vector3 inPosition, Quaternion inRotation)
+        {
+            // Set position
+            map_root.position = inPosition;
+            // Set rotation
+            map_root.rotation = inRotation;
+        }
+
     }
 }

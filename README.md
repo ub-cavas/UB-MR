@@ -1,50 +1,91 @@
 # Mixed Reality Autonomous Vehicle Digital Twin
 
-## Quick-Start Guide
-### Install Prerequisites
-0) Latest NVIDIA Graphics Drivers (tested on RTX 4070-580.95.05) 
-1) Install Docker [[Link]](https://docs.docker.com/engine/install/ubuntu/)
-2) Setup docker user to not require sudo when running docker [[Link]](https://docs.docker.com/engine/install/linux-postinstall/)
-3) Install NVIDIA container toolkit [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and register with docker [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuration)
+## Quick-Start User Guide
+If you only intend to run Mixed Reality scenarios, use this method... 
+### Prerequisites
+0) NVIDIA Graphics Drivers 
+1) Docker [[Link]](https://docs.docker.com/engine/install/ubuntu/)
+2) Set up user to not require sudo when running Docker [[Link]](https://docs.docker.com/engine/install/linux-postinstall/)
+3) Install NVIDIA container toolkit [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and register with Docker [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuration)
 
-### Use the Dockerized version of the project
+### Download a Release
+```bash
+# Download latest release
+./download_unity_player.sh
+
+# Download a specific version
+./download_unity_player.sh <NAME-OF-BUILD-FOLDER>
+```
+
+### Setup the Runtime Environment
+In order to maximize compatibility and minimize setup time, we use Docker with GPU passthrough. The image hosts the Unity player and the required ROS nodes for Mixed Reality
+
+**Option A).** Pull from Dockerhub (Recommended)
    ```bash
-   TODO: Link Upcoming!
+   docker pull oakleyth/ub-mr:latest
    ```
-   or build it locally:
+**Option B).** Build the image locally:
    ```bash
+   git submodule update --init --recursive
    docker build -f Docker/Dockerfile -t ub-mr .
    ```
-   The docker image hosts the Unity Player and required ROS nodes for Mixed Reality
-   
 
+### Run a Mixed Reality session
+```bash
+# Start the Unity executable in the ub-mr-container
+./run_ub_mr.sh <NAME-OF-BUILD-FOLDER>
+# Start the container using the repo's local submodule copy of mr_pkg
+./run_ub_mr.sh use-local-mr-pkg <NAME-OF-BUILD-FOLDER>
+# (Optional - in another terminal) Start a localization stack
+docker exec -it ub-mr-container
+ros2 launch mr_pkg <dual_ekf_localization.launch.py> <autoware_localization.launch.py> <carla_localization.py>
+```
 ---
 
 ## Developer Guide
-### Suggested Configuration
-- **Ubuntu 2022.04.5** 
-- **Unity Editor - 6000.0.36f1**
-- **ROS 2 Distribution:** Humble
+If you intend to develop the Mixed Reality Engine, follow these steps...
 
-Install Vulkan Graphics APIs (skip if already installed)
+### Configuration
+- **Ubuntu 2022.04.5** (Required)
+- **Unity Editor - 6000.0.36f1** [[Link]](https://unity.com/releases/editor/archive#:~:text=See%20all-,6000.0.36f1,-Security%20Alert)
+- **ROS 2 Distribution:** Humble [[Link]](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
+- **RMW**: Eclipse Cyclone DDS [[Link]](https://docs.ros.org/en/humble/Installation/RMW-Implementations/DDS-Implementations/Working-with-Eclipse-CycloneDDS.html)
+
+1. Install Vulkan Graphics APIs (skip if already installed)
    ```bash
    sudo apt update
    sudo apt install libvulkan1
    ```
+2. Clone this repo and its submodules, then initialize git lfs for the assets
 
-### Unity Player Installation (the packaged version)
-**NOTE: you may need to create the `UB-MR/Builds` folder if it does not exist**
-1. Download the latest release [[Link]](https://github.com/ub-cavas/UB-MR/releases/tag/v0.0.1)
-2. Extract the folder into `UB-MR/Builds` 
+   ```bash
+   git clone --recurse-submodules git@github.com:ub-cavas/mr_pkg.git
+   cd UB-MR
+   git lfs install
+   ```
+
+3. Unity Project Installation (with Unity Editor)
+
+   **IMPORTANT: There is a RoadRunner bug that requires reimporting some files... Unity may crash the first time the project is loaded, if this occurs force quit the editor and relaunch**
+
+   A. Install the UnityHub [[Link]](https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux/)
+
+   B. Install Unity Editor - 6000.0.36f1
+
+   C. Add the project (/UB-MR) to UnityHub
+
+   D. Download Ros2ForUnity
+   ```bash
+   ./Util/Ros2ForUnity/DownloadRos2ForUnity.sh             # latest release
+   ```
+   E. Open the project.. you may need to force quit and relaunch on first load
+
+4. Copy agents to Unity Editor's expected path (OPTIONAL)
 
 
-### Unity Project Installation (with Unity Editor)
-
-**IMPORTANT: There is a RoadRunner bug that requires reimporting some files... Unity will crash the first time the project is loaded, if this occurs force quit the editor and relaunch**
-1. Install the UnityHub [[Link]](https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux/)
-2. Install Unity Editor - 6000.0.36f1
-3. Add the project (/UB-MR) to UnityHub
-4. Open the project.. you may need to force quit and relaunch on first load
+   ```bash
+   ./Util/Development/copy_agents.sh
+   ```
 
 #### Fix import errors - Only needed if the RoadRunner environments do not load correctly
 1. Navigate to Assets/UB_MR_Assets/RoadRunner/
@@ -52,24 +93,6 @@ Install Vulkan Graphics APIs (skip if already installed)
 3. This takes some time...
 
 ![File Location](Docs/RR_Reimport_FBX.png)
-
-
-### ROS2 Interface
-1. Install ROS2 Humble [[Link]](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
-2. Clone the mr_pkg ROS2 workspace:
-   ```bash
-   git clone https://github.com/ub-cavas/mr_pkg.git
-   ```
-3. Remember: when you update the ROS 2 package, rebuild it and source the workspace:
-   ```bash
-   cd ~/ros2_ws
-   colcon build
-   source install/setup.bash
-   ```
-
-
-
-
 
 ## Running the Project
 
@@ -80,6 +103,8 @@ Install Vulkan Graphics APIs (skip if already installed)
 
 
 ### Unity Player (Native)
+If you want the checked-in agent JSON files copied into Unity's persistent-data directory before launch:
+
 ```bash
 chmod +x UB-MR.x86_64 # give execution permissions
 
@@ -110,4 +135,3 @@ chmod +x UB-MR.x86_64 # give execution permissions
 - **Unity Logs:** Check the Console window for errors when launching the scene.
 
 *For further assistance, please open an issue in the respective GitHub repository.*
-
