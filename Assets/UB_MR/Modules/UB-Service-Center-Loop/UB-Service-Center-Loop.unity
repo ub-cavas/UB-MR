@@ -418,6 +418,7 @@ MonoBehaviour:
   origin_altitude: 152.5
   mSdfs:
   - {fileID: 1196883501}
+  - {fileID: 1335542471}
   mapPanel: {fileID: 1209921482}
 --- !u!1001 &219841356
 PrefabInstance:
