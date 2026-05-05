@@ -21,9 +21,11 @@ RUN apt-get update && apt-get install -y locales curl gnupg2 lsb-release \
 
 SHELL ["/bin/bash","-c"]
 RUN echo "source /app/ub-mr-env.sh" >> /root/.bashrc \
+ && echo "[[ -f \"${UB_MR_ROS_ENV_SCRIPT:-/app/Scripts/host_ros2_env.bash}\" ]] && source \"${UB_MR_ROS_ENV_SCRIPT:-/app/Scripts/host_ros2_env.bash}\"" >> /root/.bashrc \
  && echo "alias ub-mr-player='/app/ub-mr.sh'" >> /root/.bashrc
 
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+ENV UB_MR_ROS_ENV_SCRIPT=/app/Scripts/host_ros2_env.bash
 
 WORKDIR /ub_mr_workspace
 COPY submodules/mr_pkg /ub_mr_workspace/src/mr_pkg
@@ -54,11 +56,13 @@ ENV UB_MR_LOCAL_MR_PKG_WS=/ub_mr_local_mr_pkg_ws
 ENV UB_MR_USE_LOCAL_MR_PKG=0
 
 WORKDIR /app
+COPY Scripts/host_ros2_env.bash /app/Scripts/host_ros2_env.bash
+COPY Docker/Scripts/ub-mr-entrypoint.sh /app/ub-mr-entrypoint.sh
 COPY Docker/Scripts/ub-mr.sh /app/ub-mr.sh
 COPY Docker/Scripts/ub-mr-env.sh /app/ub-mr-env.sh
 COPY Docker/Scripts/ub-mr-shell.sh /app/ub-mr-shell.sh
 COPY Docker/Scripts/cyclone_dds_config.bash /app/cyclone_dds_config.bash
-RUN chmod +x /app/ub-mr.sh /app/ub-mr-env.sh /app/ub-mr-shell.sh /app/cyclone_dds_config.bash
+RUN chmod +x /app/Scripts/host_ros2_env.bash /app/ub-mr-entrypoint.sh /app/ub-mr.sh /app/ub-mr-env.sh /app/ub-mr-shell.sh /app/cyclone_dds_config.bash
 
 # Prepare mount points for the Unity player and vehicle config files.
 # The actual content is expected to be bind-mounted from the host at runtime.
@@ -67,4 +71,5 @@ RUN mkdir -p "$UB_MR_PLAYER_DIR" \
  && mkdir -p /root/.config/unity3d/UB-CAVAS/UB-MR
 
 # TODO: Use Vulkan API
+ENTRYPOINT ["/app/ub-mr-entrypoint.sh"]
 CMD ["/app/ub-mr-shell.sh"]
