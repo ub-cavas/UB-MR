@@ -1,0 +1,6 @@
+[submodule "submodules/ros2-for-unity"]
+	path = submodules/ros2-for-unity
+	url = https://github.com/ub-cavas/ros2-for-unity.git
+[submodule "submodules/mr_pkg"]
+	path = submodules/mr_pkg
+	url = git@github.com:ub-cavas/mr_pkg.git
