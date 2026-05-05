@@ -142,7 +142,7 @@ namespace CAVAS.UB_MR.DT
                         qosProfile.SetHistory(historyPolicy, historyDepth);
                         qosProfile.SetDurability(durabilityPolicy);
 
-                        sensor = new LidarModifier(this, sensor_config.topic, raysPerScan, lidarModifierComputeShader, ROSNode(), qosProfile, inModule.GetFirstSDF());
+                        sensor = new LidarModifier(this, sensor_config.topic, raysPerScan, lidarModifierComputeShader, ROSNode(), qosProfile, inModule.GetSDFs());
                         LidarModifier lidarModifier = (LidarModifier)sensor;
                         lidarModifier.UpdateSDFRaytraceParameters(maxRaytraceDistance, hitThreshold, maxIterations); // TODO: Does this need to be called here?
                         break;
