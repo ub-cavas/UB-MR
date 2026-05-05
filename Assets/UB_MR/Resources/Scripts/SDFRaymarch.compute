@@ -1,7 +1,7 @@
 #pragma kernel SDFRaymarch
 #define THREADS 128
 
-StructuredBuffer<float3> _Points; // in: ray dir (LOCAL to object), 
+StructuredBuffer<float4> _Points; // in: current best point along the ray (LOCAL to object),
 RWStructuredBuffer<float4> _ModifiedPoints; //out: hit position (world.xyz), hit (w)
 
 float4x4 _WorldToSDFSpace;
@@ -11,6 +11,7 @@ SamplerState sampler_SDF;
 
 // Units are in SDF space
 float _Margin;
+float _MaxDistance;
 int   _MaxIterations;
 float _HitThreshold;
 
@@ -43,8 +44,9 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
     if (id.x >= count) return;
 
     // Direction in OBJECT-LOCAL space
-    float3 localDir = _Points[id.x];
-    if (all(abs(localDir) < 1e-6)) { _ModifiedPoints[id.x] = float4(0,0,0,0); return; }
+    float4 currentPoint = _Points[id.x];
+    float3 localDir = currentPoint.xyz;
+    if (all(abs(localDir) < 1e-6)) { _ModifiedPoints[id.x] = currentPoint; return; }
 
     // Convert to WORLD direction using rotation+scale only (no translation)
     float3 worldDir = mul(_LocalToWorldRS, float4(localDir, 0.0)).xyz;
@@ -56,8 +58,9 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
 
     // Clip to unit cube [0,1]^3
     float tEnter, tExit;
-    if (!RayBoxUnit(texRayOrigin, texRayDir, tEnter, tExit)) { _ModifiedPoints[id.x] = float4(_Points[id.x], 0.0); return; }
+    if (!RayBoxUnit(texRayOrigin, texRayDir, tEnter, tExit)) { _ModifiedPoints[id.x] = currentPoint; return; }
     float step = max(tEnter, 0.0);
+    float currentDistance = length(localDir);
     
     // Raymarch
     [loop]
@@ -69,13 +72,14 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
         {
             float3 worldHit = mul(_SDFToWorldSpace, float4(texPoint, 1.0)).xyz;
             float3 localHit = mul(_WorldToLocalRS, float4(worldHit - _RayOriginWorld, 0.0)).xyz;
-            if (length(localHit) < length(_Points[id.x].xyz))
+            float hitDistance = length(localHit);
+            if (hitDistance <= _MaxDistance && hitDistance < currentDistance)
             {
                 _ModifiedPoints[id.x] = float4(localHit, 1.0);
             }
             else
             {
-                _ModifiedPoints[id.x] = float4(_Points[id.x], 0.0);
+                _ModifiedPoints[id.x] = currentPoint;
             }
             return;
         }
@@ -87,5 +91,5 @@ void SDFRaymarch (uint3 id : SV_DispatchThreadID)
     }
 
     // no hit
-    _ModifiedPoints[id.x] = float4(_Points[id.x], 0.0);
+    _ModifiedPoints[id.x] = currentPoint;
 }
