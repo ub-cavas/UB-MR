@@ -4,6 +4,7 @@ using UnityEngine;
 using sensor_msgs.msg;
 using CAVAS.UB_MR.ROS2;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 
 namespace CAVAS.UB_MR.DT.Sensors.Lidar
@@ -12,13 +13,13 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
     {
         ComputeShader mLiDARComputeShader;
         int mKernel;
-        Vector3 mWorldPosition = Vector3.zero;
+        float mMaxSDFRange = 10f;
 
         #region Data Queues
         // Incoming Point Clouds
         ConcurrentQueue<PointCloud2> mInput_PCD_Queue;
         readonly object _staged_lock = new object();
-        Vector3[] mStaged_PCD;
+        Vector4[] mStaged_PCD;
         // Outgoing Point Clouds
         ConcurrentQueue<PointCloud2> mOutput_PCD_Queue;
         readonly object _ready_lock = new object();
@@ -35,10 +36,12 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         #endregion
         
         #region SDF
-        SDFTexture mSDF;
+        readonly List<SDFTexture> mSDFs;
+        readonly List<SDFTexture> mActiveSDFs = new List<SDFTexture>();
+        readonly HashSet<int> mWarnedInvalidSDFIndices = new HashSet<int>();
         #endregion
 
-        public LidarModifier(Agent inOwner, string inTopicName, int inRaysPerScan, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, SDFTexture inSDFs)
+        public LidarModifier(Agent inOwner, string inTopicName, int inRaysPerScan, ComputeShader inComputeShader, ROS2Node inNode, QualityOfServiceProfile inQoSProfile, IReadOnlyList<SDFTexture> inSDFs)
         {
             // -- Cache the provided compute shader --
             this.mLiDARComputeShader = inComputeShader;
@@ -51,36 +54,30 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
             this.mInput_PCD_Queue = new ConcurrentQueue<PointCloud2>();
             this.mOutput_PCD_Queue = new ConcurrentQueue<PointCloud2>();
 
-            // TODO: Support multiple SDFs
-            this.mKernel = this.mLiDARComputeShader.FindKernel(inComputeShader.name);
-            this.mSDF = inSDFs;
-            // This part should be done for each SDF
-            this.mLiDARComputeShader.SetTexture(this.mKernel, "_SDF", this.mSDF.sdf);
-            this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
-            this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
+            this.mKernel = this.mLiDARComputeShader.FindKernel("SDFRaymarch");
+            this.mSDFs = inSDFs != null ? new List<SDFTexture>(inSDFs) : new List<SDFTexture>();
             // Global for ALL SDFs
             // (Default Parameters)
             float maxDistance = 10f;
             float hitThreshold = 0.0001f;
             int maxIterations = 128;
             this.UpdateSDFRaytraceParameters(maxDistance, hitThreshold, maxIterations);
-            this.mLiDARComputeShader.SetVector("_Origin", this.mWorldPosition);
         }
 
         #region ROS2 Subscription Initialization
         IEnumerator Subscribe_To_PCD2(string inTopicName, QualityOfServiceProfile inQoSProfile, int inCount)
         {
             // -- Optimization: Pre-allocate the "staging" CPU Buffers --
-            this.mStaged_PCD = new Vector3[inCount];
+            this.mStaged_PCD = new Vector4[inCount];
             this.mReadyPCD = new Vector4[inCount];
             Debug.Log("CPU Buffers Created!");
             yield return new WaitForSeconds(0.5f);
 
             // -- Optimization: Pre-allocate compute buffers (matched with "staging" buffers) --
-            const int inputStride = sizeof(float) * 3;
+            const int inputStride = sizeof(float) * 4;
             const int outputStride = sizeof(float) * 4;
             this.mInput_GPU_Buffer = new ComputeBuffer(inCount, inputStride, ComputeBufferType.Structured);
-            this.mOutput_GPU_Buffer = new ComputeBuffer(inCount, outputStride);
+            this.mOutput_GPU_Buffer = new ComputeBuffer(inCount, outputStride, ComputeBufferType.Structured);
             Debug.Log("GPU Buffers Created!");
             yield return null;
 
@@ -113,7 +110,6 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
 
             int width = (int)inOriginalMessage.Width;
             int height = (int)inOriginalMessage.Height;
-            int count = width * height;
             int pointStep = (int)inOriginalMessage.Point_step;
             int rowStep = (int)inOriginalMessage.Row_step;
 
@@ -148,7 +144,7 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
                                 byte* pt = row + (long)cIdx * pointStep;
 
                                 // Convert back to ROS coordinate frame
-                                Vector3 v3 = new Vector3(this.mReadyPCD[idx].x, this.mReadyPCD[idx].y, this.mReadyPCD[idx].z);
+                                Vector3 v3 = new Vector3(inNewData[idx].x, inNewData[idx].y, inNewData[idx].z);
                                 Vector3 rosPos = Ros2Utility.UnityToRos2Position(v3);
 
                                 WriteF32(pt + xOff, rosPos.x);
@@ -272,7 +268,8 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
                                 float x = ReadF32(pt + xOff);
                                 float y = ReadF32(pt + yOff);
                                 float z = ReadF32(pt + zOff);
-                                this.mStaged_PCD[idx++] = Ros2Utility.Ros2ToUnityPosition(new Vector3(x, y, z));
+                                Vector3 point = Ros2Utility.Ros2ToUnityPosition(new Vector3(x, y, z));
+                                this.mStaged_PCD[idx++] = new Vector4(point.x, point.y, point.z, 0.0f);
                             }
                         }
                     }
@@ -292,22 +289,52 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         /// <param name="inMargin"></param>
         public void UpdateSDFRaytraceParameters(float inMaxDistance, float inHitThreshold, int inMaxIterations, float inMargin = 0.05f)
         {
+            this.mMaxSDFRange = inMaxDistance;
             this.mLiDARComputeShader.SetFloat("_Margin", inMargin);
             this.mLiDARComputeShader.SetFloat("_MaxDistance", inMaxDistance);
             this.mLiDARComputeShader.SetFloat("_HitThreshold", inHitThreshold);
             this.mLiDARComputeShader.SetInt("_MaxIterations", inMaxIterations);
         }
 
-        void UpdateSDFTransforms(Transform inTransform)
+        void UpdateLidarTransforms(Transform inTransform)
         {
-            // Update SDF Matrices
-            this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", this.mSDF.worldToSDFTexCoords);
-            this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", this.mSDF.worldToSDFTexCoords.inverse);
             // Update LiDAR Transform on Compute Shader
             this.mLiDARComputeShader.SetVector("_RayOriginWorld", inTransform.position);
             Matrix4x4 rs = Matrix4x4.TRS(Vector3.zero, inTransform.rotation, inTransform.lossyScale);
             this.mLiDARComputeShader.SetMatrix("_LocalToWorldRS", rs);
             this.mLiDARComputeShader.SetMatrix("_WorldToLocalRS", rs.inverse);
+        }
+
+        void BindSDF(SDFTexture inSDF)
+        {
+            this.mLiDARComputeShader.SetTexture(this.mKernel, "_SDF", inSDF.sdf);
+            this.mLiDARComputeShader.SetMatrix("_WorldToSDFSpace", inSDF.worldToSDFTexCoords);
+            this.mLiDARComputeShader.SetMatrix("_SDFToWorldSpace", inSDF.worldToSDFTexCoords.inverse);
+        }
+
+        List<SDFTexture> GetActiveSDFs(Transform inTransform)
+        {
+            this.mActiveSDFs.Clear();
+
+            for (int i = 0; i < this.mSDFs.Count; i++)
+            {
+                SDFTexture sdf = this.mSDFs[i];
+                if (sdf == null || sdf.sdf == null)
+                {
+                    if (this.mWarnedInvalidSDFIndices.Add(i))
+                    {
+                        Debug.LogWarning($"Skipping invalid SDF entry at index {i} for LiDAR modifier.");
+                    }
+                    continue;
+                }
+
+                if (Vector3.Distance(inTransform.position, sdf.transform.position) <= this.mMaxSDFRange)
+                {
+                    this.mActiveSDFs.Add(sdf);
+                }
+            }
+
+            return this.mActiveSDFs;
         }
         #endregion
 
@@ -326,20 +353,38 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
             const int THREADS = 128; // ** MUST MATCH COMPUTE SHADER **
             int groupsX = (count + THREADS - 1) / THREADS;
 
-            // -- Update GPU cached transforms of SDFs --
-            UpdateSDFTransforms(inTransform);
+            List<SDFTexture> activeSDFs = GetActiveSDFs(inTransform);
+            if (activeSDFs.Count == 0)
+            {
+                EnqueuePCD(originalPCD, this.mOutput_PCD_Queue);
+                return true;
+            }
+
+            // -- Update GPU cached transforms of the LiDAR --
+            UpdateLidarTransforms(inTransform);
 
             // -- Prepare GPU data buffers with new data --
             StagePCD(originalPCD); // (atomically) updates this.mStaged_PCD
             this.mInput_GPU_Buffer.SetData(this.mStaged_PCD);
-            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", this.mInput_GPU_Buffer);
-            this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", this.mOutput_GPU_Buffer);
 
-            // -- Dispatch to GPU --
-            this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
+            ComputeBuffer currentBuffer = this.mInput_GPU_Buffer;
+            ComputeBuffer nextBuffer = this.mOutput_GPU_Buffer;
+
+            foreach (SDFTexture sdf in activeSDFs)
+            {
+                BindSDF(sdf);
+                this.mLiDARComputeShader.SetBuffer(this.mKernel, "_Points", currentBuffer);
+                this.mLiDARComputeShader.SetBuffer(this.mKernel, "_ModifiedPoints", nextBuffer);
+                this.mLiDARComputeShader.Dispatch(this.mKernel, groupsX, 1, 1);
+
+                ComputeBuffer temp = currentBuffer;
+                currentBuffer = nextBuffer;
+                nextBuffer = temp;
+            }
+
             lock (_ready_lock) // NOTE: I suspect this is where the main thread spends most of its time
             {
-                this.mOutput_GPU_Buffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: count);
+                currentBuffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: count);
                 // -- Create new message with GPU results --
                 PointCloud2 pcd = ModifyPCD_InPlace(originalPCD, this.mReadyPCD);
                 EnqueuePCD(pcd, this.mOutput_PCD_Queue);
