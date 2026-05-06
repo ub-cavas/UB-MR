@@ -5,60 +5,56 @@ namespace UB_MR.Redis_Networking
 {
     public class TrafficRenderer : MonoBehaviour
     {
-        [SerializeField] TrafficReceiver receiver;
+        [SerializeField] private TrafficReceiver receiver;
+        [SerializeField] private GameObject vehiclePrefab;
+        [SerializeField] private Vector3 originOffset = new Vector3(1.347f, 0f, 5.916f);
 
-        [Header("Prefabs")]
-        public GameObject defaultVehicle;
-        public GameObject defaultWalker;
+        private Dictionary<string, GameObject> spawnedVehicles = new();
 
-        Dictionary<string, GameObject> actors = new();
-
-        Queue<TrafficReceiver.TrafficActorData> CREATE_Q = new();
-        Queue<TrafficReceiver.TrafficActorData> UPDATE_Q = new();
-        Queue<TrafficReceiver.TrafficActorData> REMOVE_Q = new();
-
-        void Start()
+        void OnEnable()
         {
-            receiver.OnSpawnTrafficActor += a => CREATE_Q.Enqueue(a);
-            receiver.OnTrafficActorUpdate += a => UPDATE_Q.Enqueue(a);
-            receiver.OnDespawnTrafficActor += a => REMOVE_Q.Enqueue(a);
+            receiver.OnSpawnVehicle += HandleSpawn;
+            receiver.OnVehicleUpdate += HandleUpdate;
+            receiver.OnDespawnVehicle += HandleDespawn;
         }
 
-        void Update()
+        void OnDisable()
         {
-            while (CREATE_Q.TryDequeue(out var a))
-            {
-                GameObject prefab =
-                    a.actor_type == "walker"
-                        ? defaultWalker
-                        : defaultVehicle;
+            receiver.OnSpawnVehicle -= HandleSpawn;
+            receiver.OnVehicleUpdate -= HandleUpdate;
+            receiver.OnDespawnVehicle -= HandleDespawn;
+        }
 
-                GameObject go = Instantiate(
-                    prefab,
-                    a.Position(),
-                    a.Orientation()
-                );
+        private void HandleSpawn(TrafficReceiver.VehicleData data)
+        {
+            if (spawnedVehicles.ContainsKey(data.id)) return;
 
-                actors[a.Id] = go;
-            }
+            GameObject go = Instantiate(vehiclePrefab);
+            go.name = $"Vehicle_{data.id}";
 
-            while (UPDATE_Q.TryDequeue(out var a))
-            {
-                if (!actors.ContainsKey(a.Id)) continue;
+            go.transform.position = data.Position() + originOffset;
+            go.transform.rotation = data.Orientation();
 
-                actors[a.Id].transform.SetPositionAndRotation(
-                    a.Position(),
-                    a.Orientation()
-                );
-            }
+            spawnedVehicles[data.id] = go;
+        }
 
-            while (REMOVE_Q.TryDequeue(out var a))
-            {
-                if (!actors.ContainsKey(a.Id)) continue;
+        private void HandleUpdate(TrafficReceiver.VehicleData data)
+        {
+            Debug.Log($"Vehicle {data.id} → {data.Position()}");
+            Debug.Log($"SPAWN POINT: {data.location.x}, {data.location.y}, {data.location.z}");
+        
+            if (!spawnedVehicles.TryGetValue(data.id, out GameObject go)) return;
 
-                Destroy(actors[a.Id]);
-                actors.Remove(a.Id);
-            }
+            go.transform.position = data.Position() + originOffset;
+            go.transform.rotation = data.Orientation();
+        }
+
+        private void HandleDespawn(TrafficReceiver.VehicleData data)
+        {
+            if (!spawnedVehicles.TryGetValue(data.id, out GameObject go)) return;
+
+            Destroy(go);
+            spawnedVehicles.Remove(data.id);
         }
     }
 }
