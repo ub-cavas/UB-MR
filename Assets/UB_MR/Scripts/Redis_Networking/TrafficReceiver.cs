@@ -1,28 +1,23 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Newtonsoft.Json;
 using System.Text;
+using UnityEngine;
+using Newtonsoft.Json;
 
 namespace UB_MR.Redis_Networking
 {
     public class TrafficReceiver : MonoBehaviour
     {
-        //Agent events
-        public Action<VehicleData> OnSpawnNewVehicle;
-        public Action<VehicleData> OnDespawnVehicle;
-        public Action<VehicleData> OnVehicleUpdate;
-
-        //Traffic actor events
-        public Action<TrafficActorData> OnSpawnTrafficActor;
-        public Action<TrafficActorData> OnDespawnTrafficActor;
-        public Action<TrafficActorData> OnTrafficActorUpdate;
+        public event Action<VehicleData> OnSpawnVehicle;
+        public event Action<VehicleData> OnDespawnVehicle;
+        public event Action<VehicleData> OnVehicleUpdate;
 
         [Serializable]
-        public class Location
+        public class LocationData
         {
             public float x;
             public float y;
@@ -30,212 +25,140 @@ namespace UB_MR.Redis_Networking
         }
 
         [Serializable]
-        public class Rotation
-        {
-            public float roll;
-            public float pitch;
-            public float yaw;
-        }
-
-        [Serializable]
         public class VehicleData
         {
             public string id;
-            public Location location;
+            public LocationData location;
             public float yaw;
             public string blueprint;
             public string color;
 
             public Vector3 Position()
             {
-                return ConvertPositionUEToUnity(
-                    new Vector3(location.x, location.y, location.z),
-                    100
+                return new Vector3(
+                     location.y,
+                     location.z,
+                     location.x
                 );
             }
 
             public Quaternion Orientation()
             {
-                return Quaternion.Euler(
-                    ConvertRotationUEToUnity(new Vector3(0, yaw, 0))
-                );
+                return Quaternion.Euler(0f, -yaw, 0f);
             }
         }
 
         [Serializable]
-        public class TrafficActorData
+        private class TrafficPayload
         {
-            public int actor_id;
-            public string actor_type;
-            public string type_id;
-            public Location location;
-            public Rotation rotation;
-            public Location extent;
-            public Location velocity;
-
-            public string Id => actor_id.ToString();
-
-            public Vector3 Position()
-            {
-                return ConvertPositionUEToUnity(
-                    new Vector3(location.x, location.y, location.z),
-                    100
-                );
-            }
-
-            public Quaternion Orientation()
-            {
-                return Quaternion.Euler(
-                    ConvertRotationUEToUnity(
-                        new Vector3(rotation.pitch, rotation.yaw, rotation.roll)
-                    )
-                );
-            }
+            public List<VehicleData> vehicles;
+            public double timestamp;
         }
 
-        [Serializable]
-        public class TrafficPayload
-        {
-            public Dictionary<string, VehicleData> vehicles;
-            public List<TrafficActorData> traffic;
-        }
+        [Header("Network")]
+        [SerializeField] private int listenPort = 12345;
 
-        public static Vector3 ConvertPositionUEToUnity(Vector3 ue, float scale)
-        {
-            return new Vector3(
-                ue.y * scale / 100f,
-                ue.z * scale / 100f,
-                ue.x * scale / 100f
-            );
-        }
+        private readonly ConcurrentQueue<TrafficPayload> _incomingPayloads = new();
 
-        public static Vector3 ConvertRotationUEToUnity(Vector3 ue)
-        {
-            return new Vector3(-ue.x, -ue.y, ue.z);
-        }
+        private readonly Dictionary<string, VehicleData> _knownVehicles = new();
 
-        private UdpClient udpClient;
-        private Thread receiveThread;
-        private bool isReceiving;
-
-        public int port = 12345;
-
-        private readonly object _lock = new object();
-
-        private Dictionary<string, VehicleData> agents = new();
-        private Dictionary<string, TrafficActorData> trafficActors = new();
+        private UdpClient _udpClient;
+        private Thread _receiveThread;
+        private volatile bool _isReceiving;
 
         void Start()
         {
-            StartReceiving();
+            _udpClient = new UdpClient(listenPort);
+
+            Debug.Log($"Listening on UDP port {listenPort}");
+            Debug.Log($"Socket bound to: {_udpClient.Client.LocalEndPoint}");
+
+            _isReceiving = true;
+            _receiveThread = new Thread(ReceiveLoop) { IsBackground = true, Name = "TrafficReceiver" };
+            _receiveThread.Start();
+            Debug.Log($"Listening on UDP port {listenPort}");
+        }
+
+        void Update()
+        {
+            while (_incomingPayloads.TryDequeue(out TrafficPayload payload))
+            {
+                ProcessPayload(payload);
+            }
         }
 
         void OnDestroy()
         {
-            isReceiving = false;
-            udpClient?.Close();
-            receiveThread?.Join(500);
+            _isReceiving = false;
+            _udpClient?.Close();
+            _receiveThread?.Join(500);
         }
 
-        void StartReceiving()
+        private void ReceiveLoop()
         {
-            udpClient = new UdpClient(port);
-            isReceiving = true;
-
-            receiveThread = new Thread(ReceiveLoop);
-            receiveThread.Start();
-
-            Debug.Log($"[TrafficReceiver] Listening on UDP {port}");
-        }
-
-        void ReceiveLoop()
-        {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Any, 0);
-
-            while (isReceiving)
+            IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, 0);
+            while (_isReceiving)
             {
                 try
                 {
-                    byte[] data = udpClient.Receive(ref ep);
+                    byte[] data = _udpClient.Receive(ref endpoint);
                     string json = Encoding.UTF8.GetString(data);
 
-                    TrafficPayload payload =
-                        JsonConvert.DeserializeObject<TrafficPayload>(json);
+                    Debug.Log($"[TrafficReceiver] Packet received from {endpoint.Address}:{endpoint.Port} | Size: {data.Length} bytes");
 
-                    lock (_lock)
-                    {
-                        ProcessAgents(payload.vehicles);
-                        ProcessTraffic(payload.traffic);
-                    }
+                    TrafficPayload payload = JsonConvert.DeserializeObject<TrafficPayload>(json);
+                    if (payload?.vehicles != null)
+                        _incomingPayloads.Enqueue(payload);
+                }
+                catch (SocketException)
+                {
+                    break;
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"[TrafficReceiver] {e.Message}");
+                    Debug.LogError($"[TrafficReceiver] Receive error: {e.Message}");
                 }
             }
         }
 
-        void ProcessAgents(Dictionary<string, VehicleData> incoming)
+        private void ProcessPayload(TrafficPayload payload)
         {
-            foreach (var kv in incoming)
-            {
-                kv.Value.id = kv.Key;
 
-                if (agents.ContainsKey(kv.Key))
+
+            HashSet<string> seen = new HashSet<string>();
+
+            foreach (VehicleData vehicle in payload.vehicles)
+            {
+                if (string.IsNullOrEmpty(vehicle.id)) continue;
+
+                seen.Add(vehicle.id);
+
+                if (_knownVehicles.TryGetValue(vehicle.id, out _))
                 {
-                    agents[kv.Key] = kv.Value;
-                    OnVehicleUpdate?.Invoke(kv.Value);
+                    _knownVehicles[vehicle.id] = vehicle;
+                    OnVehicleUpdate?.Invoke(vehicle);
                 }
                 else
                 {
-                    agents.Add(kv.Key, kv.Value);
-                    OnSpawnNewVehicle?.Invoke(kv.Value);
+                    _knownVehicles[vehicle.id] = vehicle;
+                    OnSpawnVehicle?.Invoke(vehicle);
                 }
             }
 
-            List<string> toRemove = new();
-            foreach (var id in agents.Keys)
-                if (!incoming.ContainsKey(id))
-                    toRemove.Add(id);
-
-            foreach (var id in toRemove)
+            List<string> toRemove = new List<string>();
+            foreach (string id in _knownVehicles.Keys)
             {
-                OnDespawnVehicle?.Invoke(agents[id]);
-                agents.Remove(id);
-            }
-        }
-
-        void ProcessTraffic(List<TrafficActorData> incoming)
-        {
-            HashSet<string> seen = new();
-
-            foreach (var actor in incoming)
-            {
-                string id = actor.Id;
-                seen.Add(id);
-
-                if (trafficActors.ContainsKey(id))
-                {
-                    trafficActors[id] = actor;
-                    OnTrafficActorUpdate?.Invoke(actor);
-                }
-                else
-                {
-                    trafficActors.Add(id, actor);
-                    OnSpawnTrafficActor?.Invoke(actor);
-                }
-            }
-
-            List<string> toRemove = new();
-            foreach (var id in trafficActors.Keys)
                 if (!seen.Contains(id))
                     toRemove.Add(id);
+            }
 
-            foreach (var id in toRemove)
+            foreach (string id in toRemove)
             {
-                OnDespawnTrafficActor?.Invoke(trafficActors[id]);
-                trafficActors.Remove(id);
+                OnDespawnVehicle?.Invoke(_knownVehicles[id]);
+                _knownVehicles.Remove(id);
             }
         }
+
+        public IReadOnlyDictionary<string, VehicleData> KnownVehicles => _knownVehicles;
     }
 }
