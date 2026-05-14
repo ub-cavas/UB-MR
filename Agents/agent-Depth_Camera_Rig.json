@@ -1,0 +1,26 @@
+{
+  "name": "Depth_Camera_Rig",
+  "isDynamic": true,
+  "model": "Lincoln_MKZ",
+  "sensors": {
+    "ZED_Camera": {
+      "name": "ZED_Camera",
+      "topic": "/zed/zed_node/rgb/color/rect/image",
+      "type": "Camera",
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "magnitude": 0.0,
+        "sqrMagnitude": 0.0
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "magnitude": 0.0,
+        "sqrMagnitude": 0.0
+      }
+    }
+  }
+}
