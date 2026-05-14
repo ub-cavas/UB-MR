@@ -76,7 +76,7 @@ If you intend to develop the Mixed Reality Engine, follow these steps...
 
    D. Download Ros2ForUnity
    ```bash
-   ./Util/Ros2ForUnity/DownloadRos2ForUnity.sh             # latest release
+   ./Util/Ros2ForUnity/DownloadRos2ForUnity.sh ros2forunity-v1.0.2          # latest release
    ```
    E. Open the project.. you may need to force quit and relaunch on first load
 
