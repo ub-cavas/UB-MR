@@ -1,0 +1,33 @@
+{
+  "name": "LincolnMKZ",
+  "isDynamic": true,
+  "model": "Lincoln_MKZ",
+  "sensors": {
+    "LiDAR_Top": {
+      "name": "LiDAR_Top",
+      "topic": "/sensing/lidar/top/pointcloud_raw_ex",
+      "type": "LiDAR",
+      "position": {
+        "x": 0.0,
+        "y": 2.0,
+        "z": 0.0,
+        "normalized": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.0,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.0
+        },
+        "magnitude": 3.1,
+        "sqrMagnitude": 9.61
+      },
+      "rotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "magnitude": 0.0,
+        "sqrMagnitude": 0.0
+      }
+    }
+  }
+}

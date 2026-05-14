@@ -1,91 +1,123 @@
 # Mixed Reality Autonomous Vehicle Digital Twin
 
-## Table of Contents
+## Quick-Start User Guide
+If you only intend to run Mixed Reality scenarios, use this method... 
+### Prerequisites
+0) NVIDIA Graphics Drivers 
+1) Docker [[Link]](https://docs.docker.com/engine/install/ubuntu/)
+2) Set up user to not require sudo when running Docker [[Link]](https://docs.docker.com/engine/install/linux-postinstall/)
+3) Install NVIDIA container toolkit [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and register with Docker [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuration)
 
-- [Configuration](#configuration)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-  - [ROS 2 Humble on WSL2 Ubuntu 22.04.5 LTS](#ros-2-humble-on-wsl2-ubuntu-22045-lts)
-  - [Clone Repositories](#clone-repositories)
-- [Building the ROS 2 Package](#building-the-ros-2-package)
-- [Sourcing Your Environment](#sourcing-your-environment)
-- [Running the Mixed Reality Package](#running-the-mixed-reality-package)
-  - [Option 1: Live Stream Mixed Reality](#option-1-live-stream-mixed-reality)
-  - [Option 2: Replay a ROS Bag](#option-2-replay-a-ros-bag)
-- [Running the Unity Engine](#running-the-unity-engine)
-- [Troubleshooting & Tips](#troubleshooting--tips)
-
----
-
-## Configuration
-- **Ubuntu 2022.04.5** 
-- **Unity Editor:** 6000.0.36f1
-- **ROS 2 Distribution:** Humble
-
-## ROS2 Installation
-Follow the official guide to install ROS 2 Humble (packaged version):
+### Download a Release
 ```bash
-https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
+# Download latest release
+./download_unity_player.sh
+
+# Download a specific version
+./download_unity_player.sh <NAME-OF-BUILD-FOLDER>
 ```
 
----
-## Install Mixed Reality Packages
+### Setup the Runtime Environment
+In order to maximize compatibility and minimize setup time, we use Docker with GPU passthrough. The image hosts the Unity player and the required ROS nodes for Mixed Reality
 
-1. **ROS 2 MR Package** (~/ros2_ws/src):
+**Option A).** Pull from Dockerhub (Recommended)
    ```bash
-   git clone https://github.com/ub-cavas/mr_pkg.git
+   docker pull oakleyth/ub-mr:latest
    ```
-   Whenever you update the ROS 2 package, rebuild it and source the workspace:
+**Option B).** Build the image locally:
    ```bash
-   cd ~/ros2_ws
-   colcon build
-   source install/setup.bash
+   git submodule update --init --recursive
+   docker build -f Docker/Dockerfile -t ub-mr .
    ```
 
-2. **Vulkan Graphics API's** (skip if already installed)
-   ```bash
-     sudo apt update
-     sudo apt install libvulkan1
-     ```
-
-2. **OPTION A: Packaged Simulator** (recommended):
-   > *TODO: Provide binary download link and installation steps.*
-
-3. **OPTION B: Simulator Source Code**:
-     ```bash
-     cd <directory-outside-of-your-ros2_ws>
-     git clone https://github.com/ub-cavas/UB-MR.git
-     ```
-     *Add the project to UnityHub*
-
-     1.) Open UnityHub
-
-     2.) Click the "Add" Button from the "Project" tab
-
-     3.) Locate the UB-MR directory that you cloned and add it to the UnityHub
-
-     4.) Open the project with Unity Editor 6000.0.36f1
+### Run a Mixed Reality session
+```bash
+# Start the Unity executable in the ub-mr-container
+./run_ub_mr.sh <NAME-OF-BUILD-FOLDER>
+# Start the container using the repo's local submodule copy of mr_pkg
+./run_ub_mr.sh use-local-mr-pkg <NAME-OF-BUILD-FOLDER>
+# (Optional - in another terminal) Start a localization stack
+docker exec -it ub-mr-container
+ros2 launch mr_pkg <dual_ekf_localization.launch.py> <autoware_localization.launch.py> <carla_localization.py>
+```
 ---
+
+## Developer Guide
+If you intend to develop the Mixed Reality Engine, follow these steps...
+
+### Configuration
+- **Ubuntu 2022.04.5** (Required)
+- **Unity Editor - 6000.0.36f1** [[Link]](https://unity.com/releases/editor/archive#:~:text=See%20all-,6000.0.36f1,-Security%20Alert)
+- **ROS 2 Distribution:** Humble [[Link]](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html)
+- **RMW**: Eclipse Cyclone DDS [[Link]](https://docs.ros.org/en/humble/Installation/RMW-Implementations/DDS-Implementations/Working-with-Eclipse-CycloneDDS.html)
+
+1. Install Vulkan Graphics APIs (skip if already installed)
+   ```bash
+   sudo apt update
+   sudo apt install libvulkan1
+   ```
+2. Clone this repo and its submodules, then initialize git lfs for the assets
+
+   ```bash
+   git clone --recurse-submodules git@github.com:ub-cavas/mr_pkg.git
+   cd UB-MR
+   git lfs install
+   ```
+
+3. Unity Project Installation (with Unity Editor)
+
+   **IMPORTANT: There is a RoadRunner bug that requires reimporting some files... Unity may crash the first time the project is loaded, if this occurs force quit the editor and relaunch**
+
+   A. Install the UnityHub [[Link]](https://docs.unity3d.com/hub/manual/InstallHub.html#install-hub-linux/)
+
+   B. Install Unity Editor - 6000.0.36f1
+
+   C. Add the project (/UB-MR) to UnityHub
+
+   D. Download Ros2ForUnity
+   ```bash
+   ./Util/Ros2ForUnity/DownloadRos2ForUnity.sh             # latest release
+   ```
+   E. Open the project.. you may need to force quit and relaunch on first load
+
+4. Copy agents to Unity Editor's expected path (OPTIONAL)
+
+
+   ```bash
+   ./Util/Development/copy_agents.sh
+   ```
+
+#### Fix import errors - Only needed if the RoadRunner environments do not load correctly
+1. Navigate to Assets/UB_MR_Assets/RoadRunner/
+2. In each subfolder, find the .fbx -> Right-Click -> "Reimport"
+3. This takes some time...
+
+![File Location](Docs/RR_Reimport_FBX.png)
 
 ## Running the Project
 
-1. **Run the Mixed Reality ROS2 Package**
+### Docker 
+```bash
+./run_ub_mr.sh 0.0.1
+```
 
-   Launch localization nodes in one terminal:
 
-   ```bash
-   ros2 launch mr_pkg dual_ekf.launch.py
-   ```
+### Unity Player (Native)
+If you want the checked-in agent JSON files copied into Unity's persistent-data directory before launch:
 
-2. **Run the Mixed Reality Simulator**
+```bash
+chmod +x UB-MR.x86_64 # give execution permissions
 
-   OPTION A: Run the executable
-
-   OPTION B: Press Play in the Unity Editor
+./UB-MR.x86_64
+```
+   
+### Unity Editor (Native)
+1. Open Assets/Modules/MainMenu.unity 
+2. Press Play in editor
 
 ## Playback a Ros Bag
 
-1. Open a new terminal, source ROS2 Humble and your Workspace:
+1. Open a new terminal, source ROS2 Humble
    ```bash
    source /opt/ros/humble/setup.bash
    ```
@@ -103,4 +135,3 @@ https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
 - **Unity Logs:** Check the Console window for errors when launching the scene.
 
 *For further assistance, please open an issue in the respective GitHub repository.*
-

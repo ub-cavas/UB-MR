@@ -340,6 +340,7 @@ MonoBehaviour:
   mLidarVisualMaterial: {fileID: 2100000, guid: ba128a66cee48f403902b2babfc43d51, type: 2}
   mLineWidth: 0.01
   lidarType: 0
+  raysPerScan: 60000
   maxRaytraceDistance: 0
   maxIterations: 0
   useGPU: 0
@@ -925,7 +926,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1255,6 +1256,7 @@ MonoBehaviour:
   mLidarVisualMaterial: {fileID: 2100000, guid: e3d372b3121ab3e8ab4ad00da940a801, type: 2}
   mLineWidth: 0.01
   lidarType: 1
+  raysPerScan: 80000
   maxRaytraceDistance: 50
   maxIterations: 64
   useGPU: 1
