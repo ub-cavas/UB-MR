@@ -37,7 +37,7 @@ In order to maximize compatibility and minimize setup time, we use Docker with G
 # Start the container using the repo's local submodule copy of mr_pkg
 ./run_ub_mr.sh use-local-mr-pkg <NAME-OF-BUILD-FOLDER>
 # (Optional - in another terminal) Start a localization stack
-docker exec -it ub-mr-container
+docker exec -it ub-mr-container /bin/bash
 ros2 launch mr_pkg <dual_ekf_localization.launch.py> <autoware_localization.launch.py> <carla_localization.py>
 ```
 ---
