@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/UB_MR_Assets/RoadRunner/Exports/Asphalt1_AORM.png.meta
 guid: 3d4c598d4a23fbaf4b70731899d7f982
+========
+guid: c6e605e2e4ea40f43b0a475d623a64ab
+>>>>>>>> main:Assets/UB_MR_Assets/RoadRunner/UB-Service-Center-Loop/Textures/Atlas_Tree_Diff.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

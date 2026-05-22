@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/UB_MR_Assets/RoadRunner/Exports/Asphalt1_Diff.png.meta
 guid: 5079a5e5874a37d55800244612ac2e7b
+========
+guid: c0998c7156334dd749171dd0bdcb1028
+>>>>>>>> main:Assets/UB_MR_Assets/RoadRunner/UB-Service-Center-Loop/Textures/Backhoe_AORM.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}

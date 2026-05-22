@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/UB_MR_Assets/RoadRunner/Exports/Grass1_AORM.png.meta
 guid: 6799b1d92a9a01b53811977185501fe0
+========
+guid: a180668f96a85fad79197e56c63bb867
+>>>>>>>> main:Assets/UB_MR_Assets/RoadRunner/UB-Service-Center-Loop/Textures/Asphalt_Worn3_Diff.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
