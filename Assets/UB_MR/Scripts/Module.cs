@@ -22,6 +22,7 @@ namespace CAVAS.UB_MR
 
         [Header("Scene Data")]
         [SerializeField] List<SDFTexture> mSdfs;
+        [SerializeField, Min(0f)] float sdfRefreshIntervalSeconds = 0.25f;
 
         [Space]
 
@@ -34,9 +35,11 @@ namespace CAVAS.UB_MR
 
         protected virtual void Start()
         {
+            RefreshSDFList();
             mapPanel.SetMapPosition(map_root.position);
             mapPanel.SetMapRotation(map_root.rotation.eulerAngles);
             StartCoroutine(MapUpdate());
+            StartCoroutine(SDFListUpdate());
             
             SpawnActiveAgent();
             if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
@@ -54,6 +57,32 @@ namespace CAVAS.UB_MR
                 UpdateMap(mapPanel.GetMapPosition(), mapPanel.GetMapRotation());
             }
             
+        }
+
+        IEnumerator SDFListUpdate()
+        {
+            if (this.sdfRefreshIntervalSeconds <= 0f)
+            {
+                while (true)
+                {
+                    RefreshSDFList();
+                    yield return null;
+                }
+            }
+
+            WaitForSeconds refreshDelay = new WaitForSeconds(this.sdfRefreshIntervalSeconds);
+            while (true)
+            {
+                RefreshSDFList();
+                yield return refreshDelay;
+            }
+        }
+
+        void RefreshSDFList()
+        {
+            this.mSdfs ??= new List<SDFTexture>();
+            this.mSdfs.Clear();
+            this.mSdfs.AddRange(FindObjectsByType<SDFTexture>(FindObjectsSortMode.None));
         }
 
         void SetDatum()

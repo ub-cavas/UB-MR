@@ -417,9 +417,8 @@ MonoBehaviour:
   origin_latitude: 42.9926180599693
   origin_longitude: -78.7924945927909
   origin_altitude: 152.5
-  mSdfs:
-  - {fileID: 1196883501}
-  - {fileID: 1335542471}
+  mSdfs: []
+  sdfRefreshIntervalSeconds: 0.25
   mapPanel: {fileID: 1209921482}
 --- !u!1001 &219841356
 PrefabInstance:
