@@ -32,8 +32,10 @@ In order to maximize compatibility and minimize setup time, we use Docker with G
 
 ### Run a Mixed Reality session
 ```bash
-# Start the Unity executable in the ub-mr-container
+# Start the ub-mr-container and drop into a shell
 ./run_ub_mr.sh <NAME-OF-BUILD-FOLDER>
+# Then launch the Unity player inside the container
+./ub-mr.sh
 # Start the container using the repo's local submodule copy of mr_pkg
 ./run_ub_mr.sh use-local-mr-pkg <NAME-OF-BUILD-FOLDER>
 # (Optional - in another terminal) Start a localization stack
@@ -133,5 +135,16 @@ chmod +x UB-MR.x86_64 # give execution permissions
 - **Build Errors:** Ensure all dependencies are installed and your environment is sourced.
 - **ROS 2 Topics:** Use `ros2 topic list` and `ros2 topic echo <topic>` to verify data flow.
 - **Unity Logs:** Check the Console window for errors when launching the scene.
+- **Interactive container shell:** Launch the player manually with `./ub-mr.sh`. If the host copy ever loses its executable bit, `bash /app/ub-mr.sh` is a safe fallback.
+- **Docker GPU startup fails:** If `./run_ub_mr.sh` fails with a Docker/NVIDIA GPU error such as `no known GPU vendor found` or `exec: "nvidia-container-runtime": executable file not found`, verify the host first:
+  ```bash
+  nvidia-smi
+  docker run --rm --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all nvidia/cuda:12.5.0-base-ubuntu22.04 nvidia-smi
+  ```
+  If either command fails, install/configure the NVIDIA Container Toolkit and register it with Docker:
+  ```bash
+  sudo nvidia-ctk runtime configure --runtime=docker
+  sudo systemctl restart docker
+  ```
 
 *For further assistance, please open an issue in the respective GitHub repository.*

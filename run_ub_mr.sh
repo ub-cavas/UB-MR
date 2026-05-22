@@ -71,14 +71,17 @@ if [[ "${USE_LOCAL_MR_PKG}" == "1" ]]; then
 fi
 
 IMAGE_NAME="${IMAGE_NAME:-ub-mr}"
-CONTAINER_COMMAND=("${CONTAINER_ARGS[@]}")
+CONTAINER_COMMAND=()
 
 if [[ "${USE_LOCAL_MR_PKG}" == "1" ]]; then
-  CONTAINER_COMMAND=(/app/ub-mr-shell.sh "${CONTAINER_ARGS[@]}")
+  if [[ ${#CONTAINER_ARGS[@]} -gt 0 ]]; then
+    CONTAINER_COMMAND=(/app/ub-mr-shell.sh "${CONTAINER_ARGS[@]}")
+  fi
+elif [[ ${#CONTAINER_ARGS[@]} -gt 0 ]]; then
+  CONTAINER_COMMAND=("${CONTAINER_ARGS[@]}")
 fi
 
 docker run --rm -it \
-  --gpus all \
   --net=host \
   --name "${CONTAINER_NAME}" \
   --runtime=nvidia \
