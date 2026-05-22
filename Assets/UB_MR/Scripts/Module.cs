@@ -124,6 +124,13 @@ namespace CAVAS.UB_MR
 
         DT.Agent SpawnAgent(Config.Agent inAgent)
         {
+            if (inAgent is null)
+            {
+                Debug.LogWarning("NO AGENT SPAWNED");
+                return null;
+            }
+                
+
             DT.Agent agent;
             GameObject newAgent = Instantiate(Resources.Load<GameObject>(agentPath), new Vector3(0,0,0), Quaternion.identity);
             if (inAgent.isDynamic)
