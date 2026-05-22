@@ -920,6 +920,67 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &480256278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 480256281}
+  - component: {fileID: 480256280}
+  - component: {fileID: 480256279}
+  m_Layer: 0
+  m_Name: --Network-Manager--
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &480256279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480256278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea9107b68a7d57690b600d1c81ede0ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  receiver: {fileID: 480256280}
+  vehiclePrefab: {fileID: 0}
+  originOffset: {x: 1.347, y: 0, z: 5.916}
+--- !u!114 &480256280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480256278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df534e1267e57986fbcd0258a4dcba48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listenPort: 12345
+--- !u!4 &480256281
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480256278}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &798976656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1517,8 +1578,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2552f720924cdd5aa9da8e6338f12abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sdfTextureSize: {x: 0, y: 0, z: 0}
-  sdfTextureResolution: 32
+  sdfTextureSize: {x: 2.1, y: 2.4, z: 4.5}
+  sdfTextureResolution: 8
   meshToSDF: {fileID: 1929435454}
   boundingBox: {fileID: 1929435456}
 --- !u!1001 &1943893336
@@ -1654,8 +1715,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2552f720924cdd5aa9da8e6338f12abc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sdfTextureSize: {x: 0, y: 0, z: 0}
-  sdfTextureResolution: 32
+  sdfTextureSize: {x: 2.1, y: 2.4, z: 4.5}
+  sdfTextureResolution: 8
   meshToSDF: {fileID: 1943893342}
   boundingBox: {fileID: 1943893340}
 --- !u!114 &1943893342
@@ -1761,6 +1822,7 @@ SceneRoots:
   - {fileID: 1258575407}
   - {fileID: 285627481}
   - {fileID: 328723750}
+  - {fileID: 480256281}
   - {fileID: 211020085}
   - {fileID: 1929435451}
   - {fileID: 1943893336}
