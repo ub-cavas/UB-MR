@@ -5,6 +5,7 @@ using sensor_msgs.msg;
 using CAVAS.UB_MR.ROS2;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System;
 
 
 namespace CAVAS.UB_MR.DT.Sensors.Lidar
@@ -36,7 +37,7 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         #endregion
         
         #region SDF
-        readonly List<SDFTexture> mSDFs;
+        readonly IReadOnlyList<SDFTexture> mSDFs;
         readonly List<SDFTexture> mActiveSDFs = new List<SDFTexture>();
         readonly HashSet<int> mWarnedInvalidSDFIndices = new HashSet<int>();
         #endregion
@@ -55,7 +56,7 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
             this.mOutput_PCD_Queue = new ConcurrentQueue<PointCloud2>();
 
             this.mKernel = this.mLiDARComputeShader.FindKernel("SDFRaymarch");
-            this.mSDFs = inSDFs != null ? new List<SDFTexture>(inSDFs) : new List<SDFTexture>();
+            this.mSDFs = inSDFs ?? Array.Empty<SDFTexture>();
             // Global for ALL SDFs
             // (Default Parameters)
             float maxDistance = 10f;
