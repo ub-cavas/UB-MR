@@ -2,7 +2,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="${SCRIPT_DIR}/Agents"
+PROJECT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+SOURCE_DIR="${PROJECT_DIR}/Agents"
 
 COMPANY_NAME="${UNITY_COMPANY_NAME:-UB-CAVAS}"
 PRODUCT_NAME="${UNITY_PRODUCT_NAME:-UB-MR}"
