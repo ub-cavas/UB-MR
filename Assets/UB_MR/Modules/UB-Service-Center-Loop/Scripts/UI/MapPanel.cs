@@ -26,12 +26,15 @@ public class MapPanel : Panel
 
     public Quaternion GetMapRotation()
     {
-        return Quaternion.Euler(
-            new Vector3(
-                ParseFloat(rot_x.text),
-                ParseFloat(rot_y.text),
-                ParseFloat(rot_z.text)
-            )
+        return Quaternion.Euler(GetMapRotationEuler());
+    }
+
+    public Vector3 GetMapRotationEuler()
+    {
+        return new Vector3(
+            ParseFloat(rot_x.text),
+            ParseFloat(rot_y.text),
+            ParseFloat(rot_z.text)
         );
     }
 

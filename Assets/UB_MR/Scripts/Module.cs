@@ -32,14 +32,24 @@ namespace CAVAS.UB_MR
 
         string agentPath = "Prefabs/Agent";
         ROS2Node mNode;
+        Vector3 currentMapRotationEuler;
+        bool hasMapRotationState;
 
         public Transform MapRoot => this.map_root;
+        public Vector3 CurrentMapRotationEuler => this.currentMapRotationEuler;
+        public bool HasMapRotationState => this.hasMapRotationState;
+
+        void Awake()
+        {
+            InitializeMapRotationState();
+        }
 
         protected virtual void Start()
         {
+            InitializeMapRotationState();
             RefreshSDFList();
             mapPanel.SetMapPosition(map_root.position);
-            mapPanel.SetMapRotation(map_root.rotation.eulerAngles);
+            mapPanel.SetMapRotation(this.currentMapRotationEuler);
             StartCoroutine(MapUpdate());
             StartCoroutine(SDFListUpdate());
             
@@ -56,7 +66,9 @@ namespace CAVAS.UB_MR
             while (true)
             {
                 yield return null;
-                UpdateMap(mapPanel.GetMapPosition(), mapPanel.GetMapRotation());
+                Vector3 mapRotationEuler = mapPanel.GetMapRotationEuler();
+                this.currentMapRotationEuler = mapRotationEuler;
+                UpdateMap(mapPanel.GetMapPosition(), Quaternion.Euler(mapRotationEuler));
             }
             
         }
@@ -85,6 +97,15 @@ namespace CAVAS.UB_MR
             this.mSdfs ??= new List<SDFTexture>();
             this.mSdfs.Clear();
             this.mSdfs.AddRange(FindObjectsByType<SDFTexture>(FindObjectsSortMode.None));
+        }
+
+        void InitializeMapRotationState()
+        {
+            if (this.hasMapRotationState || this.map_root == null)
+                return;
+
+            this.currentMapRotationEuler = this.map_root.rotation.eulerAngles;
+            this.hasMapRotationState = true;
         }
 
         void SetDatum()
