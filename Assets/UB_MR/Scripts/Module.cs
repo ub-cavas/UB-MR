@@ -34,10 +34,12 @@ namespace CAVAS.UB_MR
         ROS2Node mNode;
         Vector3 currentMapRotationEuler;
         bool hasMapRotationState;
+        DT.Agent activeAgent;
 
         public Transform MapRoot => this.map_root;
         public Vector3 CurrentMapRotationEuler => this.currentMapRotationEuler;
         public bool HasMapRotationState => this.hasMapRotationState;
+        public DT.Agent ActiveAgent => this.activeAgent;
 
         void Awake()
         {
@@ -142,7 +144,8 @@ namespace CAVAS.UB_MR
 
         DT.Agent SpawnActiveAgent()
         {
-            return SpawnAgent(ConfigurationManager.GetConfiguration().Item1);
+            this.activeAgent = SpawnAgent(ConfigurationManager.GetConfiguration().Item1);
+            return this.activeAgent;
         }
 
         DT.Agent SpawnAgent(Config.Agent inAgent)

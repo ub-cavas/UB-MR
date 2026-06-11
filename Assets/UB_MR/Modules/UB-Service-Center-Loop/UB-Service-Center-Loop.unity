@@ -958,6 +958,7 @@ GameObject:
   - component: {fileID: 480256281}
   - component: {fileID: 480256280}
   - component: {fileID: 480256279}
+  - component: {fileID: 480256282}
   m_Layer: 0
   m_Name: --Network-Manager--
   m_TagString: Untagged
@@ -979,6 +980,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   receiver: {fileID: 480256280}
   vehiclePrefab: {fileID: 1272740862478031309, guid: 45c97a6cdff58e4b2bad6ee93a49d6d2, type: 3}
+  module: {fileID: 211020087}
+  mapRoot: {fileID: 219841357}
+  applyClientMapYawCorrection: 1
+  uncorrectedMapYawDegrees: 90
+  originOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &480256282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480256278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c3d6f0b9e1a4c5d8f7a0b2c3d4e5f61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bridgeHost: 127.0.0.1
+  bridgePort: 12346
+  publishRateHz: 20
+  egoId: ub-mr-ego
+  blueprint: vehicle.lincoln.mkz_2020
+  color: 0,0,255
+  egoTransform: {fileID: 0}
   module: {fileID: 211020087}
   mapRoot: {fileID: 219841357}
   applyClientMapYawCorrection: 1
