@@ -450,7 +450,6 @@ MonoBehaviour:
   requireRightMouseForLook: 1
   lockCursorWhileActive: 1
   toggleKey: 102
-  cancelKey: 27
   forwardKey: 119
   backwardKey: 115
   rightKey: 100
