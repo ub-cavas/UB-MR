@@ -37,7 +37,6 @@ namespace CAVAS.UB_MR.CameraControls
 #if ENABLE_LEGACY_INPUT_MANAGER
         [Header("Legacy Input")]
         [SerializeField] KeyCode toggleKey = KeyCode.F;
-        [SerializeField] KeyCode cancelKey = KeyCode.Escape;
         [SerializeField] KeyCode forwardKey = KeyCode.W;
         [SerializeField] KeyCode backwardKey = KeyCode.S;
         [SerializeField] KeyCode rightKey = KeyCode.D;
@@ -51,6 +50,7 @@ namespace CAVAS.UB_MR.CameraControls
 #endif
 
         bool isActive;
+        bool cursorCaptured;
         CursorLockMode previousCursorLockMode;
         bool previousCursorVisible;
 
@@ -87,11 +87,15 @@ namespace CAVAS.UB_MR.CameraControls
             if (!isActive || freeFlyCamera == null)
                 return;
 
-            if (WasCancelPressed())
+            bool releasedCursor = false;
+            if (WasCursorReleasePressed())
             {
-                Deactivate();
-                return;
+                ReleaseCursor();
+                releasedCursor = true;
             }
+
+            if (!releasedCursor && !cursorCaptured && IsLookButtonPressed())
+                CaptureCursor();
 
             UpdateMotion(DeltaTime());
         }
@@ -311,7 +315,7 @@ namespace CAVAS.UB_MR.CameraControls
 #endif
         }
 
-        bool WasCancelPressed()
+        bool WasCursorReleasePressed()
         {
 #if ENABLE_INPUT_SYSTEM
             Keyboard keyboard = Keyboard.current;
@@ -320,7 +324,7 @@ namespace CAVAS.UB_MR.CameraControls
 #endif
 
 #if ENABLE_LEGACY_INPUT_MANAGER
-            return Input.GetKeyDown(cancelKey);
+            return Input.GetKeyDown(KeyCode.Escape);
 #else
             return false;
 #endif
@@ -356,22 +360,34 @@ namespace CAVAS.UB_MR.CameraControls
 
         void CaptureCursor()
         {
-            if (!lockCursorWhileActive)
+            if (!lockCursorWhileActive || cursorCaptured)
                 return;
 
             previousCursorLockMode = Cursor.lockState;
             previousCursorVisible = Cursor.visible;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            cursorCaptured = true;
         }
 
         void RestoreCursor()
         {
-            if (!lockCursorWhileActive)
+            if (!lockCursorWhileActive || !cursorCaptured)
                 return;
 
             Cursor.lockState = previousCursorLockMode;
             Cursor.visible = previousCursorVisible;
+            cursorCaptured = false;
+        }
+
+        void ReleaseCursor()
+        {
+            if (!lockCursorWhileActive || !cursorCaptured)
+                return;
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            cursorCaptured = false;
         }
 
         void OnDisable()
