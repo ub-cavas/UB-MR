@@ -33,6 +33,8 @@ namespace CAVAS.UB_MR
         string agentPath = "Prefabs/Agent";
         ROS2Node mNode;
 
+        public Transform MapRoot => this.map_root;
+
         protected virtual void Start()
         {
             RefreshSDFList();
