@@ -15,6 +15,10 @@ fi
 chmod +x "${PLAYER_EXECUTABLE}"
 mkdir -p /app/Logs
 
+SCREEN_FULLSCREEN="${UB_MR_SCREEN_FULLSCREEN:-0}"
+SCREEN_WIDTH="${UB_MR_SCREEN_WIDTH:-1920}"
+SCREEN_HEIGHT="${UB_MR_SCREEN_HEIGHT:-1080}"
+
 # Configure ROS 2/DDS before Unity starts.
 ROS_ENV_SCRIPT="${UB_MR_ROS_ENV_SCRIPT:-/app/Scripts/host_ros2_env.bash}"
 if [[ -f "${ROS_ENV_SCRIPT}" ]]; then
@@ -26,8 +30,8 @@ fi
 
 # Start Unity in the foreground (container lifetime == Unity lifetime)
 exec "${UB_MR_PLAYER_DIR}/UB-MR.x86_64" \
-  -screen-fullscreen 0 \
-  -screen-width 1920 \
-  -screen-height 1080 \
+  -screen-fullscreen "${SCREEN_FULLSCREEN}" \
+  -screen-width "${SCREEN_WIDTH}" \
+  -screen-height "${SCREEN_HEIGHT}" \
   -logFile ./Logs/ub-mr-player.log \
   -force-glcore
