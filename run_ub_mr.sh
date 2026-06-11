@@ -91,6 +91,9 @@ docker run --rm -it \
   -e DISPLAY="${DISPLAY}" \
   -e UB_MR_PLAYER_DIR=/app/UB-MR-Player \
   -e UB_MR_ROS_ENV_SCRIPT=/app/Scripts/host_ros2_env.bash \
+  -e UB_MR_SCREEN_FULLSCREEN="${UB_MR_SCREEN_FULLSCREEN:-0}" \
+  -e UB_MR_SCREEN_WIDTH="${UB_MR_SCREEN_WIDTH:-1920}" \
+  -e UB_MR_SCREEN_HEIGHT="${UB_MR_SCREEN_HEIGHT:-1080}" \
   -e CYCLONEDDS_URI=file:///etc/cyclonedds.xml \
   -v ${HOME}/cyclonedds.xml:/etc/cyclonedds.xml:ro \
   -v /tmp/.X11-unix:/tmp/.X11-unix:ro \

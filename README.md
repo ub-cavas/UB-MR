@@ -36,6 +36,8 @@ In order to maximize compatibility and minimize setup time, we use Docker with G
 ./run_ub_mr.sh <NAME-OF-BUILD-FOLDER>
 # Then launch the Unity player inside the container
 ./ub-mr.sh
+# Optional: override the initial player window size
+UB_MR_SCREEN_WIDTH=1600 UB_MR_SCREEN_HEIGHT=900 ./run_ub_mr.sh <NAME-OF-BUILD-FOLDER>
 # Start the container using the repo's local submodule copy of mr_pkg
 ./run_ub_mr.sh use-local-mr-pkg <NAME-OF-BUILD-FOLDER>
 # (Optional - in another terminal) Start a localization stack
@@ -135,6 +137,7 @@ chmod +x UB-MR.x86_64 # give execution permissions
 - **Build Errors:** Ensure all dependencies are installed and your environment is sourced.
 - **ROS 2 Topics:** Use `ros2 topic list` and `ros2 topic echo <topic>` to verify data flow.
 - **Unity Logs:** Check the Console window for errors when launching the scene.
+- **Unity player window:** New player builds start windowed and resizable. The Docker launcher defaults to `1920x1080`; set `UB_MR_SCREEN_WIDTH`, `UB_MR_SCREEN_HEIGHT`, or `UB_MR_SCREEN_FULLSCREEN=1` before `./run_ub_mr.sh` to override the initial mode.
 - **Interactive container shell:** Launch the player manually with `./ub-mr.sh`. If the host copy ever loses its executable bit, `bash /app/ub-mr.sh` is a safe fallback.
 - **Docker GPU startup fails:** If `./run_ub_mr.sh` fails with a Docker/NVIDIA GPU error such as `no known GPU vendor found` or `exec: "nvidia-container-runtime": executable file not found`, verify the host first:
   ```bash
