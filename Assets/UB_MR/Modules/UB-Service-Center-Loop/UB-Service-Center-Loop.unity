@@ -979,6 +979,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   receiver: {fileID: 480256280}
   vehiclePrefab: {fileID: 1272740862478031309, guid: 45c97a6cdff58e4b2bad6ee93a49d6d2, type: 3}
+  mapRoot: {fileID: 219841357}
+  applyMapTransform: 1
   originOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &480256280
 MonoBehaviour:

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CAVAS.UB_MR;
 using UnityEngine;
 
 namespace UB_MR.Redis_Networking
@@ -7,12 +8,20 @@ namespace UB_MR.Redis_Networking
     {
         [SerializeField] private TrafficReceiver receiver;
         [SerializeField] private GameObject vehiclePrefab;
+        [SerializeField] private Transform mapRoot;
+        [SerializeField] private bool applyMapTransform = true;
         [SerializeField] private Vector3 originOffset = new Vector3(1.347f, 0f, 5.916f);
 
         private Dictionary<string, GameObject> spawnedVehicles = new();
 
+        void Awake()
+        {
+            ResolveMapRoot();
+        }
+
         void OnEnable()
         {
+            ResolveMapRoot();
             receiver.OnSpawnVehicle += HandleSpawn;
             receiver.OnVehicleUpdate += HandleUpdate;
             receiver.OnDespawnVehicle += HandleDespawn;
@@ -32,21 +41,16 @@ namespace UB_MR.Redis_Networking
             GameObject go = Instantiate(vehiclePrefab);
             go.name = $"Vehicle_{data.id}";
 
-            go.transform.position = data.Position() + originOffset;
-            go.transform.rotation = data.Orientation();
+            ApplyPose(go.transform, data);
 
             spawnedVehicles[data.id] = go;
         }
 
         private void HandleUpdate(TrafficReceiver.VehicleData data)
         {
-            Debug.Log($"Vehicle {data.id} → {data.Position()}");
-            Debug.Log($"SPAWN POINT: {data.location.x}, {data.location.y}, {data.location.z}");
-        
             if (!spawnedVehicles.TryGetValue(data.id, out GameObject go)) return;
 
-            go.transform.position = data.Position() + originOffset;
-            go.transform.rotation = data.Orientation();
+            ApplyPose(go.transform, data);
         }
 
         private void HandleDespawn(TrafficReceiver.VehicleData data)
@@ -55,6 +59,42 @@ namespace UB_MR.Redis_Networking
 
             Destroy(go);
             spawnedVehicles.Remove(data.id);
+        }
+
+        private void ApplyPose(Transform vehicleTransform, TrafficReceiver.VehicleData data)
+        {
+            Vector3 mapLocalPosition = data.Position() + originOffset;
+            Quaternion mapLocalRotation = data.Orientation();
+
+            if (applyMapTransform && TryGetMapRoot(out Transform root))
+            {
+                if (vehicleTransform.parent != root)
+                    vehicleTransform.SetParent(root, false);
+
+                vehicleTransform.localPosition = mapLocalPosition;
+                vehicleTransform.localRotation = mapLocalRotation;
+                return;
+            }
+
+            vehicleTransform.SetPositionAndRotation(mapLocalPosition, mapLocalRotation);
+        }
+
+        private bool TryGetMapRoot(out Transform root)
+        {
+            root = ResolveMapRoot();
+            return root != null;
+        }
+
+        private Transform ResolveMapRoot()
+        {
+            if (mapRoot != null)
+                return mapRoot;
+
+            Module module = FindFirstObjectByType<Module>();
+            if (module != null)
+                mapRoot = module.MapRoot;
+
+            return mapRoot;
         }
     }
 }
