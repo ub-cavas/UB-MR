@@ -44,7 +44,9 @@ namespace UB_MR.Redis_Networking
 
             public Quaternion Orientation()
             {
-                return Quaternion.Euler(0f, -yaw, 0f);
+                // CARLA +X forward maps to Unity +Z, and CARLA +Y maps to Unity +X.
+                // With that basis, CARLA yaw has the same sign as Unity yaw.
+                return Quaternion.Euler(0f, yaw, 0f);
             }
         }
 
