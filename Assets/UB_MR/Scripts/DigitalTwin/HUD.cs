@@ -14,12 +14,25 @@ namespace CAVAS.UB_MR.DT
             //TODO: 
         }
 
+        public void EnsureStatsPanel()
+        {
+            if (statPanel is null)
+                statPanel = StatPanel.FindOrCreate();
+            StatPanel.EnsureHudToggle(ToggleStats);
+        }
+
         public void ToggleStats()
         {
+            EnsureStatsPanel();
+            if (statPanel is null)
+                return;
+
             if (statPanel.gameObject.activeInHierarchy)
                 UI_Manager.UnloadPanel(statPanel);
             else
                 UI_Manager.LoadPanel(statPanel);
+
+            StatPanel.UpdateHudToggleState(statPanel.gameObject.activeInHierarchy);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace CAVAS.UB_MR.DT
         HUD hud;
         ROS2Node mNode;
         Vector3 mWorldPosition;
-        Quaternion mWorldRotation;
+        Quaternion mWorldRotation; 
 
         // TODO: Store QOS settings in the sensor
         #region LiDAR
@@ -173,6 +173,7 @@ namespace CAVAS.UB_MR.DT
             // HUD
             if (hud is null)
                 hud = new HUD();
+            hud.EnsureStatsPanel();
             hud.OnNextSpectatorCamera += NextSpectatorCamera;
             hud.OnPrevSpectatorCamera += PreviousSpectatorCamera;
         }
