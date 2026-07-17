@@ -958,6 +958,7 @@ GameObject:
   - component: {fileID: 480256281}
   - component: {fileID: 480256280}
   - component: {fileID: 480256279}
+  - component: {fileID: 480256282}
   m_Layer: 0
   m_Name: --Network-Manager--
   m_TagString: Untagged
@@ -1012,6 +1013,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &480256282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480256278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64064ea4209e53a898d1bea3b7c1188e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  egoTransformOverride: {fileID: 0}
+  agentSearchInterval: 1
+  egoId: 
+  carlaBlueprint: vehicle.lincoln.mkz_2017
+  vehicleColor: 0,0,0
+  bridgeHost: 100.83.98.37
+  bridgePort: 12346
+  publishRateHz: 20
+  module: {fileID: 0}
+  mapRoot: {fileID: 0}
+  applyClientMapYawCorrection: 1
+  uncorrectedMapYawDegrees: 90
+  originOffset: {x: 1.347, y: 0, z: 5.916}
 --- !u!1 &798976656
 GameObject:
   m_ObjectHideFlags: 0
