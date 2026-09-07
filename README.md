@@ -5,7 +5,7 @@ If you only intend to run Mixed Reality scenarios, use this method...
 ### Prerequisites
 0) NVIDIA Graphics Drivers 
 1) Docker [[Link]](https://docs.docker.com/engine/install/ubuntu/)
-2) Set up user to not require sudo when running Docker [[Link]](https://docs.docker.com/engine/install/linux-postinstall/)
+2) Set up a user to not require sudo when running Docker [[Link]](https://docs.docker.com/engine/install/linux-postinstall/)
 3) Install NVIDIA container toolkit [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#with-apt-ubuntu-debian) and register with Docker [[Link]](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuration)
 
 ### Download a Release
@@ -20,7 +20,7 @@ If you only intend to run Mixed Reality scenarios, use this method...
 ### Setup the Runtime Environment
 In order to maximize compatibility and minimize setup time, we use Docker with GPU passthrough. The image hosts the Unity player and the required ROS nodes for Mixed Reality
 
-**Option A).** Pull from Dockerhub (Recommended)
+**Option A).** Pull from Docker Hub (Recommended)
    ```bash
    docker pull oakleyth/ub-mr:latest
    ```
@@ -63,12 +63,20 @@ If you intend to develop the Mixed Reality Engine, follow these steps...
 2. Clone this repo and its submodules, then initialize git lfs for the assets
 
    ```bash
-   git clone --recurse-submodules git@github.com:ub-cavas/mr_pkg.git
+   git clone --recurse-submodules git@github.com:ub-cavas/UB-MR.git
    cd UB-MR
    git lfs install
    ```
+   No SSH Key? Use HTTPS instead
 
-3. Unity Project Installation (with Unity Editor)
+   ```bash
+   git clone https://github.com/ub-cavas/UB-MR.git
+   cd UB-MR
+   git config submodule.submodules/mr_pkg.url https://github.com/ub-cavas/mr_pkg.git
+   git submodule update --init --recursive
+   ```
+
+4. Unity Project Installation (with Unity Editor)
 
    **IMPORTANT: There is a RoadRunner bug that requires reimporting some files... Unity may crash the first time the project is loaded, if this occurs force quit the editor and relaunch**
 
@@ -84,7 +92,7 @@ If you intend to develop the Mixed Reality Engine, follow these steps...
    ```
    E. Open the project.. you may need to force quit and relaunch on first load
 
-4. Copy agents to Unity Editor's expected path (OPTIONAL)
+5. Copy agents to Unity Editor's expected path (OPTIONAL)
 
 
    ```bash
@@ -117,11 +125,11 @@ chmod +x UB-MR.x86_64 # give execution permissions
    
 ### Unity Editor (Native)
 1. Open Assets/Modules/MainMenu.unity 
-2. Press Play in editor
+2. Press Play in the editor
 
-## Playback a Ros Bag
+## Playback a ROS Bag
 
-1. Open a new terminal, source ROS2 Humble
+1. Open a new terminal and source ROS2 Humble
    ```bash
    source /opt/ros/humble/setup.bash
    ```
@@ -134,7 +142,7 @@ chmod +x UB-MR.x86_64 # give execution permissions
 
 ## Troubleshooting & Tips
 
-- **Build Errors:** Ensure all dependencies are installed and your environment is sourced.
+- **Build Errors:** Ensure all dependencies are installed, and your environment is sourced.
 - **ROS 2 Topics:** Use `ros2 topic list` and `ros2 topic echo <topic>` to verify data flow.
 - **Unity Logs:** Check the Console window for errors when launching the scene.
 - **Unity player window:** New player builds start windowed and resizable. The Docker launcher defaults to `1920x1080`; set `UB_MR_SCREEN_WIDTH`, `UB_MR_SCREEN_HEIGHT`, or `UB_MR_SCREEN_FULLSCREEN=1` before `./run_ub_mr.sh` to override the initial mode.
