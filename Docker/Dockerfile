@@ -25,6 +25,7 @@ RUN echo "source /app/ub-mr-env.sh" >> /root/.bashrc \
  && echo "alias ub-mr-player='/app/ub-mr.sh'" >> /root/.bashrc
 
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+ENV CYCLONEDDS_URI=file:///etc/cyclonedds.xml
 ENV UB_MR_ROS_ENV_SCRIPT=/app/Scripts/host_ros2_env.bash
 
 WORKDIR /ub_mr_workspace
@@ -56,6 +57,7 @@ ENV UB_MR_LOCAL_MR_PKG_WS=/ub_mr_local_mr_pkg_ws
 ENV UB_MR_USE_LOCAL_MR_PKG=0
 
 WORKDIR /app
+COPY Resources/cyclonedds.xml /etc/cyclonedds.xml
 COPY Scripts/host_ros2_env.bash /app/Scripts/host_ros2_env.bash
 COPY Docker/Scripts/ub-mr-entrypoint.sh /app/ub-mr-entrypoint.sh
 COPY Docker/Scripts/ub-mr.sh /app/ub-mr.sh

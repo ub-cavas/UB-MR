@@ -48,9 +48,15 @@ fi
 xhost +local:root
 
 HOST_BUILD_DIR="${REPO_ROOT}/Builds/${BUILD_FOLDER}"
+CYCLONEDDS_CONFIG="${REPO_ROOT}/Resources/cyclonedds.xml"
 
 if [[ ! -d "${HOST_BUILD_DIR}" ]]; then
   echo "Error: build directory '${HOST_BUILD_DIR}' does not exist."
+  exit 1
+fi
+
+if [[ ! -f "${CYCLONEDDS_CONFIG}" ]]; then
+  echo "Error: CycloneDDS configuration '${CYCLONEDDS_CONFIG}' does not exist."
   exit 1
 fi
 
@@ -91,11 +97,13 @@ docker run --rm -it \
   -e DISPLAY="${DISPLAY}" \
   -e UB_MR_PLAYER_DIR=/app/UB-MR-Player \
   -e UB_MR_ROS_ENV_SCRIPT=/app/Scripts/host_ros2_env.bash \
+  -e UB_MR_CYCLONEDDS_URI=file:///etc/cyclonedds.xml \
+  -e CYCLONEDDS_URI=file:///etc/cyclonedds.xml \
+  -e ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-0}" \
   -e UB_MR_SCREEN_FULLSCREEN="${UB_MR_SCREEN_FULLSCREEN:-0}" \
   -e UB_MR_SCREEN_WIDTH="${UB_MR_SCREEN_WIDTH:-1920}" \
   -e UB_MR_SCREEN_HEIGHT="${UB_MR_SCREEN_HEIGHT:-1080}" \
-  -e CYCLONEDDS_URI=file:///etc/cyclonedds.xml \
-  -v ${HOME}/cyclonedds.xml:/etc/cyclonedds.xml:ro \
+  -v "${CYCLONEDDS_CONFIG}:/etc/cyclonedds.xml:ro" \
   -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
   -v "${REPO_ROOT}/Docker/Scripts/ub-mr.sh:/app/ub-mr.sh:ro" \
   -v "${REPO_ROOT}/Docker/Logs:/app/Logs" \
