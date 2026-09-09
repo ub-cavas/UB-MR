@@ -72,6 +72,52 @@ namespace CAVAS.UB_MR.DT
         VirtualBoundingBoxDetector mVirtualBoundingBoxDetector;
         #endregion
 
+        #region Virtual Object Detection Mode
+        VirtualObjectDetectionMode mDetectionMode = VirtualObjectDetectionMode.Both;
+
+        /// <summary>
+        /// Selects which virtual object injection method(s) are live. Safe to change at runtime;
+        /// both pipelines stay constructed and subscribed, they are only gated.
+        /// </summary>
+        public VirtualObjectDetectionMode DetectionMode
+        {
+            get { return this.mDetectionMode; }
+            set
+            {
+                if (this.mDetectionMode == value)
+                    return;
+                this.mDetectionMode = value;
+                ApplyDetectionMode();
+            }
+        }
+
+        bool LidarModificationEnabled
+        {
+            get { return this.mDetectionMode.Includes(VirtualObjectDetectionMode.LidarModification); }
+        }
+
+        bool BoundingBoxInjectionEnabled
+        {
+            get { return this.mDetectionMode.Includes(VirtualObjectDetectionMode.BoundingBoxInjection); }
+        }
+
+        /// <summary>
+        /// Pushes the current mode down into the sensor modifiers. The LiDAR modifier is bypassed
+        /// rather than skipped so its input queue keeps draining and the modified topic keeps
+        /// publishing.
+        /// </summary>
+        void ApplyDetectionMode()
+        {
+            bool bypassLidar = !LidarModificationEnabled;
+            foreach (Tuple<Config.Sensor, SensorModifier, Transform> sensor in sensors)
+            {
+                if (sensor.Item1.type == SensorType.LiDAR && sensor.Item2 is LidarModifier lidarModifier)
+                    lidarModifier.Bypass = bypassLidar;
+            }
+            Debug.Log($"[{gameObject.name}] Virtual object detection mode: {VirtualObjectDetectionModes.DisplayName(this.mDetectionMode)}");
+        }
+        #endregion
+
         float timer = 0f;
 
         protected virtual IEnumerator Start()
@@ -103,8 +149,9 @@ namespace CAVAS.UB_MR.DT
                 switch(sensor.Item1.type)
                 {
                     case SensorType.LiDAR:
-                        LidarModifier lidarModifier = (LidarModifier)sensor.Item2;
-                        if (lidarModifier.TryModify(sensor.Item3))
+                        // Always pumped: when LiDAR modification is off the modifier bypasses,
+                        // republishing the raw cloud so the queue drains and the topic stays alive.
+                        if (sensor.Item2 is LidarModifier lidarModifier && lidarModifier.TryModify(sensor.Item3))
                             lidarModifier.Publish();
                         break;
                     default:
@@ -158,6 +205,10 @@ namespace CAVAS.UB_MR.DT
                 }
                 sensors.Add(new Tuple<Config.Sensor, SensorModifier, Transform>(sensor_config, sensor, sensorGO.transform));
             }
+
+            // Virtual object detection mode (initial value comes from the module, then the UI drives it)
+            this.mDetectionMode = inModule.DetectionMode;
+            ApplyDetectionMode();
             // Visuals
             visRoot = new GameObject("visuals").transform;
             visRoot.SetParent(baseLink);
@@ -253,7 +304,12 @@ namespace CAVAS.UB_MR.DT
             {
                 yield return new WaitForSeconds(1.0f / gt_pub_rate);
                 yield return new WaitForEndOfFrame();
-                this.mVirtualBoundingBoxDetector.PublishNearbyVirtualObjects(baseLink, detectionRadius);
+                if (this.mVirtualBoundingBoxDetector is null)
+                    continue;
+                if (BoundingBoxInjectionEnabled)
+                    this.mVirtualBoundingBoxDetector.PublishNearbyVirtualObjects(baseLink, detectionRadius);
+                else
+                    this.mVirtualBoundingBoxDetector.PublishEmpty();
             }
         }
 

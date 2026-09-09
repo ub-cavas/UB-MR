@@ -1,6 +1,7 @@
 using UnityEngine;
 using CAVAS.UB_MR.Config;
 using CAVAS.UB_MR.DT.Vehicle;
+using CAVAS.UB_MR.DT.Sensors;
 using ROS2;
 using robot_localization.srv;
 using CAVAS.UB_MR.ROS2;
@@ -29,11 +30,20 @@ namespace CAVAS.UB_MR
         [Header("UI")]
         [SerializeField] MapPanel mapPanel;
 
+        [Space]
+
+        [Header("Virtual Object Detection")]
+        [Tooltip("Injection method used when the scene starts. Changeable at runtime from the map panel.")]
+        [SerializeField] VirtualObjectDetectionMode detectionMode = VirtualObjectDetectionMode.Both;
+
 
         string agentPath = "Prefabs/Agent";
         ROS2Node mNode;
         Vector3 currentMapRotationEuler;
         bool hasMapRotationState;
+        DT.Agent activeAgent;
+
+        public VirtualObjectDetectionMode DetectionMode => this.detectionMode;
 
         public Transform MapRoot => this.map_root;
         public Vector3 CurrentMapRotationEuler => this.currentMapRotationEuler;
@@ -53,12 +63,34 @@ namespace CAVAS.UB_MR
             StartCoroutine(MapUpdate());
             StartCoroutine(SDFListUpdate());
             
-            SpawnActiveAgent();
+            if (mapPanel != null)
+            {
+                mapPanel.SetDetectionMode(this.detectionMode);
+                mapPanel.OnDetectionModeChanged += HandleDetectionModeChanged;
+            }
+
+            this.activeAgent = SpawnActiveAgent();
             if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
             {
                 this.mNode = ROS2_Bridge.ROS_CORE.CreateNode("Unity_Map");
                 SetDatum();
             }
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (mapPanel != null)
+                mapPanel.OnDetectionModeChanged -= HandleDetectionModeChanged;
+        }
+
+        /// <summary>
+        /// Relays a runtime mode change from the UI to the spawned agent.
+        /// </summary>
+        void HandleDetectionModeChanged(VirtualObjectDetectionMode inMode)
+        {
+            this.detectionMode = inMode;
+            if (this.activeAgent != null)
+                this.activeAgent.DetectionMode = inMode;
         }
 
         IEnumerator MapUpdate()

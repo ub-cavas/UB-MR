@@ -62,7 +62,17 @@ namespace CAVAS.UB_MR.DT.Sensors
             return nearbyObjects;
         }
 
-        public void PublishNearbyVirtualObjects(Transform baseLink, float detectionRadius)
+        /// <summary>
+        /// Publishes an empty detection list. Used when bounding box injection is switched off
+        /// at runtime: going silent instead would leave stale tracks alive downstream until they
+        /// time out, which would contaminate a LiDAR-modification-only run.
+        /// </summary>
+        public void PublishEmpty()
+        {
+            PublishDetectedObjects(System.Array.Empty<DetectedObject>());
+        }
+
+        void PublishDetectedObjects(DetectedObject[] inObjects)
         {
             // Message Structure + Header
             DetectedObjects detectedObjectMsg = new DetectedObjects();
@@ -72,6 +82,13 @@ namespace CAVAS.UB_MR.DT.Sensors
             time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
             detectedObjectMsg.Header.Stamp = time; //TODO: get correct timestamp
 
+            detectedObjectMsg.Objects = inObjects;
+            detectedObjectMsg.WriteNativeMessage();
+            this.mObstacleBoundingBoxPublisher.Publish(detectedObjectMsg);
+        }
+
+        public void PublishNearbyVirtualObjects(Transform baseLink, float detectionRadius)
+        {
             List<VirtualObject> virtualObjects = GetNearbyObstacles(baseLink, detectionRadius);
             DetectedObject[] detectedObjects = new DetectedObject[virtualObjects.Count];
             for (int i = 0; i < virtualObjects.Count; i++)
@@ -126,9 +143,7 @@ namespace CAVAS.UB_MR.DT.Sensors
 
                 detectedObjects[i] = obj;
             }
-            detectedObjectMsg.Objects = detectedObjects;
-            detectedObjectMsg.WriteNativeMessage();
-            this.mObstacleBoundingBoxPublisher.Publish(detectedObjectMsg);
+            PublishDetectedObjects(detectedObjects);
         }
 
         public void CleanUp()

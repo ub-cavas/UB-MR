@@ -16,6 +16,14 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         int mKernel;
         float mMaxSDFRange = 10f;
 
+        /// <summary>
+        /// When true, incoming clouds are republished untouched instead of being raymarched
+        /// against the SDFs. The subscription keeps draining (so the input queue cannot grow
+        /// without bound) and downstream consumers keep receiving a cloud on the modified
+        /// topic, which keeps an A/B comparison against bounding box injection fair.
+        /// </summary>
+        public bool Bypass { get; set; }
+
         #region Data Queues
         // Incoming Point Clouds
         ConcurrentQueue<PointCloud2> mInput_PCD_Queue;
@@ -349,6 +357,13 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
             // No-op if no data
             PointCloud2 originalPCD = DequeuePCD(this.mInput_PCD_Queue);
             if (originalPCD is null) { return false; }
+
+            // Forward the raw cloud when LiDAR modification is switched off at runtime.
+            if (this.Bypass)
+            {
+                EnqueuePCD(originalPCD, this.mOutput_PCD_Queue);
+                return true;
+            }
 
             int count = (int)originalPCD.Width * (int)originalPCD.Height;
             const int THREADS = 128; // ** MUST MATCH COMPUTE SHADER **
