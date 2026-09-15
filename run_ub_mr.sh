@@ -72,6 +72,14 @@ fi
 
 IMAGE_NAME="${IMAGE_NAME:-ub-mr}"
 CONTAINER_COMMAND=()
+DOCKER_INTERACTIVE_ARGS=()
+
+# The integrated launcher starts this script in the background, where there is
+# no stdin TTY to attach. Keep interactive use convenient, but do not request a
+# TTY when running as a child process.
+if [[ -t 0 && -t 1 ]]; then
+  DOCKER_INTERACTIVE_ARGS=(-it)
+fi
 
 if [[ "${USE_LOCAL_MR_PKG}" == "1" ]]; then
   if [[ ${#CONTAINER_ARGS[@]} -gt 0 ]]; then
@@ -81,7 +89,7 @@ elif [[ ${#CONTAINER_ARGS[@]} -gt 0 ]]; then
   CONTAINER_COMMAND=("${CONTAINER_ARGS[@]}")
 fi
 
-docker run --rm -it \
+docker run --rm "${DOCKER_INTERACTIVE_ARGS[@]}" \
   --net=host \
   --name "${CONTAINER_NAME}" \
   --runtime=nvidia \
