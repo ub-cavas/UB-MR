@@ -14,6 +14,8 @@ namespace CAVAS.UB_MR.DT.Sensors
 
         float mDetectionRadius;
         Transform mTransform;
+        ROS2Node mNode;
+        SimulationClock mSimulationClock;
         IPublisher<DetectedObjects> mObstacleBoundingBoxPublisher;
 
         public VirtualBoundingBoxDetector(string inTopicName, ROS2Node inNode, Transform inTransform)
@@ -23,6 +25,8 @@ namespace CAVAS.UB_MR.DT.Sensors
                 sVirtualObjects = new List<VirtualObject>();
             }
             this.mTransform = inTransform;
+            this.mNode = inNode;
+            this.mSimulationClock = new SimulationClock(inNode);
             this.mObstacleBoundingBoxPublisher = inNode.CreatePublisher<DetectedObjects>(inTopicName);
         }
 
@@ -78,9 +82,12 @@ namespace CAVAS.UB_MR.DT.Sensors
             DetectedObjects detectedObjectMsg = new DetectedObjects();
             detectedObjectMsg.Header = new std_msgs.msg.Header();
             detectedObjectMsg.Header.Frame_id = "base_link";
+            // Must match the clock Autoware runs on. With the CARLA bridge that is simulation
+            // time from /clock, not Unity play time and not wall time. A stamp from the wrong
+            // clock lands outside the tracker's association window and the detection is dropped.
             builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
-            time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
-            detectedObjectMsg.Header.Stamp = time; //TODO: get correct timestamp
+            this.mSimulationClock.Stamp(time);
+            detectedObjectMsg.Header.Stamp = time;
 
             detectedObjectMsg.Objects = inObjects;
             detectedObjectMsg.WriteNativeMessage();
@@ -148,7 +155,11 @@ namespace CAVAS.UB_MR.DT.Sensors
 
         public void CleanUp()
         {
-            // TODO: Implement cleanup logic if necessary
+            if (this.mSimulationClock != null)
+            {
+                this.mSimulationClock.CleanUp();
+                this.mSimulationClock = null;
+            }
         }
 
     }

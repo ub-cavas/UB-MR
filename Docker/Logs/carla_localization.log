@@ -1,0 +1,4 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-09-09-20-44-25-871432-oakley-Dell-G16-7630-86
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [carla_localization-1]: process started with pid [130]
+[carla_localization-1] [INFO] [1788986666.025349395] [carla_localization_node]: Forwarding /localization/kinematic_state directly to /ub_mr/localization
