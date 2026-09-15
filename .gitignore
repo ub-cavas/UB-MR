@@ -80,3 +80,6 @@ Docker/Logs/ub-mr-player.log
 /Assets/Ros2ForUnity/
 /Assets/Ros2ForUnity.meta
 .codex
+
+# Docker Logs
+/Docker/Logs
