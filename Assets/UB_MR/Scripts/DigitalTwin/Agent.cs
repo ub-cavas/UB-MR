@@ -283,12 +283,12 @@ namespace CAVAS.UB_MR.DT
             return this.mNode;
         }
 
-        protected Vector3 WorldPosition()
+        public Vector3 WorldPosition()
         {
             return this.mWorldPosition;
         }
 
-        protected Quaternion WorldRotation()
+        public Quaternion WorldRotation()
         {
             return this.mWorldRotation;
         }
