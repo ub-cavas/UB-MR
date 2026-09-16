@@ -1,0 +1,215 @@
+{
+  "Refr": [
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Refracted_Coloroverlay.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Refracted_IN_N.png",
+      "connections": [
+        "Color"
+      ]
+    }
+  ],
+  "badges": [
+    {
+      "texture": "Badges_D.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Badges_N.png",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "Badges_D.png",
+      "connections": [
+        "Alpha"
+      ]
+    }
+  ],
+  "red_glass": [],
+  "Calipers": [
+    {
+      "texture": "Shared_Car_CaliperExoticParking_Diffuse_Black.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Shared_Car_CaliperExoticParking_N.png",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "Shared_Car_CaliperExoticParking_Diffuse_Black.png",
+      "connections": [
+        "Alpha"
+      ]
+    }
+  ],
+  "glass": [],
+  "Light_glass": [],
+  "Light": [
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Light_D.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Light_N.png",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Light_D.png",
+      "connections": [
+        "Alpha"
+      ]
+    }
+  ],
+  "Color_glass": [],
+  "mirror": [],
+  "disk": [
+    {
+      "texture": "Shared_Car_DiscForgedSolid_D.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Shared_Car_DiscForgedSolid_N.png",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "Shared_Car_DiscForgedSolid_D.png",
+      "connections": [
+        "Alpha"
+      ]
+    }
+  ],
+  "Plas1": [
+    {
+      "texture": "Shared_Car_Swatches_D.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Shared_Car_Swatches_D.png",
+      "connections": [
+        "Alpha"
+      ]
+    }
+  ],
+  "chasis": [
+    {
+      "texture": "ChassisImprovement_D.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Shared_Car_ChassisImprovement_N.png",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "ChassisImprovement_D.png",
+      "connections": [
+        "Alpha"
+      ]
+    }
+  ],
+  "grille": [
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Grille_NO.png",
+      "connections": [
+        "Color"
+      ]
+    }
+  ],
+  "Internal": [
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Internal_D.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Internal_N.png",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Internal_D.png",
+      "connections": [
+        "Alpha"
+      ]
+    }
+  ],
+  "Livery": [
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_001_Livery_D.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_001_Livery_D.png",
+      "connections": [
+        "Alpha"
+      ]
+    }
+  ],
+  "Chrome": [
+    {
+      "texture": "Shared_Car_Swatches_D.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Shared_Car_Swatches_D.png",
+      "connections": [
+        "Alpha"
+      ]
+    }
+  ],
+  "rim": [
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Rim_D.png",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Car_Ford_MustangBoss302_2012_Rim_N.png",
+      "connections": [
+        "Color"
+      ]
+    }
+  ],
+  "glass_surr": [],
+  "tire": [
+    {
+      "texture": "Shared_Car_Tire_Sport_N.png",
+      "connections": [
+        "Color"
+      ]
+    }
+  ],
+  "plate": []
+}

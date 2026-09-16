@@ -106,6 +106,11 @@ If you intend to develop the Mixed Reality Engine, follow these steps...
 
 ![File Location](Docs/RR_Reimport_FBX.png)
 
+## Virtual-object recognition
+
+Agents can use GPU LiDAR modification (default) or direct Autoware bounding-box injection.
+Choose **Recognition settings** in the agent editor. See the [setup and validation guide](Docs/VirtualObjectRecognition.md) for the Autoware profile, ROS time, and topic routing.
+
 ## Running the Project
 
 ### Docker 

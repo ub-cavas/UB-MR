@@ -7,6 +7,38 @@ using System;
 
 namespace CAVAS.UB_MR.Config
 {
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum VirtualObjectRecognitionMode
+    {
+        LidarModification,
+        BoundingBoxInjection
+    }
+
+    [Serializable]
+    public class VirtualObjectRecognitionSettings
+    {
+        public VirtualObjectRecognitionMode mode = VirtualObjectRecognitionMode.LidarModification;
+        public string boundingBoxTopic = "/virtual_obstacles";
+        public float publishRateHz = 30f;
+        public float detectionRadiusMeters = 1000f;
+        public bool useSimTime = false;
+
+        public bool TryValidate(out string error)
+        {
+            error = null;
+            if (!Enum.IsDefined(typeof(VirtualObjectRecognitionMode), mode))
+                error = "Choose a valid recognition mode.";
+            else if (string.IsNullOrWhiteSpace(boundingBoxTopic) ||
+                !System.Text.RegularExpressions.Regex.IsMatch(boundingBoxTopic, @"^/[A-Za-z_][A-Za-z0-9_]*(/[A-Za-z_][A-Za-z0-9_]*)*$"))
+                error = "Enter an absolute ROS topic, such as /virtual_obstacles.";
+            else if (float.IsNaN(publishRateHz) || float.IsInfinity(publishRateHz) || publishRateHz <= 0)
+                error = "Publication rate must be a finite positive number.";
+            else if (float.IsNaN(detectionRadiusMeters) || float.IsInfinity(detectionRadiusMeters) || detectionRadiusMeters <= 0)
+                error = "Detection radius must be a finite positive number.";
+            return error == null;
+        }
+    }
+
     [System.Serializable]
     [JsonConverter(typeof(StringEnumConverter))] // Makes JSON readable ("LiDAR" instead of 0)
     public enum SensorType
@@ -33,6 +65,7 @@ namespace CAVAS.UB_MR.Config
         public string name;
         public bool isDynamic = true;
         public VisualModel model = VisualModel.Lincoln_MKZ;
+        public VirtualObjectRecognitionSettings recognition = new VirtualObjectRecognitionSettings();
         public Dictionary<string, Sensor> sensors = new Dictionary<string, Sensor>();
     }
 

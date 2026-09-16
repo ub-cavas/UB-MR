@@ -57,6 +57,9 @@ ExportedObj/
 # Unity3D generated file on crash reports
 sysinfo.txt
 
+# Mono crash memory dumps
+mono_crash.*.blob
+
 # Builds
 *.apk
 *.aab

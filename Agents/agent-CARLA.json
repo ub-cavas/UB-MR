@@ -1,6 +1,13 @@
 {
   "name": "CARLA",
   "isDynamic": true,
+  "recognition": {
+    "mode": "LidarModification",
+    "boundingBoxTopic": "/virtual_obstacles",
+    "publishRateHz": 30.0,
+    "detectionRadiusMeters": 1000.0,
+    "useSimTime": true
+  },
   "model": "Lincoln_MKZ",
   "sensors": {
     "LiDAR_Top": {
