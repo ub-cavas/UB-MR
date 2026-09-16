@@ -10,6 +10,7 @@ using System.Collections;
 
 namespace CAVAS.UB_MR
 {
+    [DefaultExecutionOrder(-1000)]
     public class Module : MonoBehaviour
     {
         [Header("Map Data")]
@@ -39,19 +40,27 @@ namespace CAVAS.UB_MR
         public Vector3 CurrentMapRotationEuler => this.currentMapRotationEuler;
         public bool HasMapRotationState => this.hasMapRotationState;
 
+        public Config.Agent SessionAgent { get; private set; }
+        public bool UsesLidarModification { get; private set; } = true;
+
         void Awake()
         {
+            SessionAgent = ConfigurationManager.GetConfiguration().Item1;
+            UsesLidarModification = (SessionAgent?.recognition?.mode ?? VirtualObjectRecognitionMode.LidarModification)
+                == VirtualObjectRecognitionMode.LidarModification;
             InitializeMapRotationState();
         }
 
         protected virtual void Start()
         {
             InitializeMapRotationState();
-            RefreshSDFList();
+            if (UsesLidarModification)
+                RefreshSDFList();
             mapPanel.SetMapPosition(map_root.position);
             mapPanel.SetMapRotation(this.currentMapRotationEuler);
             StartCoroutine(MapUpdate());
-            StartCoroutine(SDFListUpdate());
+            if (UsesLidarModification)
+                StartCoroutine(SDFListUpdate());
             
             SpawnActiveAgent();
             if (ROS2_Bridge.ROS_CORE.Ok() && this.mNode == null)
@@ -142,7 +151,7 @@ namespace CAVAS.UB_MR
 
         DT.Agent SpawnActiveAgent()
         {
-            return SpawnAgent(ConfigurationManager.GetConfiguration().Item1);
+            return SpawnAgent(SessionAgent);
         }
 
         DT.Agent SpawnAgent(Config.Agent inAgent)
@@ -165,6 +174,13 @@ namespace CAVAS.UB_MR
             return agent;
         }
     
+        void OnDestroy()
+        {
+            StopAllCoroutines();
+            if (mNode != null && Ros2cs.Ok()) ROS2_Bridge.ROS_CORE.RemoveNode(mNode);
+            mNode = null;
+        }
+
         void UpdateMap(Vector3 inPosition, Quaternion inRotation)
         {
             // Set position

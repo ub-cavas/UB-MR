@@ -12,6 +12,9 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
 {
     public class LidarModifier : SensorModifier
     {
+        readonly Agent owner;
+        Coroutine subscriptionRoutine;
+        volatile bool disposed;
         ComputeShader mLiDARComputeShader;
         int mKernel;
         float mMaxSDFRange = 10f;
@@ -49,11 +52,12 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
 
             // -- Set up subscriptions to LiDAR topics and create topic for modified LiDAR data
             this.mNode = inNode;
-            inOwner.StartCoroutine(Subscribe_To_PCD2(inTopicName, inQoSProfile, inRaysPerScan));
+            owner = inOwner;
             this.mPointCloudPublisher = inNode.CreatePublisher<PointCloud2>(inTopicName + "_modified");
             // Set up Queues
             this.mInput_PCD_Queue = new ConcurrentQueue<PointCloud2>();
             this.mOutput_PCD_Queue = new ConcurrentQueue<PointCloud2>();
+            subscriptionRoutine = inOwner.StartCoroutine(Subscribe_To_PCD2(inTopicName, inQoSProfile, inRaysPerScan));
 
             this.mKernel = this.mLiDARComputeShader.FindKernel("SDFRaymarch");
             this.mSDFs = inSDFs ?? Array.Empty<SDFTexture>();
@@ -166,12 +170,14 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         #region Data Queue Operations
         void EnqueuePCD(PointCloud2 inPointCloud, ConcurrentQueue<PointCloud2> inQueue)
         {
+            if (disposed) return;
             if (inPointCloud == null || inPointCloud.Data == null || inPointCloud.Fields == null)
             {
                 Debug.LogWarning("Invalid PointCloud2!");
                 return;
             }
             inQueue.Enqueue(inPointCloud);
+            while (inQueue.Count > 2) inQueue.TryDequeue(out _);
         }
         
         /// <summary>
@@ -395,17 +401,24 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
 
         public override void CleanUp()
         {
-            this.mInput_GPU_Buffer?.Dispose();
+            if (disposed) return;
+            disposed = true;
+            if (owner != null && subscriptionRoutine != null) owner.StopCoroutine(subscriptionRoutine);
+            subscriptionRoutine = null;
             this.mInput_GPU_Buffer?.Release();
-            this.mOutput_GPU_Buffer?.Dispose();
             this.mOutput_GPU_Buffer?.Release();
-
-            if (Ros2cs.Ok() && this.mPointCloudSubscriber != null)
+            this.mInput_GPU_Buffer = null;
+            this.mOutput_GPU_Buffer = null;
+            if (Ros2cs.Ok())
             {
-                this.mNode.RemoveSubscription<PointCloud2>(this.mPointCloudSubscriber);
-                this.mPointCloudSubscriber = null; 
+                if (mPointCloudSubscriber != null) mNode.RemoveSubscription<PointCloud2>(mPointCloudSubscriber);
+                if (mPointCloudPublisher != null) mNode.RemovePublisher<PointCloud2>(mPointCloudPublisher);
             }
-            
+            mPointCloudSubscriber = null;
+            mPointCloudPublisher = null;
+            while (mInput_PCD_Queue.TryDequeue(out _)) { }
+            while (mOutput_PCD_Queue.TryDequeue(out _)) { }
+
         }
 
     }

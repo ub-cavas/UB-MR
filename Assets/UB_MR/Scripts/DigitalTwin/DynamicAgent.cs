@@ -9,6 +9,8 @@ namespace CAVAS.UB_MR.DT.Vehicle
         
         ISubscription<nav_msgs.msg.Odometry> odometrySubscriber;
         
+        protected override bool ReadyForDetection => HasOdometry;
+
         protected override void Update()
         {
             base.Update();
@@ -31,7 +33,7 @@ namespace CAVAS.UB_MR.DT.Vehicle
             // Odometry
             if (ROSNode() is not null && odometrySubscriber is not null)
             {
-                ROSNode().RemoveSubscription<nav_msgs.msg.Odometry>(this.odometrySubscriber);
+                if (Ros2cs.Ok()) ROSNode().RemoveSubscription<nav_msgs.msg.Odometry>(this.odometrySubscriber);
                 this.odometrySubscriber = null;
             }
             base.Teardown();

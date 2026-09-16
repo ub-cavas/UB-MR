@@ -1,23 +1,16 @@
 {
-  "name": "CARLA",
+  "name": "LincolnMKZ-Physical-Boxes",
   "isDynamic": true,
-  "recognition": {
-    "mode": "LidarModification",
-    "boundingBoxTopic": "/virtual_obstacles",
-    "publishRateHz": 30.0,
-    "detectionRadiusMeters": 1000.0,
-    "useSimTime": true
-  },
   "model": "Lincoln_MKZ",
   "sensors": {
     "LiDAR_Top": {
       "name": "LiDAR_Top",
-      "topic": "/sensing/lidar/top/pointcloud",
+      "topic": "/sensing/lidar/top/pointcloud_raw_ex",
       "type": "LiDAR",
       "position": {
         "x": 0.0,
-        "y": 0.0,
-        "z": 3.1,
+        "y": 2.0,
+        "z": 0.0,
         "normalized": {
           "x": 0.0,
           "y": 0.0,
@@ -36,5 +29,12 @@
         "sqrMagnitude": 0.0
       }
     }
+  },
+  "recognition": {
+    "mode": "BoundingBoxInjection",
+    "boundingBoxTopic": "/virtual_obstacles",
+    "publishRateHz": 30.0,
+    "detectionRadiusMeters": 1000.0,
+    "useSimTime": false
   }
 }
