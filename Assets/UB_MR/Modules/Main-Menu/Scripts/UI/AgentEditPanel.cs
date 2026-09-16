@@ -14,6 +14,8 @@ namespace CAVAS.UB_MR.Modules.MainMenu
         [SerializeField] Panel mapPanel;
         [SerializeField] SensorEditPanel sensorEditPanel;
         Config.Agent agent;
+        Button recognitionButton;
+        RecognitionSettingsView recognitionView;
 
         public void SetAgent(Config.Agent inAgent)
         {
@@ -24,6 +26,25 @@ namespace CAVAS.UB_MR.Modules.MainMenu
         {
             base.LoadPanel();
 
+            if (recognitionButton == null)
+            {
+                recognitionButton = Instantiate(loadAgentButton, loadAgentButton.transform.parent);
+                recognitionButton.name = "Recognition settings";
+                recognitionButton.onClick = new Button.ButtonClickedEvent();
+                var label = recognitionButton.GetComponentInChildren<TMPro.TextMeshProUGUI>(true);
+                label.text = "Recognition settings";
+                label.enableAutoSizing = true;
+                label.fontSizeMin = 20;
+                label.fontSizeMax = 30;
+                var rect = (RectTransform)recognitionButton.transform;
+                rect.sizeDelta = new Vector2(360, 90);
+                rect.anchoredPosition = new Vector2(-200, -350);
+                var loadRect = (RectTransform)loadAgentButton.transform;
+                loadRect.sizeDelta = new Vector2(360, 90);
+                loadRect.anchoredPosition = new Vector2(200, -350);
+                recognitionView = new RecognitionSettingsView(transform, sensorEditPanel, loadAgentButton);
+                recognitionButton.onClick.AddListener(() => recognitionView.Show(agent));
+            }
             loadAgentButton.onClick.AddListener(LoadAgent);
             // Reassign function of back button
             GetBackButton().onClick.RemoveAllListeners();
@@ -40,6 +61,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
 
         public override void UnloadPanel()
         {
+            recognitionView?.Hide();
             loadAgentButton.onClick.RemoveAllListeners();
 
             base.UnloadPanel();
