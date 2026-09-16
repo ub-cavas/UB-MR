@@ -1586,7 +1586,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1657,6 +1657,7 @@ MonoBehaviour:
   sdfTextureResolution: 8
   meshToSDF: {fileID: 1943893342}
   boundingBox: {fileID: 1943893340}
+  classification: 1
 --- !u!114 &1943893342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1691,7 +1692,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1272740862478031309, guid: 45c97a6cdff58e4b2bad6ee93a49d6d2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1937251246655193975, guid: 45c97a6cdff58e4b2bad6ee93a49d6d2, type: 3}
       propertyPath: m_LocalPosition.x
