@@ -110,7 +110,7 @@ If you intend to develop the Mixed Reality Engine, follow these steps...
 
 ### Docker 
 ```bash
-./run_ub_mr.sh 0.0.1
+./run_ub_mr.sh 0.0.8
 ```
 
 
