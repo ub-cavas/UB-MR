@@ -3,6 +3,22 @@
 Open **New Session → select an agent → Recognition settings**. Save the settings,
 then load the agent and map. Changes apply when the next session starts.
 
+The former `LincolnMKZ-Simple` bounding-box agent is split into two presets:
+
+| Agent | ROS clock | Localization bridge |
+|---|---|---|
+| `LincolnMKZ-CARLA-Boxes` | Simulation `/clock` | `launch_mr_pkg_dev.sh` |
+| `LincolnMKZ-Physical-Boxes` | System time | `launch_mr_pkg_dev.sh --physical` |
+
+Both publish direct boxes on `/virtual_obstacles` at 30 Hz within 1,000 m.
+Import the corresponding JSON from `Agents/` into Unity's agent configuration
+folder and select it for a new session. The CARLA preset also uses the CARLA
+top-LiDAR topic and mounting pose; the physical preset retains the original
+Lincoln sensor settings. In box mode these sensors only forward scans unchanged.
+Box publication does not depend on receiving scans: Autoware can consume the
+original sensor clouds directly. Enable the Autoware perception profile for both
+presets. For CARLA boxes use the regular CARLA launcher, not the LiDAR-test launcher.
+
 | Mode | LiDAR output | Bounding boxes |
 |---|---|---|
 | LiDAR modification (default) | GPU SDF modification on each configured `<topic>_modified` | No box publisher |
