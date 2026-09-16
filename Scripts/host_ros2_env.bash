@@ -11,6 +11,11 @@ source /opt/ros/humble/setup.bash
 # Match container's DDS middleware (CycloneDDS)
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 
+# ROS_LOCALHOST_ONLY makes rmw_cyclonedds_cpp add `lo` automatically.  This
+# helper already selects `lo` explicitly below, so keeping it set would select
+# the same interface twice and prevent Cyclone DDS from creating a node.
+unset ROS_LOCALHOST_ONLY
+
 # Match container's CycloneDDS configuration (loopback interface binding)
 export CYCLONEDDS_URI='<CycloneDDS><Domain Id="any"><General><Interfaces><NetworkInterface autodetermine="false" name="lo" priority="default" multicast="default" /></Interfaces><AllowMulticast>default</AllowMulticast><MaxMessageSize>65500B</MaxMessageSize></General></Domain></CycloneDDS>'
 
