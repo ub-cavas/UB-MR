@@ -1,140 +1,102 @@
 using ROS2;
 using System.Collections.Generic;
-//using vision_msgs.msg;
 using autoware_perception_msgs.msg;
 using UnityEngine;
 using CAVAS.UB_MR.ROS2;
-using System.Linq;
 
 namespace CAVAS.UB_MR.DT.Sensors
 {
-    public class VirtualBoundingBoxDetector
+    public sealed class VirtualBoundingBoxDetector
     {
-        static List<VirtualObject> sVirtualObjects;
+        static readonly HashSet<VirtualObject> virtualObjects = new HashSet<VirtualObject>();
+        readonly ROS2Node node;
+        readonly Transform egoRoot;
+        IPublisher<DetectedObjects> publisher;
 
-        float mDetectionRadius;
-        Transform mTransform;
-        IPublisher<DetectedObjects> mObstacleBoundingBoxPublisher;
-
-        public VirtualBoundingBoxDetector(string inTopicName, ROS2Node inNode, Transform inTransform)
+        public VirtualBoundingBoxDetector(string topic, ROS2Node node, Transform egoRoot)
         {
-            if (sVirtualObjects == null)
-            {
-                sVirtualObjects = new List<VirtualObject>();
-            }
-            this.mTransform = inTransform;
-            this.mObstacleBoundingBoxPublisher = inNode.CreatePublisher<DetectedObjects>(inTopicName);
+            this.node = node;
+            this.egoRoot = egoRoot;
+            var qos = new QualityOfServiceProfile();
+            qos.SetReliability(ReliabilityPolicy.QOS_POLICY_RELIABILITY_RELIABLE);
+            qos.SetDurability(DurabilityPolicy.QOS_POLICY_DURABILITY_VOLATILE);
+            qos.SetHistory(HistoryPolicy.QOS_POLICY_HISTORY_KEEP_LAST, 1);
+            publisher = node.CreatePublisher<DetectedObjects>(topic, qos);
         }
 
-        public static void AddVirtualObjectToDatabase(VirtualObject vObj)
-        {
-            if (sVirtualObjects == null)
-                sVirtualObjects = new List<VirtualObject>();
-            if (sVirtualObjects.Contains(vObj) == false)
-                sVirtualObjects.Add(vObj);
-        }
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void ClearVirtualObjectDatabase() => virtualObjects.Clear();
+        public static void AddVirtualObjectToDatabase(VirtualObject obj) => virtualObjects.Add(obj);
+        public static void RemoveVirtualObjectFromDatabase(VirtualObject obj) => virtualObjects.Remove(obj);
 
         public static void UpdateVirtualObjectDatabase()
         {
-            ClearVirtualObjectDatabase();
-            VirtualObject[] objects = GameObject.FindObjectsByType<VirtualObject>(FindObjectsSortMode.None);
-            // Add new virtual objects
-            foreach (VirtualObject vObj in objects)
-            {
-                if (sVirtualObjects.Contains(vObj) == false)
-                    sVirtualObjects.Add(vObj);
-            }
+            virtualObjects.Clear();
+            foreach (var obj in Object.FindObjectsByType<VirtualObject>(FindObjectsSortMode.None))
+                if (obj.isActiveAndEnabled) virtualObjects.Add(obj);
         }
 
-        public static void ClearVirtualObjectDatabase()
+        public static DetectedObjects BuildMessage(Transform baseLink, Transform egoRoot, float radius,
+            builtin_interfaces.msg.Time stamp)
         {
-            sVirtualObjects.Clear();
+            var objects = new List<DetectedObject>();
+            foreach (var obj in virtualObjects)
+            {
+                if (obj == null || !obj.isActiveAndEnabled ||
+                    (egoRoot != null && obj.transform.IsChildOf(egoRoot))) continue;
+                if (!obj.TryGetBoundingBox(out var center, out var rotation, out var size)) continue;
+                if ((center - baseLink.position).sqrMagnitude > radius * radius) continue;
+                objects.Add(CreateDetection(baseLink, center, rotation, size, obj.Classification));
+            }
+            return new DetectedObjects
+            {
+                Header = new std_msgs.msg.Header { Frame_id = "base_link", Stamp = stamp },
+                Objects = objects.ToArray()
+            };
         }
 
-        public List<VirtualObject> GetNearbyObstacles(Transform baseLink, float radius)
+        public static DetectedObject CreateDetection(Transform baseLink, Vector3 center,
+            Quaternion rotation, Vector3 size, VirtualObjectClassification classification)
         {
-            List<VirtualObject> nearbyObjects = new List<VirtualObject>();
-            foreach (VirtualObject vObj in sVirtualObjects)
+            Quaternion inverse = Quaternion.Inverse(baseLink.rotation);
+            Vector3 position = Ros2Utility.UnityToRos2Position(inverse * (center - baseLink.position));
+            Quaternion orientation = Ros2Utility.UnityToRosRotation(inverse * rotation);
+            Vector3 dimensions = Ros2Utility.UnityToRos2Scale(size);
+            var obj = new DetectedObject
             {
-                if (Vector3.Distance(vObj.transform.position, baseLink.position) <= radius)
-                    nearbyObjects.Add(vObj);
-            }
-            return nearbyObjects;
+                Existence_probability = 1.0f,
+                Classification = new[] { new ObjectClassification { Label = (byte)classification, Probability = 1.0f } }
+            };
+            var pose = obj.Kinematics.Pose_with_covariance;
+            pose.Pose.Position.X = position.x;
+            pose.Pose.Position.Y = position.y;
+            pose.Pose.Position.Z = position.z;
+            pose.Pose.Orientation.X = orientation.x;
+            pose.Pose.Orientation.Y = orientation.y;
+            pose.Pose.Orientation.Z = orientation.z;
+            pose.Pose.Orientation.W = orientation.w;
+            for (int i = 0; i < 6; i++) pose.Covariance[i * 7] = 0.01;
+            obj.Kinematics.Has_position_covariance = true;
+            obj.Kinematics.Orientation_availability = DetectedObjectKinematics.AVAILABLE;
+            obj.Kinematics.Has_twist = false;
+            obj.Kinematics.Has_twist_covariance = false;
+            obj.Shape.Type = Shape.BOUNDING_BOX;
+            obj.Shape.Dimensions.X = dimensions.x;
+            obj.Shape.Dimensions.Y = dimensions.y;
+            obj.Shape.Dimensions.Z = dimensions.z;
+            return obj;
         }
 
-        public void PublishNearbyVirtualObjects(Transform baseLink, float detectionRadius)
+        public void PublishNearbyVirtualObjects(Transform baseLink, float radius, builtin_interfaces.msg.Time stamp)
         {
-            // Message Structure + Header
-            DetectedObjects detectedObjectMsg = new DetectedObjects();
-            detectedObjectMsg.Header = new std_msgs.msg.Header();
-            detectedObjectMsg.Header.Frame_id = "base_link";
-            builtin_interfaces.msg.Time time = new builtin_interfaces.msg.Time();
-            time.Sec = (int)UnityEngine.Time.timeSinceLevelLoad;
-            detectedObjectMsg.Header.Stamp = time; //TODO: get correct timestamp
-
-            List<VirtualObject> virtualObjects = GetNearbyObstacles(baseLink, detectionRadius);
-            DetectedObject[] detectedObjects = new DetectedObject[virtualObjects.Count];
-            for (int i = 0; i < virtualObjects.Count; i++)
-            {
-                // Extract Unity Object Properties
-                VirtualObject virtualObject = virtualObjects[i];
-                Bounds bounds = virtualObject.GetBoundingBox();
-                Vector3 worldCenter = bounds.center;
-                Vector3 localCenter = baseLink.InverseTransformPoint(worldCenter);
-                Quaternion worldRot = virtualObject.transform.rotation;
-                Quaternion localRot = Quaternion.Inverse(baseLink.rotation) * worldRot;
-                Vector3 ros2Center = Ros2Utility.UnityToRos2Position(localCenter);
-                Quaternion ros2Rotation = Ros2Utility.UnityToRosRotation(localRot);
-
-                // ROS Object
-                DetectedObject obj = new DetectedObject();
-
-                // Classification
-                ObjectClassification classification = new ObjectClassification();
-                classification.Label = ObjectClassification.CAR; //TODO: support other types of classifications
-                classification.Probability = 1.0f;
-                obj.Classification = new ObjectClassification[] { classification };
-
-                // Pose
-                obj.Kinematics.Pose_with_covariance.Pose.Position.X = ros2Center.x;
-                obj.Kinematics.Pose_with_covariance.Pose.Position.Y = ros2Center.y;
-                obj.Kinematics.Pose_with_covariance.Pose.Position.Z = ros2Center.z;
-                // Rotation
-                obj.Kinematics.Pose_with_covariance.Pose.Orientation.X = ros2Rotation.x;
-                obj.Kinematics.Pose_with_covariance.Pose.Orientation.Y = ros2Rotation.y;
-                obj.Kinematics.Pose_with_covariance.Pose.Orientation.Z = ros2Rotation.z;
-                obj.Kinematics.Pose_with_covariance.Pose.Orientation.W = ros2Rotation.w;
-                // Pose Covariance (6x6 matrix, row-major, diagonal elements)
-                obj.Kinematics.Pose_with_covariance.Covariance[0]  = 0.01; // x
-                obj.Kinematics.Pose_with_covariance.Covariance[7]  = 0.01; // y
-                obj.Kinematics.Pose_with_covariance.Covariance[14] = 0.01; // z
-                obj.Kinematics.Pose_with_covariance.Covariance[21] = 0.01; // roll
-                obj.Kinematics.Pose_with_covariance.Covariance[28] = 0.01; // pitch
-                obj.Kinematics.Pose_with_covariance.Covariance[35] = 0.01; // yaw
-                // Twist //TODO: should not be defaulting to 0.0
-                obj.Kinematics.Twist_with_covariance.Twist.Linear.X = 0.0f;
-                obj.Kinematics.Twist_with_covariance.Twist.Linear.Y = 0.0f;
-
-                // Bounding Box
-                Shape bbox = new Shape();
-                bbox.Type = Shape.BOUNDING_BOX;
-                Vector3 ros2Size = Ros2Utility.UnityToRos2Scale(bounds.size);
-                bbox.Dimensions.X = ros2Size.x;
-                bbox.Dimensions.Y = ros2Size.y;
-                bbox.Dimensions.Z = ros2Size.z;
-                obj.Shape = bbox;
-
-                detectedObjects[i] = obj;
-            }
-            detectedObjectMsg.Objects = detectedObjects;
-            detectedObjectMsg.WriteNativeMessage();
-            this.mObstacleBoundingBoxPublisher.Publish(detectedObjectMsg);
+            if (publisher != null) publisher.Publish(BuildMessage(baseLink, egoRoot, radius, stamp));
         }
 
         public void CleanUp()
         {
-            // TODO: Implement cleanup logic if necessary
+            if (publisher == null) return;
+            if (Ros2cs.Ok()) node.RemovePublisher<DetectedObjects>(publisher);
+            publisher = null;
         }
-
     }
 }

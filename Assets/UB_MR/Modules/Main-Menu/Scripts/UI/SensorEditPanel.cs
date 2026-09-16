@@ -27,6 +27,9 @@ namespace CAVAS.UB_MR.Modules.MainMenu
         [Header("Panels")]
         [SerializeField] AgentEditMenu agentEditMenu;
 
+        internal TMP_Dropdown RecognitionDropdownTemplate => sensorType;
+        internal TMP_InputField RecognitionInputTemplate => sensorTopic;
+
         Config.Agent agent;
         Config.Sensor sensor;
 
