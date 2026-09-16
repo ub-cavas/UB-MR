@@ -243,7 +243,7 @@ namespace CAVAS.UB_MR.DT
             {
                 string name = gameObject.name.Replace("(Clone)", "");
                 name = name.Replace(" Variant", "");
-                name = name.Replace(" ", "_");
+                name = name.Replace(" ", "_").Replace("-", "_");
                 // This is sort of cheating but ROS2_Bridge is not immediately deleting nodes so this avoids a collision (~99% of the time)
                 int randomSuffix = UnityEngine.Random.Range(0, 1000);
                 this.mNode = ROS2_Bridge.ROS_CORE.CreateNode(name + "_Agent_" + randomSuffix.ToString());
