@@ -1,0 +1,59 @@
+{
+  "MI_Wheels_Lincoln": [
+    {
+      "texture": "T_LincolnWheels_D_07ae4a4f.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details_Lincoln": [
+    {
+      "texture": "T_LincolnOutDetails_D_133c5b06.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarLights_Lincoln": [
+    {
+      "texture": "T_LincolnOutDetails_D_133c5b06.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LincolnOutDetails_D_133c5b06.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "M_CarGlass_Master_Inst": [],
+  "M_LicensePlate_Master_Inst": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Interior_Lincoln": [
+    {
+      "texture": "T_LincolnIntDetails_D_020298c9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarExterior_Lincoln": [
+    {
+      "texture": "T_LincolnIntDetails_D_020298c9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

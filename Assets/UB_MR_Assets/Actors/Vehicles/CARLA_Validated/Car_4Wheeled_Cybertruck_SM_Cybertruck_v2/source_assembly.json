@@ -1,0 +1,790 @@
+{
+  "vehicle": {
+    "id": "Car_4Wheeled_Cybertruck_SM_Cybertruck_v2",
+    "name": "SM_Cybertruck_v2",
+    "path": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/SM_Cybertruck_v2.SM_Cybertruck_v2",
+    "category": "Car"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/SM_Cybertruck_v2.SM_Cybertruck_v2",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\Cybertruck\\BP_Cybertruck.uasset",
+    "components": [
+      {
+        "name": "SM_Cybertruck_DoorGlass_Ext1_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Ext1_RR.SM_Cybertruck_DoorGlass_Ext1_RR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            1.9406687984406605e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -1.9406687984406605e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_v2_lights",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/SM_Cybertruck_v2_lights.SM_Cybertruck_v2_lights",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_001.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Ext2_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Ext2_FL.SM_Cybertruck_DoorGlass_Ext2_FL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_002.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Ext2_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Ext2_FR.SM_Cybertruck_DoorGlass_Ext2_FR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_003.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Ext2_RL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Ext2_RL.SM_Cybertruck_DoorGlass_Ext2_RL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_004.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Ext2_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Ext2_RR.SM_Cybertruck_DoorGlass_Ext2_RR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            1.9406687984406605e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -1.9406687984406605e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_005.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Int1_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Int1_FL.SM_Cybertruck_DoorGlass_Int1_FL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_006.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Int1_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Int1_FR.SM_Cybertruck_DoorGlass_Int1_FR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_007.fbx"
+      },
+      {
+        "name": "SM_Cyber_Glass_int_2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/SM_Cyber_Glass_int_2.SM_Cyber_Glass_int_2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_008.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Int1_RL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Int1_RL.SM_Cybertruck_DoorGlass_Int1_RL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_009.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Int1_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Int1_RR.SM_Cybertruck_DoorGlass_Int1_RR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            1.9406687984406605e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -1.9406687984406605e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_010.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Int2_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Int2_FL.SM_Cybertruck_DoorGlass_Int2_FL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_011.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Int2_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Int2_FR.SM_Cybertruck_DoorGlass_Int2_FR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_012.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Int2_RL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Int2_RL.SM_Cybertruck_DoorGlass_Int2_RL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_013.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Int2_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Int2_RR.SM_Cybertruck_DoorGlass_Int2_RR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            1.9406687984406605e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -1.9406687984406605e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_014.fbx"
+      },
+      {
+        "name": "Door_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/SM_CyberTruck_DoorFL_SM_CyberTruckDoor_Front_L.SM_CyberTruck_DoorFL_SM_CyberTruckDoor_Front_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            1.5221066284179687
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            1.0343000030517577
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.20515869140625
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_015.fbx"
+      },
+      {
+        "name": "Door_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/SM_CyberTruck_DoorFR_SM_CyberTruckDoor_Front_R.SM_CyberTruck_DoorFR_SM_CyberTruckDoor_Front_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            1.5221066284179687
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.0342952728271484
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.20515869140625
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_016.fbx"
+      },
+      {
+        "name": "Door_RL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/SM_CyberTruck_DoorRL_SM_CyberTruckDoor_Rear_L.SM_CyberTruck_DoorRL_SM_CyberTruckDoor_Rear_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.30305898666381836
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            1.0343000030517577
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.20515869140625
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_017.fbx"
+      },
+      {
+        "name": "SM_Cyber_Glass_ext_1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/SM_Cyber_Glass_ext_1.SM_Cyber_Glass_ext_1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_018.fbx"
+      },
+      {
+        "name": "Door_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/SM_CyberTruck_DoorRR_SM_CyberTruckDoor_Rear_R.SM_CyberTruck_DoorRR_SM_CyberTruckDoor_Rear_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.30305898666381836
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.0342992401123048
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.20515869140625
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_019.fbx"
+      },
+      {
+        "name": "SM_Cyber_Glass_ext_2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/SM_Cyber_Glass_ext_2.SM_Cyber_Glass_ext_2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_020.fbx"
+      },
+      {
+        "name": "SM_Cyber_Glass_int_1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/SM_Cyber_Glass_int_1.SM_Cyber_Glass_int_1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_021.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Ext1_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Ext1_FL.SM_Cybertruck_DoorGlass_Ext1_FL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_022.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Ext1_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Ext1_FR.SM_Cybertruck_DoorGlass_Ext1_FR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_023.fbx"
+      },
+      {
+        "name": "SM_Cybertruck_DoorGlass_Ext1_RL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Cybertruck/Cybertruck_glass/Cybertruck_door_glass/SM_Cybertruck_DoorGlass_Ext1_RL.SM_Cybertruck_DoorGlass_Ext1_RL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_024.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

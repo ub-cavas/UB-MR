@@ -1,0 +1,85 @@
+{
+  "Car_4Wheeled_Mustang_SM_Mustang_v2_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 16419,
+    "bounds": [
+      [
+        -2.326620578765869,
+        -0.9474133849143982,
+        -6.215206838078302e-08
+      ],
+      [
+        2.390904664993286,
+        0.9474136233329773,
+        1.300939917564392
+      ]
+    ],
+    "dimensions_m": [
+      4.717525243759155,
+      1.8948270082473755,
+      1.3009399797164605
+    ],
+    "materials": 5,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_Mustang_SM_Mustang_v2_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.335585594177246,
+        -0.9563140273094177,
+        -0.008947351016104221
+      ],
+      [
+        2.3969383239746094,
+        0.9596228003501892,
+        1.3173798322677612
+      ]
+    ],
+    "dimensions_m": [
+      4.7325239181518555,
+      1.915936827659607,
+      1.3263271832838655
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 6.590308540505514,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.01643991470336914
+  }
+}

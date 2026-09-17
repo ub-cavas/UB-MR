@@ -1,0 +1,85 @@
+{
+  "Truck_Truck_SM_TestTruck_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 17021,
+    "bounds": [
+      [
+        -3.625800609588623,
+        -1.163164734840393,
+        -0.0016598454676568508
+      ],
+      [
+        3.7047691345214844,
+        1.1631654500961304,
+        2.972633123397827
+      ]
+    ],
+    "dimensions_m": [
+      7.330569744110107,
+      2.3263301849365234,
+      2.974292968865484
+    ],
+    "materials": 16,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Truck_Truck_SM_TestTruck_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 7998,
+    "bounds": [
+      [
+        -3.640613079071045,
+        -1.1760741472244263,
+        -0.015509608201682568
+      ],
+      [
+        3.7179033756256104,
+        1.16567063331604,
+        2.9895403385162354
+      ]
+    ],
+    "dimensions_m": [
+      7.358516454696655,
+      2.3417447805404663,
+      3.005049946717918
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 33.18300984874678,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.016907215118408203
+  }
+}

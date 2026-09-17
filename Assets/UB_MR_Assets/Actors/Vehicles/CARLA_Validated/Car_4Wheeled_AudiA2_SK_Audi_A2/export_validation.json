@@ -1,0 +1,85 @@
+{
+  "Car_4Wheeled_AudiA2_SK_Audi_A2_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 26749,
+    "bounds": [
+      [
+        -1.852684736251831,
+        -0.8946786522865295,
+        0.007282013073563576
+      ],
+      [
+        1.852684736251831,
+        0.8939996361732483,
+        1.5563321113586426
+      ]
+    ],
+    "dimensions_m": [
+      3.705369472503662,
+      1.7886782884597778,
+      1.549050098285079
+    ],
+    "materials": 17,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_AudiA2_SK_Audi_A2_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -1.858668565750122,
+        -0.8987325429916382,
+        -0.0010350807569921017
+      ],
+      [
+        1.8589633703231812,
+        0.9017056822776794,
+        1.563324213027954
+      ]
+    ],
+    "dimensions_m": [
+      3.7176319360733032,
+      1.8004382252693176,
+      1.5643592937849462
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 5.003700802566234,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.008317093830555677
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "Car_4Wheeled_DodgeCharger2020_SK_Charger2020_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 104464,
+    "bounds": [
+      [
+        -2.5092599391937256,
+        -1.0485416650772095,
+        -0.0017845041584223509
+      ],
+      [
+        2.498565196990967,
+        1.0485419034957886,
+        1.5329405069351196
+      ]
+    ],
+    "dimensions_m": [
+      5.007825136184692,
+      2.097083568572998,
+      1.534725011093542
+    ],
+    "materials": 32,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_DodgeCharger2020_SK_Charger2020_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.5182442665100098,
+        -1.0546603202819824,
+        -0.011937868781387806
+      ],
+      [
+        2.5061864852905273,
+        1.0521506071090698,
+        1.5294926166534424
+      ]
+    ],
+    "dimensions_m": [
+      5.024430751800537,
+      2.1068109273910522,
+      1.5414304854348302
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 8.691255595769572,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 513,
+        "max_outside_distance_m": 0.004240445792675018
+      },
+      "SM_Charger2020_Glass_SM_GlassInterior_2": {
+        "samples": 512,
+        "max_outside_distance_m": 0.0
+      },
+      "Door_FL": {
+        "samples": 555,
+        "max_outside_distance_m": 0.007948842830955982
+      },
+      "Door_FR": {
+        "samples": 555,
+        "max_outside_distance_m": 0.005860823206603527
+      },
+      "Door_RL": {
+        "samples": 596,
+        "max_outside_distance_m": 0.0
+      },
+      "Door_RR": {
+        "samples": 596,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Ext1_LF": {
+        "samples": 220,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Ext1_LR": {
+        "samples": 196,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Ext1_RF": {
+        "samples": 220,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Ext1_RR": {
+        "samples": 196,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Ext2_LF": {
+        "samples": 220,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Ext2_LR": {
+        "samples": 196,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Ext2_RF": {
+        "samples": 220,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Ext2_RR": {
+        "samples": 196,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Int1_LF": {
+        "samples": 96,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Int1_LR": {
+        "samples": 80,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Int1_RF": {
+        "samples": 96,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Int1_RR": {
+        "samples": 80,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Int2_LF": {
+        "samples": 96,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Int2_LR": {
+        "samples": 80,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Int2_RF": {
+        "samples": 96,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlass_Int2_RR": {
+        "samples": 80,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Lights_Charger2020": {
+        "samples": 578,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Charger2020_Glass_SM_GlassExterior_1": {
+        "samples": 534,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Charger2020_Glass_SM_GlassExterior_2": {
+        "samples": 920,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Charger2020_Glass_SM_GlassInterior_1": {
+        "samples": 602,
+        "max_outside_distance_m": 0.0
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.010153364622965455
+  }
+}

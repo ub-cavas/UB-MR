@@ -1,0 +1,40 @@
+{
+  "MI_Wheels_TeslaM3": [
+    {
+      "texture": "M_tesla_wheels_d_e8a6ae9d.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarLightGlass_TeslaM3": [],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Interior_TeslaM3": [
+    {
+      "texture": "M_Tesla_details_d_1d9fcad2.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarGlass_TeslaM3": [],
+  "MI_CarExterior_TeslaM3": [
+    {
+      "texture": "M_Tesla_Bodywork_d_a_e4b3a30e.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

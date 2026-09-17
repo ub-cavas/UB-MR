@@ -1,0 +1,480 @@
+{
+  "vehicle": {
+    "id": "Truck_European_HGV_SK_European_HGV",
+    "name": "SK_European_HGV",
+    "path": "/Game/Carla/Static/Truck/European_HGV/SK_European_HGV.SK_European_HGV",
+    "category": "Truck"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Truck/European_HGV/SK_European_HGV.SK_European_HGV",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\European_HGV\\BP_European_HGV.uasset",
+    "components": [
+      {
+        "name": "Glasses_Lights_Truck_Glass_EXT1",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Glass_EXT1.Glasses_Lights_Truck_Glass_EXT1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Window_int1_R",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Window_int1_R.Glasses_Lights_Truck_Window_int1_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            0.0
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_001.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Window_int2_L",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Window_int2_L.Glasses_Lights_Truck_Window_int2_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.5259019517300306e-23,
+            0.0
+          ],
+          [
+            0.0,
+            1.5259019517300306e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_002.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Window_int2_R",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Window_int2_R.Glasses_Lights_Truck_Window_int2_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            0.0
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_003.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Window_int_L",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Window_int_L.Glasses_Lights_Truck_Window_int_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.5259019517300306e-23,
+            0.0
+          ],
+          [
+            0.0,
+            1.5259019517300306e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_004.fbx"
+      },
+      {
+        "name": "DoorL",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/SM_DoorL_European_HGV.SM_DoorL_European_HGV",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            3.5874932861328124
+          ],
+          [
+            0.0,
+            1.0,
+            -6.123234262925839e-17,
+            1.3175900268554688
+          ],
+          [
+            0.0,
+            6.123234262925839e-17,
+            1.0,
+            1.643755645751953
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_005.fbx"
+      },
+      {
+        "name": "DoorR",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/SM_DoorR_European_HGV.SM_DoorR_European_HGV",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            3.5874932861328124
+          ],
+          [
+            0.0,
+            1.0,
+            -6.123234262925839e-17,
+            -1.3175947570800781
+          ],
+          [
+            0.0,
+            6.123234262925839e-17,
+            1.0,
+            1.643755645751953
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_006.fbx"
+      },
+      {
+        "name": "SM_SixWheeledTruck_lights",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/SM_Lights_European_HGV.SM_Lights_European_HGV",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -6.123232737023888e-17,
+            0.0
+          ],
+          [
+            0.0,
+            6.123232737023888e-17,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_007.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Glass_EXT2",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Glass_EXT2.Glasses_Lights_Truck_Glass_EXT2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_008.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Glass_INT1",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Glass_INT1.Glasses_Lights_Truck_Glass_INT1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_009.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Glass_INT2",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Glass_INT2.Glasses_Lights_Truck_Glass_INT2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_010.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Window_ext1_L",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Window_ext1_L.Glasses_Lights_Truck_Window_ext1_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.5259019517300306e-23,
+            0.0
+          ],
+          [
+            0.0,
+            1.5259019517300306e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_011.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Window_ext1_R",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Window_ext1_R.Glasses_Lights_Truck_Window_ext1_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            0.0
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_012.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Window_ext2_L",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Window_ext2_L.Glasses_Lights_Truck_Window_ext2_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.5259019517300306e-23,
+            0.0
+          ],
+          [
+            0.0,
+            1.5259019517300306e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_013.fbx"
+      },
+      {
+        "name": "Glasses_Lights_Truck_Window_ext2_R",
+        "asset": "/Game/Carla/Static/Truck/European_HGV/Glasses/Glasses_Lights_Truck_Window_ext2_R.Glasses_Lights_Truck_Window_ext2_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            0.0
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_014.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

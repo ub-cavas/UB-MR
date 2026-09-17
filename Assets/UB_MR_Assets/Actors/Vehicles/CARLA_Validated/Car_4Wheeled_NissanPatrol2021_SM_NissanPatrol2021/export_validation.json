@@ -1,0 +1,199 @@
+{
+  "Car_4Wheeled_NissanPatrol2021_SM_NissanPatrol2021_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 105072,
+    "bounds": [
+      [
+        -2.754530668258667,
+        -1.2175713777542114,
+        -0.005857352167367935
+      ],
+      [
+        2.811298131942749,
+        1.2175716161727905,
+        2.039289951324463
+      ]
+    ],
+    "dimensions_m": [
+      5.565828800201416,
+      2.435142993927002,
+      2.045147303491831
+    ],
+    "materials": 36,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_NissanPatrol2021_SM_NissanPatrol2021_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.7633326053619385,
+        -1.2249412536621094,
+        -0.016875825822353363
+      ],
+      [
+        2.8189916610717773,
+        1.2255171537399292,
+        2.0474929809570312
+      ]
+    ],
+    "dimensions_m": [
+      5.582324266433716,
+      2.4504584074020386,
+      2.0643688067793846
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 14.227253634856389,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 516,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorRL_Patrol2021": {
+        "samples": 571,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassExt1_FL": {
+        "samples": 150,
+        "max_outside_distance_m": 0.007866283878684044
+      },
+      "SM_DoorGlassExt1_FR": {
+        "samples": 150,
+        "max_outside_distance_m": 0.008492989465594292
+      },
+      "SM_DoorGlassExt1_RL": {
+        "samples": 64,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassExt1_RR": {
+        "samples": 64,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassExt2_FL": {
+        "samples": 84,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassExt2_FR": {
+        "samples": 84,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassExt2_RL": {
+        "samples": 64,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassExt2_RR": {
+        "samples": 64,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassInt1_FL": {
+        "samples": 86,
+        "max_outside_distance_m": 0.006856574211269617
+      },
+      "SM_DoorGlassInt1_FR": {
+        "samples": 86,
+        "max_outside_distance_m": 0.0074787745252251625
+      },
+      "SM_DoorRR_Patrol2021": {
+        "samples": 587,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassInt1_RL": {
+        "samples": 32,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassInt1_RR": {
+        "samples": 32,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassInt2_FL": {
+        "samples": 44,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassInt2_FR": {
+        "samples": 44,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassInt2_RL": {
+        "samples": 32,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorGlassInt2_RR": {
+        "samples": 32,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_glassExt1": {
+        "samples": 531,
+        "max_outside_distance_m": 0.0019460826879367232
+      },
+      "SM_glassExt2": {
+        "samples": 832,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_glassInt1": {
+        "samples": 638,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_glassInt2": {
+        "samples": 540,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorR_Patrol2021": {
+        "samples": 516,
+        "max_outside_distance_m": 0.007681941147893667
+      },
+      "SM_DoorL_Patrol2021": {
+        "samples": 562,
+        "max_outside_distance_m": 0.0068649970926344395
+      },
+      "SM_lights_Patrol2021": {
+        "samples": 554,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorL_Lights": {
+        "samples": 90,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_DoorR_Lights": {
+        "samples": 90,
+        "max_outside_distance_m": 0.0
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.011018473654985428
+  }
+}

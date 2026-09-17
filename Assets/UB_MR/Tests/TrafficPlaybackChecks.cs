@@ -89,7 +89,7 @@ namespace CAVAS.UB_MR.Tests
             yield return Send(data);
             Check(Count == 6, "Mixed snapshot instance count");
             Check(Root("a").GetComponent<TrafficVehicleAppearance>() != null, "Audi selection");
-            Check(Root("m").transform.Find("Alignment/Mustang_Textured") != null, "Mustang selection");
+            Check(HasCatalogVisual(Root("m"), "vehicle.ford.mustang"), "Mustang selection");
             Check(Root("u").GetComponent<TrafficVehicleAppearance>() == null, "Unknown must use Jeep fallback");
             var red = Paint(Root("a"));
             var blue = Paint(Root("b"));
@@ -113,7 +113,7 @@ namespace CAVAS.UB_MR.Tests
             data[0].blueprint = "vehicle.ford.mustang";
             yield return Send(data);
             Check(oldAudi == null || !oldAudi.activeInHierarchy, "Replaced object still active");
-            Check(Root("a").transform.Find("Alignment/Mustang_Textured") != null && Count == 6, "Blueprint replacement");
+            Check(HasCatalogVisual(Root("a"), "vehicle.ford.mustang") && Count == 6, "Blueprint replacement");
             foreach (float yaw in new[] { 0f, 90f, 180f, 270f })
             {
                 data[0].yaw = yaw;
@@ -295,6 +295,17 @@ namespace CAVAS.UB_MR.Tests
         private TrafficMaterialCache Cache => Get<TrafficMaterialCache>(renderer, "materials");
         private int Detections => VirtualBoundingBoxDetector.BuildMessage(transform, transform, 10000, new builtin_interfaces.msg.Time()).Objects.Length;
         private GameObject Root(string id) => GameObject.Find("Vehicle_" + id);
+        private bool HasCatalogVisual(GameObject root, string blueprint)
+        {
+            if (!catalog.TryResolve(blueprint, out var prefab)) return false;
+            var expected = prefab.GetComponentsInChildren<MeshFilter>()
+                .Where(f => f.GetComponent<Renderer>() != null && f.GetComponent<Renderer>().enabled)
+                .Select(f => f.sharedMesh).ToArray();
+            var actual = root.GetComponentsInChildren<MeshFilter>()
+                .Where(f => f.GetComponent<Renderer>() != null && f.GetComponent<Renderer>().enabled)
+                .Select(f => f.sharedMesh).ToArray();
+            return expected.Length > 0 && expected.SequenceEqual(actual);
+        }
         private static Material Paint(GameObject root)
         {
             var binding = root.GetComponent<TrafficVehicleAppearance>().PaintBindings[0];

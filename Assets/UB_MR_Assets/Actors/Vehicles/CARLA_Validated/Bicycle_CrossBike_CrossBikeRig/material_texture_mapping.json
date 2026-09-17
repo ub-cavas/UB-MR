@@ -1,0 +1,42 @@
+{
+  "CrossBikeMetal_Inst1": [
+    {
+      "texture": "MetalMat_BaseColor_4f1a4b81.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "CrossBikeSeat_Inst2": [
+    {
+      "texture": "SeatMat_BaseColor_3be693c8.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "CrossbikeBody": [
+    {
+      "texture": "BodyMat_BaseColor_16c17224.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "CrossBikeWheel_Inst3": [
+    {
+      "texture": "WheelMat_BaseColor_0c971efc.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 4": [
+    {
+      "texture": "MetalMat_BaseColor_4f1a4b81.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

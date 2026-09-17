@@ -1,0 +1,85 @@
+{
+  "Motorcycle_Vespa_VespaRig_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 7948,
+    "bounds": [
+      [
+        -0.8918666839599609,
+        -0.42784374952316284,
+        0.0033382666297256947
+      ],
+      [
+        0.9128000140190125,
+        0.4278438985347748,
+        1.2389665842056274
+      ]
+    ],
+    "dimensions_m": [
+      1.8046666979789734,
+      0.8556876480579376,
+      1.2356283175759017
+    ],
+    "materials": 6,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Motorcycle_Vespa_VespaRig_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -0.8944196701049805,
+        -0.42961567640304565,
+        -0.0005964605952613056
+      ],
+      [
+        0.9168357849121094,
+        0.42738497257232666,
+        1.2374187707901
+      ]
+    ],
+    "dimensions_m": [
+      1.8112554550170898,
+      0.8570006489753723,
+      1.2380152313853614
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 0.2236293868095696,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.004035770893096924
+  }
+}

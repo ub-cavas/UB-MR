@@ -1,0 +1,790 @@
+{
+  "vehicle": {
+    "id": "Car_4Wheeled_Ford_Crown_SK_Ford_Crown",
+    "name": "SK_Ford_Crown",
+    "path": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/SK_Ford_Crown.SK_Ford_Crown",
+    "category": "Car"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/SK_Ford_Crown.SK_Ford_Crown",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\Ford_Crown\\BP_Ford_Crown.uasset",
+    "components": [
+      {
+        "name": "Door_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/SM_Ford_CrownDoor_Rear_R.SM_Ford_CrownDoor_Rear_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.022904968261718752
+          ],
+          [
+            0.0,
+            1.0,
+            1.6081226229577292e-16,
+            -0.8297889709472657
+          ],
+          [
+            0.0,
+            -1.6081226229577292e-16,
+            1.0,
+            0.8739890289306641
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      },
+      {
+        "name": "Glass_doorL_Rear_int2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorL_FordCrown_Rear_int2.SM_Glass_doorL_FordCrown_Rear_int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            3.7587273943168156e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -3.7587273943168156e-23,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_001.fbx"
+      },
+      {
+        "name": "Glass_doorR_Rear_int2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorR_FordCrown_Rear_int2.SM_Glass_doorR_FordCrown_Rear_int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_002.fbx"
+      },
+      {
+        "name": "Glass_doorR_Rear_ext1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorR_FordCrown_Rear_ext1.SM_Glass_doorR_FordCrown_Rear_ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_003.fbx"
+      },
+      {
+        "name": "Glass_doorR_Rear_ext2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorR_FordCrown_Rear_ext2.SM_Glass_doorR_FordCrown_Rear_ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_004.fbx"
+      },
+      {
+        "name": "Glass_doorR_Rear_int1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorR_FordCrown_Rear_int1.SM_Glass_doorR_FordCrown_Rear_int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_005.fbx"
+      },
+      {
+        "name": "Door_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/SM_Ford_CrownDoor_Front_R.SM_Ford_CrownDoor_Front_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            1.1372429656982421
+          ],
+          [
+            0.0,
+            1.0,
+            1.6081226229577292e-16,
+            -0.834634017944336
+          ],
+          [
+            0.0,
+            -1.6081226229577292e-16,
+            1.0,
+            0.8717610168457032
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_006.fbx"
+      },
+      {
+        "name": "Glass_doorL_ext1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorL_FordCrown_ext1.SM_Glass_doorL_FordCrown_ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_007.fbx"
+      },
+      {
+        "name": "Glass_doorL_ext2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorL_FordCrown_ext2.SM_Glass_doorL_FordCrown_ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_008.fbx"
+      },
+      {
+        "name": "Glass_doorL_int1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorL_FordCrown_int1.SM_Glass_doorL_FordCrown_int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_009.fbx"
+      },
+      {
+        "name": "Door_RL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/SM_Ford_CrownDoor_Rear_L.SM_Ford_CrownDoor_Rear_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.022899999618530273
+          ],
+          [
+            0.0,
+            1.0,
+            1.6081226229577292e-16,
+            0.8297899627685547
+          ],
+          [
+            0.0,
+            -1.6081226229577292e-16,
+            1.0,
+            0.8739900207519531
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_010.fbx"
+      },
+      {
+        "name": "Glass_doorL_int2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorL_FordCrown_int2.SM_Glass_doorL_FordCrown_int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_011.fbx"
+      },
+      {
+        "name": "Glass_doorR_ext1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorR_FordCrown_ext1.SM_Glass_doorR_FordCrown_ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_012.fbx"
+      },
+      {
+        "name": "Glass_doorR_ext2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorR_FordCrown_ext2.SM_Glass_doorR_FordCrown_ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_013.fbx"
+      },
+      {
+        "name": "Glass_doorR_int1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorR_FordCrown_int1.SM_Glass_doorR_FordCrown_int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_014.fbx"
+      },
+      {
+        "name": "Glass_doorR_int2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorR_FordCrown_int2.SM_Glass_doorR_FordCrown_int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.2803760131968155e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -2.2803760131968155e-23,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_015.fbx"
+      },
+      {
+        "name": "SM_Glass_ext1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_FordCrown_Ext1.SM_Glass_FordCrown_Ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_016.fbx"
+      },
+      {
+        "name": "SM_Glass_Ext2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_FordCrown_Ext2.SM_Glass_FordCrown_Ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_017.fbx"
+      },
+      {
+        "name": "SM_Glass_Int1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_FordCrown_Int1.SM_Glass_FordCrown_Int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_018.fbx"
+      },
+      {
+        "name": "SM_Glass_Int2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_FordCrown_Int2.SM_Glass_FordCrown_Int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_019.fbx"
+      },
+      {
+        "name": "SM_Lights_Ford_Crown",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/SM_Lights_Ford_Crown.SM_Lights_Ford_Crown",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_020.fbx"
+      },
+      {
+        "name": "Door_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/SM_Ford_CrownDoor_Front_L.SM_Ford_CrownDoor_Front_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            1.1372429656982421
+          ],
+          [
+            0.0,
+            1.0,
+            1.6081226229577292e-16,
+            0.834634017944336
+          ],
+          [
+            0.0,
+            -1.6081226229577292e-16,
+            1.0,
+            0.8717610168457032
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_021.fbx"
+      },
+      {
+        "name": "Glass_doorL_Rear_ext1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorL_FordCrown_Rear_ext1.SM_Glass_doorL_FordCrown_Rear_ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            3.7587273943168156e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -3.7587273943168156e-23,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_022.fbx"
+      },
+      {
+        "name": "Glass_doorL_Rear_ext2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorL_FordCrown_Rear_ext2.SM_Glass_doorL_FordCrown_Rear_ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            3.7587273943168156e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -3.7587273943168156e-23,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_023.fbx"
+      },
+      {
+        "name": "Glass_doorL_Rear_int1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Ford_Crown/Glasses/SM_Glass_doorL_FordCrown_Rear_int1.SM_Glass_doorL_FordCrown_Rear_int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            3.7587273943168156e-23,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -3.7587273943168156e-23,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_024.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

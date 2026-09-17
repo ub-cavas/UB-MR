@@ -14,6 +14,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entries:
   - blueprintId: vehicle.audi.a2
-    prefab: {fileID: 1272740862478031309, guid: aa671d739632863d8a9b7ed02b7657c5, type: 3}
+    prefab: {fileID: 8497344982678122233, guid: bd59e9b74660d156d9ac7d7a71e195d9, type: 3}
   - blueprintId: vehicle.ford.mustang
-    prefab: {fileID: 1272740862478031309, guid: decec8237d542f70593b81d25d7f672a, type: 3}
+    prefab: {fileID: 3653423364024314295, guid: d826412ab5eb6da7eadcb89b72b85827, type: 3}
+  - blueprintId: vehicle.bh.crossbike
+    prefab: {fileID: 5678767278749723420, guid: 102b6a9b7a6643cdb8c732b867d5432d, type: 3}
+  - blueprintId: vehicle.gazelle.omafiets
+    prefab: {fileID: 3971270238698343667, guid: 1fcfe4f6c80d7bc3283334aa0ae8aa2e, type: 3}
+  - blueprintId: vehicle.diamondback.century
+    prefab: {fileID: 2603832944064729408, guid: c36eb9c812507afd7872d32b0abb0766, type: 3}
+  - blueprintId: vehicle.mitsubishi.fusorosa
+    prefab: {fileID: 5161795949427685046, guid: 26ddaded2e7623612ad737b10fa59316, type: 3}
+  - blueprintId: vehicle.audi.etron
+    prefab: {fileID: 3243230993908763352, guid: 006af3948f4bc3f2eb87234a21898ead, type: 3}
+  - blueprintId: vehicle.chevrolet.impala
+    prefab: {fileID: 706007090698509750, guid: d71cb3261a4ccbe55a2b0bd9b9344c48, type: 3}
+  - blueprintId: vehicle.citroen.c3
+    prefab: {fileID: 2928822171822666288, guid: c32630e40445734518283f2a23b481cd, type: 3}
+  - blueprintId: vehicle.tesla.cybertruck
+    prefab: {fileID: 7739101762344701578, guid: e08b877c3311e862a82266dac7950f47, type: 3}
+  - blueprintId: vehicle.dodge.charger_police
+    prefab: {fileID: 258215007473962499, guid: 5af6a96bc390108eeb3628d03cf216ea, type: 3}
+  - blueprintId: vehicle.dodge.charger_police_2020
+    prefab: {fileID: 7486903293024380600, guid: bbc107063eff4f087841e98cbbcf7941, type: 3}
+  - blueprintId: vehicle.dodge.charger_2020
+    prefab: {fileID: 7766990681974493915, guid: 855b41119d833562c97bb256c1195c4c, type: 3}
+  - blueprintId: vehicle.ford.crown
+    prefab: {fileID: 7405332097408412573, guid: 9d621b81bab5a95dcb3127346e02c7ea, type: 3}
+  - blueprintId: vehicle.jeep.wrangler_rubicon
+    prefab: {fileID: 9042428507308917277, guid: eb6bd27fde24e255b9976b5d7cc7e1b2, type: 3}
+  - blueprintId: vehicle.lincoln.mkz_2017
+    prefab: {fileID: 7569618556022042604, guid: 00d1aa91b1187740cb4742e297c01e60, type: 3}
+  - blueprintId: vehicle.lincoln.mkz_2020
+    prefab: {fileID: 84818476716808018, guid: 3d8d54fb09704b00daa57c6e03e348f9, type: 3}
+  - blueprintId: vehicle.mercedes.coupe_2020
+    prefab: {fileID: 4757617499126398992, guid: cfd8614f8a4c3d6a3be56d00286aa0ac, type: 3}
+  - blueprintId: vehicle.mini.cooper_s_2021
+    prefab: {fileID: 1812108465757421238, guid: d1e84dfc825f02294ac8c2cfa96a1af8, type: 3}
+  - blueprintId: vehicle.nissan.patrol_2021
+    prefab: {fileID: 6300169993340256893, guid: a9360911a76d0fdd88dfb1ab5d55e149, type: 3}
+  - blueprintId: vehicle.nissan.micra
+    prefab: {fileID: 8236056172976016375, guid: c577d95e88333b44db0ada9f25ff6015, type: 3}
+  - blueprintId: vehicle.tesla.model3
+    prefab: {fileID: 374869995388967801, guid: 7da0ebaf54bb7552eabba3867cecf397, type: 3}
+  - blueprintId: vehicle.toyota.prius
+    prefab: {fileID: 8609418325067890180, guid: 05a108975cf4a50c99c69f7b35668f35, type: 3}
+  - blueprintId: vehicle.harley-davidson.low_rider
+    prefab: {fileID: 5606083446445736166, guid: 1b1cc8f349464dbf5a4c855f7188ea97, type: 3}
+  - blueprintId: vehicle.vespa.zx125
+    prefab: {fileID: 3119721709351292658, guid: 4eba7b083102f54e39243324ccd6f917, type: 3}
+  - blueprintId: vehicle.ford.ambulance
+    prefab: {fileID: 6048955201458990452, guid: feecf1a6fc3bb64a78fdc5f4e594895d, type: 3}
+  - blueprintId: vehicle.carlamotors.european_hgv
+    prefab: {fileID: 3909150649751665100, guid: 7f8d4a80c26719b749df0f1a6be7f94c, type: 3}
+  - blueprintId: vehicle.carlamotors.firetruck
+    prefab: {fileID: 7005621682509058745, guid: ea96030a7e493e6e1b6c5459c81334e3, type: 3}
+  - blueprintId: vehicle.mercedes.sprinter
+    prefab: {fileID: 4914999847365331890, guid: 42a862758ad8ecddb8d898fded03fbca, type: 3}
+  - blueprintId: vehicle.carlamotors.carlacola
+    prefab: {fileID: 825895557351243196, guid: 1e714fc8f06e49cbbba936da8161fa79, type: 3}
+  - blueprintId: vehicle.volkswagen.t2
+    prefab: {fileID: 8220482101788057368, guid: 13bedb75577a8c5adb34e1f96342f9c5, type: 3}
+  - blueprintId: vehicle.volkswagen.t2_2021
+    prefab: {fileID: 6957606517802956463, guid: c5a8fee7cc79964edb83ef602285062d, type: 3}

@@ -1,0 +1,85 @@
+{
+  "Car_4Wheeled_LincolnMKZ2017_SM_Lincoln_v2_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 18983,
+    "bounds": [
+      [
+        -2.4467973709106445,
+        -1.064162015914917,
+        -0.036512721329927444
+      ],
+      [
+        2.454885721206665,
+        1.064162254333496,
+        1.474233865737915
+      ]
+    ],
+    "dimensions_m": [
+      4.90168309211731,
+      2.128324270248413,
+      1.5107465870678425
+    ],
+    "materials": 7,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_LincolnMKZ2017_SM_Lincoln_v2_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.456279993057251,
+        -1.0701159238815308,
+        -0.04562150686979294
+      ],
+      [
+        2.4643430709838867,
+        1.0667208433151245,
+        1.4848583936691284
+      ]
+    ],
+    "dimensions_m": [
+      4.920623064041138,
+      2.1368367671966553,
+      1.5304799005389214
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 7.908341636700642,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.010624527931213379
+  }
+}

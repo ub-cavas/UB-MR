@@ -1,0 +1,480 @@
+{
+  "vehicle": {
+    "id": "Truck_Sprinter_SK_Sprinter",
+    "name": "SK_Sprinter",
+    "path": "/Game/Carla/Static/Truck/Sprinter/SK_Sprinter.SK_Sprinter",
+    "category": "Truck"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Truck/Sprinter/SK_Sprinter.SK_Sprinter",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\Sprinter\\BP_Sprinter.uasset",
+    "components": [
+      {
+        "name": "SM_DoorL_Sprinter_Ext1_DoorL",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_DoorL_Sprinter_Ext1_DoorL.SM_DoorL_Sprinter_Ext1_DoorL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      },
+      {
+        "name": "SM_Glass_Sprinter_Ext2",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_Glass_Sprinter_Ext2.SM_Glass_Sprinter_Ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            6.617444096502274e-24,
+            0.0
+          ],
+          [
+            0.0,
+            -6.617444096502274e-24,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_001.fbx"
+      },
+      {
+        "name": "SM_Glass_Sprinter_Int1",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_Glass_Sprinter_Int1.SM_Glass_Sprinter_Int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            6.617444096502274e-24,
+            0.0
+          ],
+          [
+            0.0,
+            -6.617444096502274e-24,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_002.fbx"
+      },
+      {
+        "name": "SM_Glass_Sprinter_Int2",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_Glass_Sprinter_Int2.SM_Glass_Sprinter_Int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            6.617444096502274e-24,
+            0.0
+          ],
+          [
+            0.0,
+            -6.617444096502274e-24,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_003.fbx"
+      },
+      {
+        "name": "SM_Sprinter_DoorL",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_Sprinter_DoorL.SM_Sprinter_DoorL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            1.6826495361328124
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            0.956380615234375
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.0771335601806642
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_004.fbx"
+      },
+      {
+        "name": "SM_Sprinter_DoorR",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_Sprinter_DoorR.SM_Sprinter_DoorR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            1.6826495361328124
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -0.9572179412841797
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.0771335601806642
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_005.fbx"
+      },
+      {
+        "name": "SM_Sprinter_Lights",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_Sprinter_Lights.SM_Sprinter_Lights",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_006.fbx"
+      },
+      {
+        "name": "SM_DoorL_Sprinter_Ext2_DoorL",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_DoorL_Sprinter_Ext2_DoorL.SM_DoorL_Sprinter_Ext2_DoorL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_007.fbx"
+      },
+      {
+        "name": "SM_DoorL_Sprinter_Int1_DoorL",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_DoorL_Sprinter_Int1_DoorL.SM_DoorL_Sprinter_Int1_DoorL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_008.fbx"
+      },
+      {
+        "name": "SM_DoorL_Sprinter_Int2_DoorL",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_DoorL_Sprinter_Int2_DoorL.SM_DoorL_Sprinter_Int2_DoorL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_009.fbx"
+      },
+      {
+        "name": "SM_DoorR_Sprinter_Ext1_DoorR",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_DoorR_Sprinter_Ext1_DoorR.SM_DoorR_Sprinter_Ext1_DoorR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_010.fbx"
+      },
+      {
+        "name": "SM_DoorR_Sprinter_Ext2_DoorR",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_DoorR_Sprinter_Ext2_DoorR.SM_DoorR_Sprinter_Ext2_DoorR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_011.fbx"
+      },
+      {
+        "name": "SM_DoorR_Sprinter_Int1_DoorR",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_DoorR_Sprinter_Int1_DoorR.SM_DoorR_Sprinter_Int1_DoorR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_012.fbx"
+      },
+      {
+        "name": "SM_DoorR_Sprinter_Int2_DoorR",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_DoorR_Sprinter_Int2_DoorR.SM_DoorR_Sprinter_Int2_DoorR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            4.623174173206604e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -4.623174173206604e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_013.fbx"
+      },
+      {
+        "name": "SM_Glass_Sprinter_Ext1",
+        "asset": "/Game/Carla/Static/Truck/Sprinter/SM_Glass_Sprinter_Ext1.SM_Glass_Sprinter_Ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            6.617444096502274e-24,
+            0.0
+          ],
+          [
+            0.0,
+            -6.617444096502274e-24,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_014.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

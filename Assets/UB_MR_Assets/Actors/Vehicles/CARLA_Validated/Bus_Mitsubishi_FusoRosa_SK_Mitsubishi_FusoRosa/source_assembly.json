@@ -1,0 +1,170 @@
+{
+  "vehicle": {
+    "id": "Bus_Mitsubishi_FusoRosa_SK_Mitsubishi_FusoRosa",
+    "name": "SK_Mitsubishi_FusoRosa",
+    "path": "/Game/Carla/Static/Bus/Mitsubishi_FusoRosa/SK_Mitsubishi_FusoRosa.SK_Mitsubishi_FusoRosa",
+    "category": "Bus"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Bus/Mitsubishi_FusoRosa/SK_Mitsubishi_FusoRosa.SK_Mitsubishi_FusoRosa",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\MitsubishiFusoRosa\\BP_FusoRosa.uasset",
+    "components": [
+      {
+        "name": "SM_glass_ext_1_FusoRosa",
+        "asset": "/Game/Carla/Static/Bus/Mitsubishi_FusoRosa/Glasses/SM_glass_ext_1_FusoRosa.SM_glass_ext_1_FusoRosa",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      },
+      {
+        "name": "SM_glass_Ext_2_FusoRosa",
+        "asset": "/Game/Carla/Static/Bus/Mitsubishi_FusoRosa/Glasses/SM_glass_Ext_2_FusoRosa.SM_glass_Ext_2_FusoRosa",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_001.fbx"
+      },
+      {
+        "name": "SM_glass_int_1_FusoRosa",
+        "asset": "/Game/Carla/Static/Bus/Mitsubishi_FusoRosa/Glasses/SM_glass_int_1_FusoRosa.SM_glass_int_1_FusoRosa",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_002.fbx"
+      },
+      {
+        "name": "SM_glass_int_2_FusoRosa",
+        "asset": "/Game/Carla/Static/Bus/Mitsubishi_FusoRosa/Glasses/SM_glass_int_2_FusoRosa.SM_glass_int_2_FusoRosa",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_003.fbx"
+      },
+      {
+        "name": "SM_Lights_FusoRosa",
+        "asset": "/Game/Carla/Static/Bus/Mitsubishi_FusoRosa/SM_Lights_FusoRosa.SM_Lights_FusoRosa",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_004.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

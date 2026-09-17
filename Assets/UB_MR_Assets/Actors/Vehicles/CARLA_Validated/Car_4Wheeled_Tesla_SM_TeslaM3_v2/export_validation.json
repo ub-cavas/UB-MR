@@ -1,0 +1,85 @@
+{
+  "Car_4Wheeled_Tesla_SM_TeslaM3_v2_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 14406,
+    "bounds": [
+      [
+        -2.3666701316833496,
+        -1.0817248821258545,
+        -0.007969462312757969
+      ],
+      [
+        2.425109386444092,
+        1.0817251205444336,
+        1.4796905517578125
+      ]
+    ],
+    "dimensions_m": [
+      4.791779518127441,
+      2.163450002670288,
+      1.4876600140705705
+    ],
+    "materials": 6,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_Tesla_SM_TeslaM3_v2_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.373530387878418,
+        -1.0885754823684692,
+        -0.016917584463953972
+      ],
+      [
+        2.433298110961914,
+        1.0899367332458496,
+        1.4794466495513916
+      ]
+    ],
+    "dimensions_m": [
+      4.806828498840332,
+      2.178512215614319,
+      1.4963642340153456
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 8.359912843714893,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.008948122151196003
+  }
+}

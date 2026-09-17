@@ -1,0 +1,77 @@
+{
+  "MI_Interior_Cybertruck": [
+    {
+      "texture": "M_Cybertruck_interior_d_1f9bb751.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "M_Bodywork_Cybertruck": [],
+  "M_LicensePlate_Master": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarGlass_Cybertruck": [],
+  "MI_GlassExt_Cybertruck": [],
+  "MI_VehicleLights_Cybertruck": [],
+  "MI_GlassExt_Cybertruck.001": [],
+  "MI_GlassExt_Cybertruck.002": [],
+  "MI_GlassExt_Cybertruck.003": [],
+  "MI_GlassExt_Cybertruck.004": [],
+  "MI_GlassInt_Cybertruck": [],
+  "MI_GlassInt_Cybertruck.001": [],
+  "MI_GlassInt_Cybertruck.002": [],
+  "MI_GlassInt_Cybertruck.003": [],
+  "MI_GlassInt_Cybertruck.004": [],
+  "MI_GlassInt_Cybertruck.005": [],
+  "MI_GlassInt_Cybertruck.006": [],
+  "MI_GlassInt_Cybertruck.007": [],
+  "MI_GlassInt_Cybertruck.008": [],
+  "MI_Interior_Cybertruck.001": [
+    {
+      "texture": "M_Cybertruck_interior_d_1f9bb751.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "M_Bodywork_Cybertruck.001": [],
+  "M_Bodywork_Cybertruck.002": [],
+  "MI_Interior_Cybertruck.002": [
+    {
+      "texture": "M_Cybertruck_interior_d_1f9bb751.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "M_Bodywork_Cybertruck.003": [],
+  "MI_Interior_Cybertruck.003": [
+    {
+      "texture": "M_Cybertruck_interior_d_1f9bb751.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassExt_Cybertruck.005": [],
+  "M_Bodywork_Cybertruck.004": [],
+  "MI_Interior_Cybertruck.004": [
+    {
+      "texture": "M_Cybertruck_interior_d_1f9bb751.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassExt_Cybertruck.006": [],
+  "MI_GlassInt_Cybertruck.009": [],
+  "MI_GlassExt_Cybertruck.007": [],
+  "MI_GlassExt_Cybertruck.008": [],
+  "MI_GlassExt_Cybertruck.009": []
+}

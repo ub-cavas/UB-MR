@@ -1,0 +1,23 @@
+{
+  "source_dimensions_m": [
+    4.513522624969482,
+    2.006814479827881,
+    1.5248334407806396
+  ],
+  "voxel_pitch_m": 0.01763094775378704,
+  "before_triangles": 50246,
+  "triangles": 8000,
+  "components": 1,
+  "boundary_edges": 0,
+  "non_manifold_edges": 0,
+  "non_contiguous_edges": 0,
+  "degenerate_faces": 0,
+  "signed_volume_m3": 7.324304569025945,
+  "max_sampled_simplification_deviation_m": 0.005415251944214106,
+  "mean_sampled_simplification_deviation_m": 0.0009045226432068998,
+  "proxy_dimensions_m": [
+    4.529902458190918,
+    2.0239768028259277,
+    1.5325480699539185
+  ]
+}

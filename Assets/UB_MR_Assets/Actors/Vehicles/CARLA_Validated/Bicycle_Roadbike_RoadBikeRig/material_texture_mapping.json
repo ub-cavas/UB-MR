@@ -1,0 +1,24 @@
+{
+  "NewMaterialInstanceConstant": [
+    {
+      "texture": "T_Flat_n_2ebd99f7.tga",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "road_bicy_low_BODY_BaseColor_cbf359b4.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "RoadBikeWheels": [
+    {
+      "texture": "road_bicy_low_WHEELS_BaseColor_a893f5b3.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

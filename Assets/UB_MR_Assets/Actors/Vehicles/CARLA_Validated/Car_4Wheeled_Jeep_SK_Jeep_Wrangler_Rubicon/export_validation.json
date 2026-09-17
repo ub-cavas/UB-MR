@@ -1,0 +1,85 @@
+{
+  "Car_4Wheeled_Jeep_SK_Jeep_Wrangler_Rubicon_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 19449,
+    "bounds": [
+      [
+        -1.9328935146331787,
+        -0.9536282420158386,
+        -0.00669182650744915
+      ],
+      [
+        1.9333269596099854,
+        0.9515682458877563,
+        1.871244192123413
+      ]
+    ],
+    "dimensions_m": [
+      3.866220474243164,
+      1.905196487903595,
+      1.8779360186308622
+    ],
+    "materials": 15,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_Jeep_SK_Jeep_Wrangler_Rubicon_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -1.9391649961471558,
+        -0.9608365297317505,
+        -0.013427372090518475
+      ],
+      [
+        1.9379998445510864,
+        0.9569488167762756,
+        1.8728837966918945
+      ]
+    ],
+    "dimensions_m": [
+      3.877164840698242,
+      1.9177853465080261,
+      1.886311168782413
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 5.98904488697577,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.007208287715911865
+  }
+}

@@ -1,0 +1,352 @@
+[
+  {
+    "folder": "Bicycle_CrossBike_CrossBikeRig",
+    "name": "CrossBike",
+    "blueprintId": "vehicle.bh.crossbike",
+    "classification": "Bicycle",
+    "paintMaterials": [
+      "CrossbikeBody"
+    ]
+  },
+  {
+    "folder": "Bicycle_LeisureBike_LeisureBikeRig",
+    "name": "LeisureBike",
+    "blueprintId": "vehicle.gazelle.omafiets",
+    "classification": "Bicycle",
+    "paintMaterials": [
+      "Skyblue",
+      "White"
+    ]
+  },
+  {
+    "folder": "Bicycle_Roadbike_RoadBikeRig",
+    "name": "RoadBike",
+    "blueprintId": "vehicle.diamondback.century",
+    "classification": "Bicycle",
+    "paintMaterials": [
+      "NewMaterialInstanceConstant"
+    ]
+  },
+  {
+    "folder": "Bus_Mitsubishi_FusoRosa_SK_Mitsubishi_FusoRosa",
+    "name": "Mitsubishi_FusoRosa",
+    "blueprintId": "vehicle.mitsubishi.fusorosa",
+    "classification": "Bus",
+    "paintMaterials": [
+      "MI_BodyWork_FusoRosa"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_AudiA2_SK_Audi_A2",
+    "name": "Audi_A2",
+    "blueprintId": "vehicle.audi.a2",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWStaticMesh2"
+    ],
+    "baseColorOverrides": {
+      "MI_BodyWStaticMesh2": "Vh_Car_AudiA2_BodyworkMat_BaseColor_5610bcbc.tga",
+      "AudiA2_LightFrontMat": "Vh_Car_AudiA2_LightFrontMat_BaseColor_0719bdf4.tga",
+      "Vh_Car_AudiA2_LightBackMat_BaseColor_Mat": "Vh_Car_AudiA2_LightBackMat_BaseColor_33474954.tga",
+      "Vh_Car_AudiA2_CoverWheelMat_BaseColor_Mat": "Vh_Car_AudiA2_CoverWheelMat_BaseColor_96073dd5.tga"
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_AudiETron_SM_Etron",
+    "name": "Audi_ETron",
+    "blueprintId": "vehicle.audi.etron",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_CarExterior_Etron"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_Chevrolet_SK_Chevrolet_Impala",
+    "name": "Chevrolet_Impala",
+    "blueprintId": "vehicle.chevrolet.impala",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_Bodywork_Chevrolet"
+    ],
+    "baseColorOverrides": {
+      "MI_Bodywork_Chevrolet": null,
+      "MI_Interior_Chevrolet": null,
+      "MI_Wheels_Chevrolet": "T_Wheels_Chevrolet_5c621d23.tga"
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_Citroen_SK_Citroen_C3",
+    "name": "Citroen_C3",
+    "blueprintId": "vehicle.citroen.c3",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWStaticMesh1"
+    ],
+    "baseColorOverrides": {
+      "MI_BodyWStaticMesh1": null,
+      "Citroen_CoverWheel": "Vh_Car_CitroenC3_CoverWheelMat_BaseColor_953d2d56.tga",
+      "Citroen_LightsBack": "Vh_Car_CitroenC3_LightsBackMat_BaseColor_702129a8.tga",
+      "Vh_Car_CitroenC3_LightsFrontMat_BaseColor_Mat": "Vh_Car_CitroenC3_LightsFrontMat_BaseColor_cf902f2a.tga"
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_Cybertruck_SM_Cybertruck_v2",
+    "name": "Tesla_Cybertruck",
+    "blueprintId": "vehicle.tesla.cybertruck",
+    "classification": "Car",
+    "paintMaterials": [
+      "M_Bodywork_Cybertruck"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_DodgeCharge_SK_Dodge_Charger",
+    "name": "Dodge_Charger_Police",
+    "blueprintId": "vehicle.dodge.charger_police",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_CarExterior_DodgeCharge"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_DodgeCharger2020_ChargerCop_SK_ChargerCop",
+    "name": "Dodge_Charger_Police_2020",
+    "blueprintId": "vehicle.dodge.charger_police_2020",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_ChargerCop_Bodywork",
+      "MI_Charger2020_Bodywork"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_DodgeCharger2020_SK_Charger2020",
+    "name": "Dodge_Charger_2020",
+    "blueprintId": "vehicle.dodge.charger_2020",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_Charger2020_Bodywork"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_Ford_Crown_SK_Ford_Crown",
+    "name": "Ford_Crown",
+    "blueprintId": "vehicle.ford.crown",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWork_FordCrown"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_Jeep_SK_Jeep_Wrangler_Rubicon",
+    "name": "Jeep_Wrangler_Rubicon",
+    "blueprintId": "vehicle.jeep.wrangler_rubicon",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWStaticMesh7"
+    ],
+    "baseColorOverrides": {
+      "MI_BodyWStaticMesh7": null,
+      "JeepWranglerRubicon_Wheels_Mat": "MI_Tire_BaseColor_c55e403a.tga",
+      "JeepWranglerRubicon_HubCap_mat": "MI_Metal_BaseColor_52542f48.tga",
+      "JeepWranglerRubicon_Bumper_Mat": "MI_Plastic_Matte_Black_BaseColor_38a1d0ca.tga",
+      "JeepWranglerRubicon_bodyside_mat": "MI_Plastic_Matte_Grey_BaseColor_9e1ae4d2.tga"
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_LincolnMKZ2017_SM_Lincoln_v2",
+    "name": "Lincoln_MKZ_2017",
+    "blueprintId": "vehicle.lincoln.mkz_2017",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_CarExterior_Lincoln"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_LincolnMKZ2020_SK_Lincoln_MKZ2020",
+    "name": "Lincoln_MKZ_2020",
+    "blueprintId": "vehicle.lincoln.mkz_2020",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_Lincoln2020_bodywork"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_MercedesCCC_SK_MercedesCCC",
+    "name": "Mercedes_Coupe_2020",
+    "blueprintId": "vehicle.mercedes.coupe_2020",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_MercedesCCC_bodywork"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_Mini2021_SK_Mini2021",
+    "name": "Mini_Cooper_S_2021",
+    "blueprintId": "vehicle.mini.cooper_s_2021",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWork_Mini2021"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_Mustang_SM_Mustang_v2",
+    "name": "Ford_Mustang",
+    "blueprintId": "vehicle.ford.mustang",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWork_Mustang2"
+    ],
+    "baseColorOverrides": {
+      "MI_BodyWork_Mustang2": "T_Mustang_BodyWork_d_703e70d0.tga",
+      "MI_Details_Mustang": "T_Mustang_details_d_48ce9ce6.tga",
+      "MI_LightsText_Mustang": "T_Mustang_details_d_48ce9ce6.tga"
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_NissanPatrol2021_SM_NissanPatrol2021",
+    "name": "Nissan_Patrol_2021",
+    "blueprintId": "vehicle.nissan.patrol_2021",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWork_Patrol2022"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_Nissan_Micra_SK_Nissan_Micra",
+    "name": "Nissan_Micra",
+    "blueprintId": "vehicle.nissan.micra",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_NissanBodyWork2"
+    ],
+    "baseColorOverrides": {
+      "MI_NissanBodyWork2": "T_NissanMicra_BodyWork_d_7dd15cdc.tga"
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_Tesla_SM_TeslaM3_v2",
+    "name": "Tesla_Model3",
+    "blueprintId": "vehicle.tesla.model3",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_CarExterior_TeslaM3"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_Toyota_Prius_SK_Toyota_Prius",
+    "name": "Toyota_Prius",
+    "blueprintId": "vehicle.toyota.prius",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWStaticMesh2"
+    ],
+    "baseColorOverrides": {
+      "MI_BodyWStaticMesh2": null,
+      "Vh_Car_toyotaPrius_CoverWheelMat_BaseColor_Mat": "Vh_Car_toyotaPrius_CoverWheelMat_BaseColor_d1d5cf37.tga",
+      "Vh_Car_ToyotaPrius_LightMat_BaseColor_Mat": "Vh_Car_ToyotaPrius_LightMat_BaseColor_12a1a4ab.tga",
+      "Vh_Car_ToyotaPrius_LightFrontDownMat_BaseColor_Mat": "Vh_Car_ToyotaPrius_LightFrontDownMat_BaseColor_02b91c5d.tga"
+    }
+  },
+  {
+    "folder": "Motorcycle_Harley_HarleyRig",
+    "name": "Harley_LowRider",
+    "blueprintId": "vehicle.harley-davidson.low_rider",
+    "classification": "Motorcycle",
+    "paintMaterials": [
+      "MI_CarExterior_Master"
+    ],
+    "baseColorOverrides": {
+      "MI_CarExterior_Master": null,
+      "MI_Harley_Wheels": "T_HarleyWheels_c_682c3131.tga",
+      "MI_Harley_LampSupport": "T_Harley_LSupport_c_ba5c41f5.tga",
+      "MI_Harley_front": "T_HarleyLamps_c_714283e1.tga"
+    }
+  },
+  {
+    "folder": "Motorcycle_Vespa_VespaRig",
+    "name": "Vespa_ZX125",
+    "blueprintId": "vehicle.vespa.zx125",
+    "classification": "Motorcycle",
+    "paintMaterials": [
+      "VespaBOdy"
+    ]
+  },
+  {
+    "folder": "Truck_Ambulance_SK_Ambulance",
+    "name": "Ford_Ambulance",
+    "blueprintId": "vehicle.ford.ambulance",
+    "classification": "Truck",
+    "paintMaterials": [
+      "MI_BodyWork_Ambulance"
+    ],
+    "baseColorOverrides": {
+      "MI_Details1_Ambulance": "T_Details01_Ambulance_d_d725a7cb.tga",
+      "MI_Details2_Ambulance": "T_Details02_Ambulance_d_11ed788b.tga"
+    }
+  },
+  {
+    "folder": "Truck_European_HGV_SK_European_HGV",
+    "name": "European_HGV",
+    "blueprintId": "vehicle.carlamotors.european_hgv",
+    "classification": "Truck",
+    "paintMaterials": [
+      "MI_Bodywork_European_HGV"
+    ]
+  },
+  {
+    "folder": "Truck_Firetruck_SK_Firetruck",
+    "name": "Firetruck",
+    "blueprintId": "vehicle.carlamotors.firetruck",
+    "classification": "Truck",
+    "paintMaterials": [
+      "MI_BodyWokr_FireTruck"
+    ],
+    "baseColorOverrides": {
+      "MI_Details01_FireTruck": "T_Details1_Firetruck_d_f0175e11.tga",
+      "MI_Details02_FireTruck": "T_Details2_Firetruck_d_689e359b.tga"
+    }
+  },
+  {
+    "folder": "Truck_Sprinter_SK_Sprinter",
+    "name": "Mercedes_Sprinter",
+    "blueprintId": "vehicle.mercedes.sprinter",
+    "classification": "Truck",
+    "paintMaterials": [
+      "MI_BodyWork_Sprinter"
+    ],
+    "baseColorOverrides": {
+      "MI_Details2_Sprinter": "T_Details2_Sprinter_d_e39e3dff.tga"
+    }
+  },
+  {
+    "folder": "Truck_Truck_SM_TestTruck",
+    "name": "CarlaCola_Truck",
+    "blueprintId": "vehicle.carlamotors.carlacola",
+    "classification": "Truck",
+    "paintMaterials": [
+      "VolvoFm7Truck_Body",
+      "VolvoFm7Truck_RoofBody_mat"
+    ]
+  },
+  {
+    "folder": "Truck_VolkswagenT2_SK_Volkswagen_T2",
+    "name": "Volkswagen_T2",
+    "blueprintId": "vehicle.volkswagen.t2",
+    "classification": "Truck",
+    "paintMaterials": [
+      "MI_Exterior_VolkswagenT2"
+    ],
+    "baseColorOverrides": {
+      "MI_Exterior_VolkswagenT2": null,
+      "Vh_Van_VolksWagenT2_WheelCover": "Vh_Van_VolkswagenT2_CoverWheelMat_BaseColor_172a2087.tga"
+    }
+  },
+  {
+    "folder": "Truck_Volkswagen_T2_2021_SK_Volkswagen_T2_2021",
+    "name": "Volkswagen_T2_2021",
+    "blueprintId": "vehicle.volkswagen.t2_2021",
+    "classification": "Truck",
+    "paintMaterials": [
+      "MI_BodyWork_T2_2021"
+    ]
+  }
+]

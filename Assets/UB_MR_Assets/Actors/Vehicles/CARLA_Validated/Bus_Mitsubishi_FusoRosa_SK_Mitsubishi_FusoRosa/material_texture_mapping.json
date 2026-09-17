@@ -1,0 +1,37 @@
+{
+  "MI_BodyWork_FusoRosa": [
+    {
+      "texture": "T_Bodywork_Fuso_5_d_ccecfc23.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Interior_FusoRosa": [
+    {
+      "texture": "T_Interior_FusoRosa_D_41cc805e.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlate_FusoRosa": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassExt_Lights_FusoRosa": [],
+  "MI_GlassExt_FusoRosa": [],
+  "MI_GlassExt_FusoRosa.001": [],
+  "MI_GlassInt_Lights_FusoRosa": [],
+  "MI_GlassInt_FusoRosa": [],
+  "MI_GlassInt_FusoRosa.001": [],
+  "MI_Lights_FusoRosa": []
+}

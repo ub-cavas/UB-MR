@@ -1,0 +1,480 @@
+{
+  "vehicle": {
+    "id": "Car_4Wheeled_Mini2021_SK_Mini2021",
+    "name": "SK_Mini2021",
+    "path": "/Game/Carla/Static/Car/4Wheeled/Mini2021/SK_Mini2021.SK_Mini2021",
+    "category": "Car"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Car/4Wheeled/Mini2021/SK_Mini2021.SK_Mini2021",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\Mini2021\\BP_Mini2021.uasset",
+    "components": [
+      {
+        "name": "SM_DoorL_Mini2021",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/SM_DoorL_Mini2021.SM_DoorL_Mini2021",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.7547642517089844
+          ],
+          [
+            0.0,
+            1.0,
+            1.6081226229577292e-16,
+            1.0196537780761719
+          ],
+          [
+            0.0,
+            -1.6081226229577292e-16,
+            1.0,
+            0.8748822021484375
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int2_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_DoorGlass_Int2_FL.SM_DoorGlass_Int2_FL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_001.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int2_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_DoorGlass_Int2_FR.SM_DoorGlass_Int2_FR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_002.fbx"
+      },
+      {
+        "name": "SM_GlassExt_1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_GlassExt_1.SM_GlassExt_1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_003.fbx"
+      },
+      {
+        "name": "SM_GlassExt_2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_GlassExt_2.SM_GlassExt_2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_004.fbx"
+      },
+      {
+        "name": "SM_GlassInt_1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_GlassInt_1.SM_GlassInt_1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_005.fbx"
+      },
+      {
+        "name": "SM_GlassInt_2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_GlassInt_2.SM_GlassInt_2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_006.fbx"
+      },
+      {
+        "name": "SM_DoorR_Mini2021",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/SM_DoorR_Mini2021.SM_DoorR_Mini2021",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.7547642517089844
+          ],
+          [
+            0.0,
+            1.0,
+            1.6081226229577292e-16,
+            -1.0196537780761719
+          ],
+          [
+            0.0,
+            -1.6081226229577292e-16,
+            1.0,
+            0.8748822021484375
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_007.fbx"
+      },
+      {
+        "name": "SM_Lights_Mini2021",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/SM_Lights_Mini2021.SM_Lights_Mini2021",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_008.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext1_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_DoorGlass_Ext1_FL.SM_DoorGlass_Ext1_FL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_009.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext1_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_DoorGlass_Ext1_FR.SM_DoorGlass_Ext1_FR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_010.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext2_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_DoorGlass_Ext2_FL.SM_DoorGlass_Ext2_FL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_011.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext2_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_DoorGlass_Ext2_FR.SM_DoorGlass_Ext2_FR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_012.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int1_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_DoorGlass_Int1_FL.SM_DoorGlass_Int1_FL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_013.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int1_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/Mini2021/Glasses/SM_DoorGlass_Int1_FR.SM_DoorGlass_Int1_FR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_014.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

@@ -1,11 +1,52 @@
 # CARLA traffic vehicles
 
 UB-MR resolves the `blueprint` in each traffic snapshot through
-`Assets/UB_MR/Prefabs/Traffic/TrafficVehicleCatalog.asset`. The initial entries are
-`vehicle.audi.a2` (Audi A2) and `vehicle.ford.mustang` (Mustang 2012). All other
-vehicles use the scene's existing Jeep fallback and log one warning per blueprint.
-The Renegade is not registered as a Wrangler. Imported source meshes alone do not
-register a vehicle.
+`Assets/UB_MR/Prefabs/Traffic/TrafficVehicleCatalog.asset`. The catalog now registers
+32 validated CARLA vehicles: 19 cars, seven trucks/vans, one bus, two motorcycles,
+and three bicycles. Unmapped blueprints use the scene's existing Jeep fallback and
+log one warning per blueprint. The Renegade is not registered as a Wrangler; the
+fleet includes the actual CARLA Wrangler Rubicon. Imported source meshes alone
+do not register a vehicle.
+
+## Validated fleet
+
+Source assets are under `Assets/UB_MR_Assets/Actors/Vehicles/CARLA_Validated/`;
+ready-to-use prefabs are under `Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/`.
+`fleet.json` records exact blueprint IDs, classifications, body material bindings,
+and reviewed albedo overrides. Every supplied FBX, texture, preview, and validation
+report is preserved. The original top-level Audi, Mustang 2012, and Jeep prefabs
+remain available; the Audi and Mustang catalog entries now select the validated
+exports, including the CARLA Mustang instead of the earlier Mustang 2012 model.
+
+Each generated prefab has an identity root, shared +90-degree Y alignment,
+trigger bounding box, `VirtualObject`, `TrafficVehicleAppearance`, and a readable,
+invisible SDF proxy. Visual and proxy preserve the exported actor pivot and metre
+scale. SDF volumes use X=8 and at least one voxel of padding, with the same runtime
+baking and cleanup as the original prefabs. There is no pre-baked SDF volume.
+
+Materials use URP Lit. Reviewed overrides replace erroneous source assignments
+such as asphalt on car paint, dirt masks on details, and normal maps in albedo
+slots. Missing albedo uses the source diffuse color. Glass is transparent. Source
+Unreal shaders remain an approximation: paint color tints body textures, including
+any markings within those slots; it does not reproduce Unreal's layered paint
+masks. Separate trim, tire, glass, and interior slots are not paint-bound.
+
+Use **UB-MR > Traffic > Rebuild validated CARLA fleet** to regenerate the 32
+prefabs/materials and update their catalog registrations. This overwrites generated
+assets; put repeatable material corrections in `fleet.json`. The operation does
+not save or replace the open scene. `import_report.json` records dimensions,
+classifications, paint-binding counts, and structural validation results.
+
+Use **UB-MR > Traffic > Check validated CARLA fleet GPU and previews** with a
+graphics-capable editor to check all 32 catalog resolutions, bake and read back
+each SDF, verify finite positive/negative distances, apply/release body paint, and
+render previews. Outputs go to `Library/CarlaFleetChecks/`. All 32 passed these
+checks during import. These editor checks do not replace live CARLA pivot checks
+or a standalone player test. The fleet is static reference-pose geometry.
+
+The imported fleet is shown in [the preview sheet](carla-validated-fleet.png).
+The latest import-time GPU and paint results are saved in
+[carla-validated-fleet-checks.json](carla-validated-fleet-checks.json).
 
 The existing Redis/UDP payload remains unchanged. Actor IDs identify instances;
 blueprint IDs identify models. A changed blueprint replaces that actor's instance,
@@ -50,7 +91,7 @@ field is the fallback; `vehicleCatalog` is the new catalog reference.
    modes and a standalone build. Include the prefab, catalog update and all new
    `.meta` files in the change.
 
-The initial alignment retains the existing Audi +90-degree child yaw and Mustang
+The original initial alignment retains the existing Audi +90-degree child yaw and Mustang
 +0.15 m child height. Both visual and proxy now share these adjustments. These
 should be checked against the target live CARLA build before claiming exact pivot
 parity. Paint follows RGB values; URP lighting is not intended to reproduce Unreal
@@ -86,7 +127,9 @@ and 1 on validation failure. Runtime code does not load the inventory file.
 
 **UB-MR > Traffic > Rebuild initial Audi and Mustang prefabs** regenerates those two
 prefabs and their paint assets in place, preserving asset GUIDs and other catalog
-entries. It overwrites edits to the two initial prefabs; normal subsequent vehicle
+entries. It also switches the Audi and Mustang catalog entries back to those
+original assets; rebuild the validated fleet to restore the fleet mappings.
+It overwrites edits to the two initial prefabs; normal subsequent vehicle
 registration does not require this command. `TrafficVehicleAssetSetup.BuildBatch`
 also wires the catalog into the UB-Service-Center-Loop scene.
 

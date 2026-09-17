@@ -1,0 +1,87 @@
+{
+  "MI_MercedesCCC_bodywork": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Interior_MercedesCCC": [
+    {
+      "texture": "M_Interior_d_9a47fdba.tga",
+      "connections": []
+    },
+    {
+      "texture": "M_Interior_d_9a47fdba.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlate_MercedesCCC": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassExt_MercedesCCC": [],
+  "MI_MercedesCCC_bodywork.001": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Interior_MercedesCCC.001": [
+    {
+      "texture": "M_Interior_d_9a47fdba.tga",
+      "connections": []
+    },
+    {
+      "texture": "M_Interior_d_9a47fdba.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassInt_MercedesCCC": [],
+  "MI_GlassExt_MercedesCCC.001": [],
+  "MI_GlassInt_MercedesCCC.001": [],
+  "MI_GlassExt_MercedesCCC.002": [],
+  "MI_GlassInt_MercedesCCC.002": [],
+  "MI_GlassExt_MercedesCCC.003": [],
+  "MI_GlassInt_MercedesCCC.003": [],
+  "MI_GlassExt_MercedesCCC.004": [],
+  "MI_GlassInt_MercedesCCC.004": [],
+  "MI_GlassExt_MercedesCCC.005": [],
+  "MI_GlassInt_MercedesCCC.005": [],
+  "MI_VehicleLights_MercedesCCC": [],
+  "MI_Interior_MercedesCCC.002": [
+    {
+      "texture": "M_Interior_d_9a47fdba.tga",
+      "connections": []
+    },
+    {
+      "texture": "M_Interior_d_9a47fdba.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_MercedesCCC_bodywork.002": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

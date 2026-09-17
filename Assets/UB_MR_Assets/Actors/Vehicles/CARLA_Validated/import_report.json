@@ -1,0 +1,386 @@
+[
+  {
+    "blueprintId": "vehicle.bh.crossbike",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/CrossBike.prefab",
+    "classification": "Bicycle",
+    "size_m": [
+      0.859257758,
+      1.07957911,
+      1.487289
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.gazelle.omafiets",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/LeisureBike.prefab",
+    "classification": "Bicycle",
+    "size_m": [
+      0.328929156,
+      1.12565708,
+      1.83544064
+    ],
+    "paintBindings": 2,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.diamondback.century",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/RoadBike.prefab",
+    "classification": "Bicycle",
+    "size_m": [
+      0.3725165,
+      1.02390254,
+      1.642844
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.mitsubishi.fusorosa",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Mitsubishi_FusoRosa.prefab",
+    "classification": "Bus",
+    "size_m": [
+      3.94415379,
+      4.252848,
+      10.272686
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.audi.a2",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Audi_A2.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.78867888,
+      1.54905009,
+      3.70537019
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.audi.etron",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Audi_ETron.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.03275728,
+      1.64935935,
+      4.855709
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.chevrolet.impala",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Chevrolet_Impala.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.03320384,
+      1.41065872,
+      5.357481
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.citroen.c3",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Citroen_C3.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.85084915,
+      1.61710942,
+      3.98768568
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.tesla.cybertruck",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Tesla_Cybertruck.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.389575,
+      2.09819126,
+      6.273554
+    ],
+    "paintBindings": 5,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.dodge.charger_police",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Dodge_Charger_Police.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.038402,
+      1.54211831,
+      4.974245
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.dodge.charger_police_2020",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Dodge_Charger_Police_2020.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.09708452,
+      1.63838327,
+      5.23751545
+    ],
+    "paintBindings": 5,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.dodge.charger_2020",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Dodge_Charger_2020.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.09708452,
+      1.534725,
+      5.007826
+    ],
+    "paintBindings": 5,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.ford.crown",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Ford_Crown.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.94646287,
+      1.57496607,
+      5.365679
+    ],
+    "paintBindings": 5,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.jeep.wrangler_rubicon",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Jeep_Wrangler_Rubicon.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.90519714,
+      1.877936,
+      3.86622119
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.lincoln.mkz_2017",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Lincoln_MKZ_2017.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.12832522,
+      1.51074648,
+      4.901684
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.lincoln.mkz_2020",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Lincoln_MKZ_2020.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.23060369,
+      1.52124679,
+      4.89238262
+    ],
+    "paintBindings": 5,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.mercedes.coupe_2020",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Mercedes_Coupe_2020.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.00229335,
+      1.45195258,
+      4.67364025
+    ],
+    "paintBindings": 3,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.mini.cooper_s_2021",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Mini_Cooper_S_2021.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.18528581,
+      1.76716638,
+      4.5527
+    ],
+    "paintBindings": 3,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.ford.mustang",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Ford_Mustang.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.89482784,
+      1.30093992,
+      4.71752644
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.nissan.patrol_2021",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Nissan_Patrol_2021.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.435144,
+      2.04514718,
+      5.56582928
+    ],
+    "paintBindings": 5,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.nissan.micra",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Nissan_Micra.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.84511447,
+      1.50128269,
+      3.6333766
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.tesla.model3",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Tesla_Model3.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.16345072,
+      1.48766,
+      4.79178047
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.toyota.prius",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Toyota_Prius.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.0068152,
+      1.52483344,
+      4.513523
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.harley-davidson.low_rider",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Harley_LowRider.prefab",
+    "classification": "Motorcycle",
+    "size_m": [
+      0.763679266,
+      1.27657068,
+      2.35574055
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.vespa.zx125",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Vespa_ZX125.prefab",
+    "classification": "Motorcycle",
+    "size_m": [
+      0.8556879,
+      1.23562837,
+      1.80466712
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.ford.ambulance",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Ford_Ambulance.prefab",
+    "classification": "Truck",
+    "size_m": [
+      2.616743,
+      2.4313755,
+      6.36564445
+    ],
+    "paintBindings": 3,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.carlamotors.european_hgv",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/European_HGV.prefab",
+    "classification": "Truck",
+    "size_m": [
+      3.38130188,
+      3.46194339,
+      7.93571138
+    ],
+    "paintBindings": 3,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.carlamotors.firetruck",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Firetruck.prefab",
+    "classification": "Truck",
+    "size_m": [
+      3.38130188,
+      3.82741237,
+      8.468042
+    ],
+    "paintBindings": 3,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.mercedes.sprinter",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Mercedes_Sprinter.prefab",
+    "classification": "Truck",
+    "size_m": [
+      2.3214612,
+      2.56065536,
+      5.9151907
+    ],
+    "paintBindings": 3,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.carlamotors.carlacola",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/CarlaCola_Truck.prefab",
+    "classification": "Truck",
+    "size_m": [
+      2.32633138,
+      2.974293,
+      7.33057
+    ],
+    "paintBindings": 2,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.volkswagen.t2",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Volkswagen_T2.prefab",
+    "classification": "Truck",
+    "size_m": [
+      2.069316,
+      2.037792,
+      4.48043728
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.volkswagen.t2_2021",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Volkswagen_T2_2021.prefab",
+    "classification": "Truck",
+    "size_m": [
+      1.87775159,
+      1.9872067,
+      4.44218445
+    ],
+    "paintBindings": 3,
+    "validation": "passed"
+  }
+]

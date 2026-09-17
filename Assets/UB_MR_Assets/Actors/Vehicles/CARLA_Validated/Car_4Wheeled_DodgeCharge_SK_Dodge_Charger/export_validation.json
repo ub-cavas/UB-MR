@@ -1,0 +1,85 @@
+{
+  "Car_4Wheeled_DodgeCharge_SK_Dodge_Charger_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 20044,
+    "bounds": [
+      [
+        -2.4634850025177,
+        -1.019801139831543,
+        0.02161162532866001
+      ],
+      [
+        2.510758876800537,
+        1.0186001062393188,
+        1.5637298822402954
+      ]
+    ],
+    "dimensions_m": [
+      4.974243879318237,
+      2.038401246070862,
+      1.5421182569116354
+    ],
+    "materials": 5,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_DodgeCharge_SK_Dodge_Charger_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.471392869949341,
+        -1.0266635417938232,
+        0.012206995859742165
+      ],
+      [
+        2.5148088932037354,
+        1.0298138856887817,
+        1.564778208732605
+      ]
+    ],
+    "dimensions_m": [
+      4.986201763153076,
+      2.056477427482605,
+      1.5525712128728628
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 7.054555888731976,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.01121377944946289
+  }
+}

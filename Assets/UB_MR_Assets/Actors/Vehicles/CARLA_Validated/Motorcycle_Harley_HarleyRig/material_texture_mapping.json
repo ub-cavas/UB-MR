@@ -1,0 +1,34 @@
+{
+  "MI_Harley_Wheels": [],
+  "MI_Harley_Body": [
+    {
+      "texture": "T_T_HarleyBody__D_931e7e15.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Harely_Glass": [],
+  "MI_Harley_LampSupport": [],
+  "MI_Harley_front": [],
+  "MI_CarExterior_Master": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,790 @@
+{
+  "vehicle": {
+    "id": "Car_4Wheeled_DodgeCharger2020_ChargerCop_SK_ChargerCop",
+    "name": "SK_ChargerCop",
+    "path": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/ChargerCop/SK_ChargerCop.SK_ChargerCop",
+    "category": "Car"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/ChargerCop/SK_ChargerCop.SK_ChargerCop",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\DodgeCharger2020\\ChargerCop\\BP_ChargerCop2020.uasset",
+    "components": [
+      {
+        "name": "SM_Charger2020_Glass_SM_GlassInterior_1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_Charger2020_Glass3.SM_Charger2020_Glass3",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      },
+      {
+        "name": "SM_Charger2020_Glass_SM_GlassInterior_2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_Charger2020_Glass4.SM_Charger2020_Glass4",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_001.fbx"
+      },
+      {
+        "name": "SM_Charger2020_Glass_SM_GlassExterior_1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_Charger2020_Glass1.SM_Charger2020_Glass1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_002.fbx"
+      },
+      {
+        "name": "SM_Charger2020_Glass_SM_GlassExterior_2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_Charger2020_Glass2.SM_Charger2020_Glass2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_003.fbx"
+      },
+      {
+        "name": "SM_Lights_ChargerCop",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/ChargerCop/SM_Lights_ChargerCop.SM_Lights_ChargerCop",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_004.fbx"
+      },
+      {
+        "name": "Door_FL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_door/SM_DoorFL.SM_DoorFL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.9707093811035157
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            0.9334677124023437
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            0.741126708984375
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_005.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext1_LF",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Ext1_LF.SM_DoorGlass_Ext1_LF",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_006.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int2_LF",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Int2_LF.SM_DoorGlass_Int2_LF",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_007.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int1_LF",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Int1_LF.SM_DoorGlass_Int1_LF",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_008.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext2_LF",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Ext2_LF.SM_DoorGlass_Ext2_LF",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_009.fbx"
+      },
+      {
+        "name": "Door_FR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_door/SM_DoorFR.SM_DoorFR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.9707093811035157
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -0.9334677124023437
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            0.741126708984375
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_010.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int2_RF",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Int2_RF.SM_DoorGlass_Int2_RF",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_011.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int1_RF",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Int1_RF.SM_DoorGlass_Int1_RF",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_012.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext1_RF",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Ext1_RF.SM_DoorGlass_Ext1_RF",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_013.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext2_RF",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Ext2_RF.SM_DoorGlass_Ext2_RF",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_014.fbx"
+      },
+      {
+        "name": "Door_RL",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_door/SM_DoorRL.SM_DoorRL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.20209182739257814
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            0.902298583984375
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            0.7832159423828126
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_015.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int1_LR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Int1_LR.SM_DoorGlass_Int1_LR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_016.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int2_LR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Int2_LR.SM_DoorGlass_Int2_LR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_017.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext1_LR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Ext1_LR.SM_DoorGlass_Ext1_LR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_018.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext2_LR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Ext2_LR.SM_DoorGlass_Ext2_LR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_019.fbx"
+      },
+      {
+        "name": "Door_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_door/SM_DoorRR.SM_DoorRR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.20209182739257814
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -0.902298583984375
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            0.7832159423828126
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_020.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int1_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Int1_RR.SM_DoorGlass_Int1_RR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_021.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Int2_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Int2_RR.SM_DoorGlass_Int2_RR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_022.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext1_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Ext1_RR.SM_DoorGlass_Ext1_RR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_023.fbx"
+      },
+      {
+        "name": "SM_DoorGlass_Ext2_RR",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/DodgeCharger2020/Charger2020_Glass/SM_DoorGlass_Ext2_RR.SM_DoorGlass_Ext2_RR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            9.957991304906962e-17,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            -9.957991304906962e-17,
+            1.0,
+            -1.4210854715202004e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_024.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

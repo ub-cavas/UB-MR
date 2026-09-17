@@ -1,0 +1,170 @@
+{
+  "vehicle": {
+    "id": "Car_4Wheeled_AudiETron_SM_Etron",
+    "name": "SM_Etron",
+    "path": "/Game/Carla/Static/Car/4Wheeled/AudiETron/SM_Etron.SM_Etron",
+    "category": "Car"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Car/4Wheeled/AudiETron/SM_Etron.SM_Etron",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\AudiETron\\BP_Audi_Etron.uasset",
+    "components": [
+      {
+        "name": "SM_GlassInt1_etron",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/AudiETron/SM_Audi_Etron_glasses/SM_GlassInt1_etron.SM_GlassInt1_etron",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      },
+      {
+        "name": "SM_GlassInt2_etron",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/AudiETron/SM_Audi_Etron_glasses/SM_GlassInt2_etron.SM_GlassInt2_etron",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_001.fbx"
+      },
+      {
+        "name": "SM_Etron_v2_Lights",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/AudiETron/SM_Etron_Lights.SM_Etron_Lights",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_002.fbx"
+      },
+      {
+        "name": "SM_GlassExt1_etron",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/AudiETron/SM_Audi_Etron_glasses/SM_GlassExt1_etron.SM_GlassExt1_etron",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_003.fbx"
+      },
+      {
+        "name": "SM_GlassExt2_etron",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/AudiETron/SM_Audi_Etron_glasses/SM_GlassExt2_etron.SM_GlassExt2_etron",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_004.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

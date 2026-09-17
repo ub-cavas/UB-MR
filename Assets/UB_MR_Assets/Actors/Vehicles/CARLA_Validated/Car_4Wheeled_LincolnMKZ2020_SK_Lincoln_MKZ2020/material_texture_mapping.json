@@ -1,0 +1,135 @@
+{
+  "MI_LicensePlate_Lincoln2020": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Lincoln2020_bodywork": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Interior_Lincoln2020": [
+    {
+      "texture": "M_Interior_Lincoln_d_547249c5.tga",
+      "connections": []
+    },
+    {
+      "texture": "M_Interior_Lincoln_d_547249c5.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_VehicleLights_Lincoln2020": [],
+  "MI_Interior_Lincoln2020.001": [
+    {
+      "texture": "M_Interior_Lincoln_d_547249c5.tga",
+      "connections": []
+    },
+    {
+      "texture": "M_Interior_Lincoln_d_547249c5.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Lincoln2020_bodywork.001": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Interior_Lincoln2020.002": [
+    {
+      "texture": "M_Interior_Lincoln_d_547249c5.tga",
+      "connections": []
+    },
+    {
+      "texture": "M_Interior_Lincoln_d_547249c5.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Lincoln2020_bodywork.002": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Interior_Lincoln2020.003": [
+    {
+      "texture": "M_Interior_Lincoln_d_547249c5.tga",
+      "connections": []
+    },
+    {
+      "texture": "M_Interior_Lincoln_d_547249c5.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Lincoln2020_bodywork.003": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Interior_Lincoln2020.004": [
+    {
+      "texture": "M_Interior_Lincoln_d_547249c5.tga",
+      "connections": []
+    },
+    {
+      "texture": "M_Interior_Lincoln_d_547249c5.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Lincoln2020_bodywork.004": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassExt_Lincoln2020": [],
+  "MI_GlassInt_Lincoln2020": [],
+  "MI_GlassExt_Lincoln2020.001": [],
+  "MI_GlassInt_Lincoln2020.001": [],
+  "MI_GlassExt_Lincoln2020.002": [],
+  "MI_GlassInt_Lincoln2020.002": [],
+  "MI_GlassExt_Lincoln2020.003": [],
+  "MI_GlassInt_Lincoln2020.003": [],
+  "MI_GlassExt_Lincoln2020.004": [],
+  "MI_GlassInt_Lincoln2020.004": [],
+  "MI_GlassExt_Lincoln2020.005": [],
+  "MI_GlassInt_Lincoln2020.005": [],
+  "MI_GlassExt_Lincoln2020.006": [],
+  "MI_GlassInt_Lincoln2020.006": [],
+  "MI_GlassExt_Lincoln2020.007": [],
+  "MI_GlassInt_Lincoln2020.007": [],
+  "MI_GlassExt_Lincoln2020.008": [],
+  "MI_GlassInt_Lincoln2020.008": [],
+  "MI_GlassExt_Lincoln2020.009": [],
+  "MI_GlassInt_Lincoln2020.009": []
+}

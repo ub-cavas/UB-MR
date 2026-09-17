@@ -1,0 +1,111 @@
+{
+  "Bus_Mitsubishi_FusoRosa_SK_Mitsubishi_FusoRosa_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 138683,
+    "bounds": [
+      [
+        -5.581565856933594,
+        -1.8511886596679688,
+        0.0009262995445169508
+      ],
+      [
+        4.6911187171936035,
+        2.092963218688965,
+        4.253774642944336
+      ]
+    ],
+    "dimensions_m": [
+      10.272684574127197,
+      3.9441518783569336,
+      4.252848343399819
+    ],
+    "materials": 10,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Bus_Mitsubishi_FusoRosa_SK_Mitsubishi_FusoRosa_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 7998,
+    "bounds": [
+      [
+        -5.621112823486328,
+        -1.8875453472137451,
+        -0.037605658173561096
+      ],
+      [
+        4.729682445526123,
+        2.117689609527588,
+        4.293579578399658
+      ]
+    ],
+    "dimensions_m": [
+      10.350795269012451,
+      4.005234956741333,
+      4.331185236573219
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 114.88830884899089,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 514,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_glass_ext_1_FusoRosa": {
+        "samples": 519,
+        "max_outside_distance_m": 0.03440508618950844
+      },
+      "SM_glass_Ext_2_FusoRosa": {
+        "samples": 535,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_glass_int_1_FusoRosa": {
+        "samples": 545,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_glass_int_2_FusoRosa": {
+        "samples": 418,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Lights_FusoRosa": {
+        "samples": 666,
+        "max_outside_distance_m": 0.03736297786235809
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.039804935455322266
+  }
+}

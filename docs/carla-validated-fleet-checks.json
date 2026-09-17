@@ -1,0 +1,258 @@
+[
+  {
+    "blueprintId": "vehicle.bh.crossbike",
+    "sdfMin": -0.00172996521,
+    "sdfMax": 0.784667969,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "CrossBike.png"
+  },
+  {
+    "blueprintId": "vehicle.gazelle.omafiets",
+    "sdfMin": -0.02835083,
+    "sdfMax": 2.40625,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "LeisureBike.png"
+  },
+  {
+    "blueprintId": "vehicle.diamondback.century",
+    "sdfMin": -0.0308380127,
+    "sdfMax": 0.5493164,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "RoadBike.png"
+  },
+  {
+    "blueprintId": "vehicle.mitsubishi.fusorosa",
+    "sdfMin": -1.41601563,
+    "sdfMax": 2.55273438,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Mitsubishi_FusoRosa.png"
+  },
+  {
+    "blueprintId": "vehicle.audi.a2",
+    "sdfMin": -0.5751953,
+    "sdfMax": 1.32714844,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Audi_A2.png"
+  },
+  {
+    "blueprintId": "vehicle.audi.etron",
+    "sdfMin": -0.625,
+    "sdfMax": 1.5859375,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Audi_ETron.png"
+  },
+  {
+    "blueprintId": "vehicle.chevrolet.impala",
+    "sdfMin": -0.537597656,
+    "sdfMax": 1.45800781,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Chevrolet_Impala.png"
+  },
+  {
+    "blueprintId": "vehicle.citroen.c3",
+    "sdfMin": -0.5058594,
+    "sdfMax": 1.49902344,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Citroen_C3.png"
+  },
+  {
+    "blueprintId": "vehicle.tesla.cybertruck",
+    "sdfMin": -0.6352539,
+    "sdfMax": 1.74707031,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Tesla_Cybertruck.png"
+  },
+  {
+    "blueprintId": "vehicle.dodge.charger_police",
+    "sdfMin": -0.5410156,
+    "sdfMax": 1.53125,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Dodge_Charger_Police.png"
+  },
+  {
+    "blueprintId": "vehicle.dodge.charger_police_2020",
+    "sdfMin": -0.5498047,
+    "sdfMax": 1.58691406,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Dodge_Charger_Police_2020.png"
+  },
+  {
+    "blueprintId": "vehicle.dodge.charger_2020",
+    "sdfMin": -0.5751953,
+    "sdfMax": 1.49804688,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Dodge_Charger_2020.png"
+  },
+  {
+    "blueprintId": "vehicle.ford.crown",
+    "sdfMin": -0.5205078,
+    "sdfMax": 1.45996094,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Ford_Crown.png"
+  },
+  {
+    "blueprintId": "vehicle.jeep.wrangler_rubicon",
+    "sdfMin": -0.5683594,
+    "sdfMax": 1.39648438,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Jeep_Wrangler_Rubicon.png"
+  },
+  {
+    "blueprintId": "vehicle.lincoln.mkz_2017",
+    "sdfMin": -0.5834961,
+    "sdfMax": 1.60449219,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Lincoln_MKZ_2017.png"
+  },
+  {
+    "blueprintId": "vehicle.lincoln.mkz_2020",
+    "sdfMin": -0.5566406,
+    "sdfMax": 1.70996094,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Lincoln_MKZ_2020.png"
+  },
+  {
+    "blueprintId": "vehicle.mercedes.coupe_2020",
+    "sdfMin": -0.5654297,
+    "sdfMax": 1.45703125,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Mercedes_Coupe_2020.png"
+  },
+  {
+    "blueprintId": "vehicle.mini.cooper_s_2021",
+    "sdfMin": -0.608398438,
+    "sdfMax": 1.74511719,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Mini_Cooper_S_2021.png"
+  },
+  {
+    "blueprintId": "vehicle.ford.mustang",
+    "sdfMin": -0.483642578,
+    "sdfMax": 1.16015625,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Ford_Mustang.png"
+  },
+  {
+    "blueprintId": "vehicle.nissan.patrol_2021",
+    "sdfMin": -0.782714844,
+    "sdfMax": 1.8125,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Nissan_Patrol_2021.png"
+  },
+  {
+    "blueprintId": "vehicle.nissan.micra",
+    "sdfMin": -0.5390625,
+    "sdfMax": 1.37402344,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Nissan_Micra.png"
+  },
+  {
+    "blueprintId": "vehicle.tesla.model3",
+    "sdfMin": -0.563476563,
+    "sdfMax": 1.60058594,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Tesla_Model3.png"
+  },
+  {
+    "blueprintId": "vehicle.toyota.prius",
+    "sdfMin": -0.5776367,
+    "sdfMax": 1.49414063,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Toyota_Prius.png"
+  },
+  {
+    "blueprintId": "vehicle.harley-davidson.low_rider",
+    "sdfMin": -0.115234375,
+    "sdfMax": 1.14257813,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Harley_LowRider.png"
+  },
+  {
+    "blueprintId": "vehicle.vespa.zx125",
+    "sdfMin": -0.130981445,
+    "sdfMax": 1.01074219,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Vespa_ZX125.png"
+  },
+  {
+    "blueprintId": "vehicle.ford.ambulance",
+    "sdfMin": -0.8339844,
+    "sdfMax": 2.3046875,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Ford_Ambulance.png"
+  },
+  {
+    "blueprintId": "vehicle.carlamotors.european_hgv",
+    "sdfMin": -0.957519531,
+    "sdfMax": 3.625,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "European_HGV.png"
+  },
+  {
+    "blueprintId": "vehicle.carlamotors.firetruck",
+    "sdfMin": -1.15332031,
+    "sdfMax": 1.70898438,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Firetruck.png"
+  },
+  {
+    "blueprintId": "vehicle.mercedes.sprinter",
+    "sdfMin": -2.12109375,
+    "sdfMax": 2.546875,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Mercedes_Sprinter.png"
+  },
+  {
+    "blueprintId": "vehicle.carlamotors.carlacola",
+    "sdfMin": -0.8076172,
+    "sdfMax": 1.86914063,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "CarlaCola_Truck.png"
+  },
+  {
+    "blueprintId": "vehicle.volkswagen.t2",
+    "sdfMin": -0.637207031,
+    "sdfMax": 1.2578125,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Volkswagen_T2.png"
+  },
+  {
+    "blueprintId": "vehicle.volkswagen.t2_2021",
+    "sdfMin": -0.670898438,
+    "sdfMax": 1.1875,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Volkswagen_T2_2021.png"
+  }
+]

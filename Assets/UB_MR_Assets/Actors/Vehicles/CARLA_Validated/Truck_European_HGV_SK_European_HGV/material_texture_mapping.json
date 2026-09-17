@@ -1,0 +1,85 @@
+{
+  "MI_Details02_European_HGV": [
+    {
+      "texture": "T_Truck_Details2_d_c119b26a.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Bodywork_European_HGV": [
+    {
+      "texture": "T_Truck_Bodywork_d_2e443ace.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details01_European_HGV": [
+    {
+      "texture": "T_Truck_Details1_d_e99d2282.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlate_Ambulance": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassExt_European_HGV": [],
+  "MI_GlassExtLights_European_HGV": [],
+  "MI_GlassInt_European_HGV": [],
+  "MI_GlassInt_European_HGV.001": [],
+  "MI_GlassInt_European_HGV.002": [],
+  "MI_GlassInt_European_HGV.003": [],
+  "MI_Bodywork_European_HGV.001": [
+    {
+      "texture": "T_Truck_Bodywork_d_2e443ace.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details01_European_HGV.001": [
+    {
+      "texture": "T_Truck_Details1_d_e99d2282.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Bodywork_European_HGV.002": [
+    {
+      "texture": "T_Truck_Bodywork_d_2e443ace.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details01_European_HGV.002": [
+    {
+      "texture": "T_Truck_Details1_d_e99d2282.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Lights_European_HGV": [],
+  "MI_GlassExt_European_HGV.001": [],
+  "MI_GlassInt_European_HGV.004": [],
+  "MI_GlassIntLights_European_HGV": [],
+  "MI_GlassInt_European_HGV.005": [],
+  "MI_GlassExt_European_HGV.002": [],
+  "MI_GlassExt_European_HGV.003": [],
+  "MI_GlassExt_European_HGV.004": [],
+  "MI_GlassExt_European_HGV.005": []
+}

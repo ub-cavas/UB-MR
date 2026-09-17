@@ -1,0 +1,42 @@
+{
+  "MI_Glass_Chevrolet": [],
+  "MI_Interior_Chevrolet": [],
+  "PolishedAluminiumWhite_Inst": [],
+  "MI_LightGlass_Chevrolet": [
+    {
+      "texture": "T_Asphalt03_d_f7fc095d.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlate_Chevrolet": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Bodywork_Chevrolet": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LightText_Chevrolet": [
+    {
+      "texture": "T_LightText_d_112a7a04.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Wheels_Chevrolet": []
+}

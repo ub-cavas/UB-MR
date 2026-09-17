@@ -1,0 +1,89 @@
+{
+  "MI_Details2_Ambulance": [
+    {
+      "texture": "Ambulance_02_M_Details2_Amulance_Dirt_2f6174b9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details1_Ambulance": [
+    {
+      "texture": "Ambulance_02_M_Details_Ambulance_Dirt_96c889d9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_BodyWork_Ambulance": [
+    {
+      "texture": "T_Bodywork_Ambulance_d_b69dee93.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlate_Ambulance": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Lights_Ambulance": [],
+  "MI_GlassExt_Ambulance_Lights": [],
+  "MI_GlassExt_Ambulance": [],
+  "MI_FakeGlassExt_Ambulance": [],
+  "MI_GlassExt_Ambulance.001": [],
+  "MI_Details1_Ambulance.001": [
+    {
+      "texture": "Ambulance_02_M_Details_Ambulance_Dirt_96c889d9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_BodyWork_Ambulance.001": [
+    {
+      "texture": "T_Bodywork_Ambulance_d_b69dee93.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details1_Ambulance.002": [
+    {
+      "texture": "Ambulance_02_M_Details_Ambulance_Dirt_96c889d9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_BodyWork_Ambulance.002": [
+    {
+      "texture": "T_Bodywork_Ambulance_d_b69dee93.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassInt_Ambulance_Lights": [],
+  "MI_GlassInt_Ambulance": [],
+  "MI_GlassInt_Ambulance.001": [],
+  "MI_GlassExt_Ambulance.002": [],
+  "MI_GlassExt_Ambulance.003": [],
+  "MI_GlassInt_Ambulance.002": [],
+  "MI_GlassInt_Ambulance.003": [],
+  "MI_GlassExt_Ambulance.004": [],
+  "MI_GlassExt_Ambulance.005": [],
+  "MI_GlassInt_Ambulance.004": [],
+  "MI_GlassInt_Ambulance.005": [],
+  "MI_Lights_Ambulance.001": [],
+  "MI_VehicleLights_Sirens_Ambulance": [],
+  "MI_Lights_Ambulance.002": []
+}

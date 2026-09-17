@@ -1,0 +1,44 @@
+{
+  "JeepWranglerRubicon_Wheels_Mat": [],
+  "JeepWranglerRubicon_HubCap_mat": [],
+  "JeepWranglerRubicon_bodyside_mat": [],
+  "plastiCbLACK": [],
+  "PolishedAluminiumWhite_Inst": [],
+  "GlassInstance": [],
+  "Fbx Default Material 6": [],
+  "Rubber_Inst": [],
+  "OrangeMetal": [
+    {
+      "texture": "T_Flat_n_2ebd99f7.tga",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "T_White_D_2939f64c.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 9": [],
+  "Rubber": [],
+  "Fbx Default Material 11": [],
+  "MI_BodyWStaticMesh7": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "JeepWranglerRubicon_Bumper_Mat": [],
+  "M_LicensePlate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

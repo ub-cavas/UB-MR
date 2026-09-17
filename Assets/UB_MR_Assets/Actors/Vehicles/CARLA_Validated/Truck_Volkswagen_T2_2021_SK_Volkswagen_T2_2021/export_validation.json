@@ -1,0 +1,151 @@
+{
+  "Truck_Volkswagen_T2_2021_SK_Volkswagen_T2_2021_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 93263,
+    "bounds": [
+      [
+        -2.1044201850891113,
+        -0.9388741254806519,
+        -0.0023600482381880283
+      ],
+      [
+        2.337763786315918,
+        0.938876748085022,
+        1.9848467111587524
+      ]
+    ],
+    "dimensions_m": [
+      4.442183971405029,
+      1.8777508735656738,
+      1.9872067593969405
+    ],
+    "materials": 22,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Truck_Volkswagen_T2_2021_SK_Volkswagen_T2_2021_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.1117160320281982,
+        -0.9355555772781372,
+        -0.00939861685037613
+      ],
+      [
+        2.3449885845184326,
+        0.9367057085037231,
+        1.9990342855453491
+      ]
+    ],
+    "dimensions_m": [
+      4.456704616546631,
+      1.8722612857818604,
+      2.0084329023957253
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 10.921483099045252,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 514,
+        "max_outside_distance_m": 0.01076422818005085
+      },
+      "Door_FL": {
+        "samples": 522,
+        "max_outside_distance_m": 0.015926294028759003
+      },
+      "SM_Glass_DoorR_Int2": {
+        "samples": 11,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glasses_T2_Ext1": {
+        "samples": 530,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glasses_T2_Ext2": {
+        "samples": 312,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glasses_T2_Int1": {
+        "samples": 684,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glasses_T2_Int2": {
+        "samples": 92,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Volkswagen_T2_2021_Lights": {
+        "samples": 604,
+        "max_outside_distance_m": 0.0
+      },
+      "Door_FR": {
+        "samples": 522,
+        "max_outside_distance_m": 0.031201263889670372
+      },
+      "SM_Glass_DoorL_Ext1": {
+        "samples": 41,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorL_Ext2": {
+        "samples": 41,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorL_Int1": {
+        "samples": 11,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorL_Int2": {
+        "samples": 11,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorR_Ext1": {
+        "samples": 41,
+        "max_outside_distance_m": 0.02465106174349785
+      },
+      "SM_Glass_DoorR_Ext2": {
+        "samples": 41,
+        "max_outside_distance_m": 0.028974218294024467
+      },
+      "SM_Glass_DoorR_Int1": {
+        "samples": 11,
+        "max_outside_distance_m": 0.0
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.01418757438659668
+  }
+}

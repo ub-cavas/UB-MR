@@ -1,0 +1,159 @@
+{
+  "Truck_Ambulance_SK_Ambulance_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 113367,
+    "bounds": [
+      [
+        -3.471381187438965,
+        -1.3093490600585938,
+        -7.861547055654228e-05
+      ],
+      [
+        2.8942620754241943,
+        1.3073930740356445,
+        2.4312970638275146
+      ]
+    ],
+    "dimensions_m": [
+      6.365643262863159,
+      2.6167421340942383,
+      2.431375679298071
+    ],
+    "materials": 27,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Truck_Ambulance_SK_Ambulance_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -3.481457471847534,
+        -1.3204344511032104,
+        -0.01218158844858408
+      ],
+      [
+        2.906588077545166,
+        1.310636281967163,
+        2.4477365016937256
+      ]
+    ],
+    "dimensions_m": [
+      6.3880455493927,
+      2.6310707330703735,
+      2.4599180901423097
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 23.202485046908613,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 514,
+        "max_outside_distance_m": 0.019756656140089035
+      },
+      "SM_RBlinker_SM_RBlinker": {
+        "samples": 92,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_Ext1": {
+        "samples": 534,
+        "max_outside_distance_m": 0.004705618601292372
+      },
+      "SM_Glass_Ext2": {
+        "samples": 208,
+        "max_outside_distance_m": 0.0
+      },
+      "DoorR": {
+        "samples": 535,
+        "max_outside_distance_m": 0.00627397745847702
+      },
+      "DoorL": {
+        "samples": 530,
+        "max_outside_distance_m": 0.0020559874828904867
+      },
+      "SM_Glass_Int1": {
+        "samples": 582,
+        "max_outside_distance_m": 0.013648790307343006
+      },
+      "SM_Glass_Int2": {
+        "samples": 82,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_GlassDoorL_Ext1": {
+        "samples": 323,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_GlassDoorL_Ext2": {
+        "samples": 125,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_GlassDoorL_Int1": {
+        "samples": 277,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_GlassDoorL_Int2": {
+        "samples": 79,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_GlassDoorR_Ext1": {
+        "samples": 323,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_GlassDoorR_Ext2": {
+        "samples": 125,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_GlassDoorR_Int1": {
+        "samples": 277,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_GlassDoorR_Int2": {
+        "samples": 79,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Lights_ChargerCop": {
+        "samples": 910,
+        "max_outside_distance_m": 0.000494884152431041
+      },
+      "SM_LBlinker_SM_LBlinker": {
+        "samples": 92,
+        "max_outside_distance_m": 0.0
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.016439437866210938
+  }
+}
