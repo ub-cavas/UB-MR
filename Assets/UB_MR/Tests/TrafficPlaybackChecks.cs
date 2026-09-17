@@ -73,10 +73,12 @@ namespace CAVAS.UB_MR.Tests
             Set(renderer, "receiver", receiver);
             Set(renderer, "vehicleCatalog", catalog);
             Set(renderer, "vehiclePrefab", fallback);
-            Set(renderer, "originOffset", Vector3.zero);
             mapRoot = new GameObject("Traffic test map frame").transform;
-            mapRoot.rotation = Quaternion.Euler(0, 90, 0);
-            Set(renderer, "mapRoot", mapRoot);
+            mapRoot.rotation = Quaternion.Euler(-90, -90, -180);
+            var module = network.AddComponent<Module>();
+            module.enabled = false; // Bind the map without starting ROS.
+            Set(module, "map_root", mapRoot);
+            Set(renderer, "module", module);
             network.SetActive(true);
             yield return null;
             port = ((IPEndPoint)Get<UdpClient>(receiver, "_udpClient").Client.LocalEndPoint).Port;
@@ -120,12 +122,20 @@ namespace CAVAS.UB_MR.Tests
                 Near(Root("a").transform.position, new Vector3(3, 2, 4), "Position basis");
                 Check(Quaternion.Angle(Root("a").transform.rotation, Quaternion.Euler(0, yaw, 0)) < 0.01f, "Yaw conversion");
             }
-            mapRoot.rotation = Quaternion.Euler(0, 120, 0);
+            mapRoot.rotation = Quaternion.Euler(0, 30, 0) * Quaternion.Euler(-90, -90, -180);
             data[0].yaw = 0;
             yield return Send(data);
             Near(Root("a").transform.position, Quaternion.Euler(0, 30, 0) * new Vector3(3, 2, 4), "Map yaw position");
             Check(Quaternion.Angle(Root("a").transform.rotation, Quaternion.Euler(0, 30, 0)) < 0.01f, "Map yaw orientation");
-            mapRoot.rotation = Quaternion.Euler(0, 90, 0);
+            mapRoot.rotation = Quaternion.Euler(-90, -90, -180);
+            var blueVehicle = Root("b");
+            Set(module, "map_root", null);
+            yield return null;
+            Check(!blueVehicle.activeSelf && Detections == 0, "Missing map must hide traffic");
+            Set(module, "map_root", mapRoot);
+            yield return null;
+            Check(blueVehicle.activeSelf && Paint(blueVehicle).GetColor("_BaseColor").b == 1,
+                "Map recovery must restore vehicle paint without a new packet");
             Check(Detections == 6, "Perception registration");
             foreach (var obj in FindObjectsByType<VirtualObject>(FindObjectsSortMode.None))
             {
@@ -141,6 +151,7 @@ namespace CAVAS.UB_MR.Tests
             yield return Send(data);
             Check(Count == 0 && Detections == 0, "Disabled renderer processed a snapshot");
             renderer.enabled = true;
+            yield return null; // Poses and visibility are restored in LateUpdate.
             Check(Count == 6 && Detections == 6, "Re-enable must reconcile KnownVehicles");
             Check(Mathf.Abs(Paint(Root("b")).GetColor("_BaseColor").g - 200f / 255f) < 0.001f,
                 "Re-enable used stale appearance");
@@ -161,6 +172,7 @@ namespace CAVAS.UB_MR.Tests
             renderer.enabled = false;
             Set(renderer, "vehicleCatalog", catalog);
             renderer.enabled = true;
+            yield return null;
             Check(Root("catalog-fallback").GetComponent<TrafficVehicleAppearance>() != null,
                 "Catalog recovery failed");
             yield return Send(Array.Empty<TrafficReceiver.VehicleData>());
@@ -232,6 +244,8 @@ namespace CAVAS.UB_MR.Tests
                 Check(Time.realtimeSinceStartup < deadline, "UDP snapshot timeout");
                 yield return null;
             }
+            // The snapshot is consumed in Update; wait for its map-relative LateUpdate pose.
+            yield return null;
         }
 
         private void CheckSdfHit(GameObject root)

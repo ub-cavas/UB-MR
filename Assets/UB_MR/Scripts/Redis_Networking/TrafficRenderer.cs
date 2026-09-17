@@ -10,12 +10,8 @@ namespace UB_MR.Redis_Networking
         [SerializeField] private GameObject vehiclePrefab;
         [SerializeField] private TrafficVehicleCatalog vehicleCatalog;
         [SerializeField] private Module module;
-        [SerializeField] private Transform mapRoot;
-        [Tooltip("Apply only the runtime client-local Unity Y rotation delta from the map UI.")]
-        [SerializeField] private bool applyClientMapYawCorrection = true;
-        [Tooltip("Map UI Y rotation that corresponds to the uncorrected CARLA/RoadRunner traffic frame.")]
-        [SerializeField] private float uncorrectedMapYawDegrees = 90f;
-        [SerializeField] private Vector3 originOffset = new Vector3(1.347f, 0f, 5.916f);
+        private CarlaMapFrame _mapFrame;
+        private bool _waitingForModule;
 
         private sealed class VehicleInstance
         {
@@ -34,14 +30,12 @@ namespace UB_MR.Redis_Networking
 
         void Awake()
         {
-            ResolveModule();
-            ResolveMapRoot();
+            ResolveMapFrame();
         }
 
         void OnEnable()
         {
-            ResolveModule();
-            ResolveMapRoot();
+            ResolveMapFrame();
             if (receiver == null)
             {
                 Debug.LogError("TrafficRenderer requires a TrafficReceiver.", this);
@@ -76,6 +70,30 @@ namespace UB_MR.Redis_Networking
             materials = null;
         }
 
+        void LateUpdate()
+        {
+            if (subscribedReceiver == null) return;
+            CarlaMapFrame frame = ResolveMapFrame();
+            foreach (var entry in spawnedVehicles)
+            {
+                if (!subscribedReceiver.KnownVehicles.TryGetValue(entry.Key, out var data) || data.location == null) continue;
+                GameObject vehicle = entry.Value.root;
+                if (vehicle == null) continue;
+                Vector3 location = new(data.location.x, data.location.y, data.location.z);
+                if (frame == null || !frame.TryCarlaPoseToUnityWorld(location, data.yaw, out Pose pose))
+                {
+                    vehicle.SetActive(false);
+                    continue;
+                }
+
+                // Always reapply cached poses: alignment can change without a new packet.
+                vehicle.transform.SetPositionAndRotation(pose.position, pose.rotation);
+                if (!vehicle.activeSelf)
+                    entry.Value.appearance?.ApplyColor(entry.Value.color, materials);
+                vehicle.SetActive(true);
+            }
+        }
+
         private void HandleSpawn(TrafficReceiver.VehicleData data)
         {
             if (data == null || string.IsNullOrEmpty(data.id) || data.location == null) return;
@@ -97,10 +115,10 @@ namespace UB_MR.Redis_Networking
                 root = Instantiate(prefab), blueprint = data.blueprint, color = data.color
             };
             instance.root.name = $"Vehicle_{data.id}";
+            instance.root.SetActive(false); // Wait for a valid map-relative pose in LateUpdate.
             // Fallback appearance remains authored, even if it has paint bindings.
             if (mapped) instance.appearance = instance.root.GetComponent<TrafficVehicleAppearance>();
             instance.appearance?.ApplyColor(data.color, materials);
-            ApplyPose(instance.root.transform, data);
             spawnedVehicles.Add(data.id, instance);
         }
 
@@ -120,7 +138,6 @@ namespace UB_MR.Redis_Networking
                 instance.appearance?.ApplyColor(data.color, materials);
                 instance.color = data.color;
             }
-            ApplyPose(instance.root.transform, data);
         }
 
         private void HandleDespawn(TrafficReceiver.VehicleData data)
@@ -139,68 +156,26 @@ namespace UB_MR.Redis_Networking
             TrafficMaterialCache.DestroyOwned(instance.root);
         }
 
-        private void ApplyPose(Transform vehicleTransform, TrafficReceiver.VehicleData data)
+        private CarlaMapFrame ResolveMapFrame()
         {
-            Vector3 mapLocalPosition = data.Position() + originOffset;
-            Quaternion mapLocalRotation = data.Orientation();
-            float clientMapYawDelta = GetClientMapYawDeltaDegrees();
+            if (!Application.isPlaying) return null;
+            if (_mapFrame != null && module != null) return _mapFrame;
 
-            if (!Mathf.Approximately(clientMapYawDelta, 0f))
+            if (module == null)
+                module = FindFirstObjectByType<Module>();
+            if (module == null)
             {
-                Quaternion trafficYawCorrection = Quaternion.Euler(0f, clientMapYawDelta, 0f);
-
-                vehicleTransform.SetPositionAndRotation(
-                    trafficYawCorrection * mapLocalPosition,
-                    trafficYawCorrection * mapLocalRotation
-                );
-                return;
+                if (!_waitingForModule)
+                    Debug.LogWarning("[TrafficRenderer] Waiting for a Module before rendering poses.", this);
+                _waitingForModule = true;
+                return null;
             }
 
-            vehicleTransform.SetPositionAndRotation(mapLocalPosition, mapLocalRotation);
-        }
-
-        private float GetClientMapYawDeltaDegrees()
-        {
-            if (!applyClientMapYawCorrection)
-                return 0f;
-
-            Module mapModule = ResolveModule();
-            if (mapModule != null && mapModule.HasMapRotationState)
-            {
-                return Mathf.DeltaAngle(uncorrectedMapYawDegrees, mapModule.CurrentMapRotationEuler.y);
-            }
-
-            if (!TryGetMapRoot(out Transform root))
-                return 0f;
-
-            return Mathf.DeltaAngle(uncorrectedMapYawDegrees, root.eulerAngles.y);
-        }
-
-        private bool TryGetMapRoot(out Transform root)
-        {
-            root = ResolveMapRoot();
-            return root != null;
-        }
-
-        private Transform ResolveMapRoot()
-        {
-            if (mapRoot != null)
-                return mapRoot;
-
-            Module mapModule = ResolveModule();
-            if (mapModule != null)
-                mapRoot = mapModule.MapRoot;
-
-            return mapRoot;
-        }
-
-        private Module ResolveModule()
-        {
-            if (module != null)
-                return module;
-
-            module = FindFirstObjectByType<Module>();
-            return module;
+            if (_waitingForModule)
+                Debug.Log("[TrafficRenderer] Module acquired; pose conversion available.", this);
+            _waitingForModule = false;
+            _mapFrame = CarlaMapFrame.GetOrCreate(module);
+            return _mapFrame;
         }
     }
 }
