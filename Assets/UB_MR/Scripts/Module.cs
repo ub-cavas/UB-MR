@@ -7,6 +7,8 @@ using CAVAS.UB_MR.ROS2;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections;
+using CAVAS.UB_MR.Telemetry;
+using CAVAS.UB_MR.UI;
 
 namespace CAVAS.UB_MR
 {
@@ -42,9 +44,13 @@ namespace CAVAS.UB_MR
 
         public Config.Agent SessionAgent { get; private set; }
         public bool UsesLidarModification { get; private set; } = true;
+        public ResourceTelemetry Telemetry { get; private set; }
+        public StatPanel ResourcePanel { get; private set; }
 
         void Awake()
         {
+            Telemetry = new ResourceTelemetry();
+            ResourcePanel = StatPanel.Create(transform, Telemetry);
             SessionAgent = ConfigurationManager.GetConfiguration().Item1;
             UsesLidarModification = (SessionAgent?.recognition?.mode ?? VirtualObjectRecognitionMode.LidarModification)
                 == VirtualObjectRecognitionMode.LidarModification;
@@ -173,8 +179,10 @@ namespace CAVAS.UB_MR
             return agent;
         }
     
-        void OnDestroy()
+        protected virtual void OnDestroy()
         {
+            ResourcePanel?.Shutdown();
+            Telemetry?.Dispose();
             StopAllCoroutines();
             if (mNode != null && Ros2cs.Ok()) ROS2_Bridge.ROS_CORE.RemoveNode(mNode);
             mNode = null;

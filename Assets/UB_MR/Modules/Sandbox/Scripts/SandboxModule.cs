@@ -15,6 +15,8 @@ namespace CAVAS.UB_MR.Modules
         ISubscription<Image> imageSubscription;
         Image latestImage;
         readonly object imageLock = new();
+        System.IDisposable telemetrySource;
+        bool disposed;
 
         protected override void Start()
         {
@@ -23,6 +25,7 @@ namespace CAVAS.UB_MR.Modules
                 return;
 
             rosNode ??= ROS2_Bridge.ROS_CORE.CreateNode("sandbox_module");
+            telemetrySource = Telemetry.SensorPayload.RegisterSource();
             imageSubscription = rosNode.CreateSubscription<Image>(imageTopic, OnImageReceived);
         }
 
@@ -48,7 +51,24 @@ namespace CAVAS.UB_MR.Modules
                 return;
 
             lock (imageLock)
+            {
+                if (disposed) return;
+                Telemetry.SensorPayload.AddReceived(image.Data?.LongLength ?? 0);
                 latestImage = image;
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            lock (imageLock) { disposed = true; latestImage = null; }
+            telemetrySource?.Dispose();
+            if (rosNode != null && Ros2cs.Ok())
+            {
+                if (imageSubscription != null) rosNode.RemoveSubscription<Image>(imageSubscription);
+                ROS2_Bridge.ROS_CORE.RemoveNode(rosNode);
+            }
+            imageSubscription = null; rosNode = null;
+            base.OnDestroy();
         }
         
     }

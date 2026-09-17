@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using CAVAS.UB_MR.Telemetry;
 
 namespace UB_MR.Redis_Networking
 {
@@ -20,6 +21,7 @@ namespace UB_MR.Redis_Networking
         int disposed;
         sealed class PendingPose { public string json; public int created; }
         internal Task Completion { get; }
+        internal RedisTelemetry Telemetry { get; } = new();
 
         public bool Connected => subscribed && publishing;
         public string Status => Connected ? "Connected" : failure ?? "Connecting…";
@@ -41,7 +43,7 @@ namespace UB_MR.Redis_Networking
 
         RedisWire Open(bool receive)
         {
-            var wire = new RedisWire();
+            var wire = new RedisWire(Telemetry.Traffic);
             lock (socketLock)
             {
                 if (cancellation.IsCancellationRequested) { wire.Dispose(); throw new OperationCanceledException(); }
@@ -62,7 +64,7 @@ namespace UB_MR.Redis_Networking
                     var reply = wire.Read() as object[];
                     if (reply == null || reply.Length != 3 || !Equals(reply[0], "subscribe"))
                         throw new IOException("Subscription failed.");
-                    subscribed = true;
+                    SetChannelConnected(true, true);
                     while (!cancellation.IsCancellationRequested)
                     {
                         // Keep an idle subscription healthy even before the traffic publisher starts.
@@ -84,7 +86,7 @@ namespace UB_MR.Redis_Networking
                 catch (Exception error) { RecordFailure(error); }
                 finally
                 {
-                    subscribed = false;
+                    SetChannelConnected(true, false);
                     lock (socketLock) { subscriber?.Dispose(); subscriber = null; }
                     Interlocked.Exchange(ref traffic, null);
                 }
@@ -100,12 +102,19 @@ namespace UB_MR.Redis_Networking
                 try
                 {
                     using var wire = Open(false);
-                    wire.Write("PING");
-                    if (!Equals(wire.Read(), "PONG")) throw new IOException("Server did not respond.");
-                    publishing = true;
+                    Ping(wire);
+                    SetChannelConnected(false, true);
+                    double nextPing = 0;
                     while (!cancellation.IsCancellationRequested)
                     {
-                        int signal = WaitHandle.WaitAny(signals, 1000);
+                        double now = MonotonicClock.Instance.Seconds;
+                        if (now >= nextPing)
+                        {
+                            Ping(wire);
+                            nextPing = MonotonicClock.Instance.Seconds + 1;
+                        }
+                        int wait = Math.Max(1, (int)Math.Ceiling((nextPing - MonotonicClock.Instance.Seconds) * 1000));
+                        int signal = WaitHandle.WaitAny(signals, wait);
                         if (signal == 0) return;
                         PendingPose pose = Interlocked.Exchange(ref pendingPose, null);
                         if (pose != null && unchecked((uint)(Environment.TickCount - pose.created)) < 500 && subscribed)
@@ -113,17 +122,12 @@ namespace UB_MR.Redis_Networking
                             wire.Write("PUBLISH", settings.channel, pose.json);
                             if (wire.Read() is not long) throw new IOException("Publication failed.");
                         }
-                        else
-                        {
-                            wire.Write("PING");
-                            if (!Equals(wire.Read(), "PONG")) throw new IOException("Server did not respond.");
-                        }
                     }
                 }
                 catch (Exception error) { RecordFailure(error); }
                 finally
                 {
-                    publishing = false;
+                    SetChannelConnected(false, false);
                     Interlocked.Exchange(ref pendingPose, null);
                     lock (socketLock) { publisher?.Dispose(); publisher = null; }
                 }
@@ -137,12 +141,36 @@ namespace UB_MR.Redis_Networking
             failure = error is UnauthorizedAccessException ? error.Message : "Unable to reach server. Retrying…";
         }
 
+        void SetChannelConnected(bool receive, bool value)
+        {
+            lock (socketLock)
+            {
+                value &= !cancellation.IsCancellationRequested;
+                if (receive) subscribed = value; else publishing = value;
+                Telemetry.SetConnected(Connected);
+            }
+        }
+
+        void Ping(RedisWire wire)
+        {
+            int generation;
+            lock (socketLock) generation = Telemetry.SetConnected(Connected);
+            double startedAt = MonotonicClock.Instance.Seconds;
+            wire.Write("PING");
+            if (!Equals(wire.Read(), "PONG")) throw new IOException("Server did not respond.");
+            Telemetry.RecordRoundTrip(startedAt, generation);
+        }
+
         public void Dispose()
         {
             if (Interlocked.Exchange(ref disposed, 1) != 0) return;
             cancellation.Cancel();
-            subscribed = publishing = false;
-            lock (socketLock) { subscriber?.Dispose(); publisher?.Dispose(); }
+            lock (socketLock)
+            {
+                subscribed = publishing = false;
+                Telemetry.Dispose();
+                subscriber?.Dispose(); publisher?.Dispose();
+            }
             Interlocked.Exchange(ref pendingPose, null);
             Interlocked.Exchange(ref traffic, null);
             _ = Completion.ContinueWith(_ => { publishReady.Dispose(); cancellation.Dispose(); });

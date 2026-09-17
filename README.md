@@ -47,6 +47,9 @@ ros2 launch mr_pkg <dual_ekf_localization.launch.py> <autoware_localization.laun
 ---
 
 ## Developer Guide
+
+The simulation's **Resources** HUD shows GPU VRAM, LiDAR processing and receive-to-publish timings, ROS sensor payload rates, and Redis traffic/RTT. See the [measurement definitions and validation guide](Docs/ResourceHUD.md).
+
 If you intend to develop the Mixed Reality Engine, follow these steps...
 
 ### Configuration

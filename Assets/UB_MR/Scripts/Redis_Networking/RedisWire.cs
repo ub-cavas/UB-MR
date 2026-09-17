@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using CAVAS.UB_MR.Telemetry;
 
 namespace UB_MR.Redis_Networking
 {
@@ -14,6 +15,9 @@ namespace UB_MR.Redis_Networking
         readonly TcpClient client = new();
         NetworkStream stream;
         const int MaxBulkBytes = 4 * 1024 * 1024;
+        readonly TrafficMeter telemetry;
+
+        internal RedisWire(TrafficMeter telemetry = null) => this.telemetry = telemetry;
 
         public void Open(string host, int port, string password, CancellationToken cancellation)
         {
@@ -48,6 +52,7 @@ namespace UB_MR.Redis_Networking
             }
             byte[] command = buffer.ToArray();
             stream.Write(command, 0, command.Length);
+            telemetry?.AddSent(command.Length);
         }
 
         public object Read() => ReadValue(0);
@@ -57,7 +62,7 @@ namespace UB_MR.Redis_Networking
         object ReadValue(int depth)
         {
             if (depth > 4) throw new IOException("Invalid Redis response nesting.");
-            int marker = stream.ReadByte();
+            int marker = ReadByte();
             if (marker < 0) throw new EndOfStreamException();
             string line = ReadLine();
             switch (marker)
@@ -79,10 +84,11 @@ namespace UB_MR.Redis_Networking
                     for (int offset = 0; offset < length;)
                     {
                         int count = stream.Read(bytes, offset, length - offset);
+                        telemetry?.AddReceived(count);
                         if (count == 0) throw new EndOfStreamException();
                         offset += count;
                     }
-                    if (stream.ReadByte() != '\r' || stream.ReadByte() != '\n')
+                    if (ReadByte() != '\r' || ReadByte() != '\n')
                         throw new IOException("Invalid Redis payload terminator.");
                     return Encoding.UTF8.GetString(bytes);
                 case '*':
@@ -101,11 +107,11 @@ namespace UB_MR.Redis_Networking
             using var bytes = new MemoryStream();
             for (int i = 0; i < 1024; i++)
             {
-                int value = stream.ReadByte();
+                int value = ReadByte();
                 if (value < 0) throw new EndOfStreamException();
                 if (value == '\r')
                 {
-                    if (stream.ReadByte() != '\n') throw new IOException("Invalid Redis line ending.");
+                    if (ReadByte() != '\n') throw new IOException("Invalid Redis line ending.");
                     return Encoding.UTF8.GetString(bytes.ToArray());
                 }
                 bytes.WriteByte((byte)value);
@@ -114,5 +120,12 @@ namespace UB_MR.Redis_Networking
         }
 
         public void Dispose() => client.Close();
+
+        int ReadByte()
+        {
+            int value = stream.ReadByte();
+            if (value >= 0) telemetry?.AddReceived(1);
+            return value;
+        }
     }
 }

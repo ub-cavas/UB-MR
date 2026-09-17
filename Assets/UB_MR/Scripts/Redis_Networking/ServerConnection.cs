@@ -2,6 +2,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using CAVAS.UB_MR.Telemetry;
 
 namespace UB_MR.Redis_Networking
 {
@@ -12,6 +13,7 @@ namespace UB_MR.Redis_Networking
         public ServerSettings Settings { get; private set; }
         public string Status => session?.Status ?? "Disconnected";
         public bool IsConnected => session != null && session.Connected;
+        public RedisSnapshot TelemetrySnapshot => session?.Telemetry.Snapshot() ?? default;
         public bool HasTraffic => IsConnected && Time.realtimeSinceStartup - lastTrafficTime < 2f;
         public int VehicleCount { get; private set; }
         public event Action<string> TrafficReceived;
@@ -55,6 +57,8 @@ namespace UB_MR.Redis_Networking
 
         void Update()
         {
+            // Keep one-second rate samples current while the simulation HUD is not present.
+            session?.Telemetry.Traffic.Snapshot();
             string json = session?.TakeTraffic();
             if (json != null && IsConnected)
             {

@@ -9,17 +9,9 @@ namespace CAVAS.UB_MR.DT
         public Action OnPrevSpectatorCamera;
         public StatPanel statPanel;
 
-        public void AddStat()
-        {
-            //TODO: 
-        }
-
         public void ToggleStats()
         {
-            if (statPanel.gameObject.activeInHierarchy)
-                UI_Manager.UnloadPanel(statPanel);
-            else
-                UI_Manager.LoadPanel(statPanel);
+            if (statPanel != null) statPanel.Toggle();
         }
     }
 }
