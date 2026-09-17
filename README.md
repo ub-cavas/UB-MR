@@ -164,3 +164,7 @@ chmod +x UB-MR.x86_64 # give execution permissions
   ```
 
 *For further assistance, please open an issue in the respective GitHub repository.*
+
+## CARLA traffic models
+
+See [CARLA traffic vehicles](docs/carla-traffic-vehicles.md) for blueprint-to-prefab registration, paint masks, perception setup, server inventory export, and validation commands.

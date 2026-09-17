@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 785dbc9a6032435a6bf808406d642b86, type: 3}
+  m_Name: TrafficVehicleCatalog
+  m_EditorClassIdentifier: 
+  entries:
+  - blueprintId: vehicle.audi.a2
+    prefab: {fileID: 1272740862478031309, guid: aa671d739632863d8a9b7ed02b7657c5, type: 3}
+  - blueprintId: vehicle.ford.mustang
+    prefab: {fileID: 1272740862478031309, guid: decec8237d542f70593b81d25d7f672a, type: 3}

@@ -8,6 +8,7 @@ namespace UB_MR.Redis_Networking
     {
         [SerializeField] private TrafficReceiver receiver;
         [SerializeField] private GameObject vehiclePrefab;
+        [SerializeField] private TrafficVehicleCatalog vehicleCatalog;
         [SerializeField] private Module module;
         [SerializeField] private Transform mapRoot;
         [Tooltip("Apply only the runtime client-local Unity Y rotation delta from the map UI.")]
@@ -16,7 +17,20 @@ namespace UB_MR.Redis_Networking
         [SerializeField] private float uncorrectedMapYawDegrees = 90f;
         [SerializeField] private Vector3 originOffset = new Vector3(1.347f, 0f, 5.916f);
 
-        private Dictionary<string, GameObject> spawnedVehicles = new();
+        private sealed class VehicleInstance
+        {
+            public GameObject root;
+            public string blueprint;
+            public TrafficVehicleAppearance appearance;
+            public string color;
+        }
+
+        private readonly Dictionary<string, VehicleInstance> spawnedVehicles = new();
+        private readonly HashSet<string> warnedBlueprints = new(System.StringComparer.Ordinal);
+        private readonly HashSet<string> missingFallbackBlueprints = new(System.StringComparer.Ordinal);
+        private TrafficMaterialCache materials;
+        private TrafficReceiver subscribedReceiver;
+        private bool warnedCatalog;
 
         void Awake()
         {
@@ -28,43 +42,101 @@ namespace UB_MR.Redis_Networking
         {
             ResolveModule();
             ResolveMapRoot();
-            receiver.OnSpawnVehicle += HandleSpawn;
-            receiver.OnVehicleUpdate += HandleUpdate;
-            receiver.OnDespawnVehicle += HandleDespawn;
+            if (receiver == null)
+            {
+                Debug.LogError("TrafficRenderer requires a TrafficReceiver.", this);
+                return;
+            }
+            string error = "No vehicle catalog assigned.";
+            if ((vehicleCatalog == null || !vehicleCatalog.Initialize(out error)) && !warnedCatalog)
+            {
+                Debug.LogError($"TrafficRenderer: {error} Using fallback vehicles.", this);
+                warnedCatalog = true;
+            }
+            materials = new TrafficMaterialCache();
+            subscribedReceiver = receiver;
+            subscribedReceiver.OnSpawnVehicle += HandleSpawn;
+            subscribedReceiver.OnVehicleUpdate += HandleUpdate;
+            subscribedReceiver.OnDespawnVehicle += HandleDespawn;
+            foreach (var data in subscribedReceiver.KnownVehicles.Values) HandleSpawn(data);
         }
 
         void OnDisable()
         {
-            receiver.OnSpawnVehicle -= HandleSpawn;
-            receiver.OnVehicleUpdate -= HandleUpdate;
-            receiver.OnDespawnVehicle -= HandleDespawn;
+            if (subscribedReceiver != null)
+            {
+                subscribedReceiver.OnSpawnVehicle -= HandleSpawn;
+                subscribedReceiver.OnVehicleUpdate -= HandleUpdate;
+                subscribedReceiver.OnDespawnVehicle -= HandleDespawn;
+            }
+            subscribedReceiver = null;
+            foreach (var instance in spawnedVehicles.Values) DestroyInstance(instance);
+            spawnedVehicles.Clear();
+            materials?.Dispose();
+            materials = null;
         }
 
         private void HandleSpawn(TrafficReceiver.VehicleData data)
         {
-            if (spawnedVehicles.ContainsKey(data.id)) return;
-
-            GameObject go = Instantiate(vehiclePrefab);
-            go.name = $"Vehicle_{data.id}";
-
-            ApplyPose(go.transform, data);
-
-            spawnedVehicles[data.id] = go;
+            if (data == null || string.IsNullOrEmpty(data.id) || data.location == null) return;
+            if (spawnedVehicles.ContainsKey(data.id)) { HandleUpdate(data); return; }
+            bool mapped = vehicleCatalog != null && vehicleCatalog.TryResolve(data.blueprint, out _);
+            GameObject prefab = vehiclePrefab;
+            if (mapped) vehicleCatalog.TryResolve(data.blueprint, out prefab);
+            else
+            {
+                string key = data.blueprint ?? "";
+                if (warnedBlueprints.Add(key))
+                    Debug.LogWarning($"TrafficRenderer: unmapped blueprint '{key}'; using fallback.", this);
+                if (prefab == null && missingFallbackBlueprints.Add(key))
+                    Debug.LogError($"TrafficRenderer: no fallback for '{key}'; actor skipped.", this);
+            }
+            if (prefab == null) return;
+            var instance = new VehicleInstance
+            {
+                root = Instantiate(prefab), blueprint = data.blueprint, color = data.color
+            };
+            instance.root.name = $"Vehicle_{data.id}";
+            // Fallback appearance remains authored, even if it has paint bindings.
+            if (mapped) instance.appearance = instance.root.GetComponent<TrafficVehicleAppearance>();
+            instance.appearance?.ApplyColor(data.color, materials);
+            ApplyPose(instance.root.transform, data);
+            spawnedVehicles.Add(data.id, instance);
         }
 
         private void HandleUpdate(TrafficReceiver.VehicleData data)
         {
-            if (!spawnedVehicles.TryGetValue(data.id, out GameObject go)) return;
-
-            ApplyPose(go.transform, data);
+            if (data == null || string.IsNullOrEmpty(data.id) || data.location == null) return;
+            if (!spawnedVehicles.TryGetValue(data.id, out var instance)) { HandleSpawn(data); return; }
+            if (instance.root == null || instance.blueprint != data.blueprint)
+            {
+                DestroyInstance(instance);
+                spawnedVehicles.Remove(data.id);
+                HandleSpawn(data);
+                return;
+            }
+            if (instance.color != data.color)
+            {
+                instance.appearance?.ApplyColor(data.color, materials);
+                instance.color = data.color;
+            }
+            ApplyPose(instance.root.transform, data);
         }
 
         private void HandleDespawn(TrafficReceiver.VehicleData data)
         {
-            if (!spawnedVehicles.TryGetValue(data.id, out GameObject go)) return;
-
-            Destroy(go);
+            if (data == null || string.IsNullOrEmpty(data.id)
+                || !spawnedVehicles.TryGetValue(data.id, out var instance)) return;
+            DestroyInstance(instance);
             spawnedVehicles.Remove(data.id);
+        }
+
+        private static void DestroyInstance(VehicleInstance instance)
+        {
+            if (instance.root == null) return;
+            instance.root.SetActive(false);
+            instance.appearance?.ReleaseColor();
+            TrafficMaterialCache.DestroyOwned(instance.root);
         }
 
         private void ApplyPose(Transform vehicleTransform, TrafficReceiver.VehicleData data)
