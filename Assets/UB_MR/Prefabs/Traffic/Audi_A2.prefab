@@ -47,7 +47,7 @@ MonoBehaviour:
   m_SDF: {fileID: 8400000, guid: dceac4f82b7d2ff169ffeebff9223c19, type: 2}
   m_Size: {x: 2.1, y: 2.4, z: 4.5}
   m_Resolution: 8
---- !u!1001 &1270804543206122708
+--- !u!1001 &127992978601074693
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -55,59 +55,59 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1937251246655193975}
     m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
       propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
+    - target: {fileID: 919132149155446097, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
       propertyPath: m_Name
-      value: Mustang_Textured
+      value: Audi_A2_Textured
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
---- !u!4 &1596654172793307967 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
+--- !u!4 &453739392960268270 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fd0e1da8b9ce3d7679340d195cbce310, type: 3}
-  m_PrefabInstance: {fileID: 1270804543206122708}
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7562c76f821d0059ba33581f451f7c92, type: 3}
+  m_PrefabInstance: {fileID: 127992978601074693}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2119162169041724572
 PrefabInstance:
@@ -171,7 +171,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_Name
-      value: Mustang_2012
+      value: Audi_A2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       propertyPath: m_IsActive
@@ -195,10 +195,10 @@ PrefabInstance:
       addedObject: {fileID: 5196650727457372808}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1596654172793307967}
+      addedObject: {fileID: 453739392960268270}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5130360687456781245}
+      addedObject: {fileID: 7366352958299749152}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
       insertIndex: -1
@@ -226,7 +226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sdfTextureSize: {x: 2.1, y: 2.4, z: 4.5}
   sdfTextureResolution: 8
-  meshToSDF: {fileID: 793152535904693506}
+  meshToSDF: {fileID: 306164793861607276}
   boundingBox: {fileID: 4197958898756739000}
   classification: 1
 --- !u!65 &4197958898756739000
@@ -248,14 +248,14 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 1.4477568, z: 4.8172474}
-  m_Center: {x: 0, y: 0.73003566, z: 0.034217834}
+  m_Size: {x: 1.8241482, y: 1.5254486, z: 3.7715538}
+  m_Center: {x: -0.0019585788, y: 0.7872757, z: -0.00002348423}
 --- !u!4 &1937251246655193975 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9700e72a4a2d92e54a32cf0457510083, type: 3}
   m_PrefabInstance: {fileID: 2119162169041724572}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &4663489098462323798
+--- !u!1001 &7039182850333596875
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -263,79 +263,79 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1937251246655193975}
     m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.15
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.7071068
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: -7511558181221131132, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - target: {fileID: 919132149155446097, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       propertyPath: m_Name
-      value: Mustang_SDF_Proxy
+      value: Audi_A2_SDF_Proxy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1518b62bce2987920a65444dc048e546, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 793152535904693506}
-  m_SourcePrefab: {fileID: 100100000, guid: 1518b62bce2987920a65444dc048e546, type: 3}
---- !u!4 &5130360687456781245 stripped
+      addedObject: {fileID: 306164793861607276}
+  m_SourcePrefab: {fileID: 100100000, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
+--- !u!4 &7366352958299749152 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1518b62bce2987920a65444dc048e546, type: 3}
-  m_PrefabInstance: {fileID: 4663489098462323798}
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
+  m_PrefabInstance: {fileID: 7039182850333596875}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5510544958526707975 stripped
+--- !u!1 &7886183723004780954 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1518b62bce2987920a65444dc048e546, type: 3}
-  m_PrefabInstance: {fileID: 4663489098462323798}
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2c1d478c646cd2d02b18ee0194e08e89, type: 3}
+  m_PrefabInstance: {fileID: 7039182850333596875}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &793152535904693506
+--- !u!114 &306164793861607276
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5510544958526707975}
+  m_GameObject: {fileID: 7886183723004780954}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7f34bde58152514d8cf7e7b2e7cc7dc, type: 3}
@@ -344,7 +344,7 @@ MonoBehaviour:
   m_SDFTexture: {fileID: 7797445865173229647}
   m_FloodMode: 0
   m_FloodFillQuality: 0
-  m_FloodFillIterations: 5
+  m_FloodFillIterations: 0
   m_DistanceMode: 0
   m_Offset: 0
   m_UpdateMode: 0

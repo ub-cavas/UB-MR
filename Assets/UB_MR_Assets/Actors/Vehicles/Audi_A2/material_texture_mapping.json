@@ -1,0 +1,84 @@
+{
+  "plasticgrey_Inst": [],
+  "AudiA2_LightFrontMat": [
+    {
+      "texture": "Vh_Car_AudiA2_LightFrontMat_BaseColor.tga",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Vh_Car_AudiA2_LightFrontMat_Normal.tga",
+      "connections": [
+        "Color"
+      ]
+    }
+  ],
+  "GlassInstance": [],
+  "Vh_Car_AudiA2_LightBackMat_BaseColor_Mat": [
+    {
+      "texture": "Vh_Car_AudiA2_LightBackMat_BaseColor.tga",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Vh_Car_AudiA2_LightBackMat_Normal.tga",
+      "connections": [
+        "Color"
+      ]
+    }
+  ],
+  "MI_BodyWStaticMesh2": [
+    {
+      "texture": "Vh_Car_AudiA2_BodyworkMat_BaseColor.tga",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Vh_Car_AudiA2_BodyworkMat_Normal.tga",
+      "connections": [
+        "Color"
+      ]
+    }
+  ],
+  "BrushedAluminiumBlack": [],
+  "PolishedAluminiumWhite": [],
+  "Fbx Default Material 7": [],
+  "plastiCbLACK": [],
+  "plasticgrey": [],
+  "M_Aluminium": [],
+  "MI_ClothCointainer": [],
+  "Fbx Default Material 12": [],
+  "MI_LicensePLate": [
+    {
+      "texture": "LicensePlateMat_BaseColor.tga",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "LicensePlateMat_Notmal.tga",
+      "connections": [
+        "Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 14": [],
+  "Vh_Car_AudiA2_CoverWheelMat_BaseColor_Mat": [
+    {
+      "texture": "Vh_Car_AudiA2_CoverWheelMat_BaseColor.tga",
+      "connections": [
+        "Base Color"
+      ]
+    },
+    {
+      "texture": "Vh_Car_AudiA2_CoverWheelMat_Normal.tga",
+      "connections": [
+        "Color"
+      ]
+    }
+  ],
+  "Rubber": []
+}
