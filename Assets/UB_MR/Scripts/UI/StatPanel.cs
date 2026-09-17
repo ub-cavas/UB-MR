@@ -15,14 +15,14 @@ namespace CAVAS.UB_MR.UI
     public sealed class StatPanel : MonoBehaviour
     {
         const float Width = 384, CardWidth = 348, HeaderHeight = 64;
-        static readonly Color Ink = new(.91f, .95f, .98f);
-        static readonly Color Muted = new(.57f, .65f, .73f);
-        static readonly Color OwnColor = new(.30f, .82f, .94f);
-        static readonly Color OtherColor = new(.94f, .70f, .37f);
-        static readonly Color LidarColor = new(.72f, .65f, .98f);
-        static readonly Color NetworkColor = new(.42f, .84f, .69f);
-        static readonly Color CardColor = new(.065f, .085f, .115f, .98f);
-        static readonly Color LineColor = new(.15f, .19f, .24f);
+        static readonly Color Ink = HudTheme.Ink;
+        static readonly Color Muted = HudTheme.Muted;
+        static readonly Color OwnColor = HudTheme.Cyan;
+        static readonly Color OtherColor = HudTheme.Amber;
+        static readonly Color LidarColor = HudTheme.Purple;
+        static readonly Color NetworkColor = HudTheme.Mint;
+        static readonly Color CardColor = HudTheme.Card;
+        static readonly Color LineColor = HudTheme.Line;
         readonly List<TextMeshProUGUI> labels = new();
         readonly List<Image> shapes = new();
         ResourceTelemetry telemetry;
@@ -54,9 +54,7 @@ namespace CAVAS.UB_MR.UI
             bool linux = Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxEditor;
             gpu = new GpuMonitor(provider ?? new NvidiaSmiProvider(linux, telemetry.Clock), telemetry.Clock);
             canvas = GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = 100;
-            var scaler = GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1280, 720); scaler.matchWidthOrHeight = 1;
+            HudTheme.ScaleCanvas(canvas);
             if (FindFirstObjectByType<EventSystem>() == null)
             {
                 var events = new GameObject("Resource HUD Events", typeof(EventSystem), typeof(InputSystemUIInputModule));
@@ -66,14 +64,10 @@ namespace CAVAS.UB_MR.UI
             panel = Rect("Panel", transform);
             panel.anchorMin = panel.anchorMax = panel.pivot = Vector2.one;
             panel.anchoredPosition = new Vector2(-18, -18);
-            var background = panel.gameObject.AddComponent<Image>(); background.color = new Color(.035f, .047f, .065f, .97f);
-            var shadow = panel.gameObject.AddComponent<Shadow>();
-            shadow.effectColor = new Color(0, 0, 0, .30f); shadow.effectDistance = new Vector2(3, -4);
-            var border = panel.gameObject.AddComponent<Outline>();
-            border.effectColor = new Color(.55f, .68f, .8f, .12f); border.effectDistance = Vector2.one;
+            HudTheme.Frame(panel);
 
             header = Rect("Resources", panel); Place(header, 0, 0, Width, HeaderHeight);
-            var buttonImage = header.gameObject.AddComponent<Image>(); buttonImage.color = new Color(.06f, .082f, .11f);
+            var buttonImage = header.gameObject.AddComponent<Image>(); buttonImage.color = HudTheme.Header;
             var button = header.gameObject.AddComponent<Button>(); button.targetGraphic = buttonImage;
             var colors = button.colors;
             colors.highlightedColor = new Color(1.15f, 1.15f, 1.15f); colors.pressedColor = new Color(.85f, .85f, .85f);

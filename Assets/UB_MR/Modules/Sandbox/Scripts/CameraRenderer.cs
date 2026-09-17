@@ -1,4 +1,5 @@
 using System;
+using CAVAS.UB_MR.UI;
 using UnityEngine;
 using UnityEngine.UI;
 using sensor_msgs.msg;
@@ -13,6 +14,7 @@ namespace CAVAS.UB_MR.Modules.Sandbox
 
         void Start()
         {
+            CameraPreviewPanel.Attach(rawImage);
             // Flip RawImage to cleanly display a ROSImage 
             rawImage.uvRect = new Rect(0, 1, 1, -1);
         }
