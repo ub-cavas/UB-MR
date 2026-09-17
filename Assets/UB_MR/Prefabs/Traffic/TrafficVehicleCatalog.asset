@@ -77,3 +77,21 @@ MonoBehaviour:
     prefab: {fileID: 8220482101788057368, guid: 13bedb75577a8c5adb34e1f96342f9c5, type: 3}
   - blueprintId: vehicle.volkswagen.t2_2021
     prefab: {fileID: 6957606517802956463, guid: c5a8fee7cc79964edb83ef602285062d, type: 3}
+  - blueprintId: vehicle.audi.tt
+    prefab: {fileID: 2536239394073276400, guid: 54e6bbaf3efc1530ea9e22729efe79bd, type: 3}
+  - blueprintId: vehicle.bmw.grandtourer
+    prefab: {fileID: 4739866680788683992, guid: 0bf14d0dac0da4c029abaa3ee087a7c0, type: 3}
+  - blueprintId: vehicle.micro.microlino
+    prefab: {fileID: 7495590709724093592, guid: e0e1c48a01fdbbbdab2c1fca926b834a, type: 3}
+  - blueprintId: vehicle.seat.leon
+    prefab: {fileID: 7853179750232036924, guid: 7d7b4ff35aa0e3f4597e485f2abe6275, type: 3}
+  - blueprintId: vehicle.mini.cooper_s
+    prefab: {fileID: 2211387975500448720, guid: acff2c4aa1e82fcdaa14087ec99b16fb, type: 3}
+  - blueprintId: vehicle.mercedes.coupe
+    prefab: {fileID: 2182097153167111637, guid: 653c72d8acca74f249860c9adf519a5c, type: 3}
+  - blueprintId: vehicle.nissan.patrol
+    prefab: {fileID: 1277396971880578702, guid: 7715ec7c460b827ceb37b931928df890, type: 3}
+  - blueprintId: vehicle.kawasaki.ninja
+    prefab: {fileID: 4928765649624104953, guid: caf4a125ce152be4d8384b78cde601b4, type: 3}
+  - blueprintId: vehicle.yamaha.yzf
+    prefab: {fileID: 2910543147813537381, guid: 95d0a373a8f07b768a3b2a76c2480630, type: 3}

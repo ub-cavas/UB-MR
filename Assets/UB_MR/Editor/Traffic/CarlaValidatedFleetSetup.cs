@@ -17,15 +17,50 @@ namespace UB_MR.Redis_Networking.Editor
         public const string Prefabs = "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated";
 
         [MenuItem("UB-MR/Traffic/Rebuild validated CARLA fleet")]
-        public static void Build()
+        public static void Build() => Build(false);
+
+        [MenuItem("UB-MR/Traffic/Import only new validated CARLA vehicles")]
+        public static void ImportNew() => Build(true);
+
+        public static void ImportNewBatch()
+        {
+            try { ImportNew(); EditorApplication.Exit(0); }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+
+        private static void Build(bool onlyNew)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Stop Play mode before rebuilding traffic assets.");
             var fleet = JArray.Parse(File.ReadAllText(Assets + "/fleet.json"));
+            var catalog = AssetDatabase.LoadAssetAtPath<TrafficVehicleCatalog>(TrafficVehicleCatalogValidator.CatalogPath);
+            if (catalog == null) throw new InvalidOperationException("Missing traffic catalog.");
+            if (!catalog.Validate(out string catalogError)) throw new InvalidOperationException(catalogError);
+            if (onlyNew)
+            {
+                var existingIds = new HashSet<string>(catalog.Entries.Select(e => e.blueprintId), StringComparer.Ordinal);
+                fleet = new JArray(fleet.Where(s => RegistersInCatalog(s)
+                    ? !existingIds.Contains((string)s["blueprintId"])
+                    : !File.Exists(Prefabs + "/" + s["name"] + ".prefab")));
+                // Preflight every destination before modifying any model importer or material.
+                var ids = new HashSet<string>(StringComparer.Ordinal);
+                var names = new HashSet<string>(StringComparer.Ordinal);
+                var folders = new HashSet<string>(StringComparer.Ordinal);
+                foreach (var spec in fleet)
+                {
+                    string path = Prefabs + "/" + spec["name"] + ".prefab";
+                    if ((RegistersInCatalog(spec) && !ids.Add((string)spec["blueprintId"])) || !names.Add((string)spec["name"])
+                        || !folders.Add((string)spec["folder"]) || File.Exists(path)
+                        || Directory.Exists(Assets + "/" + spec["folder"] + "/Materials"))
+                        throw new InvalidOperationException("New vehicle conflicts with existing generated assets: " + path);
+                }
+                if (fleet.Count == 0) { Debug.Log("No new CARLA vehicles to import; existing assets unchanged."); return; }
+            }
             Directory.CreateDirectory(Prefabs);
             AssetDatabase.Refresh();
             var registrations = new List<(string id, GameObject prefab)>();
-            var report = new JArray();
+            var report = onlyNew && File.Exists(Assets + "/import_report.json")
+                ? JArray.Parse(File.ReadAllText(Assets + "/import_report.json")) : new JArray();
             foreach (JObject spec in fleet)
             {
                 string folder = (string)spec["folder"];
@@ -38,9 +73,9 @@ namespace UB_MR.Redis_Networking.Editor
                 GameObject prefab = BuildPrefab(spec, directory, visualPath, proxyPath, materials);
                 var errors = TrafficVehicleCatalogValidator.ValidatePrefab(prefab);
                 if (errors.Count != 0) throw new InvalidOperationException(folder + ": " + string.Join("; ", errors));
-                registrations.Add(((string)spec["blueprintId"], prefab));
+                if (RegistersInCatalog(spec)) registrations.Add(((string)spec["blueprintId"], prefab));
                 var box = prefab.GetComponent<BoxCollider>();
-                report.Add(new JObject
+                var result = new JObject
                 {
                     ["blueprintId"] = (string)spec["blueprintId"],
                     ["prefab"] = AssetDatabase.GetAssetPath(prefab),
@@ -48,12 +83,12 @@ namespace UB_MR.Redis_Networking.Editor
                     ["size_m"] = new JArray(box.size.x, box.size.y, box.size.z),
                     ["paintBindings"] = prefab.GetComponent<TrafficVehicleAppearance>().PaintBindings.Count,
                     ["validation"] = "passed"
-                });
+                };
+                if (!RegistersInCatalog(spec)) result["registerInCatalog"] = false;
+                report.Add(result);
                 Debug.Log("CARLA fleet built: " + spec["blueprintId"]);
             }
             // Only switch the live catalog after every generated prefab has passed validation.
-            var catalog = AssetDatabase.LoadAssetAtPath<TrafficVehicleCatalog>(TrafficVehicleCatalogValidator.CatalogPath);
-            if (catalog == null) throw new InvalidOperationException("Missing traffic catalog.");
             var settings = new SerializedObject(catalog);
             var entries = settings.FindProperty("entries");
             foreach (var registration in registrations)
@@ -66,15 +101,20 @@ namespace UB_MR.Redis_Networking.Editor
                 entry.FindPropertyRelative("blueprintId").stringValue = registration.id;
                 entry.FindPropertyRelative("prefab").objectReferenceValue = registration.prefab;
             }
-            settings.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(catalog);
+            if (registrations.Count > 0)
+            {
+                settings.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(catalog);
+            }
             AssetDatabase.SaveAssets();
             if (!TrafficVehicleCatalogValidator.ValidateAll(null))
                 throw new InvalidOperationException("CARLA fleet catalog validation failed.");
             File.WriteAllText(Assets + "/import_report.json", report.ToString() + "\n");
             AssetDatabase.ImportAsset(Assets + "/import_report.json");
-            Debug.Log($"CARLA fleet import PASSED: {registrations.Count} validated traffic prefabs.");
+            Debug.Log($"CARLA fleet import PASSED: {fleet.Count} validated traffic prefabs, {registrations.Count} catalog registrations.");
         }
+
+        public static bool RegistersInCatalog(JToken spec) => (bool?)spec["registerInCatalog"] ?? true;
 
         private static void ConfigureModel(string path, bool proxy)
         {

@@ -1,0 +1,91 @@
+{
+  "Motorcycle_kawasakiNinja_KawasakiNinjaRig_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 12704,
+    "bounds": [
+      [
+        -1.0362836122512817,
+        -0.4016660749912262,
+        0.01271315012127161
+      ],
+      [
+        0.997068464756012,
+        0.4009137749671936,
+        1.158166766166687
+      ]
+    ],
+    "dimensions_m": [
+      2.0333520770072937,
+      0.8025798499584198,
+      1.1454536160454154
+    ],
+    "materials": 5,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Motorcycle_kawasakiNinja_KawasakiNinjaRig_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -1.0448700189590454,
+        -0.41345006227493286,
+        -0.00027950885123573244
+      ],
+      [
+        1.009189248085022,
+        0.40865185856819153,
+        1.1676154136657715
+      ]
+    ],
+    "dimensions_m": [
+      2.0540592670440674,
+      0.8221019208431244,
+      1.1678949225170072
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 0.3389184800003926,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 530,
+        "max_outside_distance_m": 0.0018689085263758898
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.012992658972507343
+  }
+}

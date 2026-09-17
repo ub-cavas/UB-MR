@@ -10,6 +10,12 @@ namespace UB_MR.Redis_Networking.Editor
 {
     public static class CarlaValidatedFleetChecks
     {
+        public static void RunBatch()
+        {
+            try { Run(); EditorApplication.Exit(0); }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+
         [MenuItem("UB-MR/Traffic/Check validated CARLA fleet GPU and previews")]
         public static void Run()
         {
@@ -23,9 +29,17 @@ namespace UB_MR.Redis_Networking.Editor
             foreach (var spec in fleet)
             {
                 string id = (string)spec["blueprintId"];
-                if (!catalog.TryResolve(id, out var prefab) || AssetDatabase.GetAssetPath(prefab) !=
-                    CarlaValidatedFleetSetup.Prefabs + "/" + spec["name"] + ".prefab")
-                    throw new InvalidOperationException("Catalog resolves incorrect model: " + id);
+                string prefabPath = CarlaValidatedFleetSetup.Prefabs + "/" + spec["name"] + ".prefab";
+                GameObject prefab;
+                if (CarlaValidatedFleetSetup.RegistersInCatalog(spec))
+                {
+                    if (!catalog.TryResolve(id, out prefab) || AssetDatabase.GetAssetPath(prefab) != prefabPath)
+                        throw new InvalidOperationException("Catalog resolves incorrect model: " + id);
+                }
+                else prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+                if (prefab == null) throw new InvalidOperationException("Missing fleet prefab: " + prefabPath);
+                var errors = TrafficVehicleCatalogValidator.ValidatePrefab(prefab);
+                if (errors.Count != 0) throw new InvalidOperationException(prefabPath + ": " + string.Join("; ", errors));
                 var preview = new PreviewRenderUtility();
                 RenderTexture sdf = null;
                 try
@@ -94,8 +108,10 @@ namespace UB_MR.Redis_Networking.Editor
                         File.WriteAllBytes(output + "/" + spec["name"] + ".png", image.EncodeToPNG());
                     }
                     finally { UnityEngine.Object.DestroyImmediate(image); }
-                    report.Add(new JObject { ["blueprintId"] = id, ["sdfMin"] = min, ["sdfMax"] = max,
-                        ["paint"] = "passed", ["gpu"] = "passed", ["preview"] = (string)spec["name"] + ".png" });
+                    var result = new JObject { ["blueprintId"] = id, ["sdfMin"] = min, ["sdfMax"] = max,
+                        ["paint"] = "passed", ["gpu"] = "passed", ["preview"] = (string)spec["name"] + ".png" };
+                    if (!CarlaValidatedFleetSetup.RegistersInCatalog(spec)) result["registerInCatalog"] = false;
+                    report.Add(result);
                     Debug.Log("CARLA GPU/paint/preview passed: " + id);
                 }
                 finally

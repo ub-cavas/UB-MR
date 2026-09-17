@@ -1,0 +1,14 @@
+{
+  "vehicle": {
+    "id": "Motorcycle_Yamaha_SM_Yamaha_v1",
+    "name": "SM_Yamaha_v1",
+    "path": "/Game/Carla/Static/Motorcycle/Yamaha/SM_Yamaha_v1.SM_Yamaha_v1",
+    "category": "Motorcycle"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Motorcycle/Yamaha/SM_Yamaha_v1.SM_Yamaha_v1",
+    "blueprint": null,
+    "components": []
+  },
+  "assembly_type": "skeletal_body"
+}

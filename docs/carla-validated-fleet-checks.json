@@ -254,5 +254,86 @@
     "paint": "passed",
     "gpu": "passed",
     "preview": "Volkswagen_T2_2021.png"
+  },
+  {
+    "blueprintId": "vehicle.audi.tt",
+    "sdfMin": -0.5444336,
+    "sdfMax": 1.54003906,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Audi_TT.png"
+  },
+  {
+    "blueprintId": "vehicle.bmw.grandtourer",
+    "sdfMin": -0.6538086,
+    "sdfMax": 1.78515625,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "BMW_GrandTourer.png"
+  },
+  {
+    "blueprintId": "vehicle.micro.microlino",
+    "sdfMin": -0.4453125,
+    "sdfMax": 0.9609375,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Microlino.png"
+  },
+  {
+    "blueprintId": "vehicle.seat.leon",
+    "sdfMin": -0.5336914,
+    "sdfMax": 1.33398438,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "SEAT_Leon.png"
+  },
+  {
+    "blueprintId": "vehicle.mini.cooper_s",
+    "sdfMin": -0.5698242,
+    "sdfMax": 1.45898438,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Mini_Cooper_S.png"
+  },
+  {
+    "blueprintId": "vehicle.mercedes.coupe",
+    "sdfMin": -0.6113281,
+    "sdfMax": 1.41210938,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Mercedes_Coupe.png"
+  },
+  {
+    "blueprintId": "vehicle.nissan.patrol",
+    "sdfMin": -0.55859375,
+    "sdfMax": 1.35449219,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Nissan_Patrol.png"
+  },
+  {
+    "blueprintId": "vehicle.kawasaki.ninja",
+    "sdfMin": -0.146484375,
+    "sdfMax": 0.5786133,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Kawasaki_Ninja.png"
+  },
+  {
+    "blueprintId": "vehicle.yamaha.yzf",
+    "sdfMin": -0.0824584961,
+    "sdfMax": 0.717285156,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "Yamaha_YZF.png"
+  },
+  {
+    "blueprintId": "vehicle.carlamotors.carlacola",
+    "sdfMin": -0.870605469,
+    "sdfMax": 1.38085938,
+    "paint": "passed",
+    "gpu": "passed",
+    "preview": "CarlaCola_Truck_Alternate.png",
+    "registerInCatalog": false
   }
 ]

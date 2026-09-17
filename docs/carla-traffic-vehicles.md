@@ -2,11 +2,13 @@
 
 UB-MR resolves the `blueprint` in each traffic snapshot through
 `Assets/UB_MR/Prefabs/Traffic/TrafficVehicleCatalog.asset`. The catalog now registers
-32 validated CARLA vehicles: 19 cars, seven trucks/vans, one bus, two motorcycles,
+41 validated CARLA vehicles: 26 cars, seven trucks/vans, one bus, four motorcycles,
 and three bicycles. Unmapped blueprints use the scene's existing Jeep fallback and
 log one warning per blueprint. The Renegade is not registered as a Wrangler; the
 fleet includes the actual CARLA Wrangler Rubicon. Imported source meshes alone
 do not register a vehicle.
+There are 42 ready-to-use prefabs: the 41 catalog models plus an alternate
+CarlaCola truck with the same blueprint ID.
 
 ## Validated fleet
 
@@ -31,17 +33,42 @@ Unreal shaders remain an approximation: paint color tints body textures, includi
 any markings within those slots; it does not reproduce Unreal's layered paint
 masks. Separate trim, tire, glass, and interior slots are not paint-bound.
 
-Use **UB-MR > Traffic > Rebuild validated CARLA fleet** to regenerate the 32
+Use **UB-MR > Traffic > Import only new validated CARLA vehicles** after adding
+source folders and their reviewed entries to `fleet.json`. This skips blueprint IDs
+already registered in the catalog, refuses conflicting prefab/material destinations,
+and appends new registrations and import results. Running it again is a no-op.
+`CarlaValidatedFleetSetup.ImportNewBatch` exposes the same operation for batch use.
+Manifest entries with `registerInCatalog: false` are standalone alternatives:
+the importer checks their prefab path instead of the shared blueprint ID, and
+never changes the catalog mapping for them.
+
+The September 17 additions are Audi TT, BMW Grand Tourer, Microlino (the source
+folder is named BMW Isetta), SEAT Leon, Mini Cooper S, Mercedes Coupe, Nissan
+Patrol, Kawasaki Ninja, and Yamaha YZF. The `Truck_CarlaCola_SK_CarlaCola` export
+is also imported as `CarlaCola_Truck_Alternate.prefab`, with truck classification,
+body-paint bindings, trigger bounds, and a readable SDF proxy. It is available for
+manual placement or explicit selection in the catalog. Automatic traffic still
+maps `vehicle.carlamotors.carlacola` to the original `CarlaCola_Truck.prefab`.
+Existing vehicle assets and registrations were preserved.
+See the [alternate CarlaCola preview](carlacola-alternate.png).
+
+Use **UB-MR > Traffic > Rebuild validated CARLA fleet** to regenerate all 42
 prefabs/materials and update their catalog registrations. This overwrites generated
 assets; put repeatable material corrections in `fleet.json`. The operation does
 not save or replace the open scene. `import_report.json` records dimensions,
 classifications, paint-binding counts, and structural validation results.
 
 Use **UB-MR > Traffic > Check validated CARLA fleet GPU and previews** with a
-graphics-capable editor to check all 32 catalog resolutions, bake and read back
+graphics-capable editor to check all 41 catalog resolutions and the alternate prefab, bake and read back
 each SDF, verify finite positive/negative distances, apply/release body paint, and
-render previews. Outputs go to `Library/CarlaFleetChecks/`. All 32 passed these
-checks during import. These editor checks do not replace live CARLA pivot checks
+render previews. Outputs go to `Library/CarlaFleetChecks/`.
+`CarlaValidatedFleetChecks.RunBatch` runs these checks and exits with their result.
+All 42 passed GPU SDF, paint restoration, and preview checks after the September 17
+additions. For the first nine additions, SHA-256 checks confirmed that all 3,426 pre-existing vehicle files outside
+the shared manifest, import report, and catalog were unchanged; the original catalog
+and manifest entries were also preserved. A repeated incremental import left all
+4,141 checked source, material, prefab, catalog, and metadata files unchanged.
+These editor checks do not replace live CARLA pivot checks
 or a standalone player test. The fleet is static reference-pose geometry.
 
 The imported fleet is shown in [the preview sheet](carla-validated-fleet.png).

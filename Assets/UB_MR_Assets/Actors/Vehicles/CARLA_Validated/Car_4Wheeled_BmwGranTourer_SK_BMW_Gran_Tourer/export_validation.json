@@ -1,0 +1,91 @@
+{
+  "Car_4Wheeled_BmwGranTourer_SK_BMW_Gran_Tourer_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 27071,
+    "bounds": [
+      [
+        -2.3055028915405273,
+        -1.1203234195709229,
+        -0.06853408366441727
+      ],
+      [
+        2.3055028915405273,
+        1.1213898658752441,
+        1.598741888999939
+      ]
+    ],
+    "dimensions_m": [
+      4.611005783081055,
+      2.241713285446167,
+      1.6672759726643562
+    ],
+    "materials": 17,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_BmwGranTourer_SK_BMW_Gran_Tourer_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.3313746452331543,
+        -1.1448941230773926,
+        -0.09454499930143356
+      ],
+      [
+        2.330476760864258,
+        1.136983036994934,
+        1.6322612762451172
+      ]
+    ],
+    "dimensions_m": [
+      4.661851406097412,
+      2.2818771600723267,
+      1.7268062755465508
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 9.930889940302574,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 521,
+        "max_outside_distance_m": 0.0
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.03351938724517822
+  }
+}

@@ -382,5 +382,126 @@
     ],
     "paintBindings": 3,
     "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.audi.tt",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Audi_TT.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.994118,
+      1.38529611,
+      4.18121147
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.bmw.grandtourer",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/BMW_GrandTourer.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.241714,
+      1.66727591,
+      4.61100674
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.micro.microlino",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Microlino.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.48092031,
+      1.37602472,
+      2.20729542
+    ],
+    "paintBindings": 2,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.seat.leon",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/SEAT_Leon.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.81618667,
+      1.47383118,
+      4.192831
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.mini.cooper_s",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Mini_Cooper_S.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.97027636,
+      1.47503018,
+      3.805801
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.mercedes.coupe",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Mercedes_Coupe.prefab",
+    "classification": "Car",
+    "size_m": [
+      2.151547,
+      1.65065169,
+      5.02677727
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.nissan.patrol",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Nissan_Patrol.prefab",
+    "classification": "Car",
+    "size_m": [
+      1.93159389,
+      1.85484624,
+      4.60451031
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.kawasaki.ninja",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Kawasaki_Ninja.prefab",
+    "classification": "Motorcycle",
+    "size_m": [
+      0.802580237,
+      1.14545357,
+      2.03335238
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.yamaha.yzf",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/Yamaha_YZF.prefab",
+    "classification": "Motorcycle",
+    "size_m": [
+      0.867034554,
+      1.25114548,
+      2.20944643
+    ],
+    "paintBindings": 1,
+    "validation": "passed"
+  },
+  {
+    "blueprintId": "vehicle.carlamotors.carlacola",
+    "prefab": "Assets/UB_MR/Prefabs/Traffic/CARLA_Validated/CarlaCola_Truck_Alternate.prefab",
+    "classification": "Truck",
+    "size_m": [
+      2.62699056,
+      2.46744466,
+      5.2038393
+    ],
+    "paintBindings": 2,
+    "validation": "passed",
+    "registerInCatalog": false
   }
 ]

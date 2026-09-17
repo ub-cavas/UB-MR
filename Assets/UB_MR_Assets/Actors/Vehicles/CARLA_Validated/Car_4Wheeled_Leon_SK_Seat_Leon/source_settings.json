@@ -1,0 +1,15 @@
+{
+  "voxel_resolution": 384,
+  "closing_radius": 3,
+  "target_triangles": 8000,
+  "surface_padding_voxels": 1,
+  "solidify_vertical_columns": false,
+  "solidify_axis_intersection": true,
+  "smoothing_iterations": 30,
+  "panel_fit_materials": [
+    "MI_BodyWStaticMesh7",
+    "GlassInstance"
+  ],
+  "panel_fit_cabin_min_z_m": 0.92,
+  "panel_fit_max_distance_m": 0.15
+}

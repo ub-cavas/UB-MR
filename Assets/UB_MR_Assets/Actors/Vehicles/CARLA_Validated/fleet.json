@@ -348,5 +348,137 @@
     "paintMaterials": [
       "MI_BodyWork_T2_2021"
     ]
+  },
+  {
+    "folder": "Car_4Wheeled_AudiTT_SM_AudiTT_v1",
+    "name": "Audi_TT",
+    "blueprintId": "vehicle.audi.tt",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_Bodywork_AudiTT"
+    ],
+    "baseColorOverrides": {
+      "MI_Bodywork_AudiTT": null
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_BmwGranTourer_SK_BMW_Gran_Tourer",
+    "name": "BMW_GrandTourer",
+    "blueprintId": "vehicle.bmw.grandtourer",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWStaticMesh3"
+    ],
+    "baseColorOverrides": {
+      "Vh_Car_BmwGranTourer_TyreMat": "Vh_Car_BmwGranTourer_TyreMat_BaseColor_3ee88ae7.tga",
+      "Vh_Car_BmwGranTourer_GrillMat": "Vh_Car_BmwGranTourer_GrillMat_BaseColor_6a38d73a.tga",
+      "MI_BodyWStaticMesh3": "BmwGranTourer_BodyworkMat_D_9566e897.tga",
+      "BMWLogo": "BMW_logo_e766ed63.tga"
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_BmwIsetta_SK_BMW_Isetta",
+    "name": "Microlino",
+    "blueprintId": "vehicle.micro.microlino",
+    "classification": "Car",
+    "paintMaterials": [
+      "White",
+      "Skyblue"
+    ]
+  },
+  {
+    "folder": "Car_4Wheeled_Leon_SK_Seat_Leon",
+    "name": "SEAT_Leon",
+    "blueprintId": "vehicle.seat.leon",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWStaticMesh7"
+    ],
+    "baseColorOverrides": {
+      "MI_BodyWStaticMesh7": null,
+      "Vh_Car_SeatLeon_LightFrontMat_BaseColor_Mat": "Vh_Car_SeatLeon_LightFrontMat_BaseColor_1f07e02d.tga",
+      "Vh_Car_SeatLeon_LightBackMat_BaseColor_Mat": "Vh_Car_SeatLeon_LightBackMat_BaseColor_bc60c98f.tga",
+      "Vh_Car_SeatLeon_GrillMat_BaseColor_Mat": "Vh_Car_SeatLeon_GrillMat_BaseColor_baaea6b4.tga",
+      "Vh_Car_SeatLeon_CoverWheelMat_BaseColor_Mat": "Vh_Car_SeatLeon_CoverWheelMat_BaseColor_8c77d331.tga"
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_MIni_SK_Mini_CooperS",
+    "name": "Mini_Cooper_S",
+    "blueprintId": "vehicle.mini.cooper_s",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWStaticMesh7"
+    ],
+    "baseColorOverrides": {
+      "MI_BodyWStaticMesh7": null,
+      "Vh_Car_MiniCooperS_LightBackMat_BaseColor_Mat": "Vh_Car_MiniCooperS_LightBackMat_BaseColor_5b2de2ab.tga",
+      "Vh_Car_MiniCooperS_CoverWheelMat_BaseColor_Mat": "Vh_Car_MiniCooperS_CoverWheelMat_BaseColor_ee592dd0.tga",
+      "Vh_Car_MiniCooperS_MiniMat_Mat": "Vh_Car_MiniCooperS_MiniMat_61c000c5.tga",
+      "Vh_Car_Lights_Normal_Mat": "Vh_Car_Lights_BaseColor_d2ebc91b.tga"
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_Mercedes_SK_MercedesBenzCoupeC1",
+    "name": "Mercedes_Coupe",
+    "blueprintId": "vehicle.mercedes.coupe",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWStaticMesh4"
+    ],
+    "baseColorOverrides": {
+      "MI_BodyWStaticMesh4": null
+    }
+  },
+  {
+    "folder": "Car_4Wheeled_Nissan_Patrol_SK_Nissan_Patrol",
+    "name": "Nissan_Patrol",
+    "blueprintId": "vehicle.nissan.patrol",
+    "classification": "Car",
+    "paintMaterials": [
+      "MI_BodyWStaticMesh4"
+    ],
+    "baseColorOverrides": {
+      "Vh_Car_NissanPatrolST_CoverWheelMat_BaseColor_Mat": "Vh_Car_NissanPatrolST_CoverWheelMat_BaseColor_2d97e92e.tga",
+      "MI_BodyWStaticMesh4": null,
+      "Vh_Car_NissanPatrolST_LigthBackMat_BaseColor_Mat": "Vh_Car_NissanPatrolST_LigthBackMat_BaseColor_5c7d509f.tga",
+      "Vh_Car_NissanPatrolST_LigthFrontDownMat_Basecolor_Mat": "Vh_Car_NissanPatrolST_LigthFrontDownMat_Basecolor_376dbc09.tga",
+      "Vh_Car_Lights_Mat": "Vh_Car_Lights_b7b680a9.tga"
+    }
+  },
+  {
+    "folder": "Motorcycle_kawasakiNinja_KawasakiNinjaRig",
+    "name": "Kawasaki_Ninja",
+    "blueprintId": "vehicle.kawasaki.ninja",
+    "classification": "Motorcycle",
+    "paintMaterials": [
+      "KawasakiBody"
+    ]
+  },
+  {
+    "folder": "Motorcycle_Yamaha_SM_Yamaha_v1",
+    "name": "Yamaha_YZF",
+    "blueprintId": "vehicle.yamaha.yzf",
+    "classification": "Motorcycle",
+    "paintMaterials": [
+      "MI_Exterior_Yamaha"
+    ],
+    "baseColorOverrides": {
+      "MI_LightGlass_Yamaha": null
+    }
+  },
+  {
+    "folder": "Truck_CarlaCola_SK_CarlaCola",
+    "name": "CarlaCola_Truck_Alternate",
+    "blueprintId": "vehicle.carlamotors.carlacola",
+    "classification": "Truck",
+    "paintMaterials": [
+      "CarlaCola",
+      "Fbx Default Material 4"
+    ],
+    "registerInCatalog": false,
+    "baseColorOverrides": {
+      "Vh_Truck_CarlaCola_LightMat_BaseColor_Mat": "Vh_Truck_CarlaCola_LightMat_BaseColor_db686260.tga"
+    }
   }
 ]

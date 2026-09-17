@@ -1,0 +1,37 @@
+{
+  "Rubber_Inst": [],
+  "Vh_Car_BmwGranTourer_TyreMat": [],
+  "Black": [],
+  "PolishedAluminiumWhite_Inst": [],
+  "plastiCbLACK": [],
+  "Vh_Car_BmwGranTourer_GrillMat": [],
+  "GlassInstance": [],
+  "Vh_Car_BmwGrandTourier_Mat": [],
+  "MI_BodyWStaticMesh3": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "plasticgrey_Inst": [],
+  "Fbx Default Material 10": [],
+  "Fbx Default Material 11": [],
+  "Fbx Default Material 12": [],
+  "Fbx Default Material 13": [],
+  "Rubber": [],
+  "BMWLogo": [],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}
