@@ -1151,7 +1151,7 @@ MonoBehaviour:
   egoId: 
   carlaBlueprint: vehicle.lincoln.mkz_2017
   vehicleColor: 0,0,0
-  bridgeHost: 100.83.98.37
+  bridgeHost: 127.0.0.1
   bridgePort: 12346
   publishRateHz: 20
   module: {fileID: 211020087}

@@ -168,3 +168,7 @@ chmod +x UB-MR.x86_64 # give execution permissions
 ## CARLA traffic models
 
 See [CARLA traffic vehicles](docs/carla-traffic-vehicles.md) for blueprint-to-prefab registration, paint masks, perception setup, server inventory export, and validation commands.
+
+Connect traffic and ego publishing from **Main Menu → Server connection**. See
+[server connection setup](docs/server-connection.md) for localhost/Tailscale,
+authentication, and the server-side ego renderer.

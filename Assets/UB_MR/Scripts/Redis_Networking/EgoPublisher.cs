@@ -8,9 +8,9 @@ using UnityEngine;
 namespace UB_MR.Redis_Networking
 {
     /// <summary>
-    /// Publishes the physical ego vehicle (LincolnMKZ / DynamicAgent) pose over
-    /// UDP to ego_bridge.py, which relays it to Redis so render_ego.py can
-    /// render it in CARLA.
+    /// Publishes the physical ego vehicle (LincolnMKZ / DynamicAgent) through the
+    /// Main Menu's Redis connection for the server-side CARLA ego renderer.
+    /// Scene-only launches retain the UDP bridge path.
     ///
     /// The LincolnMKZ GameObject is instantiated at runtime, so the DynamicAgent
     /// is discovered by periodic scene search rather than an inspector reference.
@@ -36,9 +36,10 @@ namespace UB_MR.Redis_Networking
         [Tooltip("Vehicle color as R,G,B (0-255).")]
         [SerializeField] private string vehicleColor = "0,0,0";
 
-        [Header("Network")]
-        [SerializeField] private string bridgeHost = "100.83.98.37";
+        [Header("UDP fallback (scene-only launches)")]
+        [SerializeField] private string bridgeHost = "127.0.0.1";
         [SerializeField] private int bridgePort = 12346;
+        [Header("Publication")]
         [SerializeField] private float publishRateHz = 20f;
 
         [Header("Map frame (shared with TrafficRenderer)")]
@@ -50,6 +51,7 @@ namespace UB_MR.Redis_Networking
         private float _nextAgentSearchTime;
         private bool _hasPoseSource;
 
+        private ServerConnection serverConnection;
         private UdpClient _udpClient;
         private float _sendInterval;
         private float _nextSendTime;
@@ -64,15 +66,21 @@ namespace UB_MR.Redis_Networking
 
         void Start()
         {
-            _udpClient = new UdpClient();
+            serverConnection = ServerConnection.Instance;
+            if (serverConnection == null) _udpClient = new UdpClient();
             _sendInterval = 1f / Mathf.Max(publishRateHz, 1f);
+            if (serverConnection != null)
+            {
+                Debug.Log("[EgoPublisher] Using the Main Menu server connection.");
+                return;
+            }
             Debug.Log($"[EgoPublisher] Publishing ego '{egoId}' to {bridgeHost}:{bridgePort} at {publishRateHz} Hz " +
                       "(waiting for DynamicAgent to spawn)");
         }
 
         void LateUpdate()
         {
-            if (_udpClient == null) return;
+            if (_udpClient == null && (serverConnection == null || !serverConnection.IsConnected)) return;
             if (Time.time < _nextSendTime) return;
             _nextSendTime = Time.time + _sendInterval;
 
@@ -148,6 +156,12 @@ namespace UB_MR.Redis_Networking
                 location = new { x = location.x, y = location.y, z = location.z },
                 yaw
             };
+
+            if (serverConnection != null)
+            {
+                serverConnection.PublishEgo(payload);
+                return;
+            }
 
             try
             {
