@@ -58,7 +58,6 @@ namespace CAVAS.UB_MR
                 RefreshSDFList();
             mapPanel.SetMapPosition(map_root.position);
             mapPanel.SetMapRotation(this.currentMapRotationEuler);
-            StartCoroutine(MapUpdate());
             if (UsesLidarModification)
                 StartCoroutine(SDFListUpdate());
             
@@ -70,16 +69,16 @@ namespace CAVAS.UB_MR
             }
         }
 
-        IEnumerator MapUpdate()
+        void Update()
         {
-            while (true)
-            {
-                yield return null;
-                Vector3 mapRotationEuler = mapPanel.GetMapRotationEuler();
-                this.currentMapRotationEuler = mapRotationEuler;
-                UpdateMap(mapPanel.GetMapPosition(), Quaternion.Euler(mapRotationEuler));
-            }
-            
+            if (map_root == null || mapPanel == null)
+                return;
+
+            // Complete alignment before ego/traffic convert poses in LateUpdate.
+            Vector3 mapRotationEuler = mapPanel.GetMapRotationEuler();
+            UpdateMap(mapPanel.GetMapPosition(), Quaternion.Euler(mapRotationEuler));
+            this.currentMapRotationEuler = mapRotationEuler;
+            this.hasMapRotationState = true;
         }
 
         IEnumerator SDFListUpdate()
