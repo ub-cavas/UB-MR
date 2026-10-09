@@ -9,6 +9,7 @@ using CAVAS.UB_MR.DT.Sensors;
 using CAVAS.UB_MR.DT.Sensors.Lidar;
 using CAVAS.UB_MR.DT.Sensors.Camera;
 using System;
+using CAVAS.UB_MR.Telemetry;
 
 
 
@@ -30,6 +31,7 @@ namespace CAVAS.UB_MR.DT
         Transform spectatorCameras;
         List<Tuple<Config.Sensor, SensorModifier, Transform>> sensors = new List<Tuple<Config.Sensor, SensorModifier, Transform>>();
         HUD hud;
+        public ResourceTelemetry Telemetry { get; private set; }
         ROS2Node mNode;
         Vector3 mWorldPosition;
         Quaternion mWorldRotation = Quaternion.identity;
@@ -102,6 +104,7 @@ namespace CAVAS.UB_MR.DT
 
         public virtual void Setup(Config.Agent inAgent, Module inModule)
         {
+            Telemetry = inModule.Telemetry;
             recognition = inAgent.recognition ?? new VirtualObjectRecognitionSettings();
             if (!recognition.TryValidate(out string error))
                 throw new ArgumentException($"Invalid virtual-object recognition settings: {error}");
@@ -142,7 +145,8 @@ namespace CAVAS.UB_MR.DT
                         qosProfile.SetDurability(durabilityPolicy);
 
                         if (recognition.mode == VirtualObjectRecognitionMode.BoundingBoxInjection)
-                            sensor = new LidarPassthrough(sensor_config.topic, ROSNode(), qosProfile);
+                            sensor = new LidarPassthrough(sensor_config.topic, ROSNode(), qosProfile, Telemetry,
+                                inAgent.name + " · " + sensor_config.name);
                         else
                         {
                             var lidar = new LidarModifier(this, sensor_config.topic, raysPerScan,
@@ -178,6 +182,7 @@ namespace CAVAS.UB_MR.DT
             // HUD
             if (hud is null)
                 hud = new HUD();
+            hud.statPanel = inModule.ResourcePanel;
             hud.OnNextSpectatorCamera += NextSpectatorCamera;
             hud.OnPrevSpectatorCamera += PreviousSpectatorCamera;
         }

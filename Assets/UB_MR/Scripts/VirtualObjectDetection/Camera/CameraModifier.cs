@@ -5,12 +5,16 @@ using ROS2;
 using sensor_msgs.msg;
 using UnityEngine;
 using Unity.Collections;
+using CAVAS.UB_MR.Telemetry;
 
 namespace CAVAS.UB_MR.DT.Sensors.Camera
 {
     public class CameraModifier : SensorModifier
     {
         Agent owner;
+        readonly ResourceTelemetry telemetry;
+        readonly IDisposable telemetrySource;
+        volatile bool disposed;
         UnityEngine.Camera rgbCamera;
         DepthCamera depthCamera;
         RenderTexture virtualColorRT;
@@ -38,6 +42,8 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
         public CameraModifier(Agent inOwner, string rgbTopicName, string depthTopicName, UnityEngine.Camera inCamera)
         {
             owner = inOwner;
+            telemetry = inOwner.Telemetry;
+            telemetrySource = telemetry?.SensorPayload.RegisterSource();
 
             // Virtual camera
             rgbCamera = inCamera;
@@ -67,6 +73,9 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
         // ROS callback: runs on a background thread
         void OnRGB_Receive(Image inImage)
         {
+            if (disposed) return;
+            telemetry?.SensorPayload.AddReceived(inImage?.Data?.LongLength ?? 0);
+            if (inImage?.Header == null) return;
             double t = StampToSeconds(inImage.Header.Stamp);
 
             lock (syncLock)
@@ -76,6 +85,9 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
         // ROS callback: runs on a background thread
         void OnDepth_Receive(Image inImage)
         {
+            if (disposed) return;
+            telemetry?.SensorPayload.AddReceived(inImage?.Data?.LongLength ?? 0);
+            if (inImage?.Header == null) return;
             double t = StampToSeconds(inImage.Header.Stamp);
 
             lock (syncLock)
@@ -134,7 +146,10 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
             {
                 var mrFrame = ComputeMixedRealityFrame(physicalRgb, physicalDepth);
                 if (mrFrame != null)
+                {
                     mrFramePublisher.Publish(mrFrame);
+                    telemetry?.SensorPayload.AddSent(mrFrame.Data?.LongLength ?? 0);
+                }
             }
         }
 
@@ -436,6 +451,9 @@ namespace CAVAS.UB_MR.DT.Sensors.Camera
 
         public override void CleanUp()
         {
+            if (disposed) return;
+            disposed = true;
+            telemetrySource?.Dispose();
             // Virtual camera
             if (virtualColorRT != null)
             {

@@ -1,0 +1,40 @@
+{
+  "source_dimensions_m": [
+    4.1928300857543945,
+    1.8161859512329102,
+    1.4738311767578125
+  ],
+  "voxel_pitch_m": 0.010918828969200453,
+  "before_triangles": 129948,
+  "triangles": 8000,
+  "components": 1,
+  "boundary_edges": 0,
+  "non_manifold_edges": 0,
+  "non_contiguous_edges": 0,
+  "degenerate_faces": 0,
+  "signed_volume_m3": 5.381266927612989,
+  "max_sampled_simplification_deviation_m": 0.041777148842811584,
+  "mean_sampled_simplification_deviation_m": 0.008546921427193575,
+  "proxy_dimensions_m": [
+    4.214451789855957,
+    1.8200232982635498,
+    1.4904526472091675
+  ],
+  "solidification": {
+    "surface_padding_voxels": 1,
+    "vertical_columns": false,
+    "axis_intersection": true
+  },
+  "panel_fit": {
+    "materials": [
+      "GlassInstance",
+      "MI_BodyWStaticMesh7"
+    ],
+    "fitted_vertices": 2424,
+    "guarded_vertices": 453,
+    "guard_iterations": 6,
+    "max_vertex_movement_m": 0.06774465529647897,
+    "nonadjacent_triangle_intersections": 0,
+    "face_inversions": 0
+  }
+}

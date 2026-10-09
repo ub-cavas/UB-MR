@@ -1,0 +1,38 @@
+{
+  "Rubber": [],
+  "Vh_Car_NissanPatrolST_CoverWheelMat_BaseColor_Mat": [],
+  "Fbx Default Material 2": [],
+  "M_LicensePlate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "plastiCbLACK": [],
+  "PolishedAluminiumWhite_Inst": [],
+  "Fbx Default Material 6": [],
+  "Fbx Default Material 7": [],
+  "plasticgrey_Inst": [],
+  "MI_BodyWStaticMesh4": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "GlassInstance": [],
+  "Rubber_Inst": [],
+  "BrushedAluminiumWhite_Inst": [],
+  "Fbx Default Material 13": [],
+  "Fbx Default Material 14": [],
+  "Vh_Car_NissanPatrolST_LigthBackMat_BaseColor_Mat": [],
+  "Vh_Car_NissanPatrolST_LigthFrontDownMat_Basecolor_Mat": [],
+  "Fbx Default Material 17": [],
+  "Vh_Car_Lights_Mat": [],
+  "Fbx Default Material 19": [],
+  "Fbx Default Material 20": [],
+  "Fbx Default Material 21": []
+}

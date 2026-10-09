@@ -1,0 +1,30 @@
+{
+  "MI_BodyWStaticMesh7": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "PolishedAluminiumWhite_Inst": [],
+  "GlassInstance": [],
+  "Rubber_Inst": [],
+  "Vh_Car_SeatLeon_LightFrontMat_BaseColor_Mat": [],
+  "Fbx Default Material 5": [],
+  "Rubber": [],
+  "plastiCbLACK": [],
+  "Fbx Default Material 8": [],
+  "M_LicensePlate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Vh_Car_SeatLeon_LightBackMat_BaseColor_Mat": [],
+  "Vh_Car_SeatLeon_GrillMat_BaseColor_Mat": [],
+  "Fbx Default Material 12": [],
+  "Vh_Car_SeatLeon_CoverWheelMat_BaseColor_Mat": []
+}

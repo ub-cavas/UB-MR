@@ -1,0 +1,45 @@
+{
+  "Rubber_Inst": [],
+  "Vh_Car_MiniCooperS_MiniMat_Mat": [],
+  "PolishedAluminiumWhite_Inst": [],
+  "Fbx Default Material 3": [],
+  "Fbx Default Material 4": [],
+  "Fbx Default Material 5": [],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "plasticgrey_Inst": [],
+  "Fbx Default Material 8": [],
+  "GlassInstance": [],
+  "MI_BodyWStaticMesh7": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 11": [],
+  "White": [],
+  "plastiCbLACK": [],
+  "Black": [],
+  "Fbx Default Material 15": [],
+  "Fbx Default Material 16": [],
+  "Vh_Car_MiniCooperS_LightBackMat_BaseColor_Mat": [],
+  "Vh_Car_Lights_Normal_Mat": [],
+  "Fbx Default Material 19": [],
+  "BrushedAluminiumBlack_Inst": [],
+  "CarLight_Glass": [],
+  "Fbx Default Material 22": [],
+  "Vh_Car_MiniCooperS_CoverWheelMat_BaseColor_Mat": [],
+  "Fbx Default Material 24": []
+}

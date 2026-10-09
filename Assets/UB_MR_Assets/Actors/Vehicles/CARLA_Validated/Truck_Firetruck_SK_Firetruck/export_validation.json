@@ -1,0 +1,151 @@
+{
+  "Truck_Firetruck_SK_Firetruck_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 98873,
+    "bounds": [
+      [
+        -4.487462997436523,
+        -1.6906501054763794,
+        -0.0003565348742995411
+      ],
+      [
+        3.9805784225463867,
+        1.6906503438949585,
+        3.8270559310913086
+      ]
+    ],
+    "dimensions_m": [
+      8.46804141998291,
+      3.381300449371338,
+      3.827412465965608
+    ],
+    "materials": 27,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Truck_Firetruck_SK_Firetruck_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 7998,
+    "bounds": [
+      [
+        -4.503241062164307,
+        -1.7005010843276978,
+        -0.015022351406514645
+      ],
+      [
+        3.995455026626587,
+        1.6955853700637817,
+        3.8525941371917725
+      ]
+    ],
+    "dimensions_m": [
+      8.498696088790894,
+      3.3960864543914795,
+      3.867616488598287
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 68.71058162651983,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 516,
+        "max_outside_distance_m": 0.018094923347234726
+      },
+      "SM_FireTruck_lights": {
+        "samples": 556,
+        "max_outside_distance_m": 0.0016678782412782311
+      },
+      "DoorR": {
+        "samples": 539,
+        "max_outside_distance_m": 0.01818079501390457
+      },
+      "DoorL": {
+        "samples": 546,
+        "max_outside_distance_m": 0.015743102878332138
+      },
+      "Glass_Door_Ext1_L": {
+        "samples": 388,
+        "max_outside_distance_m": 0.0
+      },
+      "Glass_Door_Ext1_R": {
+        "samples": 388,
+        "max_outside_distance_m": 0.0
+      },
+      "Glass_Door_Ext2_L": {
+        "samples": 386,
+        "max_outside_distance_m": 0.0
+      },
+      "Glass_Door_Ext2_R": {
+        "samples": 386,
+        "max_outside_distance_m": 0.0
+      },
+      "Glass_Door_Int1_L": {
+        "samples": 220,
+        "max_outside_distance_m": 0.0
+      },
+      "Glass_Door_Int1_R": {
+        "samples": 220,
+        "max_outside_distance_m": 0.0
+      },
+      "Glass_Door_Int2_L": {
+        "samples": 218,
+        "max_outside_distance_m": 0.0
+      },
+      "Glass_Door_Int2_R": {
+        "samples": 218,
+        "max_outside_distance_m": 0.0
+      },
+      "Glass_EXT1": {
+        "samples": 562,
+        "max_outside_distance_m": 0.016768626868724823
+      },
+      "Glass_EXT2": {
+        "samples": 700,
+        "max_outside_distance_m": 0.017121268436312675
+      },
+      "Glass_INT1": {
+        "samples": 649,
+        "max_outside_distance_m": 0.004958244971930981
+      },
+      "Glass_INT2": {
+        "samples": 296,
+        "max_outside_distance_m": 0.0
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.025538206100463867
+  }
+}

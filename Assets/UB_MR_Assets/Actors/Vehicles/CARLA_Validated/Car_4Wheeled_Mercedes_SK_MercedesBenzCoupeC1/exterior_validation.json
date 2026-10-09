@@ -1,0 +1,25 @@
+{
+  "nonadjacent_triangle_intersections": 0,
+  "max_allowed_panel_p95_m": 0.03927169367671013,
+  "visible_exterior_panels": {
+    "MI_BodyWStaticMesh4": {
+      "samples": 3523,
+      "median_distance_m": 0.005560483317822218,
+      "p95_distance_m": 0.018883183225989312,
+      "max_distance_m": 0.09884590655565262
+    },
+    "GlassInstance": {
+      "samples": 486,
+      "median_distance_m": 0.007111900253221393,
+      "p95_distance_m": 0.017155105713754892,
+      "max_distance_m": 0.02670908346772194
+    },
+    "MercedesTop": {
+      "samples": 140,
+      "median_distance_m": 0.003377384622581303,
+      "p95_distance_m": 0.007536797691136597,
+      "max_distance_m": 0.009232438169419765
+    }
+  },
+  "method": "Triangle-centre samples on selected source panels visible along their outward geometric normal; nearest distance to independently reimported final proxy. SDF proxy remains an approximation."
+}

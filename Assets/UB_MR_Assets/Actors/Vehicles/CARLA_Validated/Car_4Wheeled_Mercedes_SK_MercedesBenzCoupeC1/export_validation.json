@@ -1,0 +1,116 @@
+{
+  "Car_4Wheeled_Mercedes_SK_MercedesBenzCoupeC1_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 19973,
+    "bounds": [
+      [
+        -2.5133883953094482,
+        -1.0749986171722412,
+        -0.15853159129619598
+      ],
+      [
+        2.5133883953094482,
+        1.0765475034713745,
+        1.4921201467514038
+      ]
+    ],
+    "dimensions_m": [
+      5.0267767906188965,
+      2.1515461206436157,
+      1.6506517380475998
+    ],
+    "materials": 16,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_Mercedes_SK_MercedesBenzCoupeC1_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.524014472961426,
+        -1.0795319080352783,
+        -0.18651917576789856
+      ],
+      [
+        2.541214942932129,
+        1.0808868408203125,
+        1.491687297821045
+      ]
+    ],
+    "dimensions_m": [
+      5.065229415893555,
+      2.160418748855591,
+      1.6782064735889435
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 8.531241973790308,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 513,
+        "max_outside_distance_m": 0.013857245445251465
+      }
+    },
+    "exterior_validation": {
+      "nonadjacent_triangle_intersections": 0,
+      "max_allowed_panel_p95_m": 0.03927169367671013,
+      "visible_exterior_panels": {
+        "MI_BodyWStaticMesh4": {
+          "samples": 3523,
+          "median_distance_m": 0.005560483317822218,
+          "p95_distance_m": 0.018883183225989312,
+          "max_distance_m": 0.09884590655565262
+        },
+        "GlassInstance": {
+          "samples": 486,
+          "median_distance_m": 0.007111900253221393,
+          "p95_distance_m": 0.017155105713754892,
+          "max_distance_m": 0.02670908346772194
+        },
+        "MercedesTop": {
+          "samples": 140,
+          "median_distance_m": 0.003377384622581303,
+          "p95_distance_m": 0.007536797691136597,
+          "max_distance_m": 0.009232438169419765
+        }
+      },
+      "method": "Triangle-centre samples on selected source panels visible along their outward geometric normal; nearest distance to independently reimported final proxy. SDF proxy remains an approximation."
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.027987584471702576
+  }
+}

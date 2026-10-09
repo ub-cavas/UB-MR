@@ -1,0 +1,44 @@
+{
+  "plasticgrey_Inst": [],
+  "AudiA2_LightFrontMat": [],
+  "GlassInstance": [],
+  "Vh_Car_AudiA2_LightBackMat_BaseColor_Mat": [],
+  "MI_BodyWStaticMesh2": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "BrushedAluminiumBlack": [],
+  "PolishedAluminiumWhite": [],
+  "Fbx Default Material 7": [],
+  "plastiCbLACK": [],
+  "plasticgrey": [],
+  "M_Aluminium": [],
+  "MI_ClothCointainer": [
+    {
+      "texture": "T_ClothContainer_d_467e7c1f.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 12": [],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 14": [],
+  "Vh_Car_AudiA2_CoverWheelMat_BaseColor_Mat": [],
+  "Rubber": []
+}

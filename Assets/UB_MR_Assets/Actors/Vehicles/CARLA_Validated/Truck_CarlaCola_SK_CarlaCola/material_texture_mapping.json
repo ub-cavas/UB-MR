@@ -1,0 +1,44 @@
+{
+  "Rubber_Inst": [],
+  "plastiCbLACK": [],
+  "PolishedAluminiumWhite_Inst": [],
+  "CarlaCola": [
+    {
+      "texture": "T_Flat_n_2ebd99f7.tga",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "Vh_Truck_CarlaCola_BodyworkMat_BaseColor_97867a5f.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 4": [
+    {
+      "texture": "Vh_Truck_CarlaCola_BodyworkMat_BaseColor_97867a5f.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 5": [],
+  "plasticgrey_Inst": [],
+  "GlassInstance": [],
+  "BrushedAluminiumWhite_Inst": [],
+  "Fbx Default Material 9": [],
+  "Fbx Default Material 10": [],
+  "Vh_Truck_CarlaCola_LightMat_BaseColor_Mat": [],
+  "M_LicensePlate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 13": [],
+  "Fbx Default Material 14": []
+}

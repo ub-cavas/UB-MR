@@ -1,0 +1,35 @@
+{
+  "M_LicensePlate_Master": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details_Mustang": [
+    {
+      "texture": "T_Mustang_Details_n_2150971f.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarGlass_Mustang": [],
+  "MI_BodyWork_Mustang2": [
+    {
+      "texture": "T_DirtMask_815754ff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LightsText_Mustang": [
+    {
+      "texture": "T_Mustang_Details_n_2150971f.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

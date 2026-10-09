@@ -1,0 +1,42 @@
+{
+  "source_dimensions_m": [
+    2.2072949409484863,
+    1.4809198379516602,
+    1.3760247230529785
+  ],
+  "voxel_pitch_m": 0.005748164219160874,
+  "before_triangles": 182686,
+  "triangles": 8000,
+  "components": 1,
+  "boundary_edges": 0,
+  "non_manifold_edges": 0,
+  "non_contiguous_edges": 0,
+  "degenerate_faces": 0,
+  "signed_volume_m3": 2.218990495666575,
+  "max_sampled_simplification_deviation_m": 0.027304528281092644,
+  "mean_sampled_simplification_deviation_m": 0.0053670603788554695,
+  "proxy_dimensions_m": [
+    2.2152018547058105,
+    1.4824578762054443,
+    1.3820310831069946
+  ],
+  "solidification": {
+    "surface_padding_voxels": 1,
+    "vertical_columns": false,
+    "axis_intersection": true
+  },
+  "panel_fit": {
+    "materials": [
+      "Fbx Default Material 5",
+      "GlassInstance",
+      "Skyblue",
+      "White"
+    ],
+    "fitted_vertices": 2587,
+    "guarded_vertices": 283,
+    "guard_iterations": 4,
+    "max_vertex_movement_m": 0.03948104115186777,
+    "nonadjacent_triangle_intersections": 0,
+    "face_inversions": 0
+  }
+}

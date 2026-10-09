@@ -1,0 +1,35 @@
+{
+  "Rubber_Inst": [],
+  "Citroen_CoverWheel": [],
+  "GlassInstance": [],
+  "plastiCbLACK": [],
+  "MI_BodyWStaticMesh1": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 5": [],
+  "PolishedAluminiumWhite_Inst": [],
+  "Fbx Default Material 7": [],
+  "Citroen_LightsBack": [],
+  "Fbx Default Material 9": [],
+  "Fbx Default Material 10": [],
+  "Fbx Default Material 11": [],
+  "Fbx Default Material 12": [],
+  "Vh_Car_CitroenC3_LightsFrontMat_BaseColor_Mat": [],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

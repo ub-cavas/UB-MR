@@ -1,0 +1,85 @@
+{
+  "Motorcycle_Harley_HarleyRig_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 24298,
+    "bounds": [
+      [
+        -1.1867395639419556,
+        -0.3840719759464264,
+        0.021628892049193382
+      ],
+      [
+        1.1690006256103516,
+        0.3796069324016571,
+        1.2981995344161987
+      ]
+    ],
+    "dimensions_m": [
+      2.355740189552307,
+      0.7636789083480835,
+      1.2765706423670053
+    ],
+    "materials": 7,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Motorcycle_Harley_HarleyRig_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -1.1887162923812866,
+        -0.3775275647640228,
+        0.01760874316096306
+      ],
+      [
+        1.1727451086044312,
+        0.37391239404678345,
+        1.3008708953857422
+      ]
+    ],
+    "dimensions_m": [
+      2.3614614009857178,
+      0.7514399588108063,
+      1.2832621522247791
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 0.31168324668343506,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.0065444111824035645
+  }
+}

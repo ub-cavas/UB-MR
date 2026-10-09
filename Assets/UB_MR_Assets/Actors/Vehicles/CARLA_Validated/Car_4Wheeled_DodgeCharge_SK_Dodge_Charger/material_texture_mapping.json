@@ -1,0 +1,39 @@
+{
+  "MI_CarExterior_DodgeCharge": [
+    {
+      "texture": "T_Exterior_D_1f8e9cd8.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarGlass_DodgeCharge": [],
+  "MI_CarInterior_DodgeCharge": [
+    {
+      "texture": "T_Interior_D_4314662c.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarLightGlass_DodgeCharge": [
+    {
+      "texture": "T_LightGlass_D_d6cbd503.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlate_DodgeCharge": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "Truck_VolkswagenT2_SK_Volkswagen_T2_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 18396,
+    "bounds": [
+      [
+        -2.238886594772339,
+        -1.0341200828552246,
+        -0.004424384795129299
+      ],
+      [
+        2.2415502071380615,
+        1.0351951122283936,
+        2.03336763381958
+      ]
+    ],
+    "dimensions_m": [
+      4.4804368019104,
+      2.069315195083618,
+      2.0377920186147094
+    ],
+    "materials": 18,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Truck_VolkswagenT2_SK_Volkswagen_T2_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.2445976734161377,
+        -1.0422359704971313,
+        -0.01307294238358736
+      ],
+      [
+        2.2498457431793213,
+        1.0388166904449463,
+        2.033730983734131
+      ]
+    ],
+    "dimensions_m": [
+      4.494443416595459,
+      2.0810526609420776,
+      2.046803926117718
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 10.495514189364828,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.008648557588458061
+  }
+}

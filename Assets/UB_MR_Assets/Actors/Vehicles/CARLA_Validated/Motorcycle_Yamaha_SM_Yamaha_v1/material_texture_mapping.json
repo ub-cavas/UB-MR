@@ -1,0 +1,38 @@
+{
+  "MI_Exterior_Yamaha": [
+    {
+      "texture": "T_Bodywork_Yamaha_d_c21105c8.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details_Yamaha": [
+    {
+      "texture": "hih_yamahaOthers_mat_BaseColor_41c6237f.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LightGlass_Yamaha": [
+    {
+      "texture": "T_Asphalt03_d_f7fc095d.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlater_Yamaha": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

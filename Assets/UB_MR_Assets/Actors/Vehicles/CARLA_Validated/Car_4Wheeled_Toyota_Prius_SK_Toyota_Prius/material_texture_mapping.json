@@ -1,0 +1,69 @@
+{
+  "Vh_Car_toyotaPrius_CoverWheelMat_BaseColor_Mat": [],
+  "Rubber_Inst": [],
+  "plastiCbLACK": [],
+  "Skyblue": [],
+  "PolishedAluminiumBlack_Inst": [],
+  "PolishedAluminiumWhite_Inst": [],
+  "MI_BodyWStaticMesh2": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "GlassInstance": [],
+  "Fbx Default Material 8": [],
+  "Fbx Default Material 9": [],
+  "OrangeMetal": [
+    {
+      "texture": "T_Flat_n_2ebd99f7.tga",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "T_White_D_2939f64c.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Glass": [],
+  "Vh_Car_ToyotaPrius_LightFrontDownMat_BaseColor_Mat": [],
+  "M_aluminium_2": [],
+  "Fbx Default Material 14": [
+    {
+      "texture": "T_White_D_2939f64c.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "BrushedAluminiumWhite_Inst": [],
+  "Vh_Car_ToyotaPrius_LightMat_BaseColor_Mat": [],
+  "Fbx Default Material 17": [],
+  "Fbx Default Material 18": [],
+  "Fbx Default Material 19": [
+    {
+      "texture": "T_White_D_2939f64c.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 20": [],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

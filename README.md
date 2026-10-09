@@ -47,6 +47,9 @@ ros2 launch mr_pkg <dual_ekf_localization.launch.py> <autoware_localization.laun
 ---
 
 ## Developer Guide
+
+The simulation's **Resources** HUD shows GPU VRAM, LiDAR processing and receive-to-publish timings, ROS sensor payload rates, and Redis traffic/RTT. See the [measurement definitions and validation guide](Docs/ResourceHUD.md).
+
 If you intend to develop the Mixed Reality Engine, follow these steps...
 
 ### Configuration
@@ -164,3 +167,11 @@ chmod +x UB-MR.x86_64 # give execution permissions
   ```
 
 *For further assistance, please open an issue in the respective GitHub repository.*
+
+## CARLA traffic models
+
+See [CARLA traffic vehicles](docs/carla-traffic-vehicles.md) for blueprint-to-prefab registration, paint masks, perception setup, server inventory export, and validation commands.
+
+Connect traffic and ego publishing from **Main Menu → Server connection**. See
+[server connection setup](docs/server-connection.md) for localhost/Tailscale,
+authentication, and the server-side ego renderer.

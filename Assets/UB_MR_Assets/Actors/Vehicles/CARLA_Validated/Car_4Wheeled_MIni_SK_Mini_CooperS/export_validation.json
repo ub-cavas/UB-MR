@@ -1,0 +1,91 @@
+{
+  "Car_4Wheeled_MIni_SK_Mini_CooperS_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 28668,
+    "bounds": [
+      [
+        -1.9029000997543335,
+        -0.9850777387619019,
+        -0.04450506344437599
+      ],
+      [
+        1.9029000997543335,
+        0.9851979613304138,
+        1.4305251836776733
+      ]
+    ],
+    "dimensions_m": [
+      3.805800199508667,
+      1.9702757000923157,
+      1.4750302471220493
+    ],
+    "materials": 25,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_MIni_SK_Mini_CooperS_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -1.9237231016159058,
+        -1.005255103111267,
+        -0.06638643890619278
+      ],
+      [
+        1.9255425930023193,
+        1.0121737718582153,
+        1.4487160444259644
+      ]
+    ],
+    "dimensions_m": [
+      3.849265694618225,
+      2.0174288749694824,
+      1.5151024833321571
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 5.918918234902898,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 522,
+        "max_outside_distance_m": 0.033545903861522675
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.026975810527801514
+  }
+}

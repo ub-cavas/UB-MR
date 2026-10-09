@@ -1,0 +1,39 @@
+{
+  "MI_Interior_Etron": [
+    {
+      "texture": "T_AudiETron_Details_D_8aa1982c.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarExterior_Etron": [
+    {
+      "texture": "T_AudiETron_Bodywork_D_92167309.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "M_LicensePlate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Wheels_Etron": [
+    {
+      "texture": "T_AudiETron_Wheels_D_b341edc8.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassInt_Etron": [],
+  "MI_GlassInt_Etron.001": [],
+  "MI_VehicleLights_Etron": [],
+  "MI_GlassExt_Etron": [],
+  "MI_GlassExt_Etron.001": []
+}

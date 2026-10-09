@@ -1,0 +1,85 @@
+{
+  "Car_4Wheeled_Citroen_SK_Citroen_C3_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 22827,
+    "bounds": [
+      [
+        -1.9938424825668335,
+        -0.9277912974357605,
+        -0.04663762450218201
+      ],
+      [
+        1.9938424825668335,
+        0.9230570793151855,
+        1.5704718828201294
+      ]
+    ],
+    "dimensions_m": [
+      3.987684965133667,
+      1.850848376750946,
+      1.6171095073223114
+    ],
+    "materials": 15,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_Citroen_SK_Citroen_C3_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.0001461505889893,
+        -0.9343493580818176,
+        -0.053516846150159836
+      ],
+      [
+        2.000805139541626,
+        0.9331468939781189,
+        1.5799835920333862
+      ]
+    ],
+    "dimensions_m": [
+      4.000951290130615,
+      1.8674962520599365,
+      1.633500438183546
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 5.7920309817180975,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.01008981466293335
+  }
+}

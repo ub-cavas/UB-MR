@@ -1,0 +1,151 @@
+{
+  "Truck_European_HGV_SK_European_HGV_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 101524,
+    "bounds": [
+      [
+        -3.955131769180298,
+        -1.690650224685669,
+        -0.0003565348742995411
+      ],
+      [
+        3.9805784225463867,
+        1.6906503438949585,
+        3.4615869522094727
+      ]
+    ],
+    "dimensions_m": [
+      7.935710191726685,
+      3.3813005685806274,
+      3.461943487083772
+    ],
+    "materials": 23,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Truck_European_HGV_SK_European_HGV_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -3.9977641105651855,
+        -1.7346218824386597,
+        -0.04524197056889534
+      ],
+      [
+        4.024643898010254,
+        1.7348847389221191,
+        3.513051986694336
+      ]
+    ],
+    "dimensions_m": [
+      8.02240800857544,
+      3.469506621360779,
+      3.5582939572632313
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 28.791720462926875,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 514,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Glass_EXT1": {
+        "samples": 566,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Window_int1_R": {
+        "samples": 219,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Window_int2_L": {
+        "samples": 218,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Window_int2_R": {
+        "samples": 218,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Window_int_L": {
+        "samples": 220,
+        "max_outside_distance_m": 0.0
+      },
+      "DoorL": {
+        "samples": 540,
+        "max_outside_distance_m": 0.0
+      },
+      "DoorR": {
+        "samples": 533,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_SixWheeledTruck_lights": {
+        "samples": 408,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Glass_EXT2": {
+        "samples": 396,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Glass_INT1": {
+        "samples": 912,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Glass_INT2": {
+        "samples": 176,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Window_ext1_L": {
+        "samples": 388,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Window_ext1_R": {
+        "samples": 387,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Window_ext2_L": {
+        "samples": 386,
+        "max_outside_distance_m": 0.0
+      },
+      "Glasses_Lights_Truck_Window_ext2_R": {
+        "samples": 386,
+        "max_outside_distance_m": 0.0
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.05146503448486328
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "MI_Glass_AudiTT": [],
+  "MI_Wheels_AudiTT": [
+    {
+      "texture": "T_Wheels_AudiTT_d_cdf26ad5.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Rubber_Inst": [],
+  "MI_Bodywork_AudiTT": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "PolishedAluminiumWhite_Inst": [],
+  "MI_LicensePlate_AudiTT": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarLightGlass_AudiTT": [],
+  "MI_LightText_AudiTT": [],
+  "WorldGridMaterial": []
+}

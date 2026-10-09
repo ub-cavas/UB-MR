@@ -1,0 +1,115 @@
+{
+  "MI_Details1_FordCrown": [
+    {
+      "texture": "T_Details_FordCrown_d_d9fcc429.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlate_FordCrown": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_BodyWork_FordCrown": [
+    {
+      "texture": "M_Bodywork_FordCrown_d_c1181d3b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details1_FordCrown.001": [
+    {
+      "texture": "T_Details_FordCrown_d_d9fcc429.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_BodyWork_FordCrown.001": [
+    {
+      "texture": "M_Bodywork_FordCrown_d_c1181d3b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassInt__FordCrown": [],
+  "MI_GlassInt__FordCrown.001": [],
+  "MI_GlassExt__FordCrown": [],
+  "MI_GlassExt__FordCrown.001": [],
+  "MI_GlassInt__FordCrown.002": [],
+  "MI_BodyWork_FordCrown.002": [
+    {
+      "texture": "M_Bodywork_FordCrown_d_c1181d3b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details1_FordCrown.002": [
+    {
+      "texture": "T_Details_FordCrown_d_d9fcc429.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassExt__FordCrown.002": [],
+  "MI_GlassInt__FordCrown.003": [],
+  "MI_GlassExt__FordCrown.003": [],
+  "MI_BodyWork_FordCrown.003": [
+    {
+      "texture": "M_Bodywork_FordCrown_d_c1181d3b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details1_FordCrown.003": [
+    {
+      "texture": "T_Details_FordCrown_d_d9fcc429.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassInt__FordCrown.004": [],
+  "MI_GlassExt__FordCrown.004": [],
+  "MI_GlassInt__FordCrown.005": [],
+  "MI_GlassExt__FordCrown.005": [],
+  "MI_GlassInt__FordCrown.006": [],
+  "MI_GlassExt__FordCrown.006": [],
+  "MI_GlassExt__FordCrown.007": [],
+  "MI_GlassInt__FordCrown.007": [],
+  "MI_GlassInt__FordCrown.008": [],
+  "MI_Lights_FordCrown": [],
+  "MI_BodyWork_FordCrown.004": [
+    {
+      "texture": "M_Bodywork_FordCrown_d_c1181d3b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details1_FordCrown.004": [
+    {
+      "texture": "T_Details_FordCrown_d_d9fcc429.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassExt__FordCrown.008": [],
+  "MI_GlassExt__FordCrown.009": [],
+  "MI_GlassInt__FordCrown.009": []
+}
