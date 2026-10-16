@@ -4,4 +4,5 @@
 *.geojson filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.png filter=lfs diff=lfs merge=lfs -text
-Assets/GaussianAssets/*.bytes filter=lfs diff=lfs merge=lfs -text
+Assets/UB_MR_Assets/GaussianSplats/*.bytes filter=lfs diff=lfs merge=lfs -text
+Assets/UB_MR_Assets/GaussianSplats/**/*.bytes filter=lfs diff=lfs merge=lfs -text
