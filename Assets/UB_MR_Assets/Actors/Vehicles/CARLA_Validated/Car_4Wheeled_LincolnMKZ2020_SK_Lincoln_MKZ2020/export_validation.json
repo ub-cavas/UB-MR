@@ -1,0 +1,191 @@
+{
+  "Car_4Wheeled_LincolnMKZ2020_SK_Lincoln_MKZ2020_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 79197,
+    "bounds": [
+      [
+        -2.4524834156036377,
+        -1.115301251411438,
+        0.0037064463831484318
+      ],
+      [
+        2.4398980140686035,
+        1.1153016090393066,
+        1.5249532461166382
+      ]
+    ],
+    "dimensions_m": [
+      4.892381429672241,
+      2.2306028604507446,
+      1.5212467997334898
+    ],
+    "materials": 32,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_LincolnMKZ2020_SK_Lincoln_MKZ2020_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.4607229232788086,
+        -1.1199887990951538,
+        -0.004794258624315262
+      ],
+      [
+        2.4486870765686035,
+        1.1245462894439697,
+        1.541727900505066
+      ]
+    ],
+    "dimensions_m": [
+      4.909409999847412,
+      2.2445350885391235,
+      1.5465221591293812
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 8.06522954322285,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 513,
+        "max_outside_distance_m": 0.0008551739156246185
+      },
+      "SM_Lincolnv1_lights": {
+        "samples": 602,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_LincolnDoor_Front_R": {
+        "samples": 595,
+        "max_outside_distance_m": 0.007399532478302717
+      },
+      "SM_LincolnDoor_Back_L": {
+        "samples": 647,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_LincolnDoor_Back_R": {
+        "samples": 647,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_LincolnDoor_Front_L": {
+        "samples": 595,
+        "max_outside_distance_m": 0.005328420549631119
+      },
+      "SM_Glass_DoorL_Lincoln_Ext1": {
+        "samples": 242,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorL_Lincoln_Ext2": {
+        "samples": 242,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorL_Lincoln_Int1": {
+        "samples": 80,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorL_Lincoln_Int2": {
+        "samples": 80,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorL_Lincoln_Rear_Ext1": {
+        "samples": 127,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorL_Lincoln_Rear_Ext2": {
+        "samples": 127,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorL_Lincoln_Rear_Int1": {
+        "samples": 40,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorL_Lincoln_Rear_Int2": {
+        "samples": 40,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorR_Lincoln_Ext1": {
+        "samples": 242,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorR_Lincoln_Ext2": {
+        "samples": 242,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorR_Lincoln_Int1": {
+        "samples": 80,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorR_Lincoln_Int2": {
+        "samples": 80,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorR_Lincoln_Rear_Ext1": {
+        "samples": 127,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorR_Lincoln_Rear_Ext2": {
+        "samples": 127,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorR_Lincoln_Rear_Int1": {
+        "samples": 40,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_DoorR_Lincoln_Rear_Int2": {
+        "samples": 40,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_Lincoln_Ext1": {
+        "samples": 656,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_Lincoln_Ext2": {
+        "samples": 938,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_Lincoln_Int1": {
+        "samples": 394,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Glass_Lincoln_Int2": {
+        "samples": 986,
+        "max_outside_distance_m": 0.0
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.016774654388427734
+  }
+}

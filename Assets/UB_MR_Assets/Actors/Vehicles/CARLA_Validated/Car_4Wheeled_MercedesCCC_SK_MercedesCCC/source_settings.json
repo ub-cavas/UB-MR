@@ -1,0 +1,7 @@
+{
+  "voxel_resolution": 256,
+  "closing_radius": 3,
+  "target_triangles": 8000,
+  "surface_padding_voxels": 1,
+  "solidify_vertical_columns": true
+}

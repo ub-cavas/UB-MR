@@ -1,0 +1,191 @@
+{
+  "Car_4Wheeled_Cybertruck_SM_Cybertruck_v2_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 30658,
+    "bounds": [
+      [
+        -3.136775493621826,
+        -1.1947870254516602,
+        -7.205650831565436e-08
+      ],
+      [
+        3.136777639389038,
+        1.1947871446609497,
+        2.098191261291504
+      ]
+    ],
+    "dimensions_m": [
+      6.273553133010864,
+      2.38957417011261,
+      2.098191333348012
+    ],
+    "materials": 33,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_Cybertruck_SM_Cybertruck_v2_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -3.1441354751586914,
+        -1.207094669342041,
+        -0.010912126861512661
+      ],
+      [
+        3.1476683616638184,
+        1.2139487266540527,
+        2.113985538482666
+      ]
+    ],
+    "dimensions_m": [
+      6.29180383682251,
+      2.4210433959960938,
+      2.1248976653441787
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 16.979115677206313,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 513,
+        "max_outside_distance_m": 0.0032937058713287115
+      },
+      "SM_Cybertruck_DoorGlass_Ext1_RR": {
+        "samples": 30,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_v2_lights": {
+        "samples": 254,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Ext2_FL": {
+        "samples": 46,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Ext2_FR": {
+        "samples": 46,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Ext2_RL": {
+        "samples": 30,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Ext2_RR": {
+        "samples": 30,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Int1_FL": {
+        "samples": 10,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Int1_FR": {
+        "samples": 10,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cyber_Glass_int_2": {
+        "samples": 50,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Int1_RL": {
+        "samples": 6,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Int1_RR": {
+        "samples": 6,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Int2_FL": {
+        "samples": 10,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Int2_FR": {
+        "samples": 10,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Int2_RL": {
+        "samples": 6,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Int2_RR": {
+        "samples": 6,
+        "max_outside_distance_m": 0.0
+      },
+      "Door_FL": {
+        "samples": 344,
+        "max_outside_distance_m": 0.0
+      },
+      "Door_FR": {
+        "samples": 344,
+        "max_outside_distance_m": 0.0
+      },
+      "Door_RL": {
+        "samples": 292,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cyber_Glass_ext_1": {
+        "samples": 250,
+        "max_outside_distance_m": 0.0
+      },
+      "Door_RR": {
+        "samples": 292,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cyber_Glass_ext_2": {
+        "samples": 250,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cyber_Glass_int_1": {
+        "samples": 50,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Ext1_FL": {
+        "samples": 46,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Ext1_FR": {
+        "samples": 46,
+        "max_outside_distance_m": 0.0
+      },
+      "SM_Cybertruck_DoorGlass_Ext1_RL": {
+        "samples": 30,
+        "max_outside_distance_m": 0.0
+      }
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.019161581993103027
+  }
+}

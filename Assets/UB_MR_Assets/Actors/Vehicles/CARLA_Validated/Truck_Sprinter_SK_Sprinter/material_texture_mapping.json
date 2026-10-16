@@ -1,0 +1,103 @@
+{
+  "MI_BodyWork_Sprinter": [
+    {
+      "texture": "M_Bodywork_Van_d_856de622.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details2_Sprinter": [
+    {
+      "texture": "Ambulance_02_M_Details2_Amulance_Dirt_2f6174b9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details1_Sprinter": [
+    {
+      "texture": "T_Details_Sprinter_d_e46d56bc.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlate_Sprinter": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassExt_Sprinter": [],
+  "MI_GlassExt_Sprinter.001": [],
+  "MI_FakeGlassInt_Sprinter": [],
+  "MI_GlassInt_Sprinter": [],
+  "MI_GlassInt_Sprinter_Lights": [],
+  "MI_GlassExt_Sprinter_Lights": [],
+  "MI_GlassInt_Sprinter.001": [],
+  "MI_BodyWork_Sprinter.001": [
+    {
+      "texture": "M_Bodywork_Van_d_856de622.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details1_Sprinter.001": [
+    {
+      "texture": "T_Details_Sprinter_d_e46d56bc.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details2_Sprinter.001": [
+    {
+      "texture": "Ambulance_02_M_Details2_Amulance_Dirt_2f6174b9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_BodyWork_Sprinter.002": [
+    {
+      "texture": "M_Bodywork_Van_d_856de622.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details1_Sprinter.002": [
+    {
+      "texture": "T_Details_Sprinter_d_e46d56bc.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details2_Sprinter.002": [
+    {
+      "texture": "Ambulance_02_M_Details2_Amulance_Dirt_2f6174b9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Lights_Sprinter": [],
+  "MI_GlassExt_Sprinter.002": [],
+  "MI_GlassInt_Sprinter.002": [],
+  "MI_GlassInt_Sprinter.003": [],
+  "MI_GlassExt_Sprinter.003": [],
+  "MI_GlassExt_Sprinter.004": [],
+  "MI_GlassInt_Sprinter.004": [],
+  "MI_GlassInt_Sprinter.005": [],
+  "MI_GlassExt_Sprinter_Lights.001": [],
+  "MI_GlassExt_Sprinter.005": []
+}

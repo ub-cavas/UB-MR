@@ -1,0 +1,14 @@
+{
+  "vehicle": {
+    "id": "Truck_CarlaCola_SK_CarlaCola",
+    "name": "SK_CarlaCola",
+    "path": "/Game/Carla/Static/Truck/CarlaCola/SK_CarlaCola.SK_CarlaCola",
+    "category": "Truck"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Truck/CarlaCola/SK_CarlaCola.SK_CarlaCola",
+    "blueprint": null,
+    "components": []
+  },
+  "assembly_type": "skeletal_body"
+}

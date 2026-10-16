@@ -1,0 +1,480 @@
+{
+  "vehicle": {
+    "id": "Truck_Firetruck_SK_Firetruck",
+    "name": "SK_Firetruck",
+    "path": "/Game/Carla/Static/Truck/Firetruck/SK_Firetruck.SK_Firetruck",
+    "category": "Truck"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Truck/Firetruck/SK_Firetruck.SK_Firetruck",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\FireTruck\\BP_FireTruck.uasset",
+    "components": [
+      {
+        "name": "SM_FireTruck_lights",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/SM_FireTruck_Lights.SM_FireTruck_Lights",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      },
+      {
+        "name": "DoorR",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/SM_FireTruck_DoorR.SM_FireTruck_DoorR",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            3.6172634887695314
+          ],
+          [
+            0.0,
+            1.0,
+            1.6081226229577292e-16,
+            -1.3522399902343751
+          ],
+          [
+            0.0,
+            -1.6081226229577292e-16,
+            1.0,
+            1.8498629760742187
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_001.fbx"
+      },
+      {
+        "name": "DoorL",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/SM_FireTruck_DoorL.SM_FireTruck_DoorL",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            3.6172634887695314
+          ],
+          [
+            0.0,
+            1.0,
+            1.6081226229577292e-16,
+            1.3522406005859375
+          ],
+          [
+            0.0,
+            -1.6081226229577292e-16,
+            1.0,
+            1.8498629760742187
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_002.fbx"
+      },
+      {
+        "name": "Glass_Door_Ext1_L",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_Door_Ext1_L.Glass_Door_Ext1_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            2.842170943040401e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_003.fbx"
+      },
+      {
+        "name": "Glass_Door_Ext1_R",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_Door_Ext1_R.Glass_Door_Ext1_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_004.fbx"
+      },
+      {
+        "name": "Glass_Door_Ext2_L",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_Door_Ext2_L.Glass_Door_Ext2_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            2.842170943040401e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_005.fbx"
+      },
+      {
+        "name": "Glass_Door_Ext2_R",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_Door_Ext2_R.Glass_Door_Ext2_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_006.fbx"
+      },
+      {
+        "name": "Glass_Door_Int1_L",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_Door_Int1_L.Glass_Door_Int1_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            2.842170943040401e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_007.fbx"
+      },
+      {
+        "name": "Glass_Door_Int1_R",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_Door_Int1_R.Glass_Door_Int1_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_008.fbx"
+      },
+      {
+        "name": "Glass_Door_Int2_L",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_Door_Int2_L.Glass_Door_Int2_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            2.842170943040401e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_009.fbx"
+      },
+      {
+        "name": "Glass_Door_Int2_R",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_Door_Int2_R.Glass_Door_Int2_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            8.020246345420058e-24,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            -8.020246345420058e-24,
+            1.0,
+            -2.842170943040401e-16
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_010.fbx"
+      },
+      {
+        "name": "Glass_EXT1",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_EXT1.Glass_EXT1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_011.fbx"
+      },
+      {
+        "name": "Glass_EXT2",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_EXT2.Glass_EXT2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_012.fbx"
+      },
+      {
+        "name": "Glass_INT1",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_INT1.Glass_INT1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_013.fbx"
+      },
+      {
+        "name": "Glass_INT2",
+        "asset": "/Game/Carla/Static/Truck/Firetruck/Glass_INT2.Glass_INT2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_014.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

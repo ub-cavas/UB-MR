@@ -1,0 +1,85 @@
+{
+  "Bicycle_Roadbike_RoadBikeRig_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 3968,
+    "bounds": [
+      [
+        -0.8214092254638672,
+        -0.18625801801681519,
+        0.013439998030662537
+      ],
+      [
+        0.8214344382286072,
+        0.1862582564353943,
+        1.0373425483703613
+      ]
+    ],
+    "dimensions_m": [
+      1.6428436636924744,
+      0.3725162744522095,
+      1.0239025503396988
+    ],
+    "materials": 2,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Bicycle_Roadbike_RoadBikeRig_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -0.8233848214149475,
+        -0.1892620176076889,
+        0.010918309912085533
+      ],
+      [
+        0.8244153261184692,
+        0.18918849527835846,
+        1.0410569906234741
+      ]
+    ],
+    "dimensions_m": [
+      1.6478001475334167,
+      0.37845051288604736,
+      1.0301386807113886
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 0.03375559394895528,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.003714442253112793
+  }
+}

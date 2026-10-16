@@ -1,0 +1,56 @@
+{
+  "VespaMetal": [
+    {
+      "texture": "MetalMat_BaseColor_79f8ffe8.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "VespaLight1": [
+    {
+      "texture": "LightMat1_BaseColor_4802954c.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "VespaBOdy": [
+    {
+      "texture": "T_Flat_n_2ebd99f7.tga",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "BodyMat_basecolortext_352c7d14.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "VespaLight": [
+    {
+      "texture": "LightMat_BaseColor_8b030bc9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "VespaSeat": [
+    {
+      "texture": "VespaSeatMat_BaseColor_d4ccac99.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "VespaWheel": [
+    {
+      "texture": "WheelMat_BaseColor_8cba2b25.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

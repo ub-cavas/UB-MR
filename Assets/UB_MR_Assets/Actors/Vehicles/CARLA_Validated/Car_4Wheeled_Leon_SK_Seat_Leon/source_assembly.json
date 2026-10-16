@@ -1,0 +1,14 @@
+{
+  "vehicle": {
+    "id": "Car_4Wheeled_Leon_SK_Seat_Leon",
+    "name": "SK_Seat_Leon",
+    "path": "/Game/Carla/Static/Car/4Wheeled/Leon/SK_Seat_Leon.SK_Seat_Leon",
+    "category": "Car"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Car/4Wheeled/Leon/SK_Seat_Leon.SK_Seat_Leon",
+    "blueprint": null,
+    "components": []
+  },
+  "assembly_type": "skeletal_body"
+}

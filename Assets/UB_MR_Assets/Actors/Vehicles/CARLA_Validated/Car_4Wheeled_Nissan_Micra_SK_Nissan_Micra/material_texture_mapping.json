@@ -1,0 +1,47 @@
+{
+  "M_NissanWheels": [
+    {
+      "texture": "T_NissanMicra_Wheel_d_93e2274a.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "M_NIssanDetails": [
+    {
+      "texture": "T_NissanMicra_Detail_d_cbe53a77.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_NissanBodyWork2": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Glass": [],
+  "M_NissanInterior": [
+    {
+      "texture": "T_NissanMicra_Interior_d_cc714837.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

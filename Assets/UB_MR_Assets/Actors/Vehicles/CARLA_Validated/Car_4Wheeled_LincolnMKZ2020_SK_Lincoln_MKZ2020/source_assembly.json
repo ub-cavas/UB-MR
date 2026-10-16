@@ -1,0 +1,790 @@
+{
+  "vehicle": {
+    "id": "Car_4Wheeled_LincolnMKZ2020_SK_Lincoln_MKZ2020",
+    "name": "SK_Lincoln_MKZ2020",
+    "path": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/SK_Lincoln_MKZ2020.SK_Lincoln_MKZ2020",
+    "category": "Car"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/SK_Lincoln_MKZ2020.SK_Lincoln_MKZ2020",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\LincolnMKZ2020\\BP_Lincoln2020.uasset",
+    "components": [
+      {
+        "name": "SM_Lincolnv1_lights",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/SM_Lincolnv1_lights.SM_Lincolnv1_lights",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            3.0517578125e-07
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      },
+      {
+        "name": "SM_LincolnDoor_Front_R",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/SM_LincolnDoor_Front_R.SM_LincolnDoor_Front_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.9595306396484375
+          ],
+          [
+            0.0,
+            1.0,
+            -6.123234262925839e-17,
+            -0.8802096745897643
+          ],
+          [
+            0.0,
+            6.123234262925839e-17,
+            1.0,
+            0.8739890289306641
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_001.fbx"
+      },
+      {
+        "name": "SM_LincolnDoor_Back_L",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/SM_LincolnDoor_Back_L.SM_LincolnDoor_Back_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.1595377254486084
+          ],
+          [
+            0.0,
+            1.0,
+            -6.123234262925839e-17,
+            0.8969478418897279
+          ],
+          [
+            0.0,
+            6.123234262925839e-17,
+            1.0,
+            0.9042851257324219
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_002.fbx"
+      },
+      {
+        "name": "SM_LincolnDoor_Back_R",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/SM_LincolnDoor_Back_R.SM_LincolnDoor_Back_R",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.15953275680541992
+          ],
+          [
+            0.0,
+            1.0,
+            -6.123234262925839e-17,
+            -0.8950441167284362
+          ],
+          [
+            0.0,
+            6.123234262925839e-17,
+            1.0,
+            0.8814220428466797
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_003.fbx"
+      },
+      {
+        "name": "SM_LincolnDoor_Front_L",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/SM_LincolnDoor_Front_L.SM_LincolnDoor_Front_L",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.9595306396484375
+          ],
+          [
+            0.0,
+            1.0,
+            -6.123234262925839e-17,
+            0.8741020777295717
+          ],
+          [
+            0.0,
+            6.123234262925839e-17,
+            1.0,
+            0.8739900207519531
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_004.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorL_Lincoln_Ext1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorL_Lincoln_Ext1.SM_Glass_DoorL_Lincoln_Ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_005.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorL_Lincoln_Ext2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorL_Lincoln_Ext2.SM_Glass_DoorL_Lincoln_Ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_006.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorL_Lincoln_Int1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorL_Lincoln_Int1.SM_Glass_DoorL_Lincoln_Int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_007.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorL_Lincoln_Int2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorL_Lincoln_Int2.SM_Glass_DoorL_Lincoln_Int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_008.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorL_Lincoln_Rear_Ext1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorL_Lincoln_Rear_Ext1.SM_Glass_DoorL_Lincoln_Rear_Ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -6.12323293943702e-17,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            6.12323293943702e-17,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_009.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorL_Lincoln_Rear_Ext2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorL_Lincoln_Rear_Ext2.SM_Glass_DoorL_Lincoln_Rear_Ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -6.12323293943702e-17,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            6.12323293943702e-17,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_010.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorL_Lincoln_Rear_Int1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorL_Lincoln_Rear_Int1.SM_Glass_DoorL_Lincoln_Rear_Int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -6.12323293943702e-17,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            6.12323293943702e-17,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_011.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorL_Lincoln_Rear_Int2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorL_Lincoln_Rear_Int2.SM_Glass_DoorL_Lincoln_Rear_Int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -6.12323293943702e-17,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            6.12323293943702e-17,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_012.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorR_Lincoln_Ext1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorR_Lincoln_Ext1.SM_Glass_DoorR_Lincoln_Ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_013.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorR_Lincoln_Ext2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorR_Lincoln_Ext2.SM_Glass_DoorR_Lincoln_Ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_014.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorR_Lincoln_Int1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorR_Lincoln_Int1.SM_Glass_DoorR_Lincoln_Int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_015.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorR_Lincoln_Int2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorR_Lincoln_Int2.SM_Glass_DoorR_Lincoln_Int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_016.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorR_Lincoln_Rear_Ext1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorR_Lincoln_Rear_Ext1.SM_Glass_DoorR_Lincoln_Rear_Ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.007433013916015625
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_017.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorR_Lincoln_Rear_Ext2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorR_Lincoln_Rear_Ext2.SM_Glass_DoorR_Lincoln_Rear_Ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.007433013916015625
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_018.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorR_Lincoln_Rear_Int1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorR_Lincoln_Rear_Int1.SM_Glass_DoorR_Lincoln_Rear_Int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.007433013916015625
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_019.fbx"
+      },
+      {
+        "name": "SM_Glass_DoorR_Lincoln_Rear_Int2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_DoorR_Lincoln_Rear_Int2.SM_Glass_DoorR_Lincoln_Rear_Int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -1.156314105833733e-23,
+            -1.8828045540431048e-08
+          ],
+          [
+            0.0,
+            1.156314105833733e-23,
+            1.0,
+            0.007433013916015625
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_020.fbx"
+      },
+      {
+        "name": "SM_Glass_Lincoln_Ext1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_Lincoln_Ext1.SM_Glass_Lincoln_Ext1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_021.fbx"
+      },
+      {
+        "name": "SM_Glass_Lincoln_Ext2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_Lincoln_Ext2.SM_Glass_Lincoln_Ext2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_022.fbx"
+      },
+      {
+        "name": "SM_Glass_Lincoln_Int1",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_Lincoln_Int1.SM_Glass_Lincoln_Int1",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_023.fbx"
+      },
+      {
+        "name": "SM_Glass_Lincoln_Int2",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/LincolnMKZ2020/Glass/SM_Glass_Lincoln_Int2.SM_Glass_Lincoln_Int2",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_024.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

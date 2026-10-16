@@ -1,0 +1,29 @@
+{
+  "White": [],
+  "PolishedAluminiumWhite": [],
+  "plasticgrey": [],
+  "PolishedAluminiumWhite_Inst": [],
+  "Skyblue": [],
+  "Fbx Default Material 5": [],
+  "GlassInstance": [],
+  "plasticgrey_Inst": [],
+  "Fbx Default Material 8": [],
+  "Fbx Default Material 9": [],
+  "Rubber_Inst": [],
+  "PolishedAluminiumBlack_Inst": [],
+  "Vh_Car_BmwIsetta2016_MicrolinoMat": [],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 14": [],
+  "Fbx Default Material 15": []
+}

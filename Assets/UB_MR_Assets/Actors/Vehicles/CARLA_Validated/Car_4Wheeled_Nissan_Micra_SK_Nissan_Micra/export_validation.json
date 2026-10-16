@@ -1,0 +1,85 @@
+{
+  "Car_4Wheeled_Nissan_Micra_SK_Nissan_Micra_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 15803,
+    "bounds": [
+      [
+        -1.8166879415512085,
+        -0.923525869846344,
+        0.030604733154177666
+      ],
+      [
+        1.8166879415512085,
+        0.9215880036354065,
+        1.5318875312805176
+      ]
+    ],
+    "dimensions_m": [
+      3.633375883102417,
+      1.8451138734817505,
+      1.50128279812634
+    ],
+    "materials": 6,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_Nissan_Micra_SK_Nissan_Micra_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -1.8226937055587769,
+        -0.9277023673057556,
+        0.022042205557227135
+      ],
+      [
+        1.8224010467529297,
+        0.9281731247901917,
+        1.5414096117019653
+      ]
+    ],
+    "dimensions_m": [
+      3.6450947523117065,
+      1.8558754920959473,
+      1.5193674061447382
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 4.524500414878207,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.009522080421447754
+  }
+}

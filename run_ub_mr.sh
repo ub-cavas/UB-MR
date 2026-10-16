@@ -105,6 +105,7 @@ docker run --rm "${DOCKER_INTERACTIVE_ARGS[@]}" \
   -e CYCLONEDDS_URI=file:///etc/cyclonedds.xml \
   -v ${HOME}/cyclonedds.xml:/etc/cyclonedds.xml:ro \
   -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
+  -v /proc:/host/proc:ro \
   -v "${REPO_ROOT}/Docker/Scripts/ub-mr.sh:/app/ub-mr.sh:ro" \
   -v "${REPO_ROOT}/Docker/Logs:/app/Logs" \
   -v "${REPO_ROOT}/Scripts:/app/Scripts:ro" \

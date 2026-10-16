@@ -1,0 +1,71 @@
+{
+  "MI_BodyWStaticMesh4": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "PolishedAluminiumWhite_Inst": [],
+  "plasticgrey_Inst": [],
+  "plastiCbLACK": [],
+  "BrushedAluminiumWhite": [],
+  "GlassInstance": [],
+  "Fbx Default Material 6": [],
+  "LightsFront": [
+    {
+      "texture": "Vh_Car_MercedesBenzCoupe_LightFrontMat_BaseColor_634294f7.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "BackGroundGrill_Mat": [
+    {
+      "texture": "Vh_Car_MercedesBenzCoupe_BackgroungGrillMat_BaseColor_c959b388.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "LightsBack": [
+    {
+      "texture": "Vh_Car_MercedesBenzCoupe_LightBackMat_BaseColor_163b7dbd.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 10": [],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "BrushedAluminiumWhite_Inst": [],
+  "MercedesTop": [
+    {
+      "texture": "Vh_Car_MercedesBenzCoupe_MercedesTopMat_BaseColor_a8b7610b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MercedesBaezCoupe_CoverWheel_Mat": [
+    {
+      "texture": "Vh_Car_MercedesBenzCoupe_CoverWheelMat_BaseColor_d94d9ddc.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Rubber_Inst": []
+}

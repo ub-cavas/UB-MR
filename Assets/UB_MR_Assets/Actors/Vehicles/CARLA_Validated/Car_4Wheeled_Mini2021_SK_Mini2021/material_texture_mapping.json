@@ -1,0 +1,85 @@
+{
+  "MI_LicensePlate_Mini2021": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_BodyWork_Mini2021": [
+    {
+      "texture": "M_Bodywork_Mini2021_d_afab1f9e.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_wheels_mini2021": [
+    {
+      "texture": "M_WheelsFixed_d_5400a55c.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details_Mini2021": [
+    {
+      "texture": "M_Interior_Mini2021_d_3bec2043.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_BodyWork_Mini2021.001": [
+    {
+      "texture": "M_Bodywork_Mini2021_d_afab1f9e.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details_Mini2021.001": [
+    {
+      "texture": "M_Interior_Mini2021_d_3bec2043.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassInt_Mini2021": [],
+  "MI_GlassInt_Mini2021.001": [],
+  "MI_GlassExt_Mini2021": [],
+  "MI_GlassExt_Lights_Mini2021": [],
+  "MI_GlassExt_Mini2021.001": [],
+  "MI_GlassInt_Mini2021.002": [],
+  "MI_GlassInt_Lights_Mini2021": [],
+  "MI_GlassInt_Mini2021.003": [],
+  "MI_Details_Mini2021.002": [
+    {
+      "texture": "M_Interior_Mini2021_d_3bec2043.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_BodyWork_Mini2021.002": [
+    {
+      "texture": "M_Bodywork_Mini2021_d_afab1f9e.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Lights_Mini2021": [],
+  "MI_GlassExt_Mini2021.002": [],
+  "MI_GlassExt_Mini2021.003": [],
+  "MI_GlassExt_Mini2021.004": [],
+  "MI_GlassExt_Mini2021.005": [],
+  "MI_GlassInt_Mini2021.004": [],
+  "MI_GlassInt_Mini2021.005": []
+}

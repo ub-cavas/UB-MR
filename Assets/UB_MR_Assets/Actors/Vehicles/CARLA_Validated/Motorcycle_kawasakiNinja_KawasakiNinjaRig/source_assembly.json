@@ -1,0 +1,14 @@
+{
+  "vehicle": {
+    "id": "Motorcycle_kawasakiNinja_KawasakiNinjaRig",
+    "name": "KawasakiNinjaRig",
+    "path": "/Game/Carla/Static/Motorcycle/kawasakiNinja/KawasakiNinjaRig.KawasakiNinjaRig",
+    "category": "Motorcycle"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Motorcycle/kawasakiNinja/KawasakiNinjaRig.KawasakiNinjaRig",
+    "blueprint": null,
+    "components": []
+  },
+  "assembly_type": "skeletal_body"
+}

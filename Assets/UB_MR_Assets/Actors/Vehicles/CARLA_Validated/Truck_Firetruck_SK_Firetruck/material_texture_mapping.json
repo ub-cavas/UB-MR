@@ -1,0 +1,89 @@
+{
+  "MI_BodyWokr_FireTruck": [
+    {
+      "texture": "T_Bodywork_Firetruck_d_a125b1a9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details01_FireTruck": [
+    {
+      "texture": "Actros_2141_Firetruck_M_Details_Truck_RDirt_0e5d3b4f.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details02_FireTruck": [
+    {
+      "texture": "Actros_2141_Firetruck_M_Details2_Truck_RDirt_5c2e4dd8.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlate_FireTruck": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Lights_FireTruck": [],
+  "MI_VehicleLights_Sirens_FireTruck": [],
+  "MI_BodyWokr_FireTruck.001": [
+    {
+      "texture": "T_Bodywork_Firetruck_d_a125b1a9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details01_FireTruck.001": [
+    {
+      "texture": "Actros_2141_Firetruck_M_Details_Truck_RDirt_0e5d3b4f.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_BodyWokr_FireTruck.002": [
+    {
+      "texture": "T_Bodywork_Firetruck_d_a125b1a9.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Details01_FireTruck.002": [
+    {
+      "texture": "Actros_2141_Firetruck_M_Details_Truck_RDirt_0e5d3b4f.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassExtFireTruck": [],
+  "MI_GlassExtFireTruck.001": [],
+  "MI_GlassExtFireTruck.002": [],
+  "MI_GlassExtFireTruck_Lights": [],
+  "MI_GlassInt_FireTruck": [],
+  "MI_GlassInt_FireTruck.001": [],
+  "MI_GlassInt_FireTruck.002": [],
+  "MI_GlassInt_FireTruck.003": [],
+  "MI_GlassExtFireTruck_Lights.001": [],
+  "MI_GlassExtFireTruck.003": [],
+  "MI_GlassExtFireTruck.004": [],
+  "MI_GlassInt_FireTruck_Lights": [],
+  "MI_GlassInt_FireTruck.004": [],
+  "MI_GlassInt_FireTruck_BlueSirens": [],
+  "MI_GlassInt_FireTruck_GlassFront": [],
+  "MI_GlassInt_FireTruck.005": [],
+  "MI_GlassInt_FireTruck_GlassFront.001": []
+}

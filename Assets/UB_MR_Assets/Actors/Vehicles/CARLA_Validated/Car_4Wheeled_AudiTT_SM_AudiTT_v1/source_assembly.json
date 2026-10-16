@@ -1,0 +1,46 @@
+{
+  "vehicle": {
+    "id": "Car_4Wheeled_AudiTT_SM_AudiTT_v1",
+    "name": "SM_AudiTT_v1",
+    "path": "/Game/Carla/Static/Car/4Wheeled/AudiTT/SM_AudiTT_v1.SM_AudiTT_v1",
+    "category": "Car"
+  },
+  "source_assembly": {
+    "skeletal_mesh": "/Game/Carla/Static/Car/4Wheeled/AudiTT/SM_AudiTT_v1.SM_AudiTT_v1",
+    "blueprint": "C:\\CARLA-Vehicles\\Content\\Carla\\Blueprints\\Vehicles\\AudiTT\\BP_AudiTT.uasset",
+    "components": [
+      {
+        "name": "SM_AudiTT_v1_lights",
+        "asset": "/Game/Carla/Static/Car/4Wheeled/AudiTT/SM_Glass/SM_AudiTT_v1_lights.SM_AudiTT_v1_lights",
+        "matrix_blender": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "file": "part_000.fbx"
+      }
+    ]
+  },
+  "assembly_type": "blueprint_rest_pose"
+}

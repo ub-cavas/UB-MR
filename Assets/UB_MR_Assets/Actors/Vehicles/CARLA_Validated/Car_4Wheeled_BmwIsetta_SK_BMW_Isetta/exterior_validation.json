@@ -1,0 +1,31 @@
+{
+  "nonadjacent_triangle_intersections": 0,
+  "max_allowed_panel_p95_m": 0.011496328438321749,
+  "visible_exterior_panels": {
+    "White": {
+      "samples": 1829,
+      "median_distance_m": 0.0017068223096430302,
+      "p95_distance_m": 0.00930893272161483,
+      "max_distance_m": 0.06528501212596893
+    },
+    "Skyblue": {
+      "samples": 1391,
+      "median_distance_m": 0.001751800300553441,
+      "p95_distance_m": 0.008617185987532139,
+      "max_distance_m": 0.03678130730986595
+    },
+    "Fbx Default Material 5": {
+      "samples": 84,
+      "median_distance_m": 0.0015072351088747382,
+      "p95_distance_m": 0.001744539657374844,
+      "max_distance_m": 0.002666207728907466
+    },
+    "GlassInstance": {
+      "samples": 417,
+      "median_distance_m": 0.0017513621132820845,
+      "p95_distance_m": 0.005381578393280503,
+      "max_distance_m": 0.010835867375135422
+    }
+  },
+  "method": "Triangle-centre samples on selected source panels visible along their outward geometric normal; nearest distance to independently reimported final proxy. SDF proxy remains an approximation."
+}

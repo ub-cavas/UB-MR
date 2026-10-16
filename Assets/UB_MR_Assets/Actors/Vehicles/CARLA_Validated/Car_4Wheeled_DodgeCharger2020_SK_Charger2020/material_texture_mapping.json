@@ -1,0 +1,135 @@
+{
+  "MI_ChargerCop_Interior": [
+    {
+      "texture": "T_Interior__DodgeCharger_d_0175565b.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_Interior__DodgeCharger_d_0175565b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Charger2020_Bodywork": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePlate_Charger2020": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_GlassInt_Charger": [],
+  "MI_Charger2020_Bodywork.001": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_ChargerCop_Interior.001": [
+    {
+      "texture": "T_Interior__DodgeCharger_d_0175565b.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_Interior__DodgeCharger_d_0175565b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Charger2020_Bodywork.002": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_ChargerCop_Interior.002": [
+    {
+      "texture": "T_Interior__DodgeCharger_d_0175565b.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_Interior__DodgeCharger_d_0175565b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_ChargerCop_Interior.003": [
+    {
+      "texture": "T_Interior__DodgeCharger_d_0175565b.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_Interior__DodgeCharger_d_0175565b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Charger2020_Bodywork.003": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_ChargerCop_Interior.004": [
+    {
+      "texture": "T_Interior__DodgeCharger_d_0175565b.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_Interior__DodgeCharger_d_0175565b.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_Charger2020_Bodywork.004": [
+    {
+      "texture": "T_Flat_White_d_2763e818.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "M_GlassExt_Charger": [],
+  "M_GlassExt_Charger.001": [],
+  "M_GlassExt_Charger.002": [],
+  "M_GlassExt_Charger.003": [],
+  "M_GlassExt_Charger.004": [],
+  "M_GlassExt_Charger.005": [],
+  "M_GlassExt_Charger.006": [],
+  "M_GlassExt_Charger.007": [],
+  "MI_GlassInt_Charger.001": [],
+  "MI_GlassInt_Charger.002": [],
+  "MI_GlassInt_Charger.003": [],
+  "MI_GlassInt_Charger.004": [],
+  "MI_GlassInt_Charger.005": [],
+  "MI_GlassInt_Charger.006": [],
+  "MI_GlassInt_Charger.007": [],
+  "MI_GlassInt_Charger.008": [],
+  "WorldGridMaterial": [],
+  "M_GlassExt_Charger.008": [],
+  "M_GlassExt_Charger.009": [],
+  "MI_GlassInt_Charger.009": []
+}

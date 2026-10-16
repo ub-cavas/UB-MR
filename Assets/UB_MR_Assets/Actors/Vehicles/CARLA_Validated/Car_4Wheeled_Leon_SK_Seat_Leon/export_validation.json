@@ -1,0 +1,110 @@
+{
+  "Car_4Wheeled_Leon_SK_Seat_Leon_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 25261,
+    "bounds": [
+      [
+        -2.096565008163452,
+        -0.9065345525741577,
+        0.0027175855357199907
+      ],
+      [
+        2.0962653160095215,
+        0.9096513986587524,
+        1.4765487909317017
+      ]
+    ],
+    "dimensions_m": [
+      4.192830324172974,
+      1.8161859512329102,
+      1.4738312053959817
+    ],
+    "materials": 14,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_Leon_SK_Seat_Leon_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.106656074523926,
+        -0.9089512228965759,
+        -0.013830057345330715
+      ],
+      [
+        2.107795476913452,
+        0.9110720753669739,
+        1.4766225814819336
+      ]
+    ],
+    "dimensions_m": [
+      4.214451551437378,
+      1.8200232982635498,
+      1.4904526388272643
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 5.3812669210739665,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 516,
+        "max_outside_distance_m": 0.01683306321501732
+      }
+    },
+    "exterior_validation": {
+      "nonadjacent_triangle_intersections": 0,
+      "max_allowed_panel_p95_m": 0.021837657938400905,
+      "visible_exterior_panels": {
+        "MI_BodyWStaticMesh7": {
+          "samples": 4410,
+          "median_distance_m": 0.0028707687743008137,
+          "p95_distance_m": 0.011482936190441252,
+          "max_distance_m": 0.026036139577627182
+        },
+        "GlassInstance": {
+          "samples": 379,
+          "median_distance_m": 0.003682851092889905,
+          "p95_distance_m": 0.01791737340390682,
+          "max_distance_m": 0.03134094551205635
+        }
+      },
+      "method": "Triangle-centre samples on selected source panels visible along their outward geometric normal; nearest distance to independently reimported final proxy. SDF proxy remains an approximation."
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.016547642881050706
+  }
+}

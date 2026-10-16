@@ -1,0 +1,122 @@
+{
+  "Car_4Wheeled_BmwIsetta_SK_BMW_Isetta_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 12076,
+    "bounds": [
+      [
+        -1.1036475896835327,
+        -0.740399956703186,
+        -0.010856952518224716
+      ],
+      [
+        1.1036474704742432,
+        0.7405198216438293,
+        1.3651678562164307
+      ]
+    ],
+    "dimensions_m": [
+      2.207295060157776,
+      1.4809197783470154,
+      1.3760248087346554
+    ],
+    "materials": 16,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_BmwIsetta_SK_BMW_Isetta_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -1.1052173376083374,
+        -0.7405427694320679,
+        -0.019004715606570244
+      ],
+      [
+        1.1099843978881836,
+        0.7419151663780212,
+        1.3630263805389404
+      ]
+    ],
+    "dimensions_m": [
+      2.215201735496521,
+      1.4824579358100891,
+      1.3820310961455107
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 2.218990493899429,
+    "components": 1,
+    "component_coverage": {
+      "skeletal_body": {
+        "samples": 526,
+        "max_outside_distance_m": 0.007370790466666222
+      }
+    },
+    "exterior_validation": {
+      "nonadjacent_triangle_intersections": 0,
+      "max_allowed_panel_p95_m": 0.011496328438321749,
+      "visible_exterior_panels": {
+        "White": {
+          "samples": 1829,
+          "median_distance_m": 0.0017068223096430302,
+          "p95_distance_m": 0.00930893272161483,
+          "max_distance_m": 0.06528501212596893
+        },
+        "Skyblue": {
+          "samples": 1391,
+          "median_distance_m": 0.001751800300553441,
+          "p95_distance_m": 0.008617185987532139,
+          "max_distance_m": 0.03678130730986595
+        },
+        "Fbx Default Material 5": {
+          "samples": 84,
+          "median_distance_m": 0.0015072351088747382,
+          "p95_distance_m": 0.001744539657374844,
+          "max_distance_m": 0.002666207728907466
+        },
+        "GlassInstance": {
+          "samples": 417,
+          "median_distance_m": 0.0017513621132820845,
+          "p95_distance_m": 0.005381578393280503,
+          "max_distance_m": 0.010835867375135422
+        }
+      },
+      "method": "Triangle-centre samples on selected source panels visible along their outward geometric normal; nearest distance to independently reimported final proxy. SDF proxy remains an approximation."
+    }
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.008147763088345528
+  }
+}

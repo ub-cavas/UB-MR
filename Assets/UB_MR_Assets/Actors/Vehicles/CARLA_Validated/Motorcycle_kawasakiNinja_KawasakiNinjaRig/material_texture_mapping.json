@@ -1,0 +1,52 @@
+{
+  "Ruedas": [
+    {
+      "texture": "RuedasMat_BaseColor_ca968c1d.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Metal": [
+    {
+      "texture": "MetalMat_BaseColor_eb6b7ed3.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "KawasakiBody": [
+    {
+      "texture": "T_Flat_n_2ebd99f7.tga",
+      "connections": [
+        "Color"
+      ]
+    },
+    {
+      "texture": "BodyMat_BaseColor_73288d8d.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "NewMaterialInstanceConstant": [
+    {
+      "texture": "PlasticMat_BaseColor_0e6939d4.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ]
+}

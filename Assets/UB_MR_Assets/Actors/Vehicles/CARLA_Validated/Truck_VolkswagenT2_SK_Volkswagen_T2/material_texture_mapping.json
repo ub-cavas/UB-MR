@@ -1,0 +1,59 @@
+{
+  "plastiCbLACK": [],
+  "Vh_Van_VolksWagenT2_WheelCover": [],
+  "MI_CarLightGlass_VolkswagenT2_front": [
+    {
+      "texture": "Vh_Van_VolkswagenT2_LightFrontMat_BaseColor_e7775b90.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "MI_CarLightGlass_VolkswagenT2_back": [
+    {
+      "texture": "Vh_Van_VolkswagenT2_LightBackMat_BaseColor_f57fdeb5.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 4": [],
+  "PolishedAluminiumWhite_Inst": [],
+  "Rubber_Inst": [],
+  "White": [],
+  "MI_Exterior_VolkswagenT2": [
+    {
+      "texture": "T_Asphalt02_d_d4a78c56.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "Fbx Default Material 9": [],
+  "Fbx Default Material 10": [],
+  "Fbx Default Material 11": [],
+  "PolishedAluminiumBlack_Inst": [],
+  "Fbx Default Material 13": [],
+  "BackGroundGrill_Mat": [
+    {
+      "texture": "Vh_Car_MercedesBenzCoupe_BackgroungGrillMat_BaseColor_c959b388.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "PolishedAluminiumWhite": [],
+  "MI_LicensePLate": [
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": []
+    },
+    {
+      "texture": "T_LicensePlate_d_74414bff.tga",
+      "connections": [
+        "Base Color"
+      ]
+    }
+  ],
+  "GlassInstance": []
+}

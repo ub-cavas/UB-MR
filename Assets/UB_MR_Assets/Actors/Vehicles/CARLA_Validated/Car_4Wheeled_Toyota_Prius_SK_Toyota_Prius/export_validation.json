@@ -1,0 +1,85 @@
+{
+  "Car_4Wheeled_Toyota_Prius_SK_Toyota_Prius_Textured.fbx": {
+    "mesh_objects": 1,
+    "triangles": 26789,
+    "bounds": [
+      [
+        -2.2547731399536133,
+        -1.0030232667922974,
+        -0.03824769705533981
+      ],
+      [
+        2.258749485015869,
+        1.0037912130355835,
+        1.4865858554840088
+      ]
+    ],
+    "dimensions_m": [
+      4.513522624969482,
+      2.006814479827881,
+      1.5248335525393486
+    ],
+    "materials": 22,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "Car_4Wheeled_Toyota_Prius_SK_Toyota_Prius_SDF_Proxy.fbx": {
+    "mesh_objects": 1,
+    "triangles": 8000,
+    "bounds": [
+      [
+        -2.2627432346343994,
+        -1.0085724592208862,
+        -0.046980179846286774
+      ],
+      [
+        2.2671594619750977,
+        1.015404224395752,
+        1.4855679273605347
+      ]
+    ],
+    "dimensions_m": [
+      4.529902696609497,
+      2.023976683616638,
+      1.5325481072068214
+    ],
+    "materials": 0,
+    "missing_images": [],
+    "object_origins": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "scales": [
+      [
+        1.0,
+        1.0,
+        1.0
+      ]
+    ],
+    "non_manifold_edges": 0,
+    "boundary_edges": 0,
+    "signed_volume": 7.324304569025945,
+    "components": 1
+  },
+  "alignment": {
+    "same_origin": true,
+    "same_scale": true,
+    "max_bounds_difference_m": 0.011613011360168457
+  }
+}

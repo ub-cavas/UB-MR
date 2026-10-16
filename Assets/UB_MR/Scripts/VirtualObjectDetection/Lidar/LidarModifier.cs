@@ -6,6 +6,7 @@ using CAVAS.UB_MR.ROS2;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System;
+using CAVAS.UB_MR.Telemetry;
 
 
 namespace CAVAS.UB_MR.DT.Sensors.Lidar
@@ -13,6 +14,9 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
     public class LidarModifier : SensorModifier
     {
         readonly Agent owner;
+        readonly ResourceTelemetry telemetry;
+        readonly SensorTelemetry timing;
+        readonly IMonotonicClock clock;
         Coroutine subscriptionRoutine;
         volatile bool disposed;
         ComputeShader mLiDARComputeShader;
@@ -21,11 +25,11 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
 
         #region Data Queues
         // Incoming Point Clouds
-        ConcurrentQueue<PointCloud2> mInput_PCD_Queue;
+        ConcurrentQueue<TimedMessage<PointCloud2>> mInput_PCD_Queue;
         readonly object _staged_lock = new object();
         Vector4[] mStaged_PCD;
         // Outgoing Point Clouds
-        ConcurrentQueue<PointCloud2> mOutput_PCD_Queue;
+        ConcurrentQueue<TimedMessage<PointCloud2>> mOutput_PCD_Queue;
         readonly object _ready_lock = new object();
         Vector4[] mReadyPCD;
         // GPU Buffers
@@ -53,10 +57,13 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
             // -- Set up subscriptions to LiDAR topics and create topic for modified LiDAR data
             this.mNode = inNode;
             owner = inOwner;
+            telemetry = inOwner.Telemetry;
+            clock = telemetry?.Clock ?? MonotonicClock.Instance;
+            timing = telemetry?.RegisterLidar(inOwner.name + " · " + inTopicName);
             this.mPointCloudPublisher = inNode.CreatePublisher<PointCloud2>(inTopicName + "_modified");
             // Set up Queues
-            this.mInput_PCD_Queue = new ConcurrentQueue<PointCloud2>();
-            this.mOutput_PCD_Queue = new ConcurrentQueue<PointCloud2>();
+            this.mInput_PCD_Queue = new ConcurrentQueue<TimedMessage<PointCloud2>>();
+            this.mOutput_PCD_Queue = new ConcurrentQueue<TimedMessage<PointCloud2>>();
             subscriptionRoutine = inOwner.StartCoroutine(Subscribe_To_PCD2(inTopicName, inQoSProfile, inRaysPerScan));
 
             this.mKernel = this.mLiDARComputeShader.FindKernel("SDFRaymarch");
@@ -87,15 +94,26 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
             yield return null;
 
             // LiDAR Queued for GPU Processing
-            this.mPointCloudSubscriber = this.mNode.CreateSubscription<PointCloud2>(inTopicName, (inPointCloud) => EnqueuePCD(inPointCloud, this.mInput_PCD_Queue),inQoSProfile);
+            this.mPointCloudSubscriber = this.mNode.CreateSubscription<PointCloud2>(inTopicName, Receive, inQoSProfile);
             Debug.Log("Subscribed to: " + inTopicName);
         }
         
         public override void Publish()
         {
-            PointCloud2 msg = DequeuePCD(this.mOutput_PCD_Queue);
-            if (msg is not null)
-                this.mPointCloudPublisher.Publish(msg);
+            if (disposed) return;
+            var scan = DequeuePCD(this.mOutput_PCD_Queue);
+            if (scan == null) return;
+            this.mPointCloudPublisher.Publish(scan.Message);
+            timing?.RecordPublished(scan.ReceivedAt, scan.Bypass);
+            telemetry?.SensorPayload.AddSent(scan.Message.Data.LongLength);
+        }
+
+        void Receive(PointCloud2 message)
+        {
+            double receivedAt = clock.Seconds;
+            if (disposed) return;
+            telemetry?.SensorPayload.AddReceived(message?.Data?.LongLength ?? 0);
+            EnqueuePCD(new TimedMessage<PointCloud2>(message, receivedAt), mInput_PCD_Queue);
         }
 
         PointCloud2 ModifyPCD_InPlace(PointCloud2 inOriginalMessage, Vector4[] inNewData)
@@ -168,15 +186,16 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         #endregion
 
         #region Data Queue Operations
-        void EnqueuePCD(PointCloud2 inPointCloud, ConcurrentQueue<PointCloud2> inQueue)
+        void EnqueuePCD(TimedMessage<PointCloud2> scan, ConcurrentQueue<TimedMessage<PointCloud2>> inQueue)
         {
             if (disposed) return;
+            PointCloud2 inPointCloud = scan.Message;
             if (inPointCloud == null || inPointCloud.Data == null || inPointCloud.Fields == null)
             {
                 Debug.LogWarning("Invalid PointCloud2!");
                 return;
             }
-            inQueue.Enqueue(inPointCloud);
+            inQueue.Enqueue(scan);
             while (inQueue.Count > 2) inQueue.TryDequeue(out _);
         }
         
@@ -185,10 +204,10 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         /// </summary>
         /// <param name="inQueue"></param>
         /// <returns></returns>
-        PointCloud2 DequeuePCD(ConcurrentQueue<PointCloud2> inQueue)
+        TimedMessage<PointCloud2> DequeuePCD(ConcurrentQueue<TimedMessage<PointCloud2>> inQueue)
         {
-            PointCloud2 retPCD = null;
-            while (inQueue.TryDequeue(out PointCloud2 pcd))
+            TimedMessage<PointCloud2> retPCD = null;
+            while (inQueue.TryDequeue(out var pcd))
                 retPCD = pcd;
             return retPCD;
         }
@@ -352,9 +371,13 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         /// <param name="inTransform"></param>
         public bool TryModify(Transform inTransform)
         {
+            if (disposed) return false;
             // No-op if no data
-            PointCloud2 originalPCD = DequeuePCD(this.mInput_PCD_Queue);
-            if (originalPCD is null) { return false; }
+            var scan = DequeuePCD(this.mInput_PCD_Queue);
+            if (scan == null) return false;
+            double startedAt = clock.Seconds;
+            PointCloud2 originalPCD = scan.Message;
+            if (!PointCloudValidation.HasCoordinates(originalPCD)) return false;
 
             int count = (int)originalPCD.Width * (int)originalPCD.Height;
             const int THREADS = 128; // ** MUST MATCH COMPUTE SHADER **
@@ -363,9 +386,13 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
             List<SDFTexture> activeSDFs = GetActiveSDFs(inTransform);
             if (activeSDFs.Count == 0)
             {
-                EnqueuePCD(originalPCD, this.mOutput_PCD_Queue);
+                EnqueuePCD(new TimedMessage<PointCloud2>(originalPCD, scan.ReceivedAt, true), this.mOutput_PCD_Queue);
                 return true;
             }
+
+            // Reject oversized scans before staging into the fixed configured buffers.
+            if ((long)originalPCD.Width * originalPCD.Height > (mStaged_PCD?.Length ?? 0) ||
+                mInput_GPU_Buffer == null || mOutput_GPU_Buffer == null) return false;
 
             // -- Update GPU cached transforms of the LiDAR --
             UpdateLidarTransforms(inTransform);
@@ -394,7 +421,8 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
                 currentBuffer.GetData(this.mReadyPCD, managedBufferStartIndex: 0, computeBufferStartIndex: 0, count: count);
                 // -- Create new message with GPU results --
                 PointCloud2 pcd = ModifyPCD_InPlace(originalPCD, this.mReadyPCD);
-                EnqueuePCD(pcd, this.mOutput_PCD_Queue);
+                timing?.RecordProcessing(startedAt);
+                EnqueuePCD(new TimedMessage<PointCloud2>(pcd, scan.ReceivedAt), this.mOutput_PCD_Queue);
             }
             return true;
         }
@@ -403,6 +431,7 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         {
             if (disposed) return;
             disposed = true;
+            timing?.Dispose();
             if (owner != null && subscriptionRoutine != null) owner.StopCoroutine(subscriptionRoutine);
             subscriptionRoutine = null;
             this.mInput_GPU_Buffer?.Release();

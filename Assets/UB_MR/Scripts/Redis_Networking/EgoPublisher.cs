@@ -8,9 +8,9 @@ using UnityEngine;
 namespace UB_MR.Redis_Networking
 {
     /// <summary>
-    /// Publishes the physical ego vehicle (LincolnMKZ / DynamicAgent) pose over
-    /// UDP to ego_bridge.py, which relays it to Redis so render_ego.py can
-    /// render it in CARLA.
+    /// Publishes the physical ego vehicle (LincolnMKZ / DynamicAgent) through the
+    /// Main Menu's Redis connection for the server-side CARLA ego renderer.
+    /// Scene-only launches retain the UDP bridge path.
     ///
     /// The LincolnMKZ GameObject is instantiated at runtime, so the DynamicAgent
     /// is discovered by periodic scene search rather than an inspector reference.
@@ -19,8 +19,8 @@ namespace UB_MR.Redis_Networking
     ///
     /// The pose is converted to the CARLA frame before sending, so the wire
     /// format matches the traffic messages (CARLA coordinates, yaw in degrees).
-    /// The map-frame settings below MUST match the ones on TrafficRenderer,
-    /// since this applies the exact inverse of TrafficRenderer.ApplyPose().
+    /// CarlaMapFrame is shared with TrafficRenderer so both directions use the
+    /// same origin and undo/apply the complete runtime map alignment.
     /// </summary>
     public class EgoPublisher : MonoBehaviour
     {
@@ -36,24 +36,22 @@ namespace UB_MR.Redis_Networking
         [Tooltip("Vehicle color as R,G,B (0-255).")]
         [SerializeField] private string vehicleColor = "0,0,0";
 
-        [Header("Network")]
-        [SerializeField] private string bridgeHost = "100.83.98.37";
+        [Header("UDP fallback (scene-only launches)")]
+        [SerializeField] private string bridgeHost = "127.0.0.1";
         [SerializeField] private int bridgePort = 12346;
+        [Header("Publication")]
         [SerializeField] private float publishRateHz = 20f;
 
-        [Header("Map frame (must match TrafficRenderer)")] 
+        [Header("Map frame (shared with TrafficRenderer)")]
         [SerializeField] private Module module;
-        [SerializeField] private Transform mapRoot;
-        [Tooltip("Apply only the runtime client-local Unity Y rotation delta from the map UI.")]
-        [SerializeField] private bool applyClientMapYawCorrection = true;
-        [Tooltip("Map UI Y rotation that corresponds to the uncorrected CARLA/RoadRunner traffic frame.")]
-        [SerializeField] private float uncorrectedMapYawDegrees = 90f;
-        [SerializeField] private Vector3 originOffset = new Vector3(1.347f, 0f, 5.916f);
+        private CarlaMapFrame _mapFrame;
+        private bool _waitingForModule;
 
         private DynamicAgent _agent;
         private float _nextAgentSearchTime;
         private bool _hasPoseSource;
 
+        private ServerConnection serverConnection;
         private UdpClient _udpClient;
         private float _sendInterval;
         private float _nextSendTime;
@@ -63,28 +61,33 @@ namespace UB_MR.Redis_Networking
             if (string.IsNullOrEmpty(egoId))
                 egoId = SystemInfo.deviceUniqueIdentifier;
 
-            ResolveModule();
-            ResolveMapRoot();
+            ResolveMapFrame();
         }
 
         void Start()
         {
-            _udpClient = new UdpClient();
+            serverConnection = ServerConnection.Instance;
+            if (serverConnection == null) _udpClient = new UdpClient();
             _sendInterval = 1f / Mathf.Max(publishRateHz, 1f);
+            if (serverConnection != null)
+            {
+                Debug.Log("[EgoPublisher] Using the Main Menu server connection.");
+                return;
+            }
             Debug.Log($"[EgoPublisher] Publishing ego '{egoId}' to {bridgeHost}:{bridgePort} at {publishRateHz} Hz " +
                       "(waiting for DynamicAgent to spawn)");
         }
 
-        void Update()
+        void LateUpdate()
         {
-            if (_udpClient == null) return;
+            if (_udpClient == null && (serverConnection == null || !serverConnection.IsConnected)) return;
             if (Time.time < _nextSendTime) return;
             _nextSendTime = Time.time + _sendInterval;
 
-            if (!TryGetEgoWorldPose(out Vector3 worldPosition, out float worldYaw))
+            if (!TryGetEgoWorldPose(out Vector3 worldPosition, out Quaternion worldRotation))
                 return;
 
-            SendEgoPose(worldPosition, worldYaw);
+            SendEgoPose(worldPosition, worldRotation);
         }
 
         void OnDestroy()
@@ -93,15 +96,15 @@ namespace UB_MR.Redis_Networking
             _udpClient = null;
         }
 
-        private bool TryGetEgoWorldPose(out Vector3 worldPosition, out float worldYaw)
+        private bool TryGetEgoWorldPose(out Vector3 worldPosition, out Quaternion worldRotation)
         {
             worldPosition = default;
-            worldYaw = 0f;
+            worldRotation = Quaternion.identity;
 
             if (egoTransformOverride != null)
             {
                 worldPosition = egoTransformOverride.position;
-                worldYaw = egoTransformOverride.eulerAngles.y;
+                worldRotation = egoTransformOverride.rotation;
                 NotePoseSource(true, "transform override");
                 return true;
             }
@@ -122,9 +125,7 @@ namespace UB_MR.Redis_Networking
             }
 
             worldPosition = _agent.WorldPosition();
-            Debug.Log($"[EgoPublisher] Ego position: {worldPosition}");
-            worldYaw = _agent.WorldRotation().eulerAngles.y;
-            Debug.Log($"[EgoPublisher] Ego rotation: {worldYaw}");
+            worldRotation = _agent.WorldRotation();
             NotePoseSource(true, _agent.gameObject.name);
             return true;
         }
@@ -140,29 +141,27 @@ namespace UB_MR.Redis_Networking
                 Debug.Log("[EgoPublisher] Ego pose source lost — publishing paused until the DynamicAgent reappears");
         }
 
-        private void SendEgoPose(Vector3 worldPosition, float worldYaw)
+        private void SendEgoPose(Vector3 worldPosition, Quaternion worldRotation)
         {
-            // Inverse of TrafficRenderer.ApplyPose():
-            //   world = yawCorrection * (unityFromCarla(pos) + originOffset)
-            // therefore:
-            //   unityFromCarla(pos) = inverse(yawCorrection) * world - originOffset
-            float yawDelta = GetClientMapYawDeltaDegrees();
-            Quaternion inverseCorrection = Quaternion.Euler(0f, -yawDelta, 0f);
+            CarlaMapFrame frame = ResolveMapFrame();
+            if (frame == null || !frame.TryUnityWorldToCarlaPose(worldPosition, worldRotation,
+                    out Vector3 location, out float yaw))
+                return;
 
-            Vector3 mapLocal = inverseCorrection * worldPosition - originOffset;
-            float mapLocalYaw = worldYaw - yawDelta;
-
-            // Unity (x right, y up, z forward) -> CARLA (x forward, y right, z up).
-            // Same basis swap as TrafficReceiver.VehicleData.Position(), inverted;
-            // yaw keeps the same sign under this mapping.
             var payload = new
             {
                 id = egoId,
                 blueprint = carlaBlueprint,
                 color = vehicleColor,
-                location = new { x = mapLocal.z, y = mapLocal.x, z = mapLocal.y },
-                yaw = mapLocalYaw
+                location = new { x = location.x, y = location.y, z = location.z },
+                yaw
             };
+
+            if (serverConnection != null)
+            {
+                serverConnection.PublishEgo(payload);
+                return;
+            }
 
             try
             {
@@ -175,43 +174,26 @@ namespace UB_MR.Redis_Networking
             }
         }
 
-        private float GetClientMapYawDeltaDegrees()
+        private CarlaMapFrame ResolveMapFrame()
         {
-            if (!applyClientMapYawCorrection)
-                return 0f;
+            if (!Application.isPlaying) return null;
+            if (_mapFrame != null && module != null) return _mapFrame;
 
-            Module mapModule = ResolveModule();
-            if (mapModule != null && mapModule.HasMapRotationState)
+            if (module == null)
+                module = FindFirstObjectByType<Module>();
+            if (module == null)
             {
-                return Mathf.DeltaAngle(uncorrectedMapYawDegrees, mapModule.CurrentMapRotationEuler.y);
+                if (!_waitingForModule)
+                    Debug.LogWarning("[EgoPublisher] Waiting for a Module before publishing poses.", this);
+                _waitingForModule = true;
+                return null;
             }
 
-            Transform root = ResolveMapRoot();
-            if (root == null)
-                return 0f;
-
-            return Mathf.DeltaAngle(uncorrectedMapYawDegrees, root.eulerAngles.y);
-        }
-
-        private Transform ResolveMapRoot()
-        {
-            if (mapRoot != null)
-                return mapRoot;
-
-            Module mapModule = ResolveModule();
-            if (mapModule != null)
-                mapRoot = mapModule.MapRoot;
-
-            return mapRoot;
-        }
-
-        private Module ResolveModule()
-        {
-            if (module != null)
-                return module;
-
-            module = FindFirstObjectByType<Module>();
-            return module;
+            if (_waitingForModule)
+                Debug.Log("[EgoPublisher] Module acquired; pose conversion available.", this);
+            _waitingForModule = false;
+            _mapFrame = CarlaMapFrame.GetOrCreate(module);
+            return _mapFrame;
         }
     }
 }

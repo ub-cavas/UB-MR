@@ -1,0 +1,41 @@
+{
+  "source_dimensions_m": [
+    5.0267767906188965,
+    2.151546001434326,
+    1.6506516933441162
+  ],
+  "voxel_pitch_m": 0.019635846838355064,
+  "before_triangles": 49920,
+  "triangles": 8000,
+  "components": 1,
+  "boundary_edges": 0,
+  "non_manifold_edges": 0,
+  "non_contiguous_edges": 0,
+  "degenerate_faces": 0,
+  "signed_volume_m3": 8.53124197276694,
+  "max_sampled_simplification_deviation_m": 0.06518381088972092,
+  "mean_sampled_simplification_deviation_m": 0.014331609808805226,
+  "proxy_dimensions_m": [
+    5.065229415893555,
+    2.160418748855591,
+    1.6782065629959106
+  ],
+  "solidification": {
+    "surface_padding_voxels": 1,
+    "vertical_columns": false,
+    "axis_intersection": true
+  },
+  "panel_fit": {
+    "materials": [
+      "GlassInstance",
+      "MI_BodyWStaticMesh4",
+      "MercedesTop"
+    ],
+    "fitted_vertices": 2397,
+    "guarded_vertices": 308,
+    "guard_iterations": 5,
+    "max_vertex_movement_m": 0.11225965986252325,
+    "nonadjacent_triangle_intersections": 0,
+    "face_inversions": 0
+  }
+}

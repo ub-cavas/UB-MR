@@ -57,19 +57,26 @@ namespace UB_MR.Redis_Networking
             public double timestamp;
         }
 
-        [Header("Network")]
+        [Header("UDP fallback (scene-only launches)")]
         [SerializeField] private int listenPort = 12345;
 
         private readonly ConcurrentQueue<TrafficPayload> _incomingPayloads = new();
 
         private readonly Dictionary<string, VehicleData> _knownVehicles = new();
 
+        private ServerConnection serverConnection;
         private UdpClient _udpClient;
         private Thread _receiveThread;
         private volatile bool _isReceiving;
 
         void Start()
         {
+            serverConnection = ServerConnection.Instance;
+            if (serverConnection != null)
+            {
+                serverConnection.TrafficReceived += ReceiveServerTraffic;
+                return;
+            }
             _udpClient = new UdpClient(listenPort);
 
             Debug.Log($"Listening on UDP port {listenPort}");
@@ -89,8 +96,19 @@ namespace UB_MR.Redis_Networking
             }
         }
 
+        private void ReceiveServerTraffic(string json)
+        {
+            try
+            {
+                var payload = JsonConvert.DeserializeObject<TrafficPayload>(json);
+                if (payload?.vehicles != null) ProcessPayload(payload);
+            }
+            catch (JsonException) { Debug.LogWarning("Invalid traffic payload received from server.", this); }
+        }
+
         void OnDestroy()
         {
+            if (serverConnection != null) serverConnection.TrafficReceived -= ReceiveServerTraffic;
             _isReceiving = false;
             _udpClient?.Close();
             _receiveThread?.Join(500);
@@ -131,7 +149,7 @@ namespace UB_MR.Redis_Networking
 
             foreach (VehicleData vehicle in payload.vehicles)
             {
-                if (string.IsNullOrEmpty(vehicle.id)) continue;
+                if (vehicle == null || string.IsNullOrEmpty(vehicle.id) || vehicle.location == null) continue;
 
                 seen.Add(vehicle.id);
 
