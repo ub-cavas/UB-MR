@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7359985579096194281}
   - component: {fileID: 6745238929493389628}
   m_Layer: 0
-  m_Name: Splat
+  m_Name: ServiceCenterSplat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
