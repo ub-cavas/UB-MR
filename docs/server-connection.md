@@ -28,7 +28,7 @@ publisher or CARLA ego renderer is running.
 In the parent UB-DigitalTwin repository, run:
 
 ```bash
-UB_REDIS_HOST=127.0.0.1 bash scripts/launch_carla_redis_server.sh
+UB_REDIS_HOST=127.0.0.1 bash launch/launch_carla_redis_server.sh
 ```
 
 For a remote client, bind Redis to the server's Tailscale address instead. The
