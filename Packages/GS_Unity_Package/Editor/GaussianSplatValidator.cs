@@ -63,7 +63,7 @@ namespace GaussianSplatting.Editor
             {
                 var item = items[index];
                 EditorUtility.DisplayProgressBar("Validating Gaussian splat rendering", item.assetPath, (float)index / items.Length);
-                var path = $"Assets/GaussianAssets/{item.assetPath}-point_cloud-iteration_30000-point_cloud.asset";
+                var path = $"Assets/UB_MR_Assets/GaussianSplats/{item.assetPath}-point_cloud-iteration_30000-point_cloud.asset";
                 var gs = AssetDatabase.LoadAssetAtPath<GaussianSplatAsset>(path);
                 if (gs == null)
                 {
