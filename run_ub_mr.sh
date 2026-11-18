@@ -54,7 +54,18 @@ if [[ ! -d "${HOST_BUILD_DIR}" ]]; then
   exit 1
 fi
 
+# Create the host output tree as the launching user, rather than letting Docker
+# create root-owned bind-mount directories on the first run.
+HOST_LOG_DIR="${UB_MR_LOG_DIR:-${REPO_ROOT}/Docker/Logs}"
+mkdir -p "${HOST_LOG_DIR}/experiments"
+HOST_LOG_DIR="$(cd "${HOST_LOG_DIR}" && pwd)"
+
 DOCKER_ARGS=()
+if [[ -n "${UB_EXPERIMENT_HOST_DIR:-}" ]]; then
+  mkdir -p "${UB_EXPERIMENT_HOST_DIR}"
+  HOST_EXPERIMENT_DIR="$(cd "${UB_EXPERIMENT_HOST_DIR}" && pwd)"
+  DOCKER_ARGS+=(-v "${HOST_EXPERIMENT_DIR}:/app/Logs/experiments")
+fi
 
 if [[ "${USE_LOCAL_MR_PKG}" == "1" ]]; then
   HOST_LOCAL_MR_PKG_DIR="${REPO_ROOT}/submodules/mr_pkg"
@@ -102,12 +113,20 @@ docker run --rm "${DOCKER_INTERACTIVE_ARGS[@]}" \
   -e UB_MR_SCREEN_FULLSCREEN="${UB_MR_SCREEN_FULLSCREEN:-0}" \
   -e UB_MR_SCREEN_WIDTH="${UB_MR_SCREEN_WIDTH:-1920}" \
   -e UB_MR_SCREEN_HEIGHT="${UB_MR_SCREEN_HEIGHT:-1080}" \
+  -e UB_MR_METRICS_ENABLED="${UB_EXPERIMENT_ENABLED:-${UB_MR_METRICS_ENABLED:-1}}" \
+  -e UB_MR_METRICS_DIR=/app/Logs/experiments \
+  -e UB_MR_HOST_NAME="${UB_EXPERIMENT_HOST_NAME:-${UB_MR_HOST_NAME:-$(hostname)}}" \
+  -e UB_EXPERIMENT_CONTROLLER="${UB_EXPERIMENT_CONTROLLER:-ros}" \
+  -e UB_EXPERIMENT_PLOTS="${UB_EXPERIMENT_PLOTS:-1}" \
+  -e UB_EXPERIMENT_CLIENT_ID \
+  -e UB_MR_HOST_UID="$(id -u)" \
+  -e UB_MR_HOST_GID="$(id -g)" \
   -e CYCLONEDDS_URI=file:///etc/cyclonedds.xml \
   -v ${HOME}/cyclonedds.xml:/etc/cyclonedds.xml:ro \
   -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
   -v /proc:/host/proc:ro \
   -v "${REPO_ROOT}/Docker/Scripts/ub-mr.sh:/app/ub-mr.sh:ro" \
-  -v "${REPO_ROOT}/Docker/Logs:/app/Logs" \
+  -v "${HOST_LOG_DIR}:/app/Logs" \
   -v "${REPO_ROOT}/Scripts:/app/Scripts:ro" \
   -v "${REPO_ROOT}/Agents:/root/.config/unity3d/UB-CAVAS/UB-MR:ro" \
   -v "${HOST_BUILD_DIR}:/app/UB-MR-Player" \

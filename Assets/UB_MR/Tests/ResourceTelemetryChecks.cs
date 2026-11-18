@@ -17,7 +17,7 @@ namespace CAVAS.UB_MR.Tests
 
         public static async Task Run()
         {
-            RollingTimings(); TrafficRates(); ConnectionGenerations(); GpuReports();
+            RollingTimings(); TrafficRates(); ConnectionGenerations(); GpuReports(); ExperimentLogChecks.Run();
             await GpuWorker().ConfigureAwait(false);
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
                 await QueryCancellation().ConfigureAwait(false);

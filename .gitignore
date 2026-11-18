@@ -86,3 +86,7 @@ Docker/Logs/ub-mr-player.log
 
 # Docker Logs
 /Docker/Logs
+/Scripts/*.egg-info/
+/Scripts/build/
+__pycache__/
+*.py[cod]
