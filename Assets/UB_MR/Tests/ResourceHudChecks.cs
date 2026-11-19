@@ -35,7 +35,8 @@ namespace CAVAS.UB_MR.Tests
             try
             {
                 ResourceTelemetryChecks.Run().GetAwaiter().GetResult();
-                ResourceNetworkChecks.Run().GetAwaiter().GetResult();
+                // The fixture awaits asynchronous I/O; do not capture the blocked Editor context.
+                Task.Run(ResourceNetworkChecks.Run).GetAwaiter().GetResult();
                 ResourceLidarChecks.Run();
                 CheckHud(false);
                 Debug.Log("UB-MR resource checks PASSED: telemetry, network, LiDAR queues, HUD and lifecycle.");

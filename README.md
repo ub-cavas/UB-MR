@@ -50,6 +50,10 @@ ros2 launch mr_pkg <dual_ekf_localization.launch.py> <autoware_localization.laun
 
 The simulation's **Resources** HUD shows GPU VRAM, LiDAR processing and receive-to-publish timings, ROS sensor payload rates, and Redis traffic/RTT. See the [measurement definitions and validation guide](Docs/ResourceHUD.md).
 
+New builds also save experiment metrics automatically. With `run_ub_mr.sh` and `./ub-mr.sh`, each player run writes CSV logs to the parent repository's `Client-Logs/ub-mr/experiments/` and generates receive-to-publish, network RTT, and throughput PNG graphs when the player exits. Rebuild the player and Docker image to enable this in existing installations. See [experiment recording setup and output files](Docs/ResourceHUD.md#experiment-logs-and-graphs).
+
+Editor logging defaults to off. Enable **UB-MR → Telemetry → Record Editor experiments** before pressing Play to record a session; the setting is saved for your user and project.
+
 If you intend to develop the Mixed Reality Engine, follow these steps...
 
 ### Configuration

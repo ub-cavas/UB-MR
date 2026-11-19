@@ -47,6 +47,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     mesa-utils \
  && rm -rf /var/lib/apt/lists/*
 
+# Install plotting dependencies before copying scripts so client-library changes
+# reuse this layer and do not reinstall graphing/ROS packages.
+RUN apt-get update && apt-get install -y --no-install-recommends python3-matplotlib \
+ && /usr/bin/python3 -c "import matplotlib" \
+ && rm -rf /var/lib/apt/lists/*
+
 ENV __GLX_VENDOR_LIBRARY_NAME=nvidia \
    __NV_PRIME_RENDER_OFFLOAD=1 \
    LIBGL_ALWAYS_INDIRECT=0
@@ -57,6 +63,8 @@ ENV UB_MR_USE_LOCAL_MR_PKG=0
 
 WORKDIR /app
 COPY Scripts/host_ros2_env.bash /app/Scripts/host_ros2_env.bash
+COPY Scripts/plot_experiment_metrics.py /app/Scripts/plot_experiment_metrics.py
+COPY Scripts/ub_experiment/ /app/Scripts/ub_experiment/
 COPY Docker/Scripts/ub-mr-entrypoint.sh /app/ub-mr-entrypoint.sh
 COPY Docker/Scripts/ub-mr.sh /app/ub-mr.sh
 COPY Docker/Scripts/ub-mr-env.sh /app/ub-mr-env.sh

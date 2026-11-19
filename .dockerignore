@@ -1,0 +1,20 @@
+# The runtime image only needs scripts and the mr_pkg ROS source tree.
+# Keep Unity assets, player builds, experiment data and caches out of the context.
+**
+!Docker/
+!Docker/Dockerfile
+!Docker/Scripts/
+!Docker/Scripts/**
+!Scripts/
+!Scripts/host_ros2_env.bash
+!Scripts/plot_experiment_metrics.py
+!Scripts/ub_experiment/
+!Scripts/ub_experiment/**
+!submodules/
+!submodules/mr_pkg/
+!submodules/mr_pkg/**
+**/.git
+**/__pycache__
+submodules/mr_pkg/build
+submodules/mr_pkg/install
+submodules/mr_pkg/log

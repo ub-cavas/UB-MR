@@ -69,18 +69,21 @@ namespace CAVAS.UB_MR.Telemetry
     {
         readonly object gate = new();
         readonly IMonotonicClock clock;
+        readonly ExperimentLog log;
+        readonly string recordingSource;
         long received, sent, previousReceived, previousSent;
         double previousTime, rxRate, txRate;
         bool sampled;
         int sources;
-        public TrafficMeter(IMonotonicClock clock = null)
+        public TrafficMeter(IMonotonicClock clock = null, string recordingSource = null)
         {
             this.clock = clock ?? MonotonicClock.Instance;
+            log = ExperimentLog.Active; this.recordingSource = recordingSource;
             previousTime = this.clock.Seconds;
         }
-        internal void AddReceived(long bytes) { if (bytes > 0) Interlocked.Add(ref received, bytes); }
-        internal void AddSent(long bytes) { if (bytes > 0) Interlocked.Add(ref sent, bytes); }
-        internal IDisposable RegisterSource()
+        public void AddReceived(long bytes) { if (bytes > 0) Interlocked.Add(ref received, bytes); }
+        public void AddSent(long bytes) { if (bytes > 0) Interlocked.Add(ref sent, bytes); }
+        public IDisposable RegisterSource()
         {
             lock (gate)
             {
@@ -89,24 +92,49 @@ namespace CAVAS.UB_MR.Telemetry
                     previousTime = clock.Seconds;
                     previousReceived = Interlocked.Read(ref received); previousSent = Interlocked.Read(ref sent);
                     sampled = false; rxRate = txRate = 0;
+                    if (recordingSource != null) log?.RegisterTraffic(this);
                 }
             }
-            return new Registration(() => { lock (gate) sources--; });
+            return new Registration(() =>
+            {
+                lock (gate)
+                {
+                    if (sources == 1 && recordingSource != null && log != null)
+                    {
+                        // Preserve the active interval before the last source is
+                        // removed or a replacement source resets the rate baseline.
+                        Sample(clock.Seconds, true);
+                        log.UnregisterTraffic(this);
+                    }
+                    sources--;
+                }
+            });
         }
         public TrafficSnapshot Snapshot()
         {
+            lock (gate) return Sample(clock.Seconds, false);
+        }
+        internal void Flush()
+        {
             lock (gate)
+                if (sources > 0) Sample(clock.Seconds, true);
+        }
+        TrafficSnapshot Sample(double now, bool final)
+        {
+            long rx = Interlocked.Read(ref received), tx = Interlocked.Read(ref sent);
+            double elapsed = now - previousTime;
+            if (elapsed >= 1 || (final && (elapsed > 0 || rx != previousReceived || tx != previousSent)))
             {
-                double now = clock.Seconds;
-                long rx = Interlocked.Read(ref received), tx = Interlocked.Read(ref sent);
-                double elapsed = now - previousTime;
-                if (elapsed >= 1)
-                {
-                    rxRate = (rx - previousReceived) / elapsed; txRate = (tx - previousSent) / elapsed;
-                    previousReceived = rx; previousSent = tx; previousTime = now; sampled = true;
-                }
-                return new TrafficSnapshot(rx, tx, rxRate, txRate, previousTime, sources > 0 && sampled);
+                // Totals still matter if the clock has not advanced; leave those
+                // rates unavailable rather than divide by zero or invent a rate.
+                sampled = elapsed > 0;
+                rxRate = sampled ? (rx - previousReceived) / elapsed : 0;
+                txRate = sampled ? (tx - previousSent) / elapsed : 0;
+                previousReceived = rx; previousSent = tx; previousTime = now;
+                if (recordingSource != null)
+                    log?.Traffic(recordingSource, now, new TrafficSnapshot(rx, tx, rxRate, txRate, now, sources > 0 && sampled));
             }
+            return new TrafficSnapshot(rx, tx, rxRate, txRate, previousTime, sources > 0 && sampled);
         }
     }
 
@@ -131,11 +159,16 @@ namespace CAVAS.UB_MR.Telemetry
         readonly object gate = new();
         readonly IMonotonicClock clock;
         readonly string name;
+        readonly string recordingSource;
+        readonly ExperimentLog log;
         readonly TimingWindow processing = new(), endToEnd = new();
         readonly IDisposable registration;
         bool bypass, disposed;
         internal SensorTelemetry(string name, bool bypass, IMonotonicClock clock, IDisposable registration)
-        { this.name = name; this.bypass = bypass; this.clock = clock; this.registration = registration; }
+        {
+            this.name = name; this.bypass = bypass; this.clock = clock; this.registration = registration;
+            log = ExperimentLog.Active; recordingSource = name + " [" + Guid.NewGuid().ToString("N") + "]";
+        }
         internal void RecordProcessing(double startedAt)
         {
             lock (gate)
@@ -145,13 +178,14 @@ namespace CAVAS.UB_MR.Telemetry
                 bypass = false; processing.Record((now - startedAt) * 1000, now);
             }
         }
-        internal void RecordPublished(double receivedAt, bool wasBypassed)
+        public void RecordPublished(double receivedAt, bool wasBypassed = false)
         {
             lock (gate)
             {
                 if (disposed) return;
                 double now = clock.Seconds;
                 bypass = wasBypassed; endToEnd.Record((now - receivedAt) * 1000, now);
+                log?.Timing("receive_to_publish", recordingSource, now, (now - receivedAt) * 1000, wasBypassed);
             }
         }
         public SensorSnapshot Snapshot()
@@ -184,19 +218,26 @@ namespace CAVAS.UB_MR.Telemetry
         readonly IMonotonicClock clock;
         readonly TimingWindow roundTrip = new();
         readonly IDisposable source;
+        readonly ExperimentLog log;
+        readonly string recordingSource = "redis [" + Guid.NewGuid().ToString("N") + "]";
         public TrafficMeter Traffic { get; }
         bool connected;
         int generation;
         public RedisTelemetry(IMonotonicClock clock = null)
         {
             this.clock = clock ?? MonotonicClock.Instance;
-            Traffic = new TrafficMeter(this.clock); source = Traffic.RegisterSource();
+            log = ExperimentLog.Active;
+            Traffic = new TrafficMeter(this.clock, recordingSource); source = Traffic.RegisterSource();
         }
         internal int SetConnected(bool value)
         {
             lock (gate)
             {
-                if (connected != value) { generation++; roundTrip.Clear(); connected = value; }
+                if (connected != value)
+                {
+                    generation++; roundTrip.Clear(); connected = value;
+                    log?.Connection(recordingSource, clock.Seconds, value);
+                }
                 return generation;
             }
         }
@@ -206,6 +247,7 @@ namespace CAVAS.UB_MR.Telemetry
             {
                 if (!connected || generation != connectionGeneration) return;
                 double now = clock.Seconds; roundTrip.Record((now - startedAt) * 1000, now);
+                log?.Timing("redis_rtt", recordingSource + "/generation-" + generation, now, (now - startedAt) * 1000);
             }
         }
         public RedisSnapshot Snapshot()
@@ -223,8 +265,14 @@ namespace CAVAS.UB_MR.Telemetry
         public IMonotonicClock Clock { get; }
         public TrafficMeter SensorPayload { get; }
         public ResourceTelemetry(IMonotonicClock clock = null)
-        { Clock = clock ?? MonotonicClock.Instance; SensorPayload = new TrafficMeter(Clock); }
+        {
+            Clock = clock ?? MonotonicClock.Instance;
+            SensorPayload = new TrafficMeter(Clock, "ros_sensor_payload [" + Guid.NewGuid().ToString("N") + "]");
+        }
         internal SensorTelemetry RegisterLidar(string name, bool bypass = false)
+            => RegisterSensor(name, bypass);
+
+        public SensorTelemetry RegisterSensor(string name, bool bypass = false)
         {
             lock (gate)
             {

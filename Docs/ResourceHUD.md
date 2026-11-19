@@ -16,6 +16,48 @@ The panel refreshes four times per second. Rates use elapsed monotonic time betw
 
 ROS payload rates exclude message metadata, serialization, DDS discovery, retransmissions, transport headers, odometry, bounding boxes, clock messages, and service calls. Multiple subscriptions count each callback delivery. They are **not machine-wide or total ROS network bandwidth**. Redis latency includes server response time and does not require synchronized clocks. Scene-only UDP traffic has no Redis RTT measurement.
 
+## Experiment logs and graphs
+
+The recorder's CSV schema and plotting package are also used by CARLA keyboard,
+wheel/joystick, drive-sim and Mustang clients. See the parent repository's
+`docs/experiment-logging.md` for generic Python/C# adapters, configuration and
+measurement scopes. `Scripts/plot_experiment_metrics.py` remains a compatible
+entry point to the shared `ub_experiment` plotter.
+
+New player builds record metrics automatically for the entire player session, including map changes. **Rebuild the Unity player with this code**; downloaded older players do not contain the recorder. Rebuild the Docker image once to install the graphing dependency:
+
+```bash
+cd UB-MR
+docker build -f Docker/Dockerfile -t ub-mr .
+./run_ub_mr.sh <new-build-folder>
+# Inside the container:
+./ub-mr.sh
+```
+
+Close the player normally and allow the launcher to finish generating graphs. The launcher forwards Ctrl+C to Unity and waits for its recording to flush before plotting. Each launch saves a separate folder on the **host**, under `Client-Logs/ub-mr/experiments/run-<yyyyMMdd-HHmmss>Z-<hostname>-<unique suffix>/`, for example `run-20261118-143611Z-awsim-Dell-G16-7630-oaxJzc/`. The timestamp is the run's start time in UTC; `Z` marks UTC. The Docker launcher passes the host machine's name into the container through `UB_MR_HOST_NAME`, so the folder identifies the deployment host. Editor/native sessions use the same naming format and their machine's name. Hostnames are sanitized for folder names and limited to 63 characters. The unique suffix prevents runs started in the same second from colliding. Existing folders retain their names. The bind mount maps container `/app/Logs` to host `Client-Logs/ub-mr`, so the files survive container removal. The launcher passes the host UID/GID and assigns the run folder and completed files to that user for review. It contains:
+
+- `metrics.csv`: every successful LiDAR receive-to-publish measurement (including bypass), every accepted Redis RTT probe, connection-state changes, and approximately one-second RX/TX throughput samples with cumulative byte counters.
+- `receive_to_publish.png`, `network_rtt.png`, `network_throughput.png`: time-series graphs. Timing graphs show each second's mean and min/max range; the CSV retains individual measurements. Sensor instances and Redis connection generations have separate timing series.
+- `summary.json`: timing counts/means/min/max, last sampled traffic totals per source, and recording status.
+- `recording-status.txt`: clean-shutdown status, dropped-row count, and any writer error. Check this when reviewing an experiment. Absence indicates interrupted shutdown.
+
+The same measurement definitions in the table above apply to the files. Throughput is measured at the application scopes shown in the graphs; ROS payload and Redis RESP are separate series with different units. `rx_Bps`/`tx_Bps` in the CSV are **bytes per second**. Blank rates with `available=0` mean unavailable; zero with `available=1` means an idle registered source. No RTT samples are invented during a disconnect. Cumulative traffic counters start with each source instance, survive retries within that instance, and are recorded at rate-sampling boundaries. Closing the last source or the recorder also saves the final partial interval using its actual elapsed time, including sessions shorter than one second. If no time has elapsed, totals are saved with unavailable rates.
+
+Durations and rates use a monotonic clock. CSV `elapsed_s` is relative to recording start; `utc` is derived from the start's UTC timestamp, so wall-clock adjustments do not distort timing. Background callbacks enqueue into a bounded queue; a worker flushes files roughly every second. If disk writing falls behind, the recorder counts dropped rows rather than blocking simulation callbacks. A forced kill can lose queued/unflushed rows and skip automatic graph creation. Preserve the CSV and regenerate graphs afterward:
+
+```bash
+# Ubuntu host dependency (already installed in the updated Docker image):
+sudo apt-get install python3-matplotlib
+python3 UB-MR/Scripts/plot_experiment_metrics.py Client-Logs/ub-mr/experiments/<run-folder>
+# Passing the experiments parent regenerates every run below it.
+```
+
+If an older Docker image reports `No module named 'matplotlib'`, rebuild it with the command above. Updating the mounted scripts does not install packages inside an existing image. Exit the old container shell and relaunch `run_ub_mr.sh` after rebuilding; an already-running container continues using its original image. The launcher checks `/usr/bin/python3` for Matplotlib before starting an experiment, so this dependency error is reported before recording begins. Graph generation uses that system interpreter and the headless Agg backend inside the container; host Python packages are not required for the deployed workflow.
+
+For Docker, set `UB_MR_LOG_DIR=/absolute/host/path` before `run_ub_mr.sh` to choose another host output directory. The run folders will be in that directory's `experiments/` subfolder. Native player/Editor Play sessions inside this checkout also use `Client-Logs/ub-mr/experiments/`. Set `UB_CLIENT_LOG_ROOT=/absolute/path` to change the shared client-log root, or `UB_MR_METRICS_DIR` before launching Unity to override only the experiment directory, and run the plotting script afterward. Standalone players outside the checkout retain `Application.persistentDataPath/Experiments/` as a fallback. The exact directory is printed in the Unity log. Set `UB_MR_METRICS_ENABLED=0` to disable recording. Keep the default enabled for experiments.
+
+**Editor logging is optional and defaults to off.** Before pressing Play, toggle **UB-MR → Telemetry → Record Editor experiments**. A checkmark means logging is enabled. The choice persists across Editor restarts for your user and this project. Stop Play before changing it; the toggle is disabled during Play and Play transitions. Enabling it records the next Play session, and stopping Play flushes the CSV. Generate Editor graphs with the plotting command above. `UB_MR_METRICS_ENABLED=0` still disables recording even when the menu is checked. The Resources HUD continues to display live metrics with Editor logging off; the Editor preference does not change player/Docker recording.
+
 ## GPU runtime requirements
 
 GPU metrics initially support Linux with NVIDIA drivers and `nvidia-smi`. Queries run off the Unity thread, never overlap, and have a two-second timeout. Unavailable/stale GPU data does not interrupt simulation. MIG process attribution is currently unavailable; device-level values can still be displayed.
@@ -26,7 +68,7 @@ The HUD reports the Unity process, not a sum of every ROS helper process in the 
 
 ## Validation
 
-- `ResourceTelemetryChecks.Run()` checks rolling windows, inactive/unavailable states, concurrent byte accounting, reconnect generations, GPU XML fixtures, and subprocess timeout/cancellation without a GPU.
+- `ResourceTelemetryChecks.Run()` checks rolling windows, inactive/unavailable states, concurrent byte accounting, reconnect generations, GPU XML fixtures, subprocess timeout/cancellation, and experiment CSV recording (concurrent callbacks, CSV escaping, unavailable/idle rates, stale RTT rejection, shutdown flush, and overwrite protection) without a GPU.
 - `ResourceNetworkChecks.Run()` uses an isolated RESP fixture on an ephemeral loopback port. It checks byte-exact UTF-8/framing accounting, fragmented responses, continued RTT sampling under publishing load, reconnect, and worker cleanup. It does not access the simulation Redis server.
 - With the project closed in other Editor instances, run Unity with `-batchmode -nographics -projectPath <UB-MR> -executeMethod CAVAS.UB_MR.Tests.ResourceHudChecks.Run`. This runs the managed and network checks, actual LiDAR queue/publication checks, and HUD lifecycle checks. Include `Assets/Ros2ForUnity/Plugins/Linux/x86_64` and the ROS installation's `lib` directory in `LD_LIBRARY_PATH` for the generated message bindings.
 - To render the HUD fixtures at both resolutions, use `-batchmode -executeMethod CAVAS.UB_MR.Tests.ResourceHudChecks.RunVisual` with a graphics device. Screenshots are written to `/tmp/ubmr-resource-hud-1280x720.png` and `/tmp/ubmr-resource-hud-1920x1080.png`.
