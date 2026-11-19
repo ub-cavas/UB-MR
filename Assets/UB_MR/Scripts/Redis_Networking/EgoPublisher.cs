@@ -29,7 +29,7 @@ namespace UB_MR.Redis_Networking
         [SerializeField] private Transform egoTransformOverride;
         [Tooltip("Seconds between scene searches for the runtime-spawned DynamicAgent.")]
         [SerializeField] private float agentSearchInterval = 1f;
-        [Tooltip("Unique id for this client's ego. Left empty, the device unique identifier is used.")]
+        [Tooltip("Unique id for this client's ego. Left empty, a process session UUID is used.")]
         [SerializeField] private string egoId = "";
         [Tooltip("CARLA blueprint to render this ego as (CARLA 0.9.16 id for the physical Lincoln MKZ 2017).")]
         [SerializeField] private string carlaBlueprint = "vehicle.lincoln.mkz_2017";
@@ -56,10 +56,14 @@ namespace UB_MR.Redis_Networking
         private float _sendInterval;
         private float _nextSendTime;
 
+        static readonly string SessionId = "ub-mr-" + System.Guid.NewGuid().ToString("N");
+        public static string LocalEgoId { get; private set; } = SessionId;
+        public string EgoId => string.IsNullOrWhiteSpace(egoId) ? SessionId : egoId;
+
         void Awake()
         {
-            if (string.IsNullOrEmpty(egoId))
-                egoId = SystemInfo.deviceUniqueIdentifier;
+            egoId = EgoId;
+            LocalEgoId = EgoId;
 
             ResolveMapFrame();
         }
