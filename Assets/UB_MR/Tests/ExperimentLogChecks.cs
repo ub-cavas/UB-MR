@@ -10,6 +10,15 @@ namespace CAVAS.UB_MR.Tests
     {
         public static void Run()
         {
+            ConcurrentRecording();
+            foreach (bool shortSession in new[] { false, true })
+                foreach (int shutdownOrder in new[] { 0, 1, 2 })
+                    FinalThroughput(shortSession, shutdownOrder);
+            ZeroDurationThroughput();
+        }
+
+        static void ConcurrentRecording()
+        {
             string directory = Path.Combine(Path.GetTempPath(), "ubmr-recording-check-" + Guid.NewGuid().ToString("N"));
             var clock = new ResourceTelemetryChecks.Clock();
             var previous = ExperimentLog.Active;
@@ -57,6 +66,85 @@ namespace CAVAS.UB_MR.Tests
                 catch (IOException) { protectedExisting = true; }
                 ResourceTelemetryChecks.Check(protectedExisting && File.ReadAllLines(Path.Combine(directory, "metrics.csv")).Length == rows.Length,
                     "Existing experiment overwritten");
+            }
+            finally { ExperimentLog.Active = previous; Directory.Delete(directory, true); }
+        }
+
+        static void FinalThroughput(bool shortSession, int shutdownOrder)
+        {
+            string directory = Path.Combine(Path.GetTempPath(), "ubmr-final-throughput-" + Guid.NewGuid().ToString("N"));
+            var clock = new ResourceTelemetryChecks.Clock();
+            var previous = ExperimentLog.Active;
+            try
+            {
+                using (var log = new ExperimentLog(directory, clock))
+                {
+                    ExperimentLog.Active = log;
+                    using var resources = new ResourceTelemetry(clock);
+                    using var firstSensor = resources.RegisterSensor("front");
+                    using var lastSensor = resources.RegisterSensor("rear");
+                    using var redis = new RedisTelemetry(clock);
+                    foreach (var meter in new[] { resources.SensorPayload, redis.Traffic })
+                    {
+                        meter.AddReceived(100); meter.AddSent(40);
+                    }
+                    if (!shortSession)
+                    {
+                        clock.Now = 1;
+                        resources.SensorPayload.Snapshot(); redis.Snapshot();
+                    }
+                    clock.Now += .25;
+                    firstSensor.Dispose(); // Remaining sources must keep their original rate interval.
+                    foreach (var meter in new[] { resources.SensorPayload, redis.Traffic })
+                    {
+                        meter.AddReceived(50); meter.AddSent(20);
+                    }
+                    clock.Now += .25;
+                    resources.SensorPayload.Snapshot(); redis.Snapshot(); // Normal polling still waits a full second.
+                    if (shutdownOrder == 2)
+                        Parallel.Invoke(log.Dispose, redis.Dispose, resources.Dispose);
+                    else
+                    {
+                        if (shutdownOrder == 1) log.Dispose(); // Unity can quit before scene objects are destroyed.
+                        redis.Dispose(); resources.Dispose();
+                    }
+                    clock.Now += .25;
+                    log.Dispose(); log.Dispose();
+                    ResourceTelemetryChecks.Check(log.Error == null && log.DroppedRows == 0, "Final throughput recording failed");
+                }
+                string[] rows = File.ReadAllLines(Path.Combine(directory, "metrics.csv"));
+                foreach (string scope in new[] { "redis [", "ros_sensor_payload [" })
+                {
+                    var samples = rows.Where(row => row.Contains(",throughput,\"" + scope)).Select(row => row.Split(',')).ToArray();
+                    ResourceTelemetryChecks.Check(samples.Length == (shortSession ? 1 : 2), "Missing or duplicate final throughput sample: " + scope);
+                    var last = samples.Last();
+                    ResourceTelemetryChecks.Check(last[7] == "150" && last[8] == "60", "Final throughput lost bytes: " + scope);
+                    ResourceTelemetryChecks.Check(last[9] == (shortSession ? "300" : "100")
+                        && last[10] == (shortSession ? "120" : "40") && last[11] == "1",
+                        "Final throughput did not use actual elapsed time: " + scope);
+                }
+            }
+            finally { ExperimentLog.Active = previous; Directory.Delete(directory, true); }
+        }
+
+        static void ZeroDurationThroughput()
+        {
+            string directory = Path.Combine(Path.GetTempPath(), "ubmr-zero-throughput-" + Guid.NewGuid().ToString("N"));
+            var previous = ExperimentLog.Active;
+            try
+            {
+                var clock = new ResourceTelemetryChecks.Clock();
+                using (var log = new ExperimentLog(directory, clock))
+                {
+                    ExperimentLog.Active = log;
+                    using var redis = new RedisTelemetry(clock);
+                    redis.Traffic.AddReceived(25);
+                    log.Dispose();
+                }
+                string[] samples = File.ReadAllLines(Path.Combine(directory, "metrics.csv"))
+                    .Where(row => row.Contains(",throughput,")).ToArray();
+                ResourceTelemetryChecks.Check(samples.Length == 1 && samples[0].EndsWith(",25,0,,,0"),
+                    "Zero-duration shutdown must preserve totals without fabricating rates");
             }
             finally { ExperimentLog.Active = previous; Directory.Delete(directory, true); }
         }

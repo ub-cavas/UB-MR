@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -13,13 +14,15 @@ namespace CAVAS.UB_MR.Telemetry
         public static ExperimentLog Active { get; internal set; }
         static readonly CultureInfo Invariant = CultureInfo.InvariantCulture;
         readonly BlockingCollection<string> rows = new(65536);
+        readonly object trafficGate = new();
+        readonly HashSet<TrafficMeter> trafficMeters = new();
         readonly Thread worker;
         readonly StreamWriter output;
         readonly IMonotonicClock clock;
         readonly double startedAt;
         readonly DateTime startedUtc;
         long dropped;
-        int stopped;
+        int disposing, stopped;
         volatile string error;
         public string DirectoryPath { get; }
         public string Error => error;
@@ -79,6 +82,16 @@ namespace CAVAS.UB_MR.Telemetry
         internal void Connection(string source, double now, bool connected)
             => Enqueue(Prefix(now, "redis_connection", source) + ",," + (connected ? "1" : "0") + ",,,,,");
 
+        internal void RegisterTraffic(TrafficMeter meter)
+        {
+            lock (trafficGate)
+                if (Volatile.Read(ref disposing) == 0) trafficMeters.Add(meter);
+        }
+        internal void UnregisterTraffic(TrafficMeter meter)
+        {
+            lock (trafficGate) trafficMeters.Remove(meter);
+        }
+
         void WriteRows()
         {
             try
@@ -100,8 +113,21 @@ namespace CAVAS.UB_MR.Telemetry
         }
         public void Dispose()
         {
-            if (Interlocked.Exchange(ref stopped, 1) != 0) return;
-            rows.CompleteAdding(); worker.Join();
+            if (Interlocked.Exchange(ref disposing, 1) != 0) return;
+            TrafficMeter[] meters;
+            lock (trafficGate)
+            {
+                meters = new TrafficMeter[trafficMeters.Count];
+                trafficMeters.CopyTo(meters); trafficMeters.Clear();
+            }
+            // Unity may close the recorder before destroying its sources. Flush
+            // outside trafficGate to avoid reversing the meter/registry lock order.
+            try { foreach (var meter in meters) meter.Flush(); }
+            finally
+            {
+                Interlocked.Exchange(ref stopped, 1);
+                rows.CompleteAdding(); worker.Join();
+            }
             try
             {
                 File.WriteAllText(Path.Combine(DirectoryPath, "recording-status.txt"),

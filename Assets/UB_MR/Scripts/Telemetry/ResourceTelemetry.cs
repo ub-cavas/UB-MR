@@ -92,26 +92,49 @@ namespace CAVAS.UB_MR.Telemetry
                     previousTime = clock.Seconds;
                     previousReceived = Interlocked.Read(ref received); previousSent = Interlocked.Read(ref sent);
                     sampled = false; rxRate = txRate = 0;
+                    if (recordingSource != null) log?.RegisterTraffic(this);
                 }
             }
-            return new Registration(() => { lock (gate) sources--; });
+            return new Registration(() =>
+            {
+                lock (gate)
+                {
+                    if (sources == 1 && recordingSource != null && log != null)
+                    {
+                        // Preserve the active interval before the last source is
+                        // removed or a replacement source resets the rate baseline.
+                        Sample(clock.Seconds, true);
+                        log.UnregisterTraffic(this);
+                    }
+                    sources--;
+                }
+            });
         }
         public TrafficSnapshot Snapshot()
         {
+            lock (gate) return Sample(clock.Seconds, false);
+        }
+        internal void Flush()
+        {
             lock (gate)
+                if (sources > 0) Sample(clock.Seconds, true);
+        }
+        TrafficSnapshot Sample(double now, bool final)
+        {
+            long rx = Interlocked.Read(ref received), tx = Interlocked.Read(ref sent);
+            double elapsed = now - previousTime;
+            if (elapsed >= 1 || (final && (elapsed > 0 || rx != previousReceived || tx != previousSent)))
             {
-                double now = clock.Seconds;
-                long rx = Interlocked.Read(ref received), tx = Interlocked.Read(ref sent);
-                double elapsed = now - previousTime;
-                if (elapsed >= 1)
-                {
-                    rxRate = (rx - previousReceived) / elapsed; txRate = (tx - previousSent) / elapsed;
-                    previousReceived = rx; previousSent = tx; previousTime = now; sampled = true;
-                    if (recordingSource != null)
-                        log?.Traffic(recordingSource, now, new TrafficSnapshot(rx, tx, rxRate, txRate, now, sources > 0));
-                }
-                return new TrafficSnapshot(rx, tx, rxRate, txRate, previousTime, sources > 0 && sampled);
+                // Totals still matter if the clock has not advanced; leave those
+                // rates unavailable rather than divide by zero or invent a rate.
+                sampled = elapsed > 0;
+                rxRate = sampled ? (rx - previousReceived) / elapsed : 0;
+                txRate = sampled ? (tx - previousSent) / elapsed : 0;
+                previousReceived = rx; previousSent = tx; previousTime = now;
+                if (recordingSource != null)
+                    log?.Traffic(recordingSource, now, new TrafficSnapshot(rx, tx, rxRate, txRate, now, sources > 0 && sampled));
             }
+            return new TrafficSnapshot(rx, tx, rxRate, txRate, previousTime, sources > 0 && sampled);
         }
     }
 
