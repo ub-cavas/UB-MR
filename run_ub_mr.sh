@@ -56,7 +56,12 @@ fi
 
 # Create the host output tree as the launching user, rather than letting Docker
 # create root-owned bind-mount directories on the first run.
-HOST_LOG_DIR="${UB_MR_LOG_DIR:-${REPO_ROOT}/Docker/Logs}"
+if [[ -d "${SCRIPT_DIR}/../CARLA" ]]; then
+  CLIENT_LOG_ROOT_DEFAULT="${SCRIPT_DIR}/../Client-Logs"
+else
+  CLIENT_LOG_ROOT_DEFAULT="${SCRIPT_DIR}/Client-Logs"
+fi
+HOST_LOG_DIR="${UB_MR_LOG_DIR:-${UB_CLIENT_LOG_ROOT:-${CLIENT_LOG_ROOT_DEFAULT}}/ub-mr}"
 mkdir -p "${HOST_LOG_DIR}/experiments"
 HOST_LOG_DIR="$(cd "${HOST_LOG_DIR}" && pwd)"
 

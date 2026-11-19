@@ -52,7 +52,7 @@ namespace CAVAS.UB_MR.Telemetry
                 {
                     string parent = Environment.GetEnvironmentVariable("UB_EXPERIMENT_DIR")
                         ?? Environment.GetEnvironmentVariable("UB_MR_METRICS_DIR");
-                    if (string.IsNullOrWhiteSpace(parent)) parent = Path.Combine(Application.persistentDataPath, "Experiments");
+                    if (string.IsNullOrWhiteSpace(parent)) parent = DefaultExperimentParent();
                     string hostName = Environment.GetEnvironmentVariable("UB_EXPERIMENT_HOST_NAME")
                         ?? Environment.GetEnvironmentVariable("UB_MR_HOST_NAME");
                     if (string.IsNullOrWhiteSpace(hostName)) hostName = Environment.MachineName;
@@ -96,5 +96,30 @@ namespace CAVAS.UB_MR.Telemetry
         }
         void OnApplicationQuit() => StopRecording();
         void OnDestroy() => StopRecording();
+
+        static string DefaultExperimentParent()
+        {
+            string directory = Environment.GetEnvironmentVariable("UB_CLIENT_LOG_DIR");
+            if (!string.IsNullOrWhiteSpace(directory)) return Path.Combine(directory, "experiments");
+            string root = Environment.GetEnvironmentVariable("UB_CLIENT_LOG_ROOT");
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                // Editor and unpacked players inside the parent repository.
+                var ancestor = new DirectoryInfo(Application.dataPath);
+                while (ancestor != null)
+                {
+                    if (Directory.Exists(Path.Combine(ancestor.FullName, "UB-MR"))
+                        && Directory.Exists(Path.Combine(ancestor.FullName, "CARLA")))
+                    {
+                        root = Path.Combine(ancestor.FullName, "Client-Logs");
+                        break;
+                    }
+                    ancestor = ancestor.Parent;
+                }
+            }
+            return string.IsNullOrWhiteSpace(root)
+                ? Path.Combine(Application.persistentDataPath, "Experiments")
+                : Path.Combine(root, "ub-mr", "experiments");
+        }
     }
 }

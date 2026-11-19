@@ -13,6 +13,7 @@ import uuid
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from .paths import client_log_directory
 
 FIELDS = "elapsed_s,utc,metric,source,duration_ms,bypass,connected,rx_bytes,tx_bytes,rx_Bps,tx_Bps,available".split(",")
 _active = None
@@ -65,7 +66,8 @@ class Recorder:
         if directory is None:
             directory = os.environ.get("UB_EXPERIMENT_RUN_DIR")
         if directory is None:
-            parent = Path(os.environ.get("UB_EXPERIMENT_DIR", os.environ.get("UB_MR_METRICS_DIR", "experiments")))
+            parent = Path(os.environ.get("UB_EXPERIMENT_DIR") or os.environ.get("UB_MR_METRICS_DIR")
+                          or client_log_directory(client_type) / "experiments")
             host = re.sub(r"[^A-Za-z0-9._-]", "_", self.hostname)[:63]
             name = "run-{}-{}-{}".format(self.started_utc.strftime("%Y%m%d-%H%M%SZ"), host, uuid.uuid4().hex[:8])
             directory = parent / name
