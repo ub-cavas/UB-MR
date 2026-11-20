@@ -76,6 +76,24 @@ namespace CAVAS.UB_MR.Tests
                 Check(result[0].z > 4.4f && result[0].z < 4.7f && result[0].w == 1,
                     "GPU SDF ray did not hit the virtual sphere: " + result[0]);
                 Check(result[1] == points[1], "GPU changed a ray that missed the virtual sphere.");
+                // Exercise VirtualObject's actual fallback allocation without a Module.
+                ConfigurationManager.SetActiveAgent(new Config.Agent { recognition = new VirtualObjectRecognitionSettings
+                    { mode = VirtualObjectRecognitionMode.LidarModificationAndBoundingBoxInjection } });
+                var root = new GameObject("combined fallback SDF");
+                try
+                {
+                    var sdf = root.AddComponent<SDFTexture>();
+                    var generator = root.AddComponent<MeshToSDF>();
+                    generator.updateMode = MeshToSDF.UpdateMode.Explicit;
+                    generator.sdfTexture = sdf;
+                    var obj = root.AddComponent<VirtualObject>();
+                    SetField(obj, "meshToSDF", generator);
+                    SetField(obj, "sdfTextureSize", Vector3.one);
+                    typeof(VirtualObject).GetMethod("Awake", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(obj, null);
+                    typeof(VirtualObject).GetMethod("Start", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(obj, null);
+                    Check(generator.enabled && sdf.sdf is RenderTexture, "Combined fallback did not allocate real SDF texture.");
+                }
+                finally { UnityEngine.Object.DestroyImmediate(root); ConfigurationManager.SetActiveAgent(null); }
                 Debug.Log("UB-MR GPU checks PASSED: SDF hit shortens scan ray; miss preserves original point.");
             }
             catch (Exception exception)
@@ -102,6 +120,24 @@ namespace CAVAS.UB_MR.Tests
 
         static void ConfigRoundTrip()
         {
+            foreach (VirtualObjectRecognitionMode mode in Enum.GetValues(typeof(VirtualObjectRecognitionMode)))
+            {
+                var settings = new VirtualObjectRecognitionSettings { mode = mode };
+                Check((int)mode >= 0 && (int)mode <= 2, "Stable enum index changed.");
+                Check(settings.UsesLidarModification == (mode != VirtualObjectRecognitionMode.BoundingBoxInjection), "LiDAR capability mismatch.");
+                Check(settings.UsesBoundingBoxInjection == (mode != VirtualObjectRecognitionMode.LidarModification), "Box capability mismatch.");
+                string encoded = JsonConvert.SerializeObject(settings);
+                Check(encoded.Contains(mode.ToString()), "Serialized enum spelling changed.");
+                Check(!encoded.Contains("UsesLidarModification") && !encoded.Contains("UsesBoundingBoxInjection"), "Computed capabilities leaked into JSON.");
+                Assert.AreEqual(mode, JsonConvert.DeserializeObject<VirtualObjectRecognitionSettings>(encoded).mode);
+                Assert.AreEqual(mode, JsonConvert.DeserializeObject<VirtualObjectRecognitionSettings>("{\"mode\":" + (int)mode + "}").mode);
+            }
+            Assert.AreEqual(0, (int)VirtualObjectRecognitionMode.LidarModification);
+            Assert.AreEqual(1, (int)VirtualObjectRecognitionMode.BoundingBoxInjection);
+            Assert.AreEqual(2, (int)VirtualObjectRecognitionMode.LidarModificationAndBoundingBoxInjection);
+            var nullSettings = JsonConvert.DeserializeObject<Config.Agent>("{\"recognition\":null}").recognition ?? new VirtualObjectRecognitionSettings();
+            Check(nullSettings.UsesLidarModification && !nullSettings.UsesBoundingBoxInjection, "Null settings lost legacy default.");
+            Check(!new VirtualObjectRecognitionSettings { mode = (VirtualObjectRecognitionMode)99 }.TryValidate(out _), "Undefined mode accepted.");
             var legacy = JsonConvert.DeserializeObject<Config.Agent>("{\"name\":\"legacy\",\"sensors\":{}}");
             Assert.AreEqual(VirtualObjectRecognitionMode.LidarModification, legacy.recognition.mode);
             Assert.AreEqual(30f, legacy.recognition.publishRateHz);
@@ -225,6 +261,12 @@ namespace CAVAS.UB_MR.Tests
                 typeof(VirtualObject).GetMethod("Awake", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(obj, null);
                 typeof(VirtualObject).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(obj, null);
                 Check(!sdf.enabled, "Box mode must disable MeshToSDF.");
+                ConfigurationManager.SetActiveAgent(new Config.Agent { recognition = new VirtualObjectRecognitionSettings
+                    { mode = VirtualObjectRecognitionMode.LidarModificationAndBoundingBoxInjection } });
+                sdf.enabled = true;
+                typeof(VirtualObject).GetMethod("Awake", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(obj, null);
+                Check(sdf.enabled && (bool)typeof(VirtualObject).GetField("usesLidar", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(obj),
+                    "Combined fallback must retain MeshToSDF generation.");
                 Check(typeof(VirtualObject).GetField("ownedSdf", BindingFlags.NonPublic | BindingFlags.Instance)
                     .GetValue(obj) == null, "Box mode allocated an SDF texture.");
             }

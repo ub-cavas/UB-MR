@@ -112,14 +112,14 @@ namespace CAVAS.UB_MR.DT
             // Name
             this.gameObject.name = inAgent.name;
             // Computer Shaders
-            if (recognition.mode == VirtualObjectRecognitionMode.LidarModification)
+            if (recognition.UsesLidarModification)
                 this.lidarModifierComputeShader = Resources.Load<ComputeShader>("Scripts/SDFRaymarch");
 
             baseLink = transform.Find("base_link");
 
             // ROS2
             ConnectToROS();
-            if (recognition.mode == VirtualObjectRecognitionMode.BoundingBoxInjection)
+            if (recognition.UsesBoundingBoxInjection)
             {
                 mVirtualBoundingBoxDetector = new VirtualBoundingBoxDetector(recognition.boundingBoxTopic, ROSNode(), transform);
                 detectionClock = new DetectionClock(ROSNode(), recognition.useSimTime, recognition.publishRateHz);
@@ -144,7 +144,7 @@ namespace CAVAS.UB_MR.DT
                         qosProfile.SetHistory(historyPolicy, historyDepth);
                         qosProfile.SetDurability(durabilityPolicy);
 
-                        if (recognition.mode == VirtualObjectRecognitionMode.BoundingBoxInjection)
+                        if (!recognition.UsesLidarModification)
                             sensor = new LidarPassthrough(sensor_config.topic, ROSNode(), qosProfile, Telemetry,
                                 inAgent.name + " · " + sensor_config.name);
                         else

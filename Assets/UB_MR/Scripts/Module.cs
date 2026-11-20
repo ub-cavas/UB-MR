@@ -52,8 +52,7 @@ namespace CAVAS.UB_MR
             Telemetry = new ResourceTelemetry();
             ResourcePanel = StatPanel.Create(transform, Telemetry);
             SessionAgent = ConfigurationManager.GetConfiguration().Item1;
-            UsesLidarModification = (SessionAgent?.recognition?.mode ?? VirtualObjectRecognitionMode.LidarModification)
-                == VirtualObjectRecognitionMode.LidarModification;
+            UsesLidarModification = (SessionAgent?.recognition ?? new VirtualObjectRecognitionSettings()).UsesLidarModification;
             InitializeMapRotationState();
         }
 

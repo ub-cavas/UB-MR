@@ -3,7 +3,7 @@
 Open **New Session → select an agent → Recognition settings**. Save the settings,
 then load the agent and map. Changes apply when the next session starts.
 
-The former `LincolnMKZ-Simple` bounding-box agent is split into two presets:
+CARLA recognition presets are `LincolnMKZ-CARLA-LiDAR`, `LincolnMKZ-CARLA-Boxes`, and `LincolnMKZ-CARLA-Both`. The physical boxes preset remains available:
 
 | Agent | ROS clock | Localization bridge |
 |---|---|---|
@@ -17,12 +17,13 @@ top-LiDAR topic and mounting pose; the physical preset retains the original
 Lincoln sensor settings. In box mode these sensors only forward scans unchanged.
 Box publication does not depend on receiving scans: Autoware can consume the
 original sensor clouds directly. Enable the Autoware perception profile for both
-presets. For CARLA boxes use the regular CARLA launcher, not the LiDAR-test launcher.
+presets. For CARLA use the explicit unified selector below to match Unity.
 
 | Mode | LiDAR output | Bounding boxes |
 |---|---|---|
 | LiDAR modification (default) | GPU SDF modification on each configured `<topic>_modified` | No box publisher |
 | Direct bounding boxes | Original scans forwarded unchanged on `<topic>_modified` | `DetectedObjects` on `/virtual_obstacles` |
+| LiDAR modification + direct boxes | GPU SDF modification on `<topic>_modified` | `DetectedObjects` on `/virtual_obstacles` |
 
 Direct boxes include active virtual objects whose collider centers are within the
 configured radius, including occluded objects. The default radius is **1,000 m**
@@ -37,6 +38,52 @@ vehicle assets default to Car. Missing, inactive, or invalid colliders are skipp
 with a warning. Ego descendants are excluded. Autoware estimates velocities,
 assigns track IDs, and predicts motion. Empty arrays indicate no current detections;
 removed objects disappear after Autoware's normal tracker lifetime, not immediately.
+
+## Unified CARLA selection
+
+Run from the UB-DigitalTwin root:
+
+```bash
+./launch/launch_ub_mr.sh --auto --injection lidar
+./launch/launch_ub_mr.sh --auto --injection boxes
+./launch/launch_ub_mr.sh --auto --injection both
+./launch/launch_ub_mr.sh --dev --auto --injection lidar
+./launch/launch_ub_mr.sh --dev --auto --injection boxes
+./launch/launch_ub_mr.sh --dev --auto --injection both
+./launch/launch_ub_mr.sh --auto --injection both --iap
+./launch/launch_ub_mr.sh --dev --auto --injection both --iap
+# Editor localization is a separate terminal:
+./launch/launch_mr_pkg_dev.sh
+```
+
+`--injection` requires `--auto`. It selects Autoware routing/profile only; it never
+edits or selects a saved Unity agent. Import/select the matching CARLA preset and
+start a new session. The player must be rebuilt from this code (or select a release
+containing these changes); older players cannot use the combined enum. The editor
+requires the pinned project Unity version (6000.0.36f1).
+
+| Selector | Unity mode / CARLA preset suffix | Autoware relay source |
+|---|---|---|
+| `lidar` | LiDAR modification / `LiDAR` | `/sensing/lidar/top/pointcloud_before_sync_modified` |
+| `boxes` | Direct bounding boxes / `Boxes` | `/sensing/lidar/top/pointcloud_before_sync` |
+| `both` | LiDAR modification + direct boxes / `Both` | `/sensing/lidar/top/pointcloud_before_sync_modified` |
+
+All explicit selections enable real sensor perception and the UB-MR tracker input,
+disable ego-only perception and CARLA ground-truth replacement, and force the
+single-top-LiDAR route. The destination is `/sensing/lidar/concatenated/pointcloud`.
+Modified-cloud modes wait for Unity with no original-cloud fallback. Without a
+selector, unified `--auto` retains its existing defaults and inherited overrides.
+The focused `launch_autoware_carla_ub_mr_lidar.sh` adapter accepts the same selector
+and defaults to `lidar`. Ordinary standalone CARLA retains its original-cloud
+source; `UB_AUTOWARE_CARLA_TOP_LIDAR_SOURCE_TOPIC` configures a validated absolute
+ROS topic for its top-LiDAR relay.
+
+Combined mode can represent the same virtual object in sensor detections and direct
+boxes. Validate tracker association/fusion and possible duplicate tracks in your
+deployment; this change does not deduplicate detections or change tracker behavior.
+Observe modified scan returns and `/virtual_obstacles` simultaneously, confirm
+LiDAR-only has no box publisher, and confirm boxes-only preserves scans and creates
+no SDFs. Check predicted objects and planning responses after localization/TF align.
 
 ## ROS time and coordinates
 
@@ -56,7 +103,7 @@ must describe that same frame. A clock setting alone cannot correct a map offset
 The profile supports **Autoware Universe 0.43.0**, including the repository's
 `ubcavas/autoware-lincoln:20251015.0` image. It adds the `ub_mr_virtual_objects`
 channel to the installed multi-object tracker, alongside existing real detections.
-An idle virtual channel is supported, so the profile works with either Unity mode.
+An idle virtual channel is supported, so the profile works with all three Unity modes.
 Do not also relay `/virtual_obstacles` onto the real detector's topic.
 
 From the **UB-DigitalTwin repository root**, enable it with either CARLA launcher:
@@ -103,7 +150,7 @@ versions or launch layouts are rejected before modification. Backups are stored 
 `/autoware/.ub_mr_perception_profile.json`; restore before independently editing
 those files. The helper refuses to overwrite unrelated edits during restoration.
 
-Existing LiDAR routing can keep consuming `<topic>_modified` in either mode. If
+Existing LiDAR routing can keep consuming `<topic>_modified` in all three modes. If
 Autoware currently consumes only the original scan topic, configuring this profile
 does not change that routing: route perception to the modified output to test the
 LiDAR-modification mode. Localization/sensor routing otherwise remains deployment-specific.
@@ -111,7 +158,9 @@ LiDAR-modification mode. Localization/sensor routing otherwise remains deploymen
 ## Configuration file
 
 Existing agent JSON needs no migration. Missing recognition settings mean LiDAR
-modification with the defaults above. Example box-mode settings:
+modification with the defaults above. Combined mode serializes as
+`LidarModificationAndBoundingBoxInjection`; existing `LidarModification` and
+`BoundingBoxInjection` names and numeric values 0/1 are preserved. Example box-mode settings:
 
 ```json
 "recognition": {
@@ -151,7 +200,11 @@ Automated checks (Unity 6000.0.36f1, project root passed to `-projectPath`):
 - `CAVAS.UB_MR.Tests.RecognitionRosChecks.Run`: real DDS scan passthrough, exact
   metadata/data preservation, `/clock` and repeated cleanup. Run with
   `ROS_DOMAIN_ID=181`, source ROS Humble, and expose the Ros2ForUnity native libraries.
-- `CAVAS.UB_MR.Tests.RecognitionMenuChecks.Run`: opens the actual agent editor and
+- `CAVAS.UB_MR.Tests.RecognitionRosChecks.RunCombined`: graphics + isolated ROS;
+  verifies actual Agent setup across all modes, Module SDF refresh, GPU hit/miss
+  scans and direct boxes during the same session, followed by repeated teardown.
+- `CAVAS.UB_MR.Tests.RecognitionMenuChecks.Run`: set `XDG_CONFIG_HOME=/tmp/ub-mr-menu-config`
+  to isolate saved agents; opens the actual agent editor and
   renders `/tmp/ub-mr-recognition-menu.png`; requires graphics (omit `-nographics`).
 
 For example, from this UB-MR checkout:
