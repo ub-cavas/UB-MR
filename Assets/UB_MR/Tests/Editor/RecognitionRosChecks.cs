@@ -118,21 +118,27 @@ namespace CAVAS.UB_MR.Tests
                 }
                 if (EditorApplication.timeSinceStartup > combinedDeadline) throw new Exception("Combined scan/box DDS delivery timed out.");
                 if (EditorApplication.timeSinceStartup < publishAfter) return;
+                // Lincoln-sized scan (> the Agent's 60k default buffers): known hit/miss rays sit at the end so
+                // the check fails if oversized scans are dropped or only the first buffer-length points are modified.
+                const int LargeScanPoints = 156_499;
+                int hitOffset = (LargeScanPoints - 2) * 12;
                 var coordinates = new[] { 10f, -.1f, .1f, .1f, -10f, .1f };
-                var data = new byte[24]; Buffer.BlockCopy(coordinates, 0, data, 0, data.Length);
+                var data = new byte[LargeScanPoints * 12]; Buffer.BlockCopy(coordinates, 0, data, hitOffset, coordinates.Length * 4);
                 scanPublisher.Publish(new PointCloud2 { Header = new std_msgs.msg.Header { Frame_id = "test_lidar" },
-                    Height = 1, Width = 2, Point_step = 12, Row_step = 24, Data = data,
+                    Height = 1, Width = LargeScanPoints, Point_step = 12, Row_step = LargeScanPoints * 12, Data = data,
                     Fields = new[] { new PointField { Name = "x", Offset = 0, Datatype = PointField.FLOAT32, Count = 1 },
                         new PointField { Name = "y", Offset = 4, Datatype = PointField.FLOAT32, Count = 1 },
                         new PointField { Name = "z", Offset = 8, Datatype = PointField.FLOAT32, Count = 1 } } });
                 typeof(DT.Agent).GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(combinedAgent, null);
                 typeof(DT.Agent).GetMethod("LateUpdate", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(combinedAgent, null);
                 if (combinedScan == null || combinedBoxes == null || combinedBoxes.Objects.Length != 1) return;
-                float hit = BitConverter.ToSingle(combinedScan.Data, 0);
-                if (hit < 4.3f || hit > 4.8f || BitConverter.ToSingle(combinedScan.Data, 12) != .1f ||
-                    BitConverter.ToSingle(combinedScan.Data, 16) != -10f)
-                    throw new Exception("Real combined LidarModifier failed known hit/miss: " + hit);
-                Debug.Log("UB-MR combined runtime PASSED: all concrete mode selections, actual Module SDF, Agent GPU scan and direct box DDS outputs, repeated teardown.");
+                if (combinedScan.Width != LargeScanPoints || combinedScan.Data.Length != data.Length)
+                    throw new Exception($"Large scan was resized: {combinedScan.Width} points.");
+                float hit = BitConverter.ToSingle(combinedScan.Data, hitOffset);
+                if (hit < 4.3f || hit > 4.8f || BitConverter.ToSingle(combinedScan.Data, hitOffset + 12) != .1f ||
+                    BitConverter.ToSingle(combinedScan.Data, hitOffset + 16) != -10f)
+                    throw new Exception("Real combined LidarModifier failed known hit/miss on a large scan: " + hit);
+                Debug.Log($"UB-MR combined runtime PASSED: all concrete mode selections, actual Module SDF, {LargeScanPoints}-point Agent GPU scan and direct box DDS outputs, repeated teardown.");
                 FinishCombined(0);
             }
             catch (Exception exception) { Debug.LogException(exception); FinishCombined(1); }

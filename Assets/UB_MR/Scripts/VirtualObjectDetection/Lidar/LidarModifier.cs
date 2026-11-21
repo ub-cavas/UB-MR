@@ -79,19 +79,11 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
         #region ROS2 Subscription Initialization
         IEnumerator Subscribe_To_PCD2(string inTopicName, QualityOfServiceProfile inQoSProfile, int inCount)
         {
-            // -- Optimization: Pre-allocate the "staging" CPU Buffers --
-            this.mStaged_PCD = new Vector4[inCount];
-            this.mReadyPCD = new Vector4[inCount];
-            Debug.Log("CPU Buffers Created!");
+            // -- Optimization: Pre-allocate CPU and GPU buffers for the expected scan size.
+            // Buffers grow on demand in EnsureCapacity if a sensor sends larger scans. --
+            EnsureCapacity(inCount);
+            Debug.Log($"LiDAR buffers created for {inCount} points.");
             yield return new WaitForSeconds(0.5f);
-
-            // -- Optimization: Pre-allocate compute buffers (matched with "staging" buffers) --
-            const int inputStride = sizeof(float) * 4;
-            const int outputStride = sizeof(float) * 4;
-            this.mInput_GPU_Buffer = new ComputeBuffer(inCount, inputStride, ComputeBufferType.Structured);
-            this.mOutput_GPU_Buffer = new ComputeBuffer(inCount, outputStride, ComputeBufferType.Structured);
-            Debug.Log("GPU Buffers Created!");
-            yield return null;
 
             // LiDAR Queued for GPU Processing
             this.mPointCloudSubscriber = this.mNode.CreateSubscription<PointCloud2>(inTopicName, Receive, inQoSProfile);
@@ -390,16 +382,15 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
                 return true;
             }
 
-            // Reject oversized scans before staging into the fixed configured buffers.
-            if ((long)originalPCD.Width * originalPCD.Height > (mStaged_PCD?.Length ?? 0) ||
-                mInput_GPU_Buffer == null || mOutput_GPU_Buffer == null) return false;
+            // Grow the CPU/GPU buffers if this scan is larger than any seen so far.
+            EnsureCapacity(count);
 
             // -- Update GPU cached transforms of the LiDAR --
             UpdateLidarTransforms(inTransform);
 
             // -- Prepare GPU data buffers with new data --
             StagePCD(originalPCD); // (atomically) updates this.mStaged_PCD
-            this.mInput_GPU_Buffer.SetData(this.mStaged_PCD);
+            this.mInput_GPU_Buffer.SetData(this.mStaged_PCD, 0, 0, count);
 
             ComputeBuffer currentBuffer = this.mInput_GPU_Buffer;
             ComputeBuffer nextBuffer = this.mOutput_GPU_Buffer;
@@ -425,6 +416,29 @@ namespace CAVAS.UB_MR.DT.Sensors.Lidar
                 EnqueuePCD(new TimedMessage<PointCloud2>(pcd, scan.ReceivedAt), this.mOutput_PCD_Queue);
             }
             return true;
+        }
+
+        /// <summary>
+        /// Ensures the staging arrays and compute buffers can hold <paramref name="inCount"/> points.
+        /// Capacity doubles until it fits, so a sensor's first full scan triggers at most a few
+        /// reallocations and later scans reuse the buffers. Must be called from the main thread.
+        /// </summary>
+        void EnsureCapacity(int inCount)
+        {
+            int current = this.mStaged_PCD?.Length ?? 0;
+            if (inCount <= current && this.mInput_GPU_Buffer != null && this.mOutput_GPU_Buffer != null) return;
+
+            int capacity = current > 0 ? current : Math.Max(inCount, 1);
+            while (capacity < inCount) capacity = capacity > int.MaxValue / 2 ? inCount : capacity * 2;
+
+            const int stride = sizeof(float) * 4;
+            lock (this._staged_lock) this.mStaged_PCD = new Vector4[capacity];
+            lock (this._ready_lock) this.mReadyPCD = new Vector4[capacity];
+            this.mInput_GPU_Buffer?.Release();
+            this.mOutput_GPU_Buffer?.Release();
+            this.mInput_GPU_Buffer = new ComputeBuffer(capacity, stride, ComputeBufferType.Structured);
+            this.mOutput_GPU_Buffer = new ComputeBuffer(capacity, stride, ComputeBufferType.Structured);
+            if (current > 0) Debug.Log($"LiDAR buffers grown from {current} to {capacity} points for a {inCount}-point scan.");
         }
 
         public override void CleanUp()
