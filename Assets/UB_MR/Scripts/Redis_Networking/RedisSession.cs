@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -17,8 +18,17 @@ namespace UB_MR.Redis_Networking
         volatile bool subscribed, publishing;
         volatile string failure;
         string traffic;
+        readonly object egoLock = new();
+        readonly Dictionary<string, string> egos = new();
+        public string[] TakeEgos()
+        {
+            lock (egoLock) { var result = new List<string>(egos.Values).ToArray(); egos.Clear(); return result; }
+        }
+        void ClearEgos() { lock (egoLock) egos.Clear(); }
         PendingPose pendingPose;
         int disposed;
+        int resetGeneration;
+        public int ResetGeneration => Volatile.Read(ref resetGeneration);
         sealed class PendingPose { public string json; public int created; }
         internal Task Completion { get; }
         internal RedisTelemetry Telemetry { get; } = new();
@@ -77,6 +87,15 @@ namespace UB_MR.Redis_Networking
                             var packet = JObject.Parse(json);
                             if ((int?)packet["type"] == 2 && packet["vehicles"] is JArray)
                                 Interlocked.Exchange(ref traffic, json);
+                            else if ((int?)packet["type"] == 3 && packet["ego"] is JObject ego &&
+                                     ego["id"] != null && (ego["id"].Type == JTokenType.String || ego["id"].Type == JTokenType.Integer))
+                            {
+                                string id = ego["id"].ToString();
+                                if (!string.IsNullOrWhiteSpace(id)) lock (egoLock)
+                                {
+                                    if (egos.Count < 1024 || egos.ContainsKey(id)) egos[id] = json;
+                                }
+                            }
                         }
                         catch (Newtonsoft.Json.JsonException) { }
                         catch (FormatException) { }
@@ -89,6 +108,7 @@ namespace UB_MR.Redis_Networking
                     SetChannelConnected(true, false);
                     lock (socketLock) { subscriber?.Dispose(); subscriber = null; }
                     Interlocked.Exchange(ref traffic, null);
+                    ClearEgos();
                 }
                 if (cancellation.Token.WaitHandle.WaitOne(1000)) return;
             }
@@ -146,7 +166,10 @@ namespace UB_MR.Redis_Networking
             lock (socketLock)
             {
                 value &= !cancellation.IsCancellationRequested;
+                bool wasConnected = Connected;
                 if (receive) subscribed = value; else publishing = value;
+                if (wasConnected && !Connected) Interlocked.Increment(ref resetGeneration);
+                if (!value) { ClearEgos(); Interlocked.Exchange(ref pendingPose, null); }
                 Telemetry.SetConnected(Connected);
             }
         }
@@ -165,6 +188,7 @@ namespace UB_MR.Redis_Networking
         {
             if (Interlocked.Exchange(ref disposed, 1) != 0) return;
             cancellation.Cancel();
+            ClearEgos();
             lock (socketLock)
             {
                 subscribed = publishing = false;

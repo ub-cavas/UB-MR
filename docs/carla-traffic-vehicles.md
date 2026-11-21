@@ -208,3 +208,68 @@ The inventory exporter's read-only contract can be tested without CARLA:
 ```bash
 python3 -m unittest discover -s CARLA/UB-API/redis-networking/tests -v
 ```
+
+### Several clients in one Redis session
+
+Each UB-MR process now publishes a stable session UUID as nested `ego.id`. An
+explicit serialized EgoPublisher `egoId` still overrides it. Every Unity client
+renders each other ego once and filters its own exact ID. Peer keys use `ego:`
+internally so an ego named `42` cannot replace traffic actor `42`. Type-2
+snapshots, traffic HUD counts, and traffic timeouts remain traffic-only. Peers
+expire after two seconds without valid arrivals, even when the connection is
+completely idle. Disconnect resets all replicas; reconnect starts fresh history.
+
+Use `scripts/launch_carla_redis_manual_client.sh` or `CARLA/start_manual_client.sh`
+for manual sessions. They generate one `UB_MANUAL_CLIENT_ID` and pass matching
+role/metadata settings to the controller and its viewer. Set
+`UB_MANUAL_CLIENT_ID`, `UB_MANUAL_ROLE_NAME`, `UB_MANUAL_ACTOR_REDIS_KEY`, or
+`UB_RENDER_MANUAL_ACTOR_REDIS_KEY` explicitly to control pairing or retain legacy
+reuse. With separate CARLA instances on one host, configure distinct Compose
+project/container names and CARLA RPC ports as usual.
+
+Updated Python renderers share Redis leases and managed `ub_mirror:` actors,
+preventing competing renderers from spawning the same source into one target
+world. A physical controlled actor in the authoritative world remains native;
+a viewer in a separate world renders its remote counterpart. Source `world_id`
+metadata distinguishes these cases. Run the updated authoritative publisher so
+managed replicas stay excluded from telemetry and all unique manual roles
+survive startup cleanup. Direct Main Menu Redis needs no UDP bridge. For a
+scene-only launch, explicitly enable `UB_EGO_BRIDGE=1` in the MR launcher; the
+bridge forwards type-3 peers alongside legacy traffic on the existing ports.
+
+The automated fake-service regressions are:
+
+```bash
+PYTHONPATH=UB-MR/Scripts:CARLA/UB-API/ub-telemetry python3 -m unittest discover -s CARLA/UB-API/ub-telemetry/tests -v
+PYTHONPATH=UB-MR/Scripts:CARLA/UB-API/ub-telemetry python3 -m unittest discover -s CARLA/UB-API/redis-networking/tests -v
+```
+
+On a machine with the Unity version in `ProjectSettings/ProjectVersion.txt`, run
+from the repository root (the connection check requires isolated test Redis on
+port 6392, password `ubmr-test`, never the simulator Redis):
+
+```bash
+Unity -batchmode -nographics -projectPath "$PWD/UB-MR" -executeMethod CAVAS.UB_MR.Tests.TrafficVehicleChecks.RunPlayMode -logFile /tmp/ubmr-traffic-playmode.log
+Unity -batchmode -nographics -projectPath "$PWD/UB-MR" -executeMethod CAVAS.UB_MR.Tests.ServerConnectionMenuChecks.Run -logFile /tmp/ubmr-server-connection.log
+```
+
+The playback checks exercise actual UDP peer delivery, self filtering, numeric
+ID collision, traffic/ego lifecycle isolation, invalid-pose lifetime protection,
+late identity discovery, idle expiry and reset/recreation. Keep the existing
+CarlaMapFrame Editor checks as well. Python tests cannot establish Unity
+compilation, live alignment or hardware performance. A provisioned live check
+should connect UB-MR A/B and manual C/D, verify one remote actor each and the
+correct camera target, stop one participant, wait for expiry, then reconnect and
+verify exactly one new replica. No simulator/hardware is started by these unit
+checks.
+
+
+Direct Compose manual/controller-viewer pairing uses the same entrypoint defaults
+in both services, including when only `UB_MANUAL_CLIENT_ID` is supplied. With no
+explicit ID, the Compose project plus a shared read-only host machine identity
+provides the default; equal project names on different hosts remain distinct.
+The shell launchers continue generating fresh UUIDs. Replica lease/world refresh
+runs on a worker with bounded Redis timeouts and cached render checks. Slow
+spawns use a longer reservation and explicit post-spawn token verification;
+normal peer silence expiry remains two seconds. Live WAN performance still
+requires provisioned measurement.

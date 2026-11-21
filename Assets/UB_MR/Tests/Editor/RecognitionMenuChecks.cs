@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using TMPro;
 using CAVAS.UB_MR.Config;
 using CAVAS.UB_MR.Modules.MainMenu;
 using UnityEditor;
@@ -45,13 +47,49 @@ namespace CAVAS.UB_MR.Tests
                     var menu = UnityEngine.Object.FindFirstObjectByType<AgentEditMenu>(FindObjectsInactive.Include);
                     if (menu == null) throw new Exception("Active agent editor was not found in Main-Menu scene.");
                     menu.SetAgent(new Config.Agent { name = "Recognition preview", recognition = new VirtualObjectRecognitionSettings
-                        { mode = VirtualObjectRecognitionMode.BoundingBoxInjection, useSimTime = true } });
+                        { mode = VirtualObjectRecognitionMode.LidarModificationAndBoundingBoxInjection, useSimTime = true } });
                     UI_Manager.LoadPanel(menu);
                     var button = menu.transform.Find("Recognition settings").GetComponent<Button>();
                     button.onClick.Invoke();
                     Canvas.ForceUpdateCanvases();
                     if (!menu.transform.Find("Virtual object recognition").gameObject.activeInHierarchy)
                         throw new Exception("Recognition settings did not open.");
+                    var panel = menu.transform.Find("Virtual object recognition");
+                    var dropdowns = panel.GetComponentsInChildren<TMP_Dropdown>(true);
+                    var mode = dropdowns[0];
+                    var fields = panel.GetComponentsInChildren<TMP_InputField>(true);
+                    if (mode.options.Count != 3) throw new Exception("Expected three recognition choices.");
+                    if (!Application.persistentDataPath.StartsWith("/tmp/"))
+                        throw new Exception("Menu check requires XDG_CONFIG_HOME under /tmp to isolate saved agents.");
+                    for (int i = 0; i < 3; i++)
+                    {
+                        mode.value = i;
+                        if (fields.Any(field => field.interactable != (i != 0)) || dropdowns[1].interactable != (i != 0))
+                            throw new Exception("Box field availability mismatch for mode " + i);
+                        panel.GetComponentsInChildren<Button>(true).First(control =>
+                            control.GetComponentInChildren<TextMeshProUGUI>(true)?.text == "Save settings").onClick.Invoke();
+                        var saved = ConfigurationManager.LoadFromJSON("Recognition preview");
+                        if ((int)saved.recognition.mode != i) throw new Exception("Mode did not save: " + i);
+                        menu.SetAgent(saved);
+                        button.onClick.Invoke();
+                        if (mode.value != i) throw new Exception("Mode did not reopen: " + i);
+                    }
+                    fields[0].text = "/test/combined_boxes";
+                    fields[1].text = "17";
+                    fields[2].text = "123";
+                    dropdowns[1].value = 1;
+                    panel.GetComponentsInChildren<Button>(true).First(button =>
+                        button.GetComponentInChildren<TextMeshProUGUI>(true)?.text == "Save settings").onClick.Invoke();
+                    var restored = ConfigurationManager.LoadFromJSON("Recognition preview");
+                    if (restored.recognition.mode != VirtualObjectRecognitionMode.LidarModificationAndBoundingBoxInjection ||
+                        restored.recognition.boundingBoxTopic != "/test/combined_boxes" || restored.recognition.publishRateHz != 17 ||
+                        restored.recognition.detectionRadiusMeters != 123 || !restored.recognition.useSimTime)
+                        throw new Exception("Combined settings did not save/reopen.");
+                    menu.SetAgent(restored);
+                    button.onClick.Invoke();
+                    if (mode.value != 2 || fields[0].text != "/test/combined_boxes")
+                        throw new Exception("Combined controls did not reopen.");
+                    ConfigurationManager.RemoveAgent("Recognition preview");
                     stage = 1;
                     readyAt = EditorApplication.timeSinceStartup + 2;
                 }

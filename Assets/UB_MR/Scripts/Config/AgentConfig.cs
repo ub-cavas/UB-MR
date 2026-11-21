@@ -10,8 +10,9 @@ namespace CAVAS.UB_MR.Config
     [JsonConverter(typeof(StringEnumConverter))]
     public enum VirtualObjectRecognitionMode
     {
-        LidarModification,
-        BoundingBoxInjection
+        LidarModification = 0,
+        BoundingBoxInjection = 1,
+        LidarModificationAndBoundingBoxInjection = 2
     }
 
     [Serializable]
@@ -22,6 +23,14 @@ namespace CAVAS.UB_MR.Config
         public float publishRateHz = 30f;
         public float detectionRadiusMeters = 1000f;
         public bool useSimTime = false;
+
+        [JsonIgnore]
+        public bool UsesLidarModification => mode == VirtualObjectRecognitionMode.LidarModification ||
+            mode == VirtualObjectRecognitionMode.LidarModificationAndBoundingBoxInjection;
+
+        [JsonIgnore]
+        public bool UsesBoundingBoxInjection => mode == VirtualObjectRecognitionMode.BoundingBoxInjection ||
+            mode == VirtualObjectRecognitionMode.LidarModificationAndBoundingBoxInjection;
 
         public bool TryValidate(out string error)
         {

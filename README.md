@@ -115,7 +115,7 @@ If you intend to develop the Mixed Reality Engine, follow these steps...
 
 ## Virtual-object recognition
 
-Agents can use GPU LiDAR modification (default) or direct Autoware bounding-box injection.
+Agents can use GPU LiDAR modification (default), direct Autoware bounding-box injection, or both in one session. CARLA presets `LincolnMKZ-CARLA-LiDAR`, `LincolnMKZ-CARLA-Boxes`, and `LincolnMKZ-CARLA-Both` match these choices.
 Choose **Recognition settings** in the agent editor. See the [setup and validation guide](Docs/VirtualObjectRecognition.md) for the Autoware profile, ROS time, and topic routing.
 
 ## Running the Project

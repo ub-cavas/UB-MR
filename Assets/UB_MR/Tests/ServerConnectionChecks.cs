@@ -41,6 +41,16 @@ namespace CAVAS.UB_MR.Tests
                 admin.Write("PUBLISH", settings.channel, "{\"type\":3,\"ego\":{}}"); admin.Read();
                 await Task.Delay(100);
                 Check(session.TakeTraffic() == null, "Ego was treated as traffic.");
+                // Distinct nested IDs must survive one frame even with the same envelope ID.
+                foreach (string id in new[] { "a", "b", "a" })
+                {
+                    string peer = "{\"type\":3,\"id\":\"ub-mr\",\"ego\":{\"id\":\"" + id + "\",\"yaw\":1}}";
+                    admin.Write("PUBLISH", settings.channel, peer); admin.Read();
+                }
+                await Task.Delay(150);
+                string[] peers = session.TakeEgos();
+                Check(peers.Length == 2, "Per-ego mailbox dropped a participant or failed to coalesce.");
+                Check(session.TakeEgos().Length == 0 && session.TakeTraffic() == null, "Mailbox drain/type isolation failed.");
                 admin.Write("PUBLISH", settings.channel, "not-json"); admin.Read();
                 admin.Write("PUBLISH", settings.channel, traffic); admin.Read();
                 await Until(() => session.TakeTraffic() != null, "Malformed message killed subscription.");
@@ -57,6 +67,7 @@ namespace CAVAS.UB_MR.Tests
                 Check(session.Connected, "Idle connection was lost.");
                 admin.Write("CLIENT", "KILL", "TYPE", "pubsub"); admin.Read();
                 await Until(() => !session.Connected, "Dropped subscription was not detected.");
+                Check(session.TakeEgos().Length == 0, "Disconnected session retained peer poses.");
                 await Until(() => session.Connected, "Automatic reconnect failed.");
                 admin.Write("PUBLISH", settings.channel, traffic); admin.Read();
                 await Until(() => session.TakeTraffic() != null, "Traffic did not resume after reconnect.");
@@ -66,6 +77,7 @@ namespace CAVAS.UB_MR.Tests
                 session.Dispose();
                 await Until(() => session.Completion.IsCompleted, "Connection workers did not stop.");
                 Check(!session.Completion.IsFaulted, "Worker failed during shutdown.");
+                Check(session.TakeEgos().Length == 0, "Disposed session retained peer poses.");
             }
             var wrongPassword = settings.Copy(); wrongPassword.password = "incorrect";
             var denied = new RedisSession(wrongPassword);

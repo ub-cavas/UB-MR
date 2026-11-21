@@ -7,6 +7,7 @@ using System.Threading;
 using System.Text;
 using UnityEngine;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace UB_MR.Redis_Networking
 {
@@ -60,10 +61,12 @@ namespace UB_MR.Redis_Networking
         [Header("UDP fallback (scene-only launches)")]
         [SerializeField] private int listenPort = 12345;
 
-        private readonly ConcurrentQueue<TrafficPayload> _incomingPayloads = new();
+        private readonly ConcurrentQueue<string> _incomingPayloads = new();
 
         private readonly Dictionary<string, VehicleData> _knownVehicles = new();
 
+        private readonly Dictionary<string, float> _egoArrivals = new();
+        private float _lastTraffic = float.NegativeInfinity;
         private ServerConnection serverConnection;
         private UdpClient _udpClient;
         private Thread _receiveThread;
@@ -75,6 +78,8 @@ namespace UB_MR.Redis_Networking
             if (serverConnection != null)
             {
                 serverConnection.TrafficReceived += ReceiveServerTraffic;
+                serverConnection.EgoReceived += ReceiveServerTraffic;
+                serverConnection.ParticipantsReset += ResetParticipants;
                 return;
             }
             _udpClient = new UdpClient(listenPort);
@@ -90,25 +95,88 @@ namespace UB_MR.Redis_Networking
 
         void Update()
         {
-            while (_incomingPayloads.TryDequeue(out TrafficPayload payload))
-            {
-                ProcessPayload(payload);
-            }
+            while (_incomingPayloads.TryDequeue(out string json)) ReceiveServerTraffic(json);
+            float now = Time.realtimeSinceStartup;
+            foreach (string id in new List<string>(_egoArrivals.Keys))
+                if (now - _egoArrivals[id] > 2f || id == "ego:" + EgoPublisher.LocalEgoId) RemoveVehicle(id);
+            if (now - _lastTraffic > 2f) ProcessPayload(new TrafficPayload { vehicles = new List<VehicleData>() });
         }
+
+        private static bool Finite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
+        private static bool Valid(VehicleData vehicle) => vehicle != null && !string.IsNullOrWhiteSpace(vehicle.id) &&
+            vehicle.location != null && Finite(vehicle.location.x) && Finite(vehicle.location.y) &&
+            Finite(vehicle.location.z) && Finite(vehicle.yaw);
 
         private void ReceiveServerTraffic(string json)
         {
             try
             {
-                var payload = JsonConvert.DeserializeObject<TrafficPayload>(json);
-                if (payload?.vehicles != null) ProcessPayload(payload);
+                var packet = JObject.Parse(json);
+                int? type = (int?)packet["type"];
+                if (type == 3)
+                {
+                    if (packet["ego"] is not JObject ego || ego["id"] == null ||
+                        (ego["id"].Type != JTokenType.String && ego["id"].Type != JTokenType.Integer) ||
+                        ego["location"] is not JObject location || location["x"] == null ||
+                        location["y"] == null || location["z"] == null || ego["yaw"] == null) return;
+                    var vehicle = ego.ToObject<VehicleData>();
+                    if (!Valid(vehicle)) return;
+                    string sourceId = vehicle.id;
+                    vehicle.id = "ego:" + sourceId;
+                    if (sourceId == EgoPublisher.LocalEgoId) { RemoveVehicle(vehicle.id); return; }
+                    if (string.IsNullOrEmpty(vehicle.blueprint)) vehicle.blueprint = "vehicle.lincoln.mkz_2017";
+                    _egoArrivals[vehicle.id] = Time.realtimeSinceStartup;
+                    Upsert(vehicle);
+                }
+                else if ((type == null || type == 2) && packet["vehicles"] is JArray)
+                {
+                    var payload = new TrafficPayload { vehicles = new List<VehicleData>() };
+                    foreach (JToken entry in (JArray)packet["vehicles"])
+                    {
+                        if (entry is not JObject vehicle || vehicle["id"] == null ||
+                            (vehicle["id"].Type != JTokenType.String && vehicle["id"].Type != JTokenType.Integer) ||
+                            vehicle["location"] is not JObject position || position["x"] == null ||
+                            position["y"] == null || position["z"] == null || vehicle["yaw"] == null) continue;
+                        var parsed = vehicle.ToObject<VehicleData>();
+                        if (Valid(parsed)) payload.vehicles.Add(parsed);
+                    }
+                    ProcessPayload(payload);
+                    _lastTraffic = Time.realtimeSinceStartup;
+                }
             }
-            catch (JsonException) { Debug.LogWarning("Invalid traffic payload received from server.", this); }
+            catch (Exception error) when (error is JsonException || error is FormatException || error is InvalidCastException || error is OverflowException) { }
+        }
+
+        private void Upsert(VehicleData vehicle)
+        {
+            bool exists = _knownVehicles.ContainsKey(vehicle.id);
+            _knownVehicles[vehicle.id] = vehicle;
+            if (exists) OnVehicleUpdate?.Invoke(vehicle); else OnSpawnVehicle?.Invoke(vehicle);
+        }
+
+        private void RemoveVehicle(string id)
+        {
+            if (_knownVehicles.TryGetValue(id, out var vehicle)) OnDespawnVehicle?.Invoke(vehicle);
+            _knownVehicles.Remove(id);
+            _egoArrivals.Remove(id);
+        }
+
+        private void ResetParticipants()
+        {
+            while (_incomingPayloads.TryDequeue(out _)) { }
+            foreach (string id in new List<string>(_knownVehicles.Keys)) RemoveVehicle(id);
+            _lastTraffic = float.NegativeInfinity;
         }
 
         void OnDestroy()
         {
-            if (serverConnection != null) serverConnection.TrafficReceived -= ReceiveServerTraffic;
+            if (serverConnection != null)
+            {
+                serverConnection.TrafficReceived -= ReceiveServerTraffic;
+                serverConnection.EgoReceived -= ReceiveServerTraffic;
+                serverConnection.ParticipantsReset -= ResetParticipants;
+            }
+            ResetParticipants();
             _isReceiving = false;
             _udpClient?.Close();
             _receiveThread?.Join(500);
@@ -124,11 +192,7 @@ namespace UB_MR.Redis_Networking
                     byte[] data = _udpClient.Receive(ref endpoint);
                     string json = Encoding.UTF8.GetString(data);
 
-                    Debug.Log($"[TrafficReceiver] Packet received from {endpoint.Address}:{endpoint.Port} | Size: {data.Length} bytes");
-
-                    TrafficPayload payload = JsonConvert.DeserializeObject<TrafficPayload>(json);
-                    if (payload?.vehicles != null)
-                        _incomingPayloads.Enqueue(payload);
+                    _incomingPayloads.Enqueue(json);
                 }
                 catch (SocketException)
                 {
@@ -146,37 +210,14 @@ namespace UB_MR.Redis_Networking
 
 
             HashSet<string> seen = new HashSet<string>();
-
             foreach (VehicleData vehicle in payload.vehicles)
             {
-                if (vehicle == null || string.IsNullOrEmpty(vehicle.id) || vehicle.location == null) continue;
-
+                if (!Valid(vehicle) || vehicle.id.StartsWith("ego:", StringComparison.Ordinal)) continue;
                 seen.Add(vehicle.id);
-
-                if (_knownVehicles.TryGetValue(vehicle.id, out _))
-                {
-                    _knownVehicles[vehicle.id] = vehicle;
-                    OnVehicleUpdate?.Invoke(vehicle);
-                }
-                else
-                {
-                    _knownVehicles[vehicle.id] = vehicle;
-                    OnSpawnVehicle?.Invoke(vehicle);
-                }
+                Upsert(vehicle);
             }
-
-            List<string> toRemove = new List<string>();
-            foreach (string id in _knownVehicles.Keys)
-            {
-                if (!seen.Contains(id))
-                    toRemove.Add(id);
-            }
-
-            foreach (string id in toRemove)
-            {
-                OnDespawnVehicle?.Invoke(_knownVehicles[id]);
-                _knownVehicles.Remove(id);
-            }
+            foreach (string id in new List<string>(_knownVehicles.Keys))
+                if (!_egoArrivals.ContainsKey(id) && !seen.Contains(id)) RemoveVehicle(id);
         }
 
         public IReadOnlyDictionary<string, VehicleData> KnownVehicles => _knownVehicles;

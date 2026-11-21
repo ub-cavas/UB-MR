@@ -8,7 +8,7 @@ namespace UB_MR.Redis_Networking
     public sealed class ServerSettings
     {
         public string host = "127.0.0.1";
-        public int port = 6390;
+        public int port = 16390;
         public string channel = "carla:telemetry";
         [NonSerialized] public string password = "";
 

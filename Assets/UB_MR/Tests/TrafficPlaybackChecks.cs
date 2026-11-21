@@ -157,6 +157,7 @@ namespace CAVAS.UB_MR.Tests
                 "Re-enable used stale appearance");
             yield return Send(Array.Empty<TrafficReceiver.VehicleData>());
             Check(Count == 0 && Detections == 0, "Empty snapshot must despawn all");
+            yield return CheckParticipants();
             // Missing fallback and invalid catalog should log once and skip/fallback without exceptions.
             Set(renderer, "vehiclePrefab", null);
             yield return Send(new[] { Vehicle("skipped", "vehicle.missing-fallback", null) });
@@ -218,6 +219,52 @@ namespace CAVAS.UB_MR.Tests
                 CheckSdfHit(Root("mustang"));
                 yield return Send(Array.Empty<TrafficReceiver.VehicleData>());
             }
+        }
+
+        private IEnumerator CheckParticipants()
+        {
+            // Actual UDP delivery exercises the same parsing/reconciliation as direct Redis callbacks.
+            foreach (string id in new[] { "42", "peer-b", EgoPublisher.LocalEgoId })
+                SendPacket(new { type = 3, id = "ub-mr", ego = Vehicle(id, "vehicle.audi.a2", "0,0,0") });
+            SendPacket(new { type = 2, vehicles = new[] { Vehicle("42", "vehicle.audi.a2", "255,0,0"),
+                Vehicle("43", "vehicle.audi.a2", "0,0,255") } });
+            yield return new WaitForSecondsRealtime(0.15f);
+            Check(Count == 4 && receiver.KnownVehicles.ContainsKey("ego:42") &&
+                receiver.KnownVehicles.ContainsKey("42") && !receiver.KnownVehicles.ContainsKey("ego:" + EgoPublisher.LocalEgoId),
+                "All-to-all identity namespace/self filtering failed");
+            var peer = Root("ego:42");
+            SendPacket(new { type = 3, id = "ub-mr", ego = Vehicle("42", "vehicle.audi.a2", "0,0,0") });
+            SendPacket(new { vehicles = Array.Empty<TrafficReceiver.VehicleData>() });
+            yield return new WaitForSecondsRealtime(0.15f);
+            Check(Count == 2 && Root("ego:42") == peer, "Traffic snapshot removed peers or repeated peer duplicated");
+            var arrivals = Get<Dictionary<string, float>>(receiver, "_egoArrivals");
+            float last = arrivals["ego:42"];
+            SendPacket(new { type = 3, ego = new { id = "42", location = new { x = 1, y = 2, z = 3 }, yaw = "NaN" } });
+            SendPacket(new { type = 0, ego = Vehicle("unrelated", "vehicle.audi.a2", null) });
+            yield return new WaitForSecondsRealtime(0.1f);
+            Check(arrivals["ego:42"] == last && Count == 2, "Invalid pose refreshed peer lifetime");
+            // Late discovery of an explicit local ID must remove its existing replica.
+            var identity = typeof(EgoPublisher).GetProperty("LocalEgoId", BindingFlags.Static | BindingFlags.Public);
+            string local = EgoPublisher.LocalEgoId;
+            identity.GetSetMethod(true).Invoke(null, new object[] { "42" });
+            yield return null;
+            Check(!receiver.KnownVehicles.ContainsKey("ego:42") && receiver.KnownVehicles.ContainsKey("ego:peer-b"),
+                "Late self identity removed the wrong participant");
+            identity.GetSetMethod(true).Invoke(null, new object[] { local });
+            yield return new WaitForSecondsRealtime(2.1f);
+            Check(Count == 0 && receiver.KnownVehicles.Count == 0, "Complete UDP silence did not expire peers");
+            SendPacket(new { type = 3, ego = Vehicle("peer-b", "vehicle.audi.a2", "0,0,0") });
+            yield return new WaitForSecondsRealtime(0.1f);
+            Check(Count == 1, "Reconnect did not recreate exactly one peer");
+            receiver.GetType().GetMethod("ResetParticipants", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(receiver, null);
+            yield return null;
+            Check(Count == 0 && arrivals.Count == 0, "Disconnect reset left participant state");
+        }
+
+        private void SendPacket(object packet)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(packet));
+            sender.Send(bytes, bytes.Length, new IPEndPoint(IPAddress.Loopback, port));
         }
 
         private static RenderTexture RenderFrame()

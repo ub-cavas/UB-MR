@@ -17,6 +17,9 @@ namespace UB_MR.Redis_Networking
         public bool HasTraffic => IsConnected && Time.realtimeSinceStartup - lastTrafficTime < 2f;
         public int VehicleCount { get; private set; }
         public event Action<string> TrafficReceived;
+        public event Action<string> EgoReceived;
+        public event Action ParticipantsReset;
+        int resetGeneration;
         RedisSession session;
         float lastTrafficTime = float.NegativeInfinity;
         bool hadTraffic;
@@ -47,6 +50,8 @@ namespace UB_MR.Redis_Networking
 
         public void Disconnect()
         {
+            ParticipantsReset?.Invoke();
+            resetGeneration = 0;
             session?.Dispose();
             session = null;
             lastTrafficTime = float.NegativeInfinity;
@@ -59,6 +64,12 @@ namespace UB_MR.Redis_Networking
         {
             // Keep one-second rate samples current while the simulation HUD is not present.
             session?.Telemetry.Traffic.Snapshot();
+            if (session != null && resetGeneration != session.ResetGeneration)
+            {
+                resetGeneration = session.ResetGeneration;
+                ParticipantsReset?.Invoke();
+            }
+            if (IsConnected) foreach (string ego in session.TakeEgos()) EgoReceived?.Invoke(ego);
             string json = session?.TakeTraffic();
             if (json != null && IsConnected)
             {

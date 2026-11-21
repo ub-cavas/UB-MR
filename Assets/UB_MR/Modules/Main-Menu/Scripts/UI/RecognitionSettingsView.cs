@@ -33,7 +33,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
             Label("Saved with this agent. Changes apply to the next session.", font, 40, 105, 820, 55, 23);
             Label("Recognition mode", font, 40, 205, 270, 56, 24);
             mode = Dropdown(templates.RecognitionDropdownTemplate, 205,
-                new[] { "LiDAR modification", "Direct bounding boxes" });
+                new[] { "LiDAR modification", "Direct bounding boxes", "LiDAR modification + direct boxes" });
             Label("ROS clock", font, 40, 285, 270, 56, 24);
             clock = Dropdown(templates.RecognitionDropdownTemplate, 285,
                 new[] { "System time", "Simulation /clock" });
@@ -131,7 +131,7 @@ namespace CAVAS.UB_MR.Modules.MainMenu
 
         void RefreshMode()
         {
-            bool boxes = mode.value == (int)VirtualObjectRecognitionMode.BoundingBoxInjection;
+            bool boxes = new VirtualObjectRecognitionSettings { mode = (VirtualObjectRecognitionMode)mode.value }.UsesBoundingBoxInjection;
             topic.interactable = rate.interactable = radius.interactable = clock.interactable = boxes;
         }
 

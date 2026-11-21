@@ -27,8 +27,8 @@ namespace CAVAS.UB_MR.DT.Sensors
         {
             var module = FindFirstObjectByType<Module>();
             usesLidar = module != null ? module.UsesLidarModification :
-                (ConfigurationManager.GetConfiguration().Item1?.recognition?.mode ??
-                 VirtualObjectRecognitionMode.LidarModification) == VirtualObjectRecognitionMode.LidarModification;
+                (ConfigurationManager.GetConfiguration().Item1?.recognition ??
+                 new VirtualObjectRecognitionSettings()).UsesLidarModification;
             if (!usesLidar && meshToSDF != null) meshToSDF.enabled = false;
         }
 
